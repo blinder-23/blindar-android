@@ -101,4 +101,23 @@ class MealDeserializerTest {
             assert(exceptionOccur)
         }
     }
+
+    @Test
+    fun parseMenu() {
+        val string = "롤케이크  (1.2.5.6.)<br/>오리불고기  (5.6.13.)"
+        val expectedList = listOf(
+            Menu(
+                name = "롤케이크",
+                allergic = listOf(1, 2, 5, 6)
+            ),
+            Menu(
+                name = "오리불고기",
+                allergic = listOf(5, 6, 13)
+            )
+        )
+        val actualList = deserializer.parseMenus(string)
+        expectedList.zip(actualList).forEach { (expectedMenu, actualMenu) ->
+            assertEquals(expectedMenu, actualMenu)
+        }
+    }
 }

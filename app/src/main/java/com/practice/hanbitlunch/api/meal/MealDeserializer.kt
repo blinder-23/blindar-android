@@ -58,7 +58,7 @@ class MealDeserializer : JsonDeserializer<MealResponse> {
                     mealName = get("MMEAL_SC_NM").asString,
                     date = get("MLSV_YMD").asString,
                     numberStudents = get("MLSV_FGR").asInt,
-                    menu = get("DDISH_NM").asString.splitBrAndTrim(),
+                    menu = parseMenus(get("DDISH_NM").asString),
                     originCountries = get("ORPLC_INFO").asString.splitBrAndTrim(),
                     calorie = parseCalorie(get("CAL_INFO").asString),
                     nutrients = get("NTR_INFO").asString.splitBrAndTrim(),
@@ -74,6 +74,30 @@ class MealDeserializer : JsonDeserializer<MealResponse> {
         return calorieString.split(" ")[0].toDouble()
     }
 
+    fun parseMenus(menusString: String): List<Menu> {
+        val menuAllergic = menusString.splitBrAndTrim()
+        return menuAllergic.map { parseMenu(it) }
+    }
+
+    private fun parseMenu(menuString: String): Menu {
+        val split = menuString.split("(")
+        val menuName = split[0].trim()
+        val allergicNumbers = if (split.size > 1) {
+            parseAllergic(split[1])
+        } else {
+            emptyList()
+        }
+        return Menu(
+            name = menuName,
+            allergic = allergicNumbers
+        )
+    }
+
+    private fun parseAllergic(allergicString: String): List<Int> {
+        val allergicNumberString = allergicString.replace("[^\\d]".toRegex(), " ").trim()
+        val allergicToken = allergicNumberString.split(" ")
+        return allergicToken.map { token -> token.toInt() }
+    }
 }
 
 class MealDeserializerException(override val message: String) : Exception(message)

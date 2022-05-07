@@ -9,7 +9,7 @@ data class Meal(
     val mealName: String,
     val date: String,
     val numberStudents: Int,
-    val menu: List<String>,
+    val menu: List<Menu>,
     val originCountries: List<String>,
     val calorie: Double,
     val nutrients: List<String>,
