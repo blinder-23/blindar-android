@@ -1,6 +1,9 @@
 package com.practice.hanbitlunch.api.meal
 
 import com.google.gson.JsonParser
+import com.practice.hanbitlunch.api.meal.pojo.MealHeader
+import com.practice.hanbitlunch.api.meal.pojo.MealResultCode
+import com.practice.hanbitlunch.api.meal.pojo.Menu
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

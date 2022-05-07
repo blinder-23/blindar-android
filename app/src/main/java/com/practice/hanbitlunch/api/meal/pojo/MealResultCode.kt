@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.api.meal
+package com.practice.hanbitlunch.api.meal.pojo
 
 data class MealResultCode(
     val code: String,

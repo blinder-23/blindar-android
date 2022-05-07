@@ -4,6 +4,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import com.practice.hanbitlunch.api.meal.pojo.*
 import java.lang.reflect.Type
 
 class MealDeserializer : JsonDeserializer<MealResponse> {

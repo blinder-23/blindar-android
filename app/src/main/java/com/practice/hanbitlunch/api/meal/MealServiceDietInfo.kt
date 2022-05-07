@@ -1,5 +1,6 @@
 package com.practice.hanbitlunch.api.meal
 
+import com.practice.hanbitlunch.api.meal.pojo.MealResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

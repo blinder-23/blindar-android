@@ -3,7 +3,7 @@ package com.practice.hanbitlunch.api
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
 import com.practice.hanbitlunch.api.meal.MealDeserializer
-import com.practice.hanbitlunch.api.meal.MealResponse
+import com.practice.hanbitlunch.api.meal.pojo.MealResponse
 import com.practice.hanbitlunch.api.meal.MealServiceDietInfo
 import retrofit2.Converter
 import retrofit2.Retrofit
