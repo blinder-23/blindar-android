@@ -62,7 +62,7 @@ class MealDeserializer : JsonDeserializer<MealResponse> {
                     menu = parseMenus(get("DDISH_NM").asString),
                     originCountries = parseOrigins(get("ORPLC_INFO").asString),
                     calorie = parseCalorie(get("CAL_INFO").asString),
-                    nutrients = get("NTR_INFO").asString.splitBrAndTrim(),
+                    nutrients = parseNutrients(get("NTR_INFO").asString),
                     fromDate = get("MLSV_FROM_YMD").asString,
                     endDate = get("MLSV_TO_YMD").asString
                 )
