@@ -113,6 +113,22 @@ class MealDeserializer : JsonDeserializer<MealResponse> {
             originCountry = tokens[1]
         )
     }
+
+    fun parseNutrients(nutrients: String): List<Nutrient> {
+        return nutrients.splitBrAndTrim().map { nutrient ->
+            parseNutrient(nutrient)
+        }
+    }
+
+    private fun parseNutrient(nutrient: String): Nutrient {
+        val nutrientBracketRemoved = nutrient.replace("[(): ]".toRegex(), " ")
+        val tokens = nutrientBracketRemoved.split(" ")
+        return Nutrient(
+            name = tokens[0],
+            unit = tokens[1],
+            amount = tokens.last().toDouble()
+        )
+    }
 }
 
 class MealDeserializerException(override val message: String) : Exception(message)

@@ -1,10 +1,7 @@
 package com.practice.hanbitlunch.api.meal
 
 import com.google.gson.JsonParser
-import com.practice.hanbitlunch.api.meal.pojo.MealHeader
-import com.practice.hanbitlunch.api.meal.pojo.MealResultCode
-import com.practice.hanbitlunch.api.meal.pojo.Menu
-import com.practice.hanbitlunch.api.meal.pojo.Origin
+import com.practice.hanbitlunch.api.meal.pojo.*
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -139,6 +136,28 @@ class MealDeserializerTest {
             ),
         )
         val actualList = deserializer.parseOrigins(string)
+        assertEquals(expectedList.size, actualList.size)
+        expectedList.zip(actualList).forEach { (expected, actual) ->
+            assertEquals(expected, actual)
+        }
+    }
+
+    @Test
+    fun parseNutrients() {
+        val nutrients = "탄수화물(g) : 136.2<br/>단백질(g) : 37.9<br/>"
+        val expectedList = listOf(
+            Nutrient(
+                name = "탄수화물",
+                unit = "g",
+                amount = 136.2,
+            ),
+            Nutrient(
+                name = "단백질",
+                unit = "g",
+                amount = 37.9
+            ),
+        )
+        val actualList = deserializer.parseNutrients(nutrients)
         assertEquals(expectedList.size, actualList.size)
         expectedList.zip(actualList).forEach { (expected, actual) ->
             assertEquals(expected, actual)
