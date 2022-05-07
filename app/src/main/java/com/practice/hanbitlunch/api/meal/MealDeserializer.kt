@@ -60,7 +60,7 @@ class MealDeserializer : JsonDeserializer<MealResponse> {
                     date = get("MLSV_YMD").asString,
                     numberStudents = get("MLSV_FGR").asInt,
                     menu = parseMenus(get("DDISH_NM").asString),
-                    originCountries = get("ORPLC_INFO").asString.splitBrAndTrim(),
+                    originCountries = parseOrigins(get("ORPLC_INFO").asString),
                     calorie = parseCalorie(get("CAL_INFO").asString),
                     nutrients = get("NTR_INFO").asString.splitBrAndTrim(),
                     fromDate = get("MLSV_FROM_YMD").asString,
@@ -100,16 +100,19 @@ class MealDeserializer : JsonDeserializer<MealResponse> {
         return allergicToken.map { token -> token.toInt() }
     }
 
-    fun parseOrigin(origins: String): List<Origin> {
+    fun parseOrigins(origins: String): List<Origin> {
         return origins.splitBrAndTrim().map { origin ->
-            val tokens = origin.split(":").map { it.trim() }
-            Origin(
-                ingredient = tokens[0],
-                originCountry = tokens[1]
-            )
+            parseOrigin(origin)
         }
     }
 
+    private fun parseOrigin(origin: String): Origin {
+        val tokens = origin.split(":").map { it.trim() }
+        return Origin(
+            ingredient = tokens[0],
+            originCountry = tokens[1]
+        )
+    }
 }
 
 class MealDeserializerException(override val message: String) : Exception(message)

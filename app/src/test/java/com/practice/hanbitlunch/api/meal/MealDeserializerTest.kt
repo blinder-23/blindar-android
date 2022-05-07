@@ -126,7 +126,7 @@ class MealDeserializerTest {
     }
 
     @Test
-    fun parseOrigin() {
+    fun parseOrigins() {
         val string = "쌀 : 국내산<br/>김치류 : 국내산<br/>"
         val expectedList = listOf(
             Origin(
@@ -138,7 +138,7 @@ class MealDeserializerTest {
                 originCountry = "국내산",
             ),
         )
-        val actualList = deserializer.parseOrigin(string)
+        val actualList = deserializer.parseOrigins(string)
         assertEquals(expectedList.size, actualList.size)
         expectedList.zip(actualList).forEach { (expected, actual) ->
             assertEquals(expected, actual)
