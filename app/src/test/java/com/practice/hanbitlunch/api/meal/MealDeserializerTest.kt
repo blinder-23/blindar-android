@@ -4,6 +4,7 @@ import com.google.gson.JsonParser
 import com.practice.hanbitlunch.api.meal.pojo.MealHeader
 import com.practice.hanbitlunch.api.meal.pojo.MealResultCode
 import com.practice.hanbitlunch.api.meal.pojo.Menu
+import com.practice.hanbitlunch.api.meal.pojo.Origin
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -121,6 +122,26 @@ class MealDeserializerTest {
         val actualList = deserializer.parseMenus(string)
         expectedList.zip(actualList).forEach { (expectedMenu, actualMenu) ->
             assertEquals(expectedMenu, actualMenu)
+        }
+    }
+
+    @Test
+    fun parseOrigin() {
+        val string = "쌀 : 국내산<br/>김치류 : 국내산<br/>"
+        val expectedList = listOf(
+            Origin(
+                ingredient = "쌀",
+                originCountry = "국내산",
+            ),
+            Origin(
+                ingredient = "김치류",
+                originCountry = "국내산",
+            ),
+        )
+        val actualList = deserializer.parseOrigin(string)
+        assertEquals(expectedList.size, actualList.size)
+        expectedList.zip(actualList).forEach { (expected, actual) ->
+            assertEquals(expected, actual)
         }
     }
 }

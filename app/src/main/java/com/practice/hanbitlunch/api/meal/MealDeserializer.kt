@@ -99,6 +99,17 @@ class MealDeserializer : JsonDeserializer<MealResponse> {
         val allergicToken = allergicNumberString.split(" ")
         return allergicToken.map { token -> token.toInt() }
     }
+
+    fun parseOrigin(origins: String): List<Origin> {
+        return origins.splitBrAndTrim().map { origin ->
+            val tokens = origin.split(":").map { it.trim() }
+            Origin(
+                ingredient = tokens[0],
+                originCountry = tokens[1]
+            )
+        }
+    }
+
 }
 
 class MealDeserializerException(override val message: String) : Exception(message)
