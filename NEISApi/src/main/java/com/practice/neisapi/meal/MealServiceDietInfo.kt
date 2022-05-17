@@ -1,6 +1,6 @@
-package com.practice.hanbitlunch.api.meal
+package com.practice.neisapi.meal
 
-import com.practice.hanbitlunch.api.meal.pojo.MealResponse
+import com.practice.neisapi.meal.pojo.MealResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

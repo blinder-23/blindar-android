@@ -1,10 +1,10 @@
-package com.practice.hanbitlunch.api
+package com.practice.neisapi
 
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
-import com.practice.hanbitlunch.api.meal.MealDeserializer
-import com.practice.hanbitlunch.api.meal.pojo.MealResponse
-import com.practice.hanbitlunch.api.meal.MealServiceDietInfo
+import com.practice.neisapi.meal.MealDeserializer
+import com.practice.neisapi.meal.MealServiceDietInfo
+import com.practice.neisapi.meal.pojo.MealResponse
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

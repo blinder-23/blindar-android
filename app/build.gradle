@@ -107,6 +107,9 @@ android {
 dependencies {
     implementation 'com.github.mwy3055:hsk-ktx:1.0-beta01'
 
+    // Module dependency
+    implementation project(path: ':NEISApi')
+
     // KTX libraries
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.collection:collection-ktx:1.2.0'
@@ -167,9 +170,4 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
-
-    // Retrofit (Gson included)
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
 }

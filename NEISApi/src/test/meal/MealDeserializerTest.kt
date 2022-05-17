@@ -1,9 +1,15 @@
-package com.practice.hanbitlunch.api.meal
+package meal
 
 import com.google.gson.JsonParser
-import com.practice.hanbitlunch.api.meal.pojo.*
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import com.practice.neisapi.meal.MealDeserializer
+import com.practice.neisapi.meal.MealDeserializerException
+import com.practice.neisapi.meal.pojo.*
+import com.practice.neisapi.meal.seoulOfficeCode
+import com.practice.neisapi.meal.splitBrAndTrim
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import zipForEach
+
 
 class MealDeserializerTest {
 
@@ -58,8 +64,7 @@ class MealDeserializerTest {
                 message = "정상 처리되었습니다."
             )
         )
-        val headerElement =
-            sampleJson.get("mealServiceDietInfo").asJsonArray[0].asJsonObject
+        val headerElement = sampleJson.get("mealServiceDietInfo").asJsonArray[0].asJsonObject
 
         val actual = deserializer.parseHeader(headerElement)
         assertEquals(expected, actual)
@@ -67,8 +72,7 @@ class MealDeserializerTest {
 
     @Test
     fun parseMeal() {
-        val rowElement =
-            sampleJson.get("mealServiceDietInfo").asJsonArray[1].asJsonObject
+        val rowElement = sampleJson.get("mealServiceDietInfo").asJsonArray[1].asJsonObject
         val actual = deserializer.parseMeals(rowElement)[0]
         println(actual)
         assertEquals(seoulOfficeCode, actual.officeCode)
@@ -117,7 +121,7 @@ class MealDeserializerTest {
             )
         )
         val actualList = deserializer.parseMenus(string)
-        expectedList.zip(actualList).forEach { (expectedMenu, actualMenu) ->
+        expectedList.zipForEach(actualList) { expectedMenu, actualMenu ->
             assertEquals(expectedMenu, actualMenu)
         }
     }
@@ -137,7 +141,7 @@ class MealDeserializerTest {
         )
         val actualList = deserializer.parseOrigins(string)
         assertEquals(expectedList.size, actualList.size)
-        expectedList.zip(actualList).forEach { (expected, actual) ->
+        expectedList.zipForEach(actualList) { expected, actual ->
             assertEquals(expected, actual)
         }
     }
@@ -159,7 +163,7 @@ class MealDeserializerTest {
         )
         val actualList = deserializer.parseNutrients(nutrients)
         assertEquals(expectedList.size, actualList.size)
-        expectedList.zip(actualList).forEach { (expected, actual) ->
+        expectedList.zipForEach(actualList) { expected, actual ->
             assertEquals(expected, actual)
         }
     }

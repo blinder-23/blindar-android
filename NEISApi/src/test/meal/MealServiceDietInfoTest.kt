@@ -1,8 +1,10 @@
-package com.practice.hanbitlunch.api.meal
+package meal
 
-import com.practice.hanbitlunch.api.NEISRetrofit
+import com.practice.neisapi.NEISRetrofit
+import com.practice.neisapi.meal.hanbitSchoolCode
+import com.practice.neisapi.meal.seoulOfficeCode
 import kotlinx.coroutines.runBlocking
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class MealServiceDietInfoTest {
 
