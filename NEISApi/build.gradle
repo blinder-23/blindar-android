@@ -10,7 +10,7 @@ java {
 
 dependencies {
     // my own KTX library
-    implementation 'com.github.mwy3055:hsk-ktx:1.0-beta01'
+    implementation 'com.github.mwy3055:hsk-ktx:1.0-beta02'
 
     // Retrofit (Gson included)
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"

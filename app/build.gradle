@@ -105,7 +105,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.mwy3055:hsk-ktx:1.0-beta01'
+    implementation 'com.github.mwy3055:hsk-ktx:1.0-beta02'
 
     // Module dependency
     implementation project(path: ':NEISApi')
