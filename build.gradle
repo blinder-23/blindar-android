@@ -4,17 +4,18 @@ buildscript {
         compose_version = '1.1.1'
         hilt_version = '2.41'
         retrofit_version = '2.9.0'
-        coroutines_version = '1.6.1-native-mt'
+        coroutines_version = '1.6.2'
         lifecycle_version = '2.4.1'
         lifecycle_extension_version = '2.2.0'
         accompanist_version = '0.23.1'
+        junit_version = '5.8.2'
     }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.0'
+        classpath 'com.android.tools.build:gradle:7.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
         classpath 'org.jacoco:org.jacoco.core:0.8.7'

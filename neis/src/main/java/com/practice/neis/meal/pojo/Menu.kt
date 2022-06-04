@@ -1,4 +1,4 @@
-package com.practice.neisapi.meal.pojo
+package com.practice.neis.meal.pojo
 
 data class Menu(
     val name: String,

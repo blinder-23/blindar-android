@@ -1,10 +1,10 @@
-package com.practice.neisapi
+package com.practice.neis
 
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
-import com.practice.neisapi.meal.MealDeserializer
-import com.practice.neisapi.meal.MealServiceDietInfo
-import com.practice.neisapi.meal.pojo.MealResponse
+import com.practice.neis.meal.MealDeserializer
+import com.practice.neis.meal.MealServiceDietInfo
+import com.practice.neis.meal.pojo.MealResponse
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

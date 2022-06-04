@@ -1,10 +1,10 @@
-package com.practice.neisapi.meal
+package com.practice.neis.meal
 
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.practice.neisapi.meal.pojo.*
+import com.practice.neis.meal.pojo.*
 import java.lang.reflect.Type
 
 class MealDeserializer : JsonDeserializer<MealResponse> {

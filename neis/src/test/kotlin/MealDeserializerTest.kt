@@ -1,11 +1,11 @@
 package meal
 
 import com.google.gson.JsonParser
-import com.practice.neisapi.meal.MealDeserializer
-import com.practice.neisapi.meal.MealDeserializerException
-import com.practice.neisapi.meal.pojo.*
-import com.practice.neisapi.meal.seoulOfficeCode
-import com.practice.neisapi.meal.splitBrAndTrim
+import com.practice.neis.meal.MealDeserializer
+import com.practice.neis.meal.MealDeserializerException
+import com.practice.neis.meal.pojo.*
+import com.practice.neis.meal.seoulOfficeCode
+import com.practice.neis.meal.splitBrAndTrim
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import zipForEach

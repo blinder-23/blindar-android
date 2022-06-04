@@ -1,6 +1,6 @@
-package com.practice.neisapi.meal
+package com.practice.neis.meal
 
-import com.practice.neisapi.meal.pojo.MealResponse
+import com.practice.neis.meal.pojo.MealResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

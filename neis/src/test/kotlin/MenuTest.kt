@@ -1,6 +1,6 @@
 package meal
 
-import com.practice.neisapi.meal.pojo.Menu
+import com.practice.neis.meal.pojo.Menu
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
