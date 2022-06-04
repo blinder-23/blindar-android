@@ -8,6 +8,13 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+tasks.withType(Test.class).configureEach {
+    it.useJUnitPlatform()
+    jacoco {
+        excludes = ["*"]
+    }
+}
+
 dependencies {
     // my own KTX library
     implementation 'com.github.mwy3055:hsk-ktx:1.0-beta02'
