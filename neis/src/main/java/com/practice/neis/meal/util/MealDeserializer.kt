@@ -1,4 +1,4 @@
-package com.practice.neis.meal
+package com.practice.neis.meal.util
 
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -46,11 +46,11 @@ class MealDeserializer : JsonDeserializer<MealResponseModel> {
         )
     }
 
-    fun parseMeals(rowJson: JsonObject): List<Meal> {
+    fun parseMeals(rowJson: JsonObject): List<MealModel> {
         val rows = rowJson.get("row").asJsonArray
         return rows.map { row ->
             with(row.asJsonObject) {
-                Meal(
+                MealModel(
                     officeCode = get("ATPT_OFCDC_SC_CODE").asString,
                     officeName = get("ATPT_OFCDC_SC_NM").asString,
                     schoolCode = get("SD_SCHUL_CODE").asInt,
@@ -75,12 +75,12 @@ class MealDeserializer : JsonDeserializer<MealResponseModel> {
         return calorieString.split(" ")[0].toDouble()
     }
 
-    fun parseMenus(menusString: String): List<Menu> {
+    fun parseMenus(menusString: String): List<MenuModel> {
         val menuAllergic = menusString.splitBrAndTrim()
         return menuAllergic.map { parseMenu(it) }
     }
 
-    private fun parseMenu(menuString: String): Menu {
+    private fun parseMenu(menuString: String): MenuModel {
         val split = menuString.split("(")
         val menuName = split[0].trim()
         val allergicNumbers = if (split.size > 1) {
@@ -88,7 +88,7 @@ class MealDeserializer : JsonDeserializer<MealResponseModel> {
         } else {
             emptyList()
         }
-        return Menu(
+        return MenuModel(
             name = menuName,
             allergic = allergicNumbers
         )
@@ -100,30 +100,30 @@ class MealDeserializer : JsonDeserializer<MealResponseModel> {
         return allergicToken.map { token -> token.toInt() }
     }
 
-    fun parseOrigins(origins: String): List<Origin> {
+    fun parseOrigins(origins: String): List<OriginModel> {
         return origins.splitBrAndTrim().map { origin ->
             parseOrigin(origin)
         }
     }
 
-    private fun parseOrigin(origin: String): Origin {
+    private fun parseOrigin(origin: String): OriginModel {
         val tokens = origin.split(":").map { it.trim() }
-        return Origin(
+        return OriginModel(
             ingredient = tokens[0],
             originCountry = tokens[1]
         )
     }
 
-    fun parseNutrients(nutrients: String): List<Nutrient> {
+    fun parseNutrients(nutrients: String): List<NutrientModel> {
         return nutrients.splitBrAndTrim().map { nutrient ->
             parseNutrient(nutrient)
         }
     }
 
-    private fun parseNutrient(nutrient: String): Nutrient {
+    private fun parseNutrient(nutrient: String): NutrientModel {
         val nutrientBracketRemoved = nutrient.replace("[(): ]".toRegex(), " ")
         val tokens = nutrientBracketRemoved.split(" ")
-        return Nutrient(
+        return NutrientModel(
             name = tokens[0],
             unit = tokens[1],
             amount = tokens.last().toDouble()

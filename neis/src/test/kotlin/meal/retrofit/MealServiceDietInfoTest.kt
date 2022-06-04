@@ -1,8 +1,8 @@
-package meal
+package meal.retrofit
 
-import com.practice.neis.NEISRetrofit
-import com.practice.neis.meal.hanbitSchoolCode
-import com.practice.neis.meal.seoulOfficeCode
+import com.practice.neis.meal.retrofit.NEISRetrofit
+import com.practice.neis.meal.retrofit.hanbitSchoolCode
+import com.practice.neis.meal.retrofit.seoulOfficeCode
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 

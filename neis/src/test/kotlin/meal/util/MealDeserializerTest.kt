@@ -1,11 +1,11 @@
-package meal
+package meal.util
 
 import com.google.gson.JsonParser
-import com.practice.neis.meal.MealDeserializer
-import com.practice.neis.meal.MealDeserializerException
+import com.practice.neis.meal.util.MealDeserializer
+import com.practice.neis.meal.util.MealDeserializerException
 import com.practice.neis.meal.pojo.*
-import com.practice.neis.meal.seoulOfficeCode
-import com.practice.neis.meal.splitBrAndTrim
+import com.practice.neis.meal.retrofit.seoulOfficeCode
+import com.practice.neis.meal.util.splitBrAndTrim
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import zipForEach
@@ -111,11 +111,11 @@ class MealDeserializerTest {
     fun parseMenu() {
         val string = "롤케이크  (1.2.5.6.)<br/>오리불고기  (5.6.13.)"
         val expectedList = listOf(
-            Menu(
+            MenuModel(
                 name = "롤케이크",
                 allergic = listOf(1, 2, 5, 6)
             ),
-            Menu(
+            MenuModel(
                 name = "오리불고기",
                 allergic = listOf(5, 6, 13)
             )
@@ -130,11 +130,11 @@ class MealDeserializerTest {
     fun parseOrigins() {
         val string = "쌀 : 국내산<br/>김치류 : 국내산<br/>"
         val expectedList = listOf(
-            Origin(
+            OriginModel(
                 ingredient = "쌀",
                 originCountry = "국내산",
             ),
-            Origin(
+            OriginModel(
                 ingredient = "김치류",
                 originCountry = "국내산",
             ),
@@ -150,12 +150,12 @@ class MealDeserializerTest {
     fun parseNutrients() {
         val nutrients = "탄수화물(g) : 136.2<br/>단백질(g) : 37.9<br/>"
         val expectedList = listOf(
-            Nutrient(
+            NutrientModel(
                 name = "탄수화물",
                 unit = "g",
                 amount = 136.2,
             ),
-            Nutrient(
+            NutrientModel(
                 name = "단백질",
                 unit = "g",
                 amount = 37.9

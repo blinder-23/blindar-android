@@ -1,4 +1,4 @@
-package meal
+package meal.pojo
 
 import com.practice.neis.meal.pojo.MenuModel
 import org.junit.jupiter.api.Assertions.assertEquals

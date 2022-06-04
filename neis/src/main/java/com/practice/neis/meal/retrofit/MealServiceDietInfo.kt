@@ -1,4 +1,4 @@
-package com.practice.neis.meal
+package com.practice.neis.meal.retrofit
 
 import com.practice.neis.meal.pojo.MealResponseModel
 import retrofit2.http.GET
