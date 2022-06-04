@@ -1,6 +1,6 @@
 package com.practice.neis.meal
 
-import com.practice.neis.meal.pojo.MealResponse
+import com.practice.neis.meal.pojo.MealResponseModel
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -15,7 +15,7 @@ interface MealServiceDietInfo {
         @Query("ATPT_OFCDC_SC_CODE") officeCode: String,
         @Query("SD_SCHUL_CODE") schoolCode: String,
         @Query("MLSV_YMD") mealYearMonth: String,
-    ): MealResponse
+    ): MealResponseModel
 }
 
 const val seoulOfficeCode = "B10"

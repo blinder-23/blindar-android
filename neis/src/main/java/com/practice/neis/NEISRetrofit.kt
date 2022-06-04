@@ -1,10 +1,9 @@
-package com.practice.neis
+package com.practice.neis.meal.retrofit
 
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
-import com.practice.neis.meal.MealDeserializer
-import com.practice.neis.meal.MealServiceDietInfo
-import com.practice.neis.meal.pojo.MealResponse
+import com.practice.neis.meal.util.MealDeserializer
+import com.practice.neis.meal.pojo.MealResponseModel
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -37,7 +36,7 @@ object NEISRetrofit {
 
     val mealApi: MealServiceDietInfo = getRetrofit(
         baseUrl = "https://open.neis.go.kr/hub/",
-        responseType = MealResponse::class.java,
+        responseType = MealResponseModel::class.java,
         typeAdapter = MealDeserializer()
     ).create(MealServiceDietInfo::class.java)
 }

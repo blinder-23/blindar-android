@@ -7,12 +7,12 @@ import com.google.gson.JsonObject
 import com.practice.neis.meal.pojo.*
 import java.lang.reflect.Type
 
-class MealDeserializer : JsonDeserializer<MealResponse> {
+class MealDeserializer : JsonDeserializer<MealResponseModel> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): MealResponse {
+    ): MealResponseModel {
         val response = json?.asJsonObject?.get("mealServiceDietInfo")?.asJsonArray
             ?: throw MealDeserializerException("Json is $json")
 
@@ -22,7 +22,7 @@ class MealDeserializer : JsonDeserializer<MealResponse> {
         val rowObject = response[1].asJsonObject
         val row = parseMeals(rowObject)
 
-        return MealResponse(
+        return MealResponseModel(
             header = header,
             mealData = row
         )

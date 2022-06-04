@@ -1,6 +1,6 @@
 package com.practice.neis.meal.pojo
 
-data class Menu(
+data class MenuModel(
     val name: String,
     val allergic: List<Int>
 ) {

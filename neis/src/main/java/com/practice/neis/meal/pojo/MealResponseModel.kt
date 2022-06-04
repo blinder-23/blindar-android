@@ -1,6 +1,6 @@
 package com.practice.neis.meal.pojo
 
-data class MealResponse(
+data class MealResponseModel(
     val header: MealHeader,
-    val mealData: List<Meal>
+    val mealData: List<MealModel>
 )

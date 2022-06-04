@@ -1,6 +1,6 @@
 package com.practice.neis.meal.pojo
 
-data class Meal(
+data class MealModel(
     val officeCode: String,
     val officeName: String,
     val schoolCode: Int,
@@ -9,10 +9,10 @@ data class Meal(
     val mealName: String,
     val date: String,
     val numberStudents: Int,
-    val menu: List<Menu>,
-    val originCountries: List<Origin>,
+    val menu: List<MenuModel>,
+    val originCountries: List<OriginModel>,
     val calorie: Double,
-    val nutrients: List<Nutrient>,
+    val nutrients: List<NutrientModel>,
     val fromDate: String,
     val endDate: String,
 )
