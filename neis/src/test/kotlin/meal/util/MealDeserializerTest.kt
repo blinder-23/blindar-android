@@ -1,10 +1,12 @@
 package meal.util
 
 import com.google.gson.JsonParser
+import com.practice.neis.common.pojo.Header
+import com.practice.neis.common.pojo.ResultCode
+import com.practice.neis.common.seoulOfficeCode
 import com.practice.neis.meal.util.MealDeserializer
 import com.practice.neis.meal.util.MealDeserializerException
 import com.practice.neis.meal.pojo.*
-import com.practice.neis.meal.retrofit.seoulOfficeCode
 import com.practice.neis.meal.util.splitBrAndTrim
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -57,9 +59,9 @@ class MealDeserializerTest {
 
     @Test
     fun parseHeader() {
-        val expected = MealHeader(
+        val expected = Header(
             listTotalCount = 20,
-            resultCode = MealResultCode(
+            resultCode = ResultCode(
                 code = "INFO-000",
                 message = "정상 처리되었습니다."
             )

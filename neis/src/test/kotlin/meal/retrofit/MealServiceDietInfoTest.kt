@@ -1,8 +1,8 @@
 package meal.retrofit
 
+import com.practice.neis.common.hanbitSchoolCode
 import com.practice.neis.meal.retrofit.NEISRetrofit
-import com.practice.neis.meal.retrofit.hanbitSchoolCode
-import com.practice.neis.meal.retrofit.seoulOfficeCode
+import com.practice.neis.common.seoulOfficeCode
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 

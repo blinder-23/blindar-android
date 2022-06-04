@@ -4,6 +4,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import com.practice.neis.common.parseHeader
 import com.practice.neis.meal.pojo.*
 import java.lang.reflect.Type
 
@@ -25,24 +26,6 @@ class MealDeserializer : JsonDeserializer<MealResponseModel> {
         return MealResponseModel(
             header = header,
             mealData = row
-        )
-    }
-
-    fun parseHeader(headJson: JsonObject): MealHeader {
-        val heads = headJson.get("head").asJsonArray
-
-        val listTotalCount = heads[0].getAsJsonObject("list_total_count").asInt
-
-        val resultObj = heads[1].getAsJsonObject("RESULT").asJsonObject
-        val resultCode = resultObj.get("CODE").asString
-        val resultMessage = resultObj.get("MESSAGE").asString
-
-        return MealHeader(
-            listTotalCount = listTotalCount,
-            resultCode = MealResultCode(
-                code = resultCode,
-                message = resultMessage
-            )
         )
     }
 

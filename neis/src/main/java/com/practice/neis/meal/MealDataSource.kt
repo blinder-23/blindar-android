@@ -1,10 +1,10 @@
 package com.practice.neis.meal
 
+import com.practice.neis.common.getYearMonthString
+import com.practice.neis.common.hanbitSchoolCode
+import com.practice.neis.common.seoulOfficeCode
 import com.practice.neis.meal.pojo.MealModel
-import com.practice.neis.meal.pojo.MealResultCode
 import com.practice.neis.meal.retrofit.NEISRetrofit
-import com.practice.neis.meal.retrofit.hanbitSchoolCode
-import com.practice.neis.meal.retrofit.seoulOfficeCode
 
 class MealDataSource {
 
@@ -18,16 +18,10 @@ class MealDataSource {
         )
 
         val resultStatus = result.header.resultCode
-        if (resultStatus.code != MealResultCode.successCode) {
-            println(resultStatus)
+        if (resultStatus.fail) {
             throw MealDataSourceException(resultStatus.message)
         }
         return result.mealData
-    }
-
-    private fun getYearMonthString(year: Int, month: Int): String {
-        val formattedMonth = month.toString().padStart(2, '0') // 01, 02, ...
-        return "$year$formattedMonth"
     }
 }
 
