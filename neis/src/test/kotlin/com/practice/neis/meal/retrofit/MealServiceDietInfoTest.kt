@@ -1,5 +1,6 @@
 package com.practice.neis.meal.retrofit
 
+import com.practice.neis.common.NEISRetrofit
 import com.practice.neis.common.hanbitSchoolCode
 import com.practice.neis.common.seoulOfficeCode
 import kotlinx.coroutines.runBlocking

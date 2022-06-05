@@ -1,10 +1,11 @@
 package com.practice.neis.meal
 
+import com.practice.neis.common.NEISRetrofit
 import com.practice.neis.common.getYearMonthString
 import com.practice.neis.common.hanbitSchoolCode
 import com.practice.neis.common.seoulOfficeCode
 import com.practice.neis.meal.pojo.MealModel
-import com.practice.neis.meal.retrofit.NEISRetrofit
+import com.practice.neis.meal.retrofit.mealApi
 
 class MealDataSource {
 
