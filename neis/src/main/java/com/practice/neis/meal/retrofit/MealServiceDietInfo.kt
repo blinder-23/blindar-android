@@ -1,7 +1,9 @@
 package com.practice.neis.meal.retrofit
 
+import com.practice.neis.common.NEISRetrofit
 import com.practice.neis.common.apiKey
 import com.practice.neis.meal.pojo.MealResponseModel
+import com.practice.neis.meal.util.MealDeserializer
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -19,3 +21,8 @@ interface MealServiceDietInfo {
     ): MealResponseModel
 }
 
+val NEISRetrofit.mealApi: MealServiceDietInfo
+    get() = getRetrofit(
+        responseType = MealResponseModel::class.java,
+        typeAdapter = MealDeserializer()
+    ).create(MealServiceDietInfo::class.java)
