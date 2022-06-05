@@ -1,13 +1,13 @@
-package meal.util
+package com.practice.neis.meal.util
 
-import com.google.gson.JsonParser
+import com.practice.neis.common.parseHeader
 import com.practice.neis.common.pojo.Header
 import com.practice.neis.common.pojo.ResultCode
 import com.practice.neis.common.seoulOfficeCode
-import com.practice.neis.meal.util.MealDeserializer
-import com.practice.neis.meal.util.MealDeserializerException
-import com.practice.neis.meal.pojo.*
-import com.practice.neis.meal.util.splitBrAndTrim
+import com.practice.neis.common.toJson
+import com.practice.neis.meal.pojo.MenuModel
+import com.practice.neis.meal.pojo.NutrientModel
+import com.practice.neis.meal.pojo.OriginModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import zipForEach
@@ -55,7 +55,7 @@ class MealDeserializerTest {
         ]
     }
     """
-    private val sampleJson = JsonParser().parse(sampleJsonString).asJsonObject
+    private val sampleJson = sampleJsonString.toJson()
 
     @Test
     fun parseHeader() {
@@ -68,7 +68,7 @@ class MealDeserializerTest {
         )
         val headerElement = sampleJson.get("mealServiceDietInfo").asJsonArray[0].asJsonObject
 
-        val actual = deserializer.parseHeader(headerElement)
+        val actual = parseHeader(headerElement)
         assertEquals(expected, actual)
     }
 

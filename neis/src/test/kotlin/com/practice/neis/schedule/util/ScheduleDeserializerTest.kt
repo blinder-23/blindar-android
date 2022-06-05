@@ -1,8 +1,7 @@
-package schedule
+package com.practice.neis.schedule.util
 
 import com.practice.neis.common.toJson
 import com.practice.neis.schedule.pojo.ScheduleModel
-import com.practice.neis.schedule.util.ScheduleDeserializer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

@@ -1,6 +1,5 @@
-package meal
+package com.practice.neis.meal
 
-import com.practice.neis.meal.MealDataSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
