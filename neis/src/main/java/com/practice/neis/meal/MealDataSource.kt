@@ -26,4 +26,4 @@ class MealDataSource {
     }
 }
 
-class MealDataSourceException(override val message: String = "") : Exception(message)
+internal class MealDataSourceException(override val message: String = "") : Exception(message)
