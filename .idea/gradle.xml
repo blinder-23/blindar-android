@@ -10,8 +10,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/NEISApi" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/neis" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -14,6 +14,7 @@ task {
 }
 
 tasks.withType(Test.class).configureEach {
+    it.useJUnitPlatform()
     jacoco {
         excludes = ["*"]
     }
@@ -47,12 +48,12 @@ configurations.all {
 }
 
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
         applicationId "com.practice.hanbitlunch"
-        minSdk 21
-        targetSdk 31
+        minSdk 23
+        targetSdk 32
         versionCode 1
         versionName "1.0"
 
@@ -105,10 +106,13 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.mwy3055:hsk-ktx:1.0-beta01'
+    // mwy3055 library
+    implementation 'com.github.mwy3055:hsk-ktx:1.0-beta02'
+    implementation 'com.github.mwy3055.violet-dreams:violet-dreams-core:0.1.2'
+    implementation 'com.github.mwy3055.violet-dreams:violet-dreams-ui:0.1.2'
 
     // Module dependency
-    implementation project(path: ':NEISApi')
+    implementation project(path: ':neis')
 
     // KTX libraries
     implementation 'androidx.core:core-ktx:1.7.0'
@@ -151,7 +155,10 @@ dependencies {
     implementation "androidx.paging:paging-compose:1.0.0-alpha14"
 
     // Unit Test
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:$junit_version"
+    testImplementation 'org.assertj:assertj-core:3.23.1'
     androidTestUtil 'androidx.test:orchestrator:1.4.1'
 
     // Instrumented Test
