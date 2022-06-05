@@ -10,9 +10,6 @@ java {
 
 tasks.withType(Test.class).configureEach {
     it.useJUnitPlatform()
-    jacoco {
-        excludes = ["*"]
-    }
 }
 
 dependencies {
