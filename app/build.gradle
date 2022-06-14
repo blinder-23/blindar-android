@@ -115,7 +115,7 @@ dependencies {
     implementation project(path: ':neis')
 
     // KTX libraries
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.collection:collection-ktx:1.2.0'
     implementation "androidx.palette:palette-ktx:1.0.0"
 
@@ -152,7 +152,7 @@ dependencies {
     // UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     // Integration with Paging
-    implementation "androidx.paging:paging-compose:1.0.0-alpha14"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha15"
 
     // Unit Test
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
