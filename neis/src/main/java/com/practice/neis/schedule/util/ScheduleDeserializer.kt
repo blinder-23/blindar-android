@@ -1,19 +1,22 @@
 package com.practice.neis.schedule.util
 
-import com.google.gson.*
-import com.practice.neis.common.parseHeader
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonElement
+import com.google.gson.JsonNull
+import com.google.gson.JsonObject
+import com.practice.neis.common.NeisDeserializer
 import com.practice.neis.schedule.pojo.ScheduleModel
 import com.practice.neis.schedule.pojo.ScheduleResponseModel
 import java.lang.reflect.Type
 
-class ScheduleDeserializer : JsonDeserializer<ScheduleResponseModel> {
+class ScheduleDeserializer : NeisDeserializer<ScheduleResponseModel> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
     ): ScheduleResponseModel {
         val response = json?.asJsonObject?.get("SchoolSchedule")?.asJsonArray
-            ?: throw ScheduleDeserializerException("Json is $json")
+            ?: throw ScheduleDeserializerException(parseErrorMessage(json))
 
         val headerObject = response[0].asJsonObject
         val header = parseHeader(headerObject)

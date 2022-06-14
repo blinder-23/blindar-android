@@ -1,21 +1,20 @@
 package com.practice.neis.meal.util
 
 import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.practice.neis.common.parseHeader
+import com.practice.neis.common.NeisDeserializer
 import com.practice.neis.meal.pojo.*
 import java.lang.reflect.Type
 
-class MealDeserializer : JsonDeserializer<MealResponseModel> {
+class MealDeserializer : NeisDeserializer<MealResponseModel> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
     ): MealResponseModel {
         val response = json?.asJsonObject?.get("mealServiceDietInfo")?.asJsonArray
-            ?: throw MealDeserializerException("Json is $json")
+            ?: throw MealDeserializerException(parseErrorMessage(json))
 
         val headerObject = response[0].asJsonObject
         val header = parseHeader(headerObject)
