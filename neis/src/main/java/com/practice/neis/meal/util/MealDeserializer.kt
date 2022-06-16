@@ -115,8 +115,6 @@ class MealDeserializer : NeisDeserializer<MealResponseModel> {
 
 class MealDeserializerException(override val message: String) : Exception(message)
 
-fun JsonElement.getAsJsonObject(key: String): JsonElement = this.asJsonObject.get(key)
-
 fun String.splitBrAndTrim(): List<String> =
     split("<br/>")
         .map { it.trim() }
