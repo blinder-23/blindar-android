@@ -24,7 +24,7 @@ class MealDeserializer : NeisDeserializer<MealResponseModel> {
 
         return MealResponseModel(
             header = header,
-            mealData = row
+            data = row
         )
     }
 

@@ -26,7 +26,7 @@ class ScheduleDeserializer : NeisDeserializer<ScheduleResponseModel> {
 
         return ScheduleResponseModel(
             header = header,
-            scheduleData = row
+            data = row
         )
     }
 

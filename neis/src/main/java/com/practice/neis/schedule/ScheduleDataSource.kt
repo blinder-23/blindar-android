@@ -16,7 +16,7 @@ class ScheduleDataSource {
         if (resultStatus.fail) {
             throw ScheduleDataSourceException(resultStatus.message)
         }
-        return result.scheduleData
+        return result.data
     }
 
 }

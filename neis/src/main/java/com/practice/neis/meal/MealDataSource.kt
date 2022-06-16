@@ -16,7 +16,7 @@ class MealDataSource {
         if (resultStatus.fail) {
             throw MealDataSourceException(resultStatus.message)
         }
-        return result.mealData
+        return result.data
     }
 }
 
