@@ -75,7 +75,7 @@ class MealDeserializerTest {
     @Test
     fun parseMeal() {
         val rowElement = sampleJson.get("mealServiceDietInfo").asJsonArray[1].asJsonObject
-        val actual = deserializer.parseMeals(rowElement)[0]
+        val actual = deserializer.parseData(rowElement)[0]
         println(actual)
         assertEquals(seoulOfficeCode, actual.officeCode)
     }

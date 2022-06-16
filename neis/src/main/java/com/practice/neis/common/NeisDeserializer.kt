@@ -1,13 +1,44 @@
 package com.practice.neis.common
 
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
+import com.google.gson.*
 import com.practice.neis.common.pojo.Header
+import com.practice.neis.common.pojo.ResponseModel
 import com.practice.neis.common.pojo.ResultCode
-import com.practice.neis.meal.util.getAsJsonObject
+import java.lang.reflect.Type
 
-interface NeisDeserializer<T> : JsonDeserializer<T> {
+interface NeisDeserializer<T, R : ResponseModel<T>> : JsonDeserializer<R> {
+    val dataKey: String
+    val createResult: (Header, List<T>) -> R
+    val exception: (String) -> Exception
+
+    fun parseData(jsonObj: JsonObject): List<T>
+
+    override fun deserialize(
+        json: JsonElement?,
+        typeOfT: Type?,
+        context: JsonDeserializationContext?
+    ): R {
+        val jsonObjects = checkIfDataExists(json, dataKey).map { it.asJsonObject }
+
+        val header = parseHeader(jsonObjects[0])
+        val data = parseData(jsonObjects[1])
+        return createResult(header, data)
+    }
+
+    /**
+     * Returns the main data object if exists,
+     * throw [NullPointerException] otherwise
+     */
+    fun checkIfDataExists(json: JsonElement?, dataKey: String): JsonArray {
+        return json?.asJsonObject?.get(dataKey)?.asJsonArray
+            ?: throwException(json)
+    }
+
+    private fun throwException(json: JsonElement?): JsonArray {
+        val message = parseErrorMessage(json)
+        throw exception(message)
+    }
+
     fun parseHeader(headJson: JsonObject): Header {
         val heads = headJson.get("head").asJsonArray
 

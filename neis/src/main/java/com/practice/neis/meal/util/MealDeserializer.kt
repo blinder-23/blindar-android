@@ -1,35 +1,17 @@
 package com.practice.neis.meal.util
 
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.practice.neis.common.NeisDeserializer
+import com.practice.neis.common.pojo.Header
 import com.practice.neis.meal.pojo.*
-import java.lang.reflect.Type
 
-class MealDeserializer : NeisDeserializer<MealResponseModel> {
-    override fun deserialize(
-        json: JsonElement?,
-        typeOfT: Type?,
-        context: JsonDeserializationContext?
-    ): MealResponseModel {
-        val response = json?.asJsonObject?.get("mealServiceDietInfo")?.asJsonArray
-            ?: throw MealDeserializerException(parseErrorMessage(json))
+class MealDeserializer : NeisDeserializer<MealModel, MealResponseModel> {
+    override val dataKey: String = "mealServiceDietInfo"
+    override val createResult: (Header, List<MealModel>) -> MealResponseModel = ::MealResponseModel
+    override val exception: (String) -> Exception = ::MealDeserializerException
 
-        val headerObject = response[0].asJsonObject
-        val header = parseHeader(headerObject)
-
-        val rowObject = response[1].asJsonObject
-        val row = parseMeals(rowObject)
-
-        return MealResponseModel(
-            header = header,
-            data = row
-        )
-    }
-
-    fun parseMeals(rowJson: JsonObject): List<MealModel> {
-        val rows = rowJson.get("row").asJsonArray
+    override fun parseData(jsonObj: JsonObject): List<MealModel> {
+        val rows = jsonObj.get("row").asJsonArray
         return rows.map { row ->
             with(row.asJsonObject) {
                 MealModel(
