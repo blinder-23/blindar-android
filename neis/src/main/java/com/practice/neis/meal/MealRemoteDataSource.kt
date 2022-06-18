@@ -5,7 +5,7 @@ import com.practice.neis.common.getYearMonthString
 import com.practice.neis.meal.pojo.MealModel
 import com.practice.neis.meal.retrofit.mealApi
 
-class MealDataSource {
+class MealRemoteDataSource {
 
     private val retrofit = NEISRetrofit.mealApi
 
