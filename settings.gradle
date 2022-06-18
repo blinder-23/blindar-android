@@ -16,3 +16,4 @@ rootProject.name = "Hanbit lunch"
 include ':app'
 include ':neis'
 include ':neis:di'
+include ':database'
