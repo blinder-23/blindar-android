@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "Hanbit lunch"
 include ':app'
 include ':neis'
+include ':neis:di'
