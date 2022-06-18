@@ -23,7 +23,7 @@ interface MealServiceDietInfo {
     ): MealResponseModel
 }
 
-val NEISRetrofit.mealApi: MealServiceDietInfo
+internal val NEISRetrofit.mealApi: MealServiceDietInfo
     get() = getRetrofit(
         responseType = MealResponseModel::class.java,
         typeAdapter = MealDeserializer()

@@ -23,7 +23,7 @@ interface ScheduleInfo {
     ): ScheduleResponseModel
 }
 
-val NEISRetrofit.scheduleApi: ScheduleInfo
+internal val NEISRetrofit.scheduleApi: ScheduleInfo
     get() = getRetrofit(
         responseType = ScheduleResponseModel::class.java,
         typeAdapter = ScheduleDeserializer()
