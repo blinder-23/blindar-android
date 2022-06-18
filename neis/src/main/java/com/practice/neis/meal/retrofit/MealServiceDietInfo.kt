@@ -17,8 +17,8 @@ interface MealServiceDietInfo {
         @Query("Type") type: String = "json",
         @Query("pIndex") pageIndex: Int = 1,
         @Query("pSize") pageSize: Int = 100,
-        @Query("ATPT_OFCDC_SC_CODE") officeCode: String= seoulOfficeCode,
-        @Query("SD_SCHUL_CODE") schoolCode: String= hanbitSchoolCode,
+        @Query("ATPT_OFCDC_SC_CODE") officeCode: String = seoulOfficeCode,
+        @Query("SD_SCHUL_CODE") schoolCode: String = hanbitSchoolCode,
         @Query("MLSV_YMD") mealYearMonth: String,
     ): MealResponseModel
 }
