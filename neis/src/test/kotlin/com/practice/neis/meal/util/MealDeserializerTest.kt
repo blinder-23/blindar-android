@@ -1,6 +1,5 @@
 package com.practice.neis.meal.util
 
-import com.practice.neis.common.parseHeader
 import com.practice.neis.common.pojo.Header
 import com.practice.neis.common.pojo.ResultCode
 import com.practice.neis.common.seoulOfficeCode
@@ -62,20 +61,21 @@ class MealDeserializerTest {
         val expected = Header(
             listTotalCount = 20,
             resultCode = ResultCode(
-                code = "INFO-000",
+                type = "INFO",
+                code = "000",
                 message = "정상 처리되었습니다."
             )
         )
         val headerElement = sampleJson.get("mealServiceDietInfo").asJsonArray[0].asJsonObject
 
-        val actual = parseHeader(headerElement)
+        val actual = deserializer.parseHeader(headerElement)
         assertEquals(expected, actual)
     }
 
     @Test
     fun parseMeal() {
         val rowElement = sampleJson.get("mealServiceDietInfo").asJsonArray[1].asJsonObject
-        val actual = deserializer.parseMeals(rowElement)[0]
+        val actual = deserializer.parseData(rowElement)[0]
         println(actual)
         assertEquals(seoulOfficeCode, actual.officeCode)
     }

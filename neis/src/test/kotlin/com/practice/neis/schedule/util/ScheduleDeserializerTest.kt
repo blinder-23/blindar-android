@@ -55,7 +55,7 @@ class ScheduleDeserializerTest {
             )
         )
 
-        val actual = deserializer.parseSchedules(message.toJson())
+        val actual = deserializer.parseData(message.toJson())
         assertEquals(expected, actual)
     }
 

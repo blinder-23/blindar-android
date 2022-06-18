@@ -1,34 +1,21 @@
 package com.practice.neis.schedule.util
 
-import com.google.gson.*
-import com.practice.neis.common.parseHeader
+import com.google.gson.JsonElement
+import com.google.gson.JsonNull
+import com.google.gson.JsonObject
+import com.practice.neis.common.NeisDeserializer
+import com.practice.neis.common.pojo.Header
 import com.practice.neis.schedule.pojo.ScheduleModel
 import com.practice.neis.schedule.pojo.ScheduleResponseModel
-import java.lang.reflect.Type
 
-class ScheduleDeserializer : JsonDeserializer<ScheduleResponseModel> {
-    override fun deserialize(
-        json: JsonElement?,
-        typeOfT: Type?,
-        context: JsonDeserializationContext?
-    ): ScheduleResponseModel {
-        val response = json?.asJsonObject?.get("SchoolSchedule")?.asJsonArray
-            ?: throw ScheduleDeserializerException("Json is $json")
+class ScheduleDeserializer : NeisDeserializer<ScheduleModel, ScheduleResponseModel> {
+    override val dataKey: String = "SchoolSchedule"
+    override val createResult: (Header, List<ScheduleModel>) -> ScheduleResponseModel =
+        ::ScheduleResponseModel
+    override val exception: (String) -> Exception = ::ScheduleDeserializerException
 
-        val headerObject = response[0].asJsonObject
-        val header = parseHeader(headerObject)
-
-        val rowObject = response[1].asJsonObject
-        val row = parseSchedules(rowObject)
-
-        return ScheduleResponseModel(
-            header = header,
-            scheduleData = row
-        )
-    }
-
-    fun parseSchedules(rowJson: JsonObject): List<ScheduleModel> {
-        val rows = rowJson.get("row").asJsonArray
+    override fun parseData(jsonObj: JsonObject): List<ScheduleModel> {
+        val rows = jsonObj.get("row").asJsonArray
         return rows.map { row ->
             with(row.asJsonObject) {
                 ScheduleModel(

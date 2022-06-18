@@ -5,7 +5,7 @@ import com.practice.neis.common.getYearMonthString
 import com.practice.neis.schedule.pojo.ScheduleModel
 import com.practice.neis.schedule.retrofit.scheduleApi
 
-class ScheduleDataSource {
+class ScheduleRemoteDataSource {
 
     private val api = NEISRetrofit.scheduleApi
 
@@ -14,11 +14,11 @@ class ScheduleDataSource {
 
         val resultStatus = result.header.resultCode
         if (resultStatus.fail) {
-            throw ScheduleDataSourceException(resultStatus.message)
+            throw ScheduleRemoteDataSourceException(resultStatus.message)
         }
-        return result.scheduleData
+        return result.data
     }
 
 }
 
-internal class ScheduleDataSourceException(override val message: String) : Exception(message)
+internal class ScheduleRemoteDataSourceException(override val message: String) : Exception(message)
