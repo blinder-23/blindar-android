@@ -2,7 +2,7 @@ package com.practice.neis.schedule
 
 import com.practice.neis.schedule.pojo.ScheduleModel
 
-class ScheduleRemoteRepository(private val scheduleRemoteDataSource: ScheduleRemoteDataSource = ScheduleRemoteDataSource()) {
+class ScheduleRemoteRepository(private val scheduleRemoteDataSource: ScheduleRemoteDataSource) {
 
     suspend fun getSchedules(year: Int, month: Int): List<ScheduleModel> {
         return try {
