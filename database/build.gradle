@@ -38,7 +38,7 @@ android {
 
 dependencies {
     // my library
-    implementation 'com.github.mwy3055:hsk-ktx:1.0-beta02'
+    implementation "com.github.mwy3055:hsk-ktx:$hsk_ktx_version"
 
     // Room
     implementation "androidx.room:room-runtime:$room_version"

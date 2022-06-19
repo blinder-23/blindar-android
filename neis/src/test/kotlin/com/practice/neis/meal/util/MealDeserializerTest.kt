@@ -1,5 +1,6 @@
 package com.practice.neis.meal.util
 
+import com.hsk.ktx.zipForEach
 import com.practice.neis.common.pojo.Header
 import com.practice.neis.common.pojo.ResultCode
 import com.practice.neis.common.seoulOfficeCode
@@ -9,7 +10,6 @@ import com.practice.neis.meal.pojo.NutrientModel
 import com.practice.neis.meal.pojo.OriginModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import zipForEach
 
 
 class MealDeserializerTest {

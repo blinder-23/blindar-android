@@ -107,7 +107,7 @@ android {
 
 dependencies {
     // mwy3055 library
-    implementation 'com.github.mwy3055:hsk-ktx:1.0-beta02'
+    implementation "com.github.mwy3055:hsk-ktx:$hsk_ktx_version"
     implementation 'com.github.mwy3055.violet-dreams:violet-dreams-core:0.1.2'
     implementation 'com.github.mwy3055.violet-dreams:violet-dreams-ui:0.1.2'
 
