@@ -8,10 +8,6 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-tasks.withType(Test.class).configureEach {
-    it.useJUnitPlatform()
-}
-
 dependencies {
     // my own KTX library
     implementation "com.github.mwy3055:hsk-ktx:$hsk_ktx_version"

@@ -35,6 +35,12 @@ allprojects {
     }
 }
 
+subprojects {
+    tasks.withType(Test.class).configureEach {
+        it.useJUnitPlatform()
+    }
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
