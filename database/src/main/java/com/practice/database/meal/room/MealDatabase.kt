@@ -7,5 +7,3 @@ import androidx.room.RoomDatabase
 abstract class MealDatabase : RoomDatabase() {
     abstract fun mealDao(): MealDao
 }
-
-internal const val databaseName = "meal-database"
