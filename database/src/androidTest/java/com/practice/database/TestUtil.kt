@@ -3,7 +3,7 @@ package com.practice.database
 import com.practice.database.meal.room.MealEntityRoom
 
 object TestUtil {
-    fun createMeal(count: Int): List<MealEntityRoom> {
+    fun createMealEntityRoom(count: Int): List<MealEntityRoom> {
         return (0 until count).map {
             MealEntityRoom(
                 date = (20220601 + it).toString(),

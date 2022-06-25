@@ -41,7 +41,7 @@ class MealDaoTest {
     @Test
     @Throws(Exception::class)
     fun writeMealAndRead() = runTest {
-        val meals = TestUtil.createMeal(5)
+        val meals = TestUtil.createMealEntityRoom(5)
         dao.insertMeals(meals)
         val mealInDatabase = dao.getMeals(meals[0].date.substring(0..5))
         assertThat(mealInDatabase).isEqualTo(meals)
