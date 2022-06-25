@@ -1,6 +1,8 @@
 package com.practice.database.meal.entity
 
 import com.practice.database.meal.room.MealEntityRoom
+import com.practice.database.meal.room.toMealEntity
+import com.practice.database.meal.room.toRoomEntity
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

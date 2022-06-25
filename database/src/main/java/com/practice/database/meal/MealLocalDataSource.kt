@@ -2,9 +2,9 @@ package com.practice.database.meal
 
 import com.hsk.ktx.getDateString
 import com.practice.database.meal.entity.MealEntity
-import com.practice.database.meal.entity.toMealEntities
-import com.practice.database.meal.entity.toRoomEntities
 import com.practice.database.meal.room.MealDao
+import com.practice.database.meal.room.toMealEntities
+import com.practice.database.meal.room.toRoomEntities
 
 class MealLocalDataSource(private val mealDao: MealDao) {
 
