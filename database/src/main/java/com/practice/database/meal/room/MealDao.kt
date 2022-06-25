@@ -9,12 +9,15 @@ interface MealDao {
     suspend fun getMeals(yearMonthString: String): List<MealEntityRoom>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertMeals(meals: List<MealEntityRoom>)
+    suspend fun insertMeals(meals: List<MealEntityRoom>)
 
     @Delete
-    fun deleteMeals(meals: List<MealEntityRoom>)
+    suspend fun deleteMeals(meals: List<MealEntityRoom>)
 
     @Query("DELETE FROM meal WHERE date LIKE :yearMonthString || '%%'")
-    fun deleteMeals(yearMonthString: String)
+    suspend fun deleteMeals(yearMonthString: String)
+
+    @Query("DELETE FROM meal")
+    suspend fun clear()
 
 }
