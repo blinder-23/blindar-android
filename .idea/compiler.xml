@@ -4,6 +4,7 @@
     <bytecodeTargetLevel target="1.8">
       <module name="Hanbit_lunch.app" target="11" />
       <module name="Hanbit_lunch.database" target="11" />
+      <module name="Hanbit_lunch.database.di" target="11" />
       <module name="Hanbit_lunch.neis.di" target="11" />
     </bytecodeTargetLevel>
   </component>
