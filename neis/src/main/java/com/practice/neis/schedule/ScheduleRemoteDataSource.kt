@@ -1,13 +1,10 @@
 package com.practice.neis.schedule
 
 import com.hsk.ktx.getDateString
-import com.practice.neis.common.NEISRetrofit
 import com.practice.neis.schedule.pojo.ScheduleModel
-import com.practice.neis.schedule.retrofit.scheduleApi
+import com.practice.neis.schedule.retrofit.ScheduleInfo
 
-class ScheduleRemoteDataSource {
-
-    private val api = NEISRetrofit.scheduleApi
+class ScheduleRemoteDataSource(private val api: ScheduleInfo) {
 
     suspend fun getSchedule(year: Int, month: Int): List<ScheduleModel> {
         val result = api.getScheduleOfMonth(scheduleYearMonth = getDateString(year, month))
