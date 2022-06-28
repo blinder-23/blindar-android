@@ -9,6 +9,8 @@ buildscript {
         lifecycle_extension_version = '2.2.0'
         accompanist_version = '0.23.1'
         junit_version = '5.8.2'
+        room_version = '2.4.2'
+        hsk_ktx_version = '1.0-beta06'
     }
     repositories {
         google()
@@ -30,6 +32,12 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+    }
+}
+
+subprojects {
+    tasks.withType(Test.class).configureEach {
+        it.useJUnitPlatform()
     }
 }
 

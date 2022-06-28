@@ -8,13 +8,9 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-tasks.withType(Test.class).configureEach {
-    it.useJUnitPlatform()
-}
-
 dependencies {
     // my own KTX library
-    implementation 'com.github.mwy3055:hsk-ktx:1.0-beta02'
+    implementation "com.github.mwy3055:hsk-ktx:$hsk_ktx_version"
 
     // Retrofit (Gson included)
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
