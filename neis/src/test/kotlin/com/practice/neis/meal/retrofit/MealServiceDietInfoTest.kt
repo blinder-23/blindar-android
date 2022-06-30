@@ -1,6 +1,6 @@
 package com.practice.neis.meal.retrofit
 
-import com.practice.neis.common.NEISRetrofit
+import com.practice.neis.common.NeisApi
 import com.practice.neis.common.hanbitSchoolCode
 import com.practice.neis.common.seoulOfficeCode
 import kotlinx.coroutines.runBlocking
@@ -10,7 +10,7 @@ class MealServiceDietInfoTest {
 
     @Test
     fun testApi() = runBlocking {
-        val api = NEISRetrofit.mealApi
+        val api = NeisApi.mealApi
         val result = api.getMealOfMonth(
             officeCode = seoulOfficeCode,
             schoolCode = hanbitSchoolCode,

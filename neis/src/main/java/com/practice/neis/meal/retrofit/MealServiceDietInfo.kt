@@ -1,6 +1,6 @@
 package com.practice.neis.meal.retrofit
 
-import com.practice.neis.common.NEISRetrofit
+import com.practice.neis.common.NeisApi
 import com.practice.neis.common.apiKey
 import com.practice.neis.common.hanbitSchoolCode
 import com.practice.neis.common.seoulOfficeCode
@@ -23,7 +23,7 @@ interface MealServiceDietInfo {
     ): MealResponseModel
 }
 
-val NEISRetrofit.mealApi: MealServiceDietInfo
+val NeisApi.mealApi: MealServiceDietInfo
     get() = getRetrofit(
         responseType = MealResponseModel::class.java,
         typeAdapter = MealDeserializer()

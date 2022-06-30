@@ -1,6 +1,6 @@
 package com.practice.neis.schedule.retrofit
 
-import com.practice.neis.common.NEISRetrofit
+import com.practice.neis.common.NeisApi
 import com.practice.neis.common.apiKey
 import com.practice.neis.common.hanbitSchoolCode
 import com.practice.neis.common.seoulOfficeCode
@@ -23,7 +23,7 @@ interface ScheduleInfo {
     ): ScheduleResponseModel
 }
 
-val NEISRetrofit.scheduleApi: ScheduleInfo
+val NeisApi.scheduleApi: ScheduleInfo
     get() = getRetrofit(
         responseType = ScheduleResponseModel::class.java,
         typeAdapter = ScheduleDeserializer()

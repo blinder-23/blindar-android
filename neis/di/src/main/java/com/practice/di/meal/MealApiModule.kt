@@ -1,6 +1,6 @@
 package com.practice.di.meal
 
-import com.practice.neis.common.NEISRetrofit
+import com.practice.neis.common.NeisApi
 import com.practice.neis.meal.retrofit.MealServiceDietInfo
 import com.practice.neis.meal.retrofit.mealApi
 import dagger.Module
@@ -13,5 +13,5 @@ import dagger.hilt.components.SingletonComponent
 object MealApiModule {
 
     @Provides
-    fun provideMealServiceDietInfo(): MealServiceDietInfo = NEISRetrofit.mealApi
+    fun provideMealServiceDietInfo(): MealServiceDietInfo = NeisApi.mealApi
 }

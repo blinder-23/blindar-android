@@ -1,6 +1,6 @@
 package com.practice.neis.schedule
 
-import com.practice.neis.common.NEISRetrofit
+import com.practice.neis.common.NeisApi
 import com.practice.neis.schedule.retrofit.scheduleApi
 import com.practice.neis.schedule.util.ScheduleDeserializerException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -12,7 +12,7 @@ import java.util.*
 @OptIn(ExperimentalCoroutinesApi::class)
 class ScheduleRemoteDataSourceTest {
 
-    private val source = ScheduleRemoteDataSource(NEISRetrofit.scheduleApi)
+    private val source = ScheduleRemoteDataSource(NeisApi.scheduleApi)
 
     @Test
     fun getSchedule() = runTest {

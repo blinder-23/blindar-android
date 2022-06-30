@@ -6,7 +6,7 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object NEISRetrofit {
+object NeisApi {
 
     inline fun <reified T : Any> getRetrofit(
         baseUrl: String = "https://open.neis.go.kr/hub/",
