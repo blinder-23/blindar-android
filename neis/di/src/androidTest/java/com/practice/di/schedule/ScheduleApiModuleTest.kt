@@ -1,6 +1,6 @@
 package com.practice.di.schedule
 
-import com.practice.neis.schedule.retrofit.ScheduleInfo
+import com.practice.neis.schedule.retrofit.ScheduleApi
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertFalse
@@ -15,7 +15,7 @@ class ScheduleApiModuleTest {
     val hiltRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var api: ScheduleInfo
+    lateinit var api: ScheduleApi
 
     @Test
     fun injectApi() {

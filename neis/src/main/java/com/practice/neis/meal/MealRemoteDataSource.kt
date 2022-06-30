@@ -2,9 +2,9 @@ package com.practice.neis.meal
 
 import com.hsk.ktx.getDateString
 import com.practice.neis.meal.pojo.MealModel
-import com.practice.neis.meal.retrofit.MealServiceDietInfo
+import com.practice.neis.meal.retrofit.MealApi
 
-class MealRemoteDataSource(private val api: MealServiceDietInfo) {
+class MealRemoteDataSource(private val api: MealApi) {
 
     suspend fun getMeal(year: Int, month: Int): List<MealModel> {
         val result = api.getMealOfMonth(mealYearMonth = getDateString(year, month))

@@ -4,6 +4,8 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import com.practice.neis.common.NeisDeserializer
+import com.practice.neis.common.getInt
+import com.practice.neis.common.getString
 import com.practice.neis.common.pojo.Header
 import com.practice.neis.schedule.pojo.ScheduleModel
 import com.practice.neis.schedule.pojo.ScheduleResponseModel

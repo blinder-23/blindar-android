@@ -1,6 +1,6 @@
 package com.practice.di.meal
 
-import com.practice.neis.meal.retrofit.MealServiceDietInfo
+import com.practice.neis.meal.retrofit.MealApi
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertFalse
@@ -15,7 +15,7 @@ class MealApiModuleTest {
     val hiltRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var scheduleApi: MealServiceDietInfo
+    lateinit var scheduleApi: MealApi
 
     @Test
     fun injectScheduleApi() {

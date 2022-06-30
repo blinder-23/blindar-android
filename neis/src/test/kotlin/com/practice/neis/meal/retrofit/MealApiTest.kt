@@ -6,7 +6,7 @@ import com.practice.neis.common.seoulOfficeCode
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 
-class MealServiceDietInfoTest {
+class MealApiTest {
 
     @Test
     fun testApi() = runBlocking {
