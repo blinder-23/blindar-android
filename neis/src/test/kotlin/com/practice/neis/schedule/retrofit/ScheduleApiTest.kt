@@ -1,6 +1,6 @@
 package com.practice.neis.schedule.retrofit
 
-import com.practice.neis.common.NEISRetrofit
+import com.practice.neis.common.NeisApi
 import com.practice.neis.common.hanbitSchoolCode
 import com.practice.neis.common.seoulOfficeCode
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -8,11 +8,11 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ScheduleInfoTest {
+class ScheduleApiTest {
 
     @Test
     fun getScheduleOfMonth() = runTest {
-        val api = NEISRetrofit.scheduleApi
+        val api = NeisApi.scheduleApi
         val result = api.getScheduleOfMonth(
             officeCode = seoulOfficeCode,
             schoolCode = hanbitSchoolCode,

@@ -1,6 +1,6 @@
 package com.practice.neis.meal.retrofit
 
-import com.practice.neis.common.NEISRetrofit
+import com.practice.neis.common.NeisApi
 import com.practice.neis.common.apiKey
 import com.practice.neis.common.hanbitSchoolCode
 import com.practice.neis.common.seoulOfficeCode
@@ -9,7 +9,7 @@ import com.practice.neis.meal.util.MealDeserializer
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface MealServiceDietInfo {
+interface MealApi {
 
     @GET("mealServiceDietInfo")
     suspend fun getMealOfMonth(
@@ -23,8 +23,8 @@ interface MealServiceDietInfo {
     ): MealResponseModel
 }
 
-internal val NEISRetrofit.mealApi: MealServiceDietInfo
+val NeisApi.mealApi: MealApi
     get() = getRetrofit(
         responseType = MealResponseModel::class.java,
         typeAdapter = MealDeserializer()
-    ).create(MealServiceDietInfo::class.java)
+    ).create(MealApi::class.java)

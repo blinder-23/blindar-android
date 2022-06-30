@@ -4,6 +4,8 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import com.practice.neis.common.NeisDeserializer
+import com.practice.neis.common.getInt
+import com.practice.neis.common.getString
 import com.practice.neis.common.pojo.Header
 import com.practice.neis.schedule.pojo.ScheduleModel
 import com.practice.neis.schedule.pojo.ScheduleResponseModel
@@ -19,24 +21,24 @@ class ScheduleDeserializer : NeisDeserializer<ScheduleModel, ScheduleResponseMod
         return rows.map { row ->
             with(row.asJsonObject) {
                 ScheduleModel(
-                    officeCode = get("ATPT_OFCDC_SC_CODE").asString,
-                    officeName = get("ATPT_OFCDC_SC_NM").asString,
-                    schoolCode = get("SD_SCHUL_CODE").asInt,
-                    schoolName = get("SCHUL_NM").asString,
-                    year = get("AY").asInt,
+                    officeCode = getString("ATPT_OFCDC_SC_CODE"),
+                    officeName = getString("ATPT_OFCDC_SC_NM"),
+                    schoolCode = getInt("SD_SCHUL_CODE"),
+                    schoolName = getString("SCHUL_NM"),
+                    year = getInt("AY"),
                     dayNightName = parseNullString(get("DGHT_CRSE_SC_NM")),
-                    schoolCourseName = get("SCHUL_CRSE_SC_NM").asString,
-                    notSchoolDayName = get("SBTR_DD_SC_NM").asString,
-                    yearMonthDay = get("AA_YMD").asString,
-                    eventName = get("EVENT_NM").asString,
+                    schoolCourseName = getString("SCHUL_CRSE_SC_NM"),
+                    notSchoolDayName = getString("SBTR_DD_SC_NM"),
+                    yearMonthDay = getString("AA_YMD"),
+                    eventName = getString("EVENT_NM"),
                     eventContent = parseNullString(get("EVENT_CNTNT")),
-                    oneGradeEvent = get("ONE_GRADE_EVENT_YN").asString,
-                    twoGradeEvent = get("TW_GRADE_EVENT_YN").asString,
-                    threeGradeEvent = get("THREE_GRADE_EVENT_YN").asString,
-                    fourGradeEvent = get("FR_GRADE_EVENT_YN").asString,
-                    fiveGradeEvent = get("FIV_GRADE_EVENT_YN").asString,
-                    sixGradeEvent = get("SIX_GRADE_EVENT_YN").asString,
-                    loadYearDateMonth = get("LOAD_DTM").asString,
+                    oneGradeEvent = getString("ONE_GRADE_EVENT_YN"),
+                    twoGradeEvent = getString("TW_GRADE_EVENT_YN"),
+                    threeGradeEvent = getString("THREE_GRADE_EVENT_YN"),
+                    fourGradeEvent = getString("FR_GRADE_EVENT_YN"),
+                    fiveGradeEvent = getString("FIV_GRADE_EVENT_YN"),
+                    sixGradeEvent = getString("SIX_GRADE_EVENT_YN"),
+                    loadYearDateMonth = getString("LOAD_DTM"),
                 )
             }
         }

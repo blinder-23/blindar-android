@@ -2,6 +2,8 @@ package com.practice.neis.meal.util
 
 import com.google.gson.JsonObject
 import com.practice.neis.common.NeisDeserializer
+import com.practice.neis.common.getInt
+import com.practice.neis.common.getString
 import com.practice.neis.common.pojo.Header
 import com.practice.neis.meal.pojo.*
 
@@ -15,20 +17,20 @@ class MealDeserializer : NeisDeserializer<MealModel, MealResponseModel> {
         return rows.map { row ->
             with(row.asJsonObject) {
                 MealModel(
-                    officeCode = get("ATPT_OFCDC_SC_CODE").asString,
-                    officeName = get("ATPT_OFCDC_SC_NM").asString,
-                    schoolCode = get("SD_SCHUL_CODE").asInt,
-                    schoolName = get("SCHUL_NM").asString,
-                    mealCode = get("MMEAL_SC_CODE").asInt,
-                    mealName = get("MMEAL_SC_NM").asString,
-                    date = get("MLSV_YMD").asString,
-                    numberStudents = get("MLSV_FGR").asInt,
-                    menu = parseMenus(get("DDISH_NM").asString),
-                    originCountries = parseOrigins(get("ORPLC_INFO").asString),
-                    calorie = parseCalorie(get("CAL_INFO").asString),
-                    nutrients = parseNutrients(get("NTR_INFO").asString),
-                    fromDate = get("MLSV_FROM_YMD").asString,
-                    endDate = get("MLSV_TO_YMD").asString
+                    officeCode = getString("ATPT_OFCDC_SC_CODE"),
+                    officeName = getString("ATPT_OFCDC_SC_NM"),
+                    schoolCode = getInt("SD_SCHUL_CODE"),
+                    schoolName = getString("SCHUL_NM"),
+                    mealCode = getInt("MMEAL_SC_CODE"),
+                    mealName = getString("MMEAL_SC_NM"),
+                    date = getString("MLSV_YMD"),
+                    numberStudents = getInt("MLSV_FGR"),
+                    menu = parseMenus(getString("DDISH_NM")),
+                    originCountries = parseOrigins(getString("ORPLC_INFO")),
+                    calorie = parseCalorie(getString("CAL_INFO")),
+                    nutrients = parseNutrients(getString("NTR_INFO")),
+                    fromDate = getString("MLSV_FROM_YMD"),
+                    endDate = getString("MLSV_TO_YMD"),
                 )
             }
         }

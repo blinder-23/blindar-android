@@ -1,5 +1,7 @@
 package com.practice.neis.meal
 
+import com.practice.neis.common.NeisApi
+import com.practice.neis.meal.retrofit.mealApi
 import com.practice.neis.meal.util.MealDeserializerException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -10,7 +12,7 @@ import java.util.*
 @OptIn(ExperimentalCoroutinesApi::class)
 class MealRemoteDataSourceTest {
 
-    private val mealRemoteDataSource = MealRemoteDataSource()
+    private val mealRemoteDataSource = MealRemoteDataSource(NeisApi.mealApi)
 
     @Test
     fun getMeal() = runTest {
