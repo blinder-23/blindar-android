@@ -6,4 +6,8 @@ import com.google.gson.JsonParser
 
 internal fun String.toJson(): JsonObject = JsonParser().parse(this).asJsonObject
 
-fun JsonElement.getAsJsonObject(key: String): JsonElement = this.asJsonObject.get(key)
+internal fun JsonElement.getAsJsonObject(key: String): JsonElement = this.asJsonObject.get(key)
+
+internal fun JsonObject.getString(key: String): String = get(key).asString
+
+internal fun JsonObject.getInt(key: String): Int = get(key).asInt
