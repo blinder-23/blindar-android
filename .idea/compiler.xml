@@ -6,6 +6,7 @@
       <module name="Hanbit_lunch.database" target="11" />
       <module name="Hanbit_lunch.database.di" target="11" />
       <module name="Hanbit_lunch.neis.di" target="11" />
+      <module name="Hanbit_lunch.preferences" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
