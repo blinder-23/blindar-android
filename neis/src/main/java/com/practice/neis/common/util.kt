@@ -4,7 +4,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 
-internal fun String.toJson(): JsonObject = JsonParser().parse(this).asJsonObject
+internal fun String.toJson(): JsonObject = JsonParser.parseString(this).asJsonObject
 
 internal fun JsonElement.getAsJsonObject(key: String): JsonElement = this.asJsonObject.get(key)
 
