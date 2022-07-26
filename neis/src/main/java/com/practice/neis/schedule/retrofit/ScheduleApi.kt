@@ -1,7 +1,7 @@
 package com.practice.neis.schedule.retrofit
 
+import com.practice.neis.BuildConfig
 import com.practice.neis.common.NeisApi
-import com.practice.neis.common.apiKey
 import com.practice.neis.common.hanbitSchoolCode
 import com.practice.neis.common.seoulOfficeCode
 import com.practice.neis.schedule.pojo.ScheduleResponseModel
@@ -13,7 +13,7 @@ interface ScheduleApi {
 
     @GET("SchoolSchedule")
     suspend fun getScheduleOfMonth(
-        @Query("KEY") key: String = apiKey,
+        @Query("KEY") key: String = BuildConfig.NEIS_API_KEY,
         @Query("Type") type: String = "json",
         @Query("pIndex") pageIndex: Int = 1,
         @Query("pSize") pageSize: Int = 100,
