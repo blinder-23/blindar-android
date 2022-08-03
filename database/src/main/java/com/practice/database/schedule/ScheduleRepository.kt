@@ -2,7 +2,7 @@ package com.practice.database.schedule
 
 import com.practice.database.schedule.entity.ScheduleEntity
 
-class ScheduleRepository(private val dataSource: ScheduleLocalDataSource) {
+class ScheduleRepository(private val dataSource: ScheduleDataSource) {
 
     suspend fun getSchedules(year: Int, month: Int): List<ScheduleEntity> {
         return dataSource.getSchedules(year, month)

@@ -2,7 +2,7 @@ package com.practice.database.meal
 
 import com.practice.database.meal.entity.MealEntity
 
-class MealRepository(private val dataSource: MealLocalDataSource) {
+class MealRepository(private val dataSource: MealDataSource) {
 
     suspend fun getMeals(year: Int, month: Int): List<MealEntity> {
         return dataSource.getMeals(year, month)
