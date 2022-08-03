@@ -38,7 +38,7 @@ class ScheduleDeserializer : NeisDeserializer<ScheduleModel, ScheduleResponseMod
                     fourGradeEvent = getString("FR_GRADE_EVENT_YN"),
                     fiveGradeEvent = getString("FIV_GRADE_EVENT_YN"),
                     sixGradeEvent = getString("SIX_GRADE_EVENT_YN"),
-                    loadYearDateMonth = getString("LOAD_DTM"),
+                    loadDate = getString("LOAD_DTM"),
                 )
             }
         }

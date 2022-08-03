@@ -18,7 +18,7 @@ data class ScheduleModel(
     val fourGradeEvent: String,
     val fiveGradeEvent: String,
     val sixGradeEvent: String,
-    val loadYearDateMonth: String,
+    val loadDate: String,
 )
 
 /*
