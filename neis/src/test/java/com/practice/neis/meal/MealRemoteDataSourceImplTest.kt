@@ -10,22 +10,22 @@ import org.junit.jupiter.api.assertThrows
 import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class MealRemoteDataSourceTest {
+class MealRemoteDataSourceImplTest {
 
-    private val mealRemoteDataSource = MealRemoteDataSource(NeisApi.mealApi)
+    private val mealRemoteDataSourceImpl = MealRemoteDataSourceImpl(NeisApi.mealApi)
 
     @Test
-    fun getMeal() = runTest {
+    fun getMeals() = runTest {
         val calendar = Calendar.getInstance()
         val currentYear = calendar.get(Calendar.YEAR)
         val currentMonth = calendar.get(Calendar.MONTH) + 1
 
-        val result = mealRemoteDataSource.getMeal(currentYear, currentMonth)
+        val result = mealRemoteDataSourceImpl.getMeals(currentYear, currentMonth)
         assert(result.isNotEmpty())
     }
 
     @Test
-    fun getMeal_NoData(): Unit = runTest {
+    fun getMeals_NoData(): Unit = runTest {
         val calendar = Calendar.getInstance().apply {
             add(Calendar.MONTH, 1)
         }
@@ -33,7 +33,7 @@ class MealRemoteDataSourceTest {
         val month = calendar.get(Calendar.MONTH)
 
         assertThrows<MealDeserializerException>("해당하는 데이터가 없습니다.") {
-            println(mealRemoteDataSource.getMeal(year, month))
+            println(mealRemoteDataSourceImpl.getMeals(year, month))
         }
     }
 
