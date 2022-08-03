@@ -10,22 +10,22 @@ import org.junit.jupiter.api.assertThrows
 import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ScheduleRemoteDataSourceTest {
+class ScheduleRemoteDataSourceImplTest {
 
-    private val source = ScheduleRemoteDataSource(NeisApi.scheduleApi)
+    private val source: ScheduleRemoteDataSource = ScheduleRemoteDataSourceImpl(NeisApi.scheduleApi)
 
     @Test
-    fun getSchedule() = runTest {
+    fun getSchedules() = runTest {
         val calendar = Calendar.getInstance()
         val currentYear = calendar.get(Calendar.YEAR)
         val currentMonth = calendar.get(Calendar.MONTH) + 1
 
-        val result = source.getSchedule(currentYear, currentMonth)
+        val result = source.getSchedules(currentYear, currentMonth)
         assert(result.isNotEmpty())
     }
 
     @Test
-    fun getSchedule_NoData(): Unit = runTest {
+    fun getSchedules_NoData(): Unit = runTest {
         val calendar = Calendar.getInstance().apply {
             add(Calendar.MONTH, 1)
         }
@@ -33,7 +33,7 @@ class ScheduleRemoteDataSourceTest {
         val month = calendar.get(Calendar.MONTH)
 
         assertThrows<ScheduleDeserializerException>("해당하는 데이터가 없습니다.") {
-            source.getSchedule(year, month)
+            source.getSchedules(year, month)
         }
     }
 
