@@ -1,6 +1,7 @@
 package com.practice.di.meal
 
 import com.practice.neis.meal.MealRemoteDataSource
+import com.practice.neis.meal.MealRemoteDataSourceImpl
 import com.practice.neis.meal.MealRemoteRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest

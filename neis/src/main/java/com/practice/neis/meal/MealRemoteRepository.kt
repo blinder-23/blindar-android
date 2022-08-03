@@ -6,7 +6,7 @@ class MealRemoteRepository(private val mealRemoteDataSource: MealRemoteDataSourc
 
     suspend fun getMealData(year: Int, month: Int): List<MealModel> {
         return try {
-            mealRemoteDataSource.getMeal(year, month)
+            mealRemoteDataSource.getMeals(year, month)
         } catch (e: MealDataSourceException) {
             throw MealRemoteRepositoryException(e.message)
         }
