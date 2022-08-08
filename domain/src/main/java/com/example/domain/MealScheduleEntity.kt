@@ -4,7 +4,7 @@ import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.entity.ScheduleEntity
 import kotlinx.collections.immutable.ImmutableList
 
-data class MealScheduleModel(
+data class MealScheduleEntity(
     val year: Int,
     val month: Int,
     val meals: ImmutableList<MealEntity>,
