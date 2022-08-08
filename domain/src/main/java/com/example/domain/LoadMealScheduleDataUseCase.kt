@@ -8,6 +8,8 @@ import com.practice.neis.meal.MealRemoteRepository
 import com.practice.neis.meal.pojo.MealModel
 import com.practice.neis.schedule.ScheduleRemoteRepository
 import com.practice.neis.schedule.pojo.ScheduleModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 class LoadMealScheduleDataUseCase(
     private val mealLocalRepository: MealRepository,
@@ -15,39 +17,61 @@ class LoadMealScheduleDataUseCase(
     private val mealRemoteRepository: MealRemoteRepository,
     private val scheduleRemoteRepository: ScheduleRemoteRepository
 ) {
-    // TODO: 작업을 총괄하는 함수 추가하기
+    suspend fun loadData(year: Int, month: Int): MealScheduleEntity {
+        val mealData = loadMealData(year, month)
+        val scheduleData = loadScheduleData(year, month)
+        return MealScheduleEntity(year, month, mealData, scheduleData)
+    }
 
-    suspend fun checkMealExists(year: Int, month: Int): Boolean {
+    internal suspend fun loadMealData(year: Int, month: Int): ImmutableList<MealEntity> {
+        val exists = checkMealExists(year, month)
+        if (!exists) {
+            val mealData = loadMealFromRemote(year, month)
+            storeMealToLocal(mealData)
+        }
+        return loadMealFromLocal(year, month).toImmutableList()
+    }
+
+    internal suspend fun loadScheduleData(year: Int, month: Int): ImmutableList<ScheduleEntity> {
+        val exists = checkScheduleExists(year, month)
+        if (!exists) {
+            val scheduleData = loadScheduleFromRemote(year, month)
+            storeScheduleToLocal(scheduleData)
+        }
+        return loadScheduleFromLocal(year, month).toImmutableList()
+    }
+
+    internal suspend fun checkMealExists(year: Int, month: Int): Boolean {
         return mealLocalRepository.getMeals(year, month).isNotEmpty()
     }
 
-    suspend fun checkScheduleExists(year: Int, month: Int): Boolean {
+    internal suspend fun checkScheduleExists(year: Int, month: Int): Boolean {
         return scheduleLocalRepository.getSchedules(year, month).isNotEmpty()
     }
 
-    suspend fun loadMealFromRemote(year: Int, month: Int): List<MealModel> {
+    internal suspend fun loadMealFromRemote(year: Int, month: Int): List<MealModel> {
         return mealRemoteRepository.getMealData(year, month)
     }
 
-    suspend fun storeMealToLocal(meals: List<MealModel>) {
+    internal suspend fun storeMealToLocal(meals: List<MealModel>) {
         val mealEntities = meals.map { it.toMealEntity() }
         mealLocalRepository.insertMeals(mealEntities)
     }
 
-    suspend fun loadMealFromLocal(year: Int, month: Int): List<MealEntity> {
+    internal suspend fun loadMealFromLocal(year: Int, month: Int): List<MealEntity> {
         return mealLocalRepository.getMeals(year, month)
     }
 
-    suspend fun loadScheduleFromRemote(year: Int, month: Int): List<ScheduleModel> {
+    internal suspend fun loadScheduleFromRemote(year: Int, month: Int): List<ScheduleModel> {
         return scheduleRemoteRepository.getSchedules(year, month)
     }
 
-    suspend fun storeScheduleToLocal(schedules: List<ScheduleModel>) {
+    internal suspend fun storeScheduleToLocal(schedules: List<ScheduleModel>) {
         val scheduleEntities = schedules.map { it.toScheduleEntity() }
         scheduleLocalRepository.insertSchedules(scheduleEntities)
     }
 
-    suspend fun loadScheduleFromLocal(year: Int, month: Int): List<ScheduleEntity> {
+    internal suspend fun loadScheduleFromLocal(year: Int, month: Int): List<ScheduleEntity> {
         return scheduleLocalRepository.getSchedules(year, month)
     }
 }

@@ -132,4 +132,27 @@ class LoadMealScheduleDataUseCaseTest {
         val localData = useCase.loadScheduleFromLocal(schedules[0].year, schedules[0].month)
         assertThat(localData).containsExactlyInAnyOrderElementsOf(schedules)
     }
+
+    @Test
+    fun `check if use case loads meal data when data doesn't exist at local`() = runTest {
+        val expected = mealRemoteRepository.getMealData(2022, 8).map { it.toMealEntity() }
+        val dataFromLocal = useCase.loadMealData(2022, 8)
+        assertThat(dataFromLocal).containsExactlyInAnyOrderElementsOf(expected)
+    }
+
+    @Test
+    fun `check if use case loads schedule data when data doesn't exist at local`() = runTest {
+        val expected = scheduleRemoteRepository.getSchedules(2022, 8).map { it.toScheduleEntity() }
+        val dataFromLocal = useCase.loadScheduleData(2022, 8)
+        assertThat(dataFromLocal).containsExactlyInAnyOrderElementsOf(expected)
+    }
+
+    @Test
+    fun `check if use case loads all data exactly`() = runTest {
+        val mealData = useCase.loadMealData(2022, 8)
+        val scheduleData = useCase.loadScheduleData(2022, 8)
+        val expected = MealScheduleEntity(2022, 8, mealData, scheduleData)
+        val actual = useCase.loadData(2022, 8)
+        assertThat(actual).isEqualTo(expected)
+    }
 }
