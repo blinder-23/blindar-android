@@ -11,6 +11,9 @@ import com.practice.neis.schedule.pojo.ScheduleModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
+/**
+ * UI layer should depend on this use case to get meal and schedule data.
+ */
 class LoadMealScheduleDataUseCase(
     private val mealLocalRepository: MealRepository,
     private val scheduleLocalRepository: ScheduleRepository,
