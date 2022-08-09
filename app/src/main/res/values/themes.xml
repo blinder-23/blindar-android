@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.HanbitLunch" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
+    <style name="Theme.HanbitCalendar" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/hanbit_blue</item>
+    </style>
+
+    <style name="Theme.HanbitCalendar.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/hanbit_blue</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.HanbitCalendar</item>
     </style>
 </resources>

@@ -3,9 +3,10 @@ package com.practice.hanbitlunch.theme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.ui.graphics.Color
+import com.practice.hanbitlunch.R
 
-private val HanbitBlue = Color(0xFF0B4F82)
-private val HanbitYellow = Color(0xFFFCDD4F)
+private val HanbitBlue = Color(R.color.hanbit_blue)
+private val HanbitYellow = Color(R.color.hanbit_yellow)
 
 val LightColorPalette = lightColors(
     primary = HanbitBlue,
