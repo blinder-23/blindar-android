@@ -10,11 +10,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.mwy3055.violetdreams.core.theme.VioletDreamsTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Splash screen will dismiss as soon as the app draws its first frame
+        installSplashScreen()
         setContent {
             VioletDreamsTheme {
                 // A surface container using the 'background' color from the theme
