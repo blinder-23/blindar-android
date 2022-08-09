@@ -6,7 +6,7 @@ class ScheduleRemoteRepository(private val scheduleRemoteDataSource: ScheduleRem
 
     suspend fun getSchedules(year: Int, month: Int): List<ScheduleModel> {
         return try {
-            scheduleRemoteDataSource.getSchedule(year, month)
+            scheduleRemoteDataSource.getSchedules(year, month)
         } catch (e: ScheduleRemoteDataSourceException) {
             throw ScheduleRemoteRepositoryException(e.message)
         }

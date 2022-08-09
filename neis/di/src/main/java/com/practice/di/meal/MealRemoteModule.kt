@@ -1,6 +1,7 @@
 package com.practice.di.meal
 
 import com.practice.neis.meal.MealRemoteDataSource
+import com.practice.neis.meal.MealRemoteDataSourceImpl
 import com.practice.neis.meal.MealRemoteRepository
 import com.practice.neis.meal.retrofit.MealApi
 import dagger.Module
@@ -14,9 +15,9 @@ import dagger.hilt.components.SingletonComponent
 object MealRemoteModule {
 
     @Provides
-    fun provideMealRemoteDataSource(
+    fun provideMealRemoteDataSourceImpl(
         api: MealApi
-    ): MealRemoteDataSource = MealRemoteDataSource(api)
+    ): MealRemoteDataSource = MealRemoteDataSourceImpl(api)
 
     @Provides
     fun provideMealRemoteRepository(

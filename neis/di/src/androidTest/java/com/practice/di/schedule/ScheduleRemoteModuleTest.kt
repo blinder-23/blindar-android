@@ -1,6 +1,7 @@
 package com.practice.di.schedule
 
 import com.practice.neis.schedule.ScheduleRemoteDataSource
+import com.practice.neis.schedule.ScheduleRemoteDataSourceImpl
 import com.practice.neis.schedule.ScheduleRemoteRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
