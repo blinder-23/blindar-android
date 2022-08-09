@@ -1,6 +1,7 @@
 package com.practice.di.schedule
 
 import com.practice.neis.schedule.ScheduleRemoteDataSource
+import com.practice.neis.schedule.ScheduleRemoteDataSourceImpl
 import com.practice.neis.schedule.ScheduleRemoteRepository
 import com.practice.neis.schedule.retrofit.ScheduleApi
 import dagger.Module
@@ -13,9 +14,9 @@ import dagger.hilt.components.SingletonComponent
 object ScheduleRemoteModule {
 
     @Provides
-    fun provideScheduleRemoteDataSource(
+    fun provideScheduleRemoteDataSourceImpl(
         api: ScheduleApi
-    ): ScheduleRemoteDataSource = ScheduleRemoteDataSource(api)
+    ): ScheduleRemoteDataSource = ScheduleRemoteDataSourceImpl(api)
 
     @Provides
     fun provideScheduleRemoteRepository(

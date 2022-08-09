@@ -51,7 +51,7 @@ class ScheduleDeserializerTest {
                 fourGradeEvent = "N",
                 fiveGradeEvent = "N",
                 sixGradeEvent = "N",
-                loadYearDateMonth = "20220605"
+                loadDate = "20220605"
             )
         )
 

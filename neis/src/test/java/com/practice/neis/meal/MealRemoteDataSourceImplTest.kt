@@ -1,8 +1,8 @@
-package com.practice.neis.schedule
+package com.practice.neis.meal
 
 import com.practice.neis.common.NeisApi
-import com.practice.neis.schedule.retrofit.scheduleApi
-import com.practice.neis.schedule.util.ScheduleDeserializerException
+import com.practice.neis.meal.retrofit.mealApi
+import com.practice.neis.meal.util.MealDeserializerException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
@@ -10,30 +10,30 @@ import org.junit.jupiter.api.assertThrows
 import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ScheduleRemoteDataSourceTest {
+class MealRemoteDataSourceImplTest {
 
-    private val source = ScheduleRemoteDataSource(NeisApi.scheduleApi)
+    private val mealRemoteDataSourceImpl = MealRemoteDataSourceImpl(NeisApi.mealApi)
 
     @Test
-    fun getSchedule() = runTest {
+    fun getMeals() = runTest {
         val calendar = Calendar.getInstance()
         val currentYear = calendar.get(Calendar.YEAR)
         val currentMonth = calendar.get(Calendar.MONTH) + 1
 
-        val result = source.getSchedule(currentYear, currentMonth)
+        val result = mealRemoteDataSourceImpl.getMeals(currentYear, currentMonth)
         assert(result.isNotEmpty())
     }
 
     @Test
-    fun getSchedule_NoData(): Unit = runTest {
+    fun getMeals_NoData(): Unit = runTest {
         val calendar = Calendar.getInstance().apply {
             add(Calendar.MONTH, 1)
         }
         val year = calendar.get(Calendar.YEAR) + 1
         val month = calendar.get(Calendar.MONTH)
 
-        assertThrows<ScheduleDeserializerException>("해당하는 데이터가 없습니다.") {
-            source.getSchedule(year, month)
+        assertThrows<MealDeserializerException>("해당하는 데이터가 없습니다.") {
+            println(mealRemoteDataSourceImpl.getMeals(year, month))
         }
     }
 

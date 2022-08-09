@@ -40,6 +40,8 @@ dependencies {
     // my library
     implementation "com.github.mwy3055:hsk-ktx:$hsk_ktx_version"
 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+
     // Room
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
