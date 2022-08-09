@@ -154,6 +154,9 @@ dependencies {
     // Integration with Paging
     implementation "androidx.paging:paging-compose:1.0.0-alpha15"
 
+    // Splash screen
+    implementation 'androidx.core:core-splashscreen:1.0.0'
+
     // Unit Test
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
