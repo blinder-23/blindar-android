@@ -1,7 +1,6 @@
 package com.example.di
 
 import com.example.domain.combine.LoadMealScheduleDataUseCase
-import com.example.domain.date.CalculateDayTypeUseCase
 import com.practice.database.meal.MealRepository
 import com.practice.database.schedule.ScheduleRepository
 import com.practice.neis.meal.MealRemoteRepository
@@ -27,8 +26,5 @@ object UseCaseModule {
         mealRemoteRepository,
         scheduleRemoteRepository
     )
-
-    @Provides
-    fun provideCalculateDayTypeUseCase() = CalculateDayTypeUseCase()
 
 }
