@@ -4,7 +4,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 
 class CalendarRow private constructor(
-    private val dates: List<LocalDate>
+    val dates: List<LocalDate>
 ) {
 
     /**
@@ -13,7 +13,7 @@ class CalendarRow private constructor(
      * All parameters are **1-indexed**.
      * For example, 1 represents the first week or Sunday respectively.
      */
-    fun get(week: Int, day: Int): LocalDate {
+    fun getDate(week: Int, day: Int): LocalDate {
         try {
             return dates[(week - 1) * 7 + (day - 1)]
         } catch (e: IndexOutOfBoundsException) {
@@ -22,7 +22,7 @@ class CalendarRow private constructor(
     }
 
     companion object {
-        fun get(year: Int, month: Int): CalendarRow {
+        fun getInstance(year: Int, month: Int): CalendarRow {
             val range = getCalendarRange(year, month)
 
             val dates = mutableListOf<LocalDate>()
