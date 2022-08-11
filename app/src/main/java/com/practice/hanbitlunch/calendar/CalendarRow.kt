@@ -1,12 +1,10 @@
 package com.practice.hanbitlunch.calendar
 
-import androidx.core.util.toRange
-import com.practice.hanbitlunch.util.Date
 import java.time.DayOfWeek
 import java.time.LocalDate
 
 class CalendarRow private constructor(
-    private val dates: List<Date>
+    private val dates: List<LocalDate>
 ) {
 
     /**
@@ -15,7 +13,7 @@ class CalendarRow private constructor(
      * All parameters are **1-indexed**.
      * For example, 1 represents the first week or Sunday respectively.
      */
-    fun get(week: Int, day: Int): Date {
+    fun get(week: Int, day: Int): LocalDate {
         try {
             return dates[(week - 1) * 7 + (day - 1)]
         } catch (e: IndexOutOfBoundsException) {
@@ -27,10 +25,10 @@ class CalendarRow private constructor(
         fun get(year: Int, month: Int): CalendarRow {
             val range = getCalendarRange(year, month)
 
-            val dates = mutableListOf<Date>()
+            val dates = mutableListOf<LocalDate>()
             var currentDate = range.start
             while (range.contains(currentDate)) {
-                dates.add(Date(currentDate))
+                dates.add(currentDate)
                 currentDate = currentDate.plusDays(1)
             }
             return CalendarRow(dates)
