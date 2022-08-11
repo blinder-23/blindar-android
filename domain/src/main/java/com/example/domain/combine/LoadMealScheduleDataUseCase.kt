@@ -1,4 +1,4 @@
-package com.example.domain
+package com.example.domain.combine
 
 import com.practice.database.meal.MealRepository
 import com.practice.database.meal.entity.MealEntity
