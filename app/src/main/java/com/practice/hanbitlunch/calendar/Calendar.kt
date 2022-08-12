@@ -5,10 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -23,25 +25,43 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.domain.date.DayType
 import com.example.domain.date.calculateDayType
+import com.example.domain.date.toKor
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.util.*
 
 @Composable
 fun Calendar(
+    modifier: Modifier = Modifier,
     calendarState: CalendarState = rememberCalendarState()
 ) {
     // TODO: movable content 적용하기
+    val calendarDays = calendarDays()
+    val calendarDates = CalendarRow.getInstance(calendarState.year, calendarState.month).dates
     LazyVerticalGrid(
-        columns = GridCells.Fixed(6),
-        modifier = Modifier.fillMaxSize()
+        columns = GridCells.Fixed(7),
+        modifier = modifier
+            .fillMaxWidth()
     ) {
-
+        items(items = calendarDays, key = { it.ordinal }) {
+            CalendarDay(day = it)
+        }
+        items(items = calendarDates, key = { it.hashCode() }) {
+            CalendarDate(
+                date = it,
+                onClick = { /* TODO: 구현 */ },
+                currentMonth = calendarState.month,
+                isSelected = (it == calendarState.selectedDate),
+            )
+        }
     }
-    // do what??????
-    // get calendar row and show it
-    // 요일
-    // 실제 날짜
+}
+
+private fun calendarDays(): List<DayOfWeek> {
+    val values = DayOfWeek.values().toList()
+    Collections.rotate(values, 1)
+    return values
 }
 
 /**
@@ -57,11 +77,6 @@ private fun CalendarDay(
         modifier = modifier,
         textColor = day.color(),
     )
-}
-
-private fun DayOfWeek.toKor(): String {
-    val names = listOf("월", "화", "수", "목", "금", "토", "일")
-    return names[this.ordinal]
 }
 
 private val WeekdayColor = Color(0xFF000000)
@@ -106,7 +121,12 @@ private fun CalendarElement(
     textColor: Color = Color.Unspecified,
     textStyle: TextStyle = MaterialTheme.typography.body1,
 ) {
-    Box(modifier = modifier.aspectRatio(1f)) {
+    Box(
+        modifier = Modifier
+            .padding(4.dp)
+            .then(modifier)
+            .aspectRatio(1f)
+    ) {
         Text(
             text = text,
             modifier = Modifier.align(Alignment.Center),
@@ -160,5 +180,18 @@ private fun CalendarDatePreview_Selected() {
             isSelected = true,
             modifier = Modifier.size(50.dp),
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CalendarPreview() {
+    val calendarState = rememberCalendarState(
+        year = 2022,
+        month = 8,
+        selectedDate = LocalDate.of(2022, 8, 12)
+    )
+    HanbitCalendarTheme {
+        Calendar(calendarState = calendarState)
     }
 }
