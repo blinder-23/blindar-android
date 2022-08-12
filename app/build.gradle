@@ -113,6 +113,7 @@ dependencies {
 
     // Module dependency
     implementation project(path: ':neis')
+    implementation project(path: ':domain')
 
     // KTX libraries
     implementation 'androidx.core:core-ktx:1.8.0'
