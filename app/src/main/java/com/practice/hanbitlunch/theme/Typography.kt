@@ -17,32 +17,37 @@ val NanumSquareRound = FontFamily(
 
 val Typography = Typography(
     defaultFontFamily = NanumSquareRound,
-    // Big title
+    // Common/big-title
     h1 = TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 40.sp,
     ),
-    // Title
+    // Common/title
     h2 = TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 36.sp,
     ),
-    // Subtitle
+    // Common/subtitle
     h3 = TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
     ),
-    // Body
+    // Common/body
     body1 = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
     ),
-    // Date
+    // Calendar/date
     body2 = TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
     ),
-    // Button text
+    // Calendar/day
+    caption = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp
+    ),
+    // Button (positive, negative)
     button = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
