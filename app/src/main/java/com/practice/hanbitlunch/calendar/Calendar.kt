@@ -36,7 +36,6 @@ fun Calendar(
     modifier: Modifier = Modifier,
     calendarState: CalendarState = rememberCalendarState()
 ) {
-    // TODO: movable content 적용하기
     val calendarDays = calendarDays()
     val calendarDates = CalendarRow.getInstance(calendarState.year, calendarState.month).dates
     LazyVerticalGrid(
