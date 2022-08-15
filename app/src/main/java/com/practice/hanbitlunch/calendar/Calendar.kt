@@ -1,13 +1,11 @@
 package com.practice.hanbitlunch.calendar
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -34,24 +32,29 @@ import java.util.*
 @Composable
 fun Calendar(
     modifier: Modifier = Modifier,
-    calendarState: CalendarState = rememberCalendarState()
+    calendarState: CalendarState = rememberCalendarState(),
+    onDateClick: (LocalDate) -> Unit = {},
 ) {
     val calendarDays = calendarDays()
     val calendarDates = CalendarRow.getInstance(calendarState.year, calendarState.month).dates
     LazyVerticalGrid(
         columns = GridCells.Fixed(7),
         modifier = modifier
+            .background(MaterialTheme.colors.surface)
             .fillMaxWidth()
     ) {
         items(items = calendarDays, key = { it.ordinal }) {
             CalendarDay(day = it)
         }
-        items(items = calendarDates, key = { it.hashCode() }) {
+        items(items = calendarDates, key = { it.hashCode() }) { date ->
             CalendarDate(
-                date = it,
-                onClick = { /* TODO: 구현 */ },
+                date = date,
+                onClick = {
+                    calendarState.selectedDate = it
+                    onDateClick(it)
+                },
                 currentMonth = calendarState.month,
-                isSelected = (it == calendarState.selectedDate),
+                isSelected = (date == calendarState.selectedDate),
             )
         }
     }
@@ -100,7 +103,11 @@ private fun CalendarDate(
     isSelected: Boolean = false,
 ) {
     val background by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colors.secondary else Color.Transparent
+        targetValue = if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.surface,
+        animationSpec = tween(
+            durationMillis = 500,
+            easing = FastOutSlowInEasing,
+        )
     )
     CalendarElement(
         text = date.dayOfMonth.toString(),
