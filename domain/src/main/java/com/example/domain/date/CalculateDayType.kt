@@ -4,7 +4,9 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 
 fun LocalDate.calculateDayType(currentMonth: Int): DayType {
-    return if (currentMonth == monthValue) {
+    return if (this == LocalDate.MAX || this == LocalDate.MIN) {
+        DayType.Weekday
+    } else if (currentMonth == monthValue) {
         if (isHoliday()) {
             DayType.Holiday
         } else {
