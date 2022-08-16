@@ -35,6 +35,9 @@ class CalendarRow private constructor(
                 dates.add(currentDate)
                 currentDate = currentDate.plusDays(1)
             }
+            if (dates.size <= 35) {
+                dates.add(LocalDate.MAX)
+            }
             return CalendarRow(dates)
         }
     }
