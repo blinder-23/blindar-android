@@ -5,15 +5,21 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.FlingBehavior
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.ScrollScope
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material.rememberSwipeableState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,11 +30,17 @@ import androidx.compose.ui.unit.dp
 import com.example.domain.date.DayType
 import com.example.domain.date.calculateDayType
 import com.example.domain.date.toKor
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerDefaults
+import com.google.accompanist.pager.rememberPagerState
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
+import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.util.*
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Calendar(
     modifier: Modifier = Modifier,
@@ -37,26 +49,117 @@ fun Calendar(
 ) {
     val calendarDays = calendarDays()
     val calendarDates = CalendarRow.getInstance(calendarState.year, calendarState.month).dates
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(7),
+
+    // variables related to swipe
+    val swipeableState = rememberSwipeableState(initialValue = 0f)
+
+
+    Column(
         modifier = modifier
             .background(MaterialTheme.colors.surface)
             .fillMaxWidth()
+            .scrollable(
+                state = rememberScrollState(),
+                orientation = Orientation.Vertical,
+                enabled = false
+            ),
     ) {
-        items(items = calendarDays, key = { it.ordinal }) {
-            CalendarDay(day = it)
+        CalendarDays(days = calendarDays)
+        // TODO: how to swipe this?
+        CalendarDates(
+            year = calendarState.year,
+            month = calendarState.month,
+            selectedDate = calendarState.selectedDate,
+            onDateClick = {
+                calendarState.selectedDate = it
+                onDateClick(it)
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class, ExperimentalSnapperApi::class)
+@Composable
+fun SwipeableCalendarDates(
+    modifier: Modifier = Modifier,
+    calendarState: CalendarState = rememberCalendarState()
+) {
+    val itemCount = Int.MAX_VALUE
+    val firstItemIndex = itemCount / 2
+
+    val pagerState = rememberPagerState(initialPage = firstItemIndex)
+
+    var offset by remember { mutableStateOf(0) }
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect { pageIndex ->
+            // TODO: set calendar state year/month
+            offset = pageIndex - firstItemIndex
+
         }
-        items(items = calendarDates, key = { it.hashCode() }) { date ->
-            CalendarDate(
-                date = date,
-                onClick = {
-                    calendarState.selectedDate = it
-                    onDateClick(it)
-                },
-                currentMonth = calendarState.month,
-                isSelected = (date == calendarState.selectedDate),
-            )
+    }
+
+    // TODO: FIX SWIPE BEHAVIOR
+    val flingBehavior = PagerDefaults.flingBehavior(state = pagerState)
+    HorizontalPager(
+        count = itemCount,
+        state = pagerState,
+        modifier = modifier,
+        flingBehavior = object : FlingBehavior {
+            override suspend fun ScrollScope.performFling(initialVelocity: Float): Float {
+                return with(flingBehavior) {
+                    performFling(initialVelocity * 0.5f)
+                }
+            }
         }
+    ) { index ->
+        val (currentYear, currentMonth) = calendarState.offset(index - firstItemIndex)
+        CalendarDates(
+            year = currentYear,
+            month = currentMonth,
+            selectedDate = calendarState.selectedDate,
+            onDateClick = {
+                calendarState.selectedDate = it
+            }
+        )
+    }
+    Text(
+        text = offset.toString(),
+        style = MaterialTheme.typography.h2
+    )
+}
+
+private fun CalendarState.offset(offset: Int): List<Int> {
+    var year = this.year
+    var month = this.month
+    month += offset
+    if (month <= 0) {
+        while (month !in 1..12) {
+            year--
+            month += 12
+        }
+    } else if (month > 12) {
+        while (month !in 1..12) {
+            year++
+            month -= 12
+        }
+    }
+    return listOf(year, month)
+}
+
+@Composable
+private fun SwipeContent(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .aspectRatio(1f)
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = text)
     }
 }
 
@@ -64,6 +167,21 @@ private fun calendarDays(): List<DayOfWeek> {
     val values = DayOfWeek.values().toList()
     Collections.rotate(values, 1)
     return values
+}
+
+@Composable
+private fun CalendarDays(
+    days: List<DayOfWeek>,
+    modifier: Modifier = Modifier,
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(7),
+        modifier = modifier
+    ) {
+        items(items = days, key = { it.ordinal }) {
+            CalendarDay(day = it)
+        }
+    }
 }
 
 /**
@@ -89,6 +207,32 @@ private fun DayOfWeek.color() = when (this) {
     DayOfWeek.SUNDAY -> HolidayColor
     DayOfWeek.SATURDAY -> SaturdayColor
     else -> WeekdayColor
+}
+
+@Composable
+private fun CalendarDates(
+    year: Int,
+    month: Int,
+    selectedDate: LocalDate,
+    modifier: Modifier = Modifier,
+    onDateClick: (LocalDate) -> Unit = {},
+) {
+    val dates = CalendarRow.getInstance(year, month).dates
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(7),
+        modifier = modifier,
+    ) {
+        items(items = dates, key = { it.hashCode() }) { date ->
+            CalendarDate(
+                date = date,
+                onClick = { clickedDate ->
+                    onDateClick(clickedDate)
+                },
+                currentMonth = month,
+                isSelected = (date == selectedDate),
+            )
+        }
+    }
 }
 
 /**
@@ -199,5 +343,22 @@ private fun CalendarPreview() {
     )
     HanbitCalendarTheme {
         Calendar(calendarState = calendarState)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SwipeableCalendarDatesPreview() {
+    HanbitCalendarTheme {
+        Column(modifier = Modifier.fillMaxSize()) {
+            SwipeableCalendarDates(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .background(MaterialTheme.colors.surface),
+                calendarState = rememberCalendarState()
+            )
+            Spacer(modifier = Modifier.weight(1f))
+        }
     }
 }
