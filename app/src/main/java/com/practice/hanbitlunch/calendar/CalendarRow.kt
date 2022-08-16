@@ -22,6 +22,10 @@ class CalendarRow private constructor(
     }
 
     companion object {
+        fun getInstance(yearMonth: YearMonth) = with(yearMonth) {
+            getInstance(year, month)
+        }
+
         fun getInstance(year: Int, month: Int): CalendarRow {
             val range = getCalendarRange(year, month)
 
