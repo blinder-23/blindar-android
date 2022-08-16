@@ -4,6 +4,7 @@ import java.time.LocalDate
 import java.time.MonthDay
 
 internal fun LocalDate.isHoliday(): Boolean {
+    if (this == LocalDate.MAX || this == LocalDate.MIN) return false
     val monthDay = MonthDay.of(monthValue, dayOfMonth)
     val monthDayToLunar = this.toLunarDate()
     // 공휴일
