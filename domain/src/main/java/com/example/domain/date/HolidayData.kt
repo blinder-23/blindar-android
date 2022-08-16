@@ -15,8 +15,12 @@ internal val holidays = listOf(
 )
 
 internal val lunarHolidays = listOf(
+    MonthDay.of(12, 31),
     MonthDay.of(1, 1),
-    MonthDay.of(8, 15)
+    MonthDay.of(1, 2),
+    MonthDay.of(8, 14),
+    MonthDay.of(8, 15),
+    MonthDay.of(8, 16),
 )
 
 internal val alternativeHolidays = listOf(
