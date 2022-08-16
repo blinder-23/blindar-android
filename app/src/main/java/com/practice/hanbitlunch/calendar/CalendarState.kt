@@ -46,7 +46,7 @@ private val CalendarStateSaver = listSaver(
             it.year,
             it.month,
             it.selectedDate.year,
-            it.selectedDate.month,
+            it.selectedDate.monthValue,
             it.selectedDate.dayOfMonth
         )
     },
