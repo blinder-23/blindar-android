@@ -39,6 +39,7 @@ fun Calendar(
     modifier: Modifier = Modifier,
     calendarState: CalendarState = rememberCalendarState(),
     onDateClick: (LocalDate) -> Unit = {},
+    onSwiped: (YearMonth) -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -50,7 +51,8 @@ fun Calendar(
                 .fillMaxWidth()
                 .background(MaterialTheme.colors.surface),
             calendarState = calendarState,
-            onDateClick = onDateClick
+            onDateClick = onDateClick,
+            onSwiped = onSwiped,
         )
     }
 }
@@ -82,6 +84,7 @@ fun SwipeableCalendarDates(
     modifier: Modifier = Modifier,
     calendarState: CalendarState = rememberCalendarState(),
     onDateClick: (LocalDate) -> Unit = {},
+    onSwiped: (YearMonth) -> Unit = {},
 ) {
     // shows from a year ago to a year after
     val itemCount = 25
@@ -99,6 +102,7 @@ fun SwipeableCalendarDates(
                 year = newYear
                 month = newMonth
             }
+            onSwiped(YearMonth(newYear, newMonth))
         }
     }
 
