@@ -42,7 +42,6 @@ fun Calendar(
 ) {
     Column(
         modifier = modifier
-            .fillMaxSize()
             .background(MaterialTheme.colors.surface)
     ) {
         CalendarDays(days = calendarDays())
