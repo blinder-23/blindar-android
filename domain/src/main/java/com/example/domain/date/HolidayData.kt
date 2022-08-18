@@ -7,6 +7,7 @@ internal val holidays = listOf(
     MonthDay.of(1, 1),
     MonthDay.of(3, 1),
     MonthDay.of(5, 5),
+    MonthDay.of(6, 6),
     MonthDay.of(8, 15),
     // TODO: 개교기념일 추가
     MonthDay.of(10, 3),
