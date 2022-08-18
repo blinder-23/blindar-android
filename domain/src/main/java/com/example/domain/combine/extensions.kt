@@ -46,3 +46,5 @@ fun ScheduleModel.toScheduleEntity() = ScheduleEntity(
     eventName = eventName,
     eventContent = eventContent ?: ""
 )
+
+internal val TAG = "domain"
