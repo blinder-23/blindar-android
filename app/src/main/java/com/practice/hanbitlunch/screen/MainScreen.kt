@@ -98,12 +98,13 @@ private fun MainScreenContents(
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
         if (!mealUiState.isEmpty) {
+            val menusExcludingMilk = mealUiState.menus.filter { it.name != "급식우유" }
             MainScreenContent(title = "식단") {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    items(mealUiState.menus) {
+                    items(menusExcludingMilk) {
                         Body(text = it.name)
                     }
                 }
@@ -111,9 +112,7 @@ private fun MainScreenContents(
         }
         if (!scheduleUiState.isEmpty) {
             MainScreenContent(title = "학사일정") {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
+                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     scheduleUiState.schedules.forEach { schedule ->
                         Body(text = schedule.scheduleName)
                     }
