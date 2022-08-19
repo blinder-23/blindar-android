@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.combine.LoadMealScheduleDataUseCase
 import com.example.domain.combine.MealScheduleEntity
+import com.practice.database.meal.entity.MealEntity
+import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.YearMonth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
@@ -72,7 +74,7 @@ private val LocalDate.yearMonth: YearMonth
 
 private fun MealScheduleEntity.getMeal(date: LocalDate): MealUiState {
     return try {
-        meals.first { meal -> meal.year == date.year && meal.month == date.monthValue && meal.day == date.dayOfMonth }
+        meals.first { it.dateEquals(date) }
             .toMealUiState()
     } catch (e: NoSuchElementException) {
         MealUiState.EmptyMealState
@@ -81,11 +83,16 @@ private fun MealScheduleEntity.getMeal(date: LocalDate): MealUiState {
 
 private fun MealScheduleEntity.getSchedule(date: LocalDate): ScheduleUiState {
     return try {
-        val schedules =
-            schedules.filter { schedule -> schedule.year == date.year && schedule.month == date.monthValue && schedule.day == date.dayOfMonth }
-                .map { Schedule(it.eventName) }
+        val schedules = schedules.filter { it.dateEquals(date) }
+            .map { Schedule(it.eventName) }
         ScheduleUiState(schedules.toPersistentList())
     } catch (e: NoSuchElementException) {
         ScheduleUiState.EmptyScheduleState
     }
 }
+
+private fun MealEntity.dateEquals(date: LocalDate) =
+    this.year == date.year && this.month == date.monthValue && this.day == date.dayOfMonth
+
+private fun ScheduleEntity.dateEquals(date: LocalDate) =
+    this.year == date.year && this.month == date.monthValue && this.day == date.dayOfMonth
