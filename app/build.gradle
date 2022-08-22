@@ -48,7 +48,7 @@ configurations.all {
         }
     }
 }
-// TODO: compileSDK 33?
+
 android {
     compileSdk 33
 
