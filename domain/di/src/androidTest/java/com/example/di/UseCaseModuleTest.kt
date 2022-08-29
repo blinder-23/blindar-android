@@ -1,6 +1,6 @@
 package com.example.di
 
-import com.example.domain.LoadMealScheduleDataUseCase
+import com.example.domain.combine.LoadMealScheduleDataUseCase
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.assertj.core.api.Assertions.assertThat

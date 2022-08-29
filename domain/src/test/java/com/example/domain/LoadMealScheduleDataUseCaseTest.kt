@@ -1,5 +1,9 @@
 package com.example.domain
 
+import com.example.domain.combine.LoadMealScheduleDataUseCase
+import com.example.domain.combine.MealScheduleEntity
+import com.example.domain.combine.toMealEntity
+import com.example.domain.combine.toScheduleEntity
 import com.practice.database.meal.MealFakeDataSource
 import com.practice.database.meal.MealRepository
 import com.practice.database.schedule.ScheduleFakeDataSource

@@ -1,5 +1,6 @@
-package com.example.domain
+package com.example.domain.combine
 
+import android.util.Log
 import com.practice.database.meal.MealRepository
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.ScheduleRepository
@@ -53,7 +54,12 @@ class LoadMealScheduleDataUseCase(
     }
 
     internal suspend fun loadMealFromRemote(year: Int, month: Int): List<MealModel> {
-        return mealRemoteRepository.getMealData(year, month)
+        return try {
+            mealRemoteRepository.getMealData(year, month)
+        } catch (e: Exception) {
+            Log.e(TAG, e.message ?: "")
+            emptyList()
+        }
     }
 
     internal suspend fun storeMealToLocal(meals: List<MealModel>) {

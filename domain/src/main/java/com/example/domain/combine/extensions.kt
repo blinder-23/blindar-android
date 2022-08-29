@@ -1,4 +1,4 @@
-package com.example.domain
+package com.example.domain.combine
 
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.meal.entity.MenuEntity
@@ -46,3 +46,5 @@ fun ScheduleModel.toScheduleEntity() = ScheduleEntity(
     eventName = eventName,
     eventContent = eventContent ?: ""
 )
+
+internal val TAG = "domain"
