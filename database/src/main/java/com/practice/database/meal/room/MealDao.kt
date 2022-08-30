@@ -8,7 +8,7 @@ interface MealDao {
     @Query("SELECT * FROM meal WHERE date LIKE :yearMonthString || '%%'")
     suspend fun getMeals(yearMonthString: String): List<MealEntityRoom>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMeals(meals: List<MealEntityRoom>)
 
     @Delete
