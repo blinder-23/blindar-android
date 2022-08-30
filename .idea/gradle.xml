@@ -11,9 +11,15 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/database" />
+            <option value="$PROJECT_DIR$/database/di" />
+            <option value="$PROJECT_DIR$/domain" />
+            <option value="$PROJECT_DIR$/domain/di" />
+            <option value="$PROJECT_DIR$/neis" />
+            <option value="$PROJECT_DIR$/neis/di" />
+            <option value="$PROJECT_DIR$/preferences" />
           </set>
         </option>
-        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

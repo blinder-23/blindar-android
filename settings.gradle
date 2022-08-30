@@ -7,7 +7,6 @@ pluginManagement {
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
@@ -15,3 +14,10 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Hanbit lunch"
 include ':app'
+include ':neis'
+include ':neis:di'
+include ':database'
+include ':database:di'
+include ':preferences'
+include ':domain'
+include ':domain:di'
