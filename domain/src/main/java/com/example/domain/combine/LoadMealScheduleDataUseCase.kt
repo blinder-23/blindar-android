@@ -28,20 +28,14 @@ class LoadMealScheduleDataUseCase(
     }
 
     internal suspend fun loadMealData(year: Int, month: Int): ImmutableList<MealEntity> {
-        val exists = checkMealExists(year, month)
-        if (!exists) {
-            val mealData = loadMealFromRemote(year, month)
-            storeMealToLocal(mealData)
-        }
+        val mealData = loadMealFromRemote(year, month)
+        storeMealToLocal(mealData)
         return loadMealFromLocal(year, month).toImmutableList()
     }
 
     internal suspend fun loadScheduleData(year: Int, month: Int): ImmutableList<ScheduleEntity> {
-        val exists = checkScheduleExists(year, month)
-        if (!exists) {
-            val scheduleData = loadScheduleFromRemote(year, month)
-            storeScheduleToLocal(scheduleData)
-        }
+        val scheduleData = loadScheduleFromRemote(year, month)
+        storeScheduleToLocal(scheduleData)
         return loadScheduleFromLocal(year, month).toImmutableList()
     }
 
