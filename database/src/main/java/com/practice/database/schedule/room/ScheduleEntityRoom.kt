@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import com.hsk.ktx.getDateString
 import com.practice.database.schedule.entity.ScheduleEntity
 
+// TODO: date를 primary key로 하면 안 될 것 같은데... 같은 날짜에 학사일정이 여러 개일 수 있어서.
 @Entity(tableName = "schedule")
 data class ScheduleEntityRoom(
     @PrimaryKey val date: String,

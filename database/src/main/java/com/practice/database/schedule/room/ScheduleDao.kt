@@ -8,7 +8,7 @@ interface ScheduleDao {
     @Query("SELECT * FROM schedule WHERE date LIKE :yearMonth || '%%'")
     suspend fun getSchedule(yearMonth: String): List<ScheduleEntityRoom>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSchedules(schedules: List<ScheduleEntityRoom>)
 
     @Delete
