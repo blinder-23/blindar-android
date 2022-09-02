@@ -40,12 +40,13 @@ fun Calendar(
     calendarState: CalendarState = rememberCalendarState(),
     onDateClick: (LocalDate) -> Unit = {},
     onSwiped: (YearMonth) -> Unit = {},
+    isLight: Boolean = MaterialTheme.colors.isLight
 ) {
     Column(
         modifier = modifier
             .background(MaterialTheme.colors.surface)
     ) {
-        CalendarDays(days = calendarDays())
+        CalendarDays(days = calendarDays(), isLight = isLight)
         SwipeableCalendarDates(
             modifier = Modifier
                 .fillMaxWidth()
@@ -53,6 +54,7 @@ fun Calendar(
             calendarState = calendarState,
             onDateClick = onDateClick,
             onSwiped = onSwiped,
+            isLight = isLight
         )
     }
 }
@@ -67,13 +69,14 @@ private fun calendarDays(): List<DayOfWeek> {
 private fun CalendarDays(
     days: List<DayOfWeek>,
     modifier: Modifier = Modifier,
+    isLight: Boolean = true,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(7),
         modifier = modifier,
     ) {
         items(items = days, key = { it.ordinal }) {
-            CalendarDay(day = it)
+            CalendarDay(day = it, isLight = isLight)
         }
     }
 }
@@ -85,6 +88,7 @@ fun SwipeableCalendarDates(
     calendarState: CalendarState = rememberCalendarState(),
     onDateClick: (LocalDate) -> Unit = {},
     onSwiped: (YearMonth) -> Unit = {},
+    isLight: Boolean = true,
 ) {
     // shows from a year ago to a year after
     val itemCount = 25
@@ -119,6 +123,7 @@ fun SwipeableCalendarDates(
                 calendarState.selectedDate = it
                 onDateClick(it)
             },
+            isLight = isLight
         )
     }
 }
@@ -130,22 +135,25 @@ fun SwipeableCalendarDates(
 private fun CalendarDay(
     day: DayOfWeek,
     modifier: Modifier = Modifier,
+    isLight: Boolean = true,
 ) {
     CalendarElement(
         text = day.toKor(),
         modifier = modifier,
-        textColor = day.color(),
+        textColor = day.color(isLight),
     )
 }
 
-private val WeekdayColor = Color(0xFF000000)
+private val WeekdayColorOnLight = Color(0xFF000000)
+private val WeekDayColorOnDark = Color(0xFFFFFFFF)
 private val SaturdayColor = Color(0xFF5151FF)
 private val HolidayColor = Color(0xFFFF5F5F)
 
-private fun DayOfWeek.color() = when (this) {
+@Composable
+private fun DayOfWeek.color(isLight: Boolean = true) = when (this) {
     DayOfWeek.SUNDAY -> HolidayColor
     DayOfWeek.SATURDAY -> SaturdayColor
-    else -> WeekdayColor
+    else -> if (isLight) WeekdayColorOnLight else WeekDayColorOnDark
 }
 
 @Composable
@@ -154,6 +162,7 @@ private fun CalendarDates(
     selectedDate: LocalDate,
     modifier: Modifier = Modifier,
     onDateClick: (LocalDate) -> Unit = {},
+    isLight: Boolean = true,
 ) {
     val dates = CalendarRow.getInstance(yearMonth).dates
     LazyVerticalGrid(
@@ -168,6 +177,7 @@ private fun CalendarDates(
                 },
                 currentMonth = yearMonth.month,
                 isSelected = (date == selectedDate),
+                isLight = isLight
             )
         }
     }
@@ -183,6 +193,7 @@ private fun CalendarDate(
     modifier: Modifier = Modifier,
     currentMonth: Int = date.monthValue,
     isSelected: Boolean = false,
+    isLight: Boolean = true
 ) {
     val background by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.surface,
@@ -198,7 +209,11 @@ private fun CalendarDate(
             .clip(shape = CircleShape)
             .background(color = background)
             .clickable { onClick(date) },
-        textColor = date.color(currentMonth),
+        textColor = date.color(
+            isSelected = isSelected,
+            isLight = isLight,
+            currentMonth = currentMonth
+        ),
         textStyle = MaterialTheme.typography.body2,
     )
 }
@@ -225,24 +240,32 @@ private fun CalendarElement(
     }
 }
 
+private val WeekDayOverMonthColor = Color(0xFF999999)
+
 @Composable
-private fun LocalDate.color(currentMonth: Int = this.monthValue) =
-    when (calculateDayType(currentMonth)) {
-        DayType.Weekday -> WeekdayColor
-        DayType.WeekdayOverMonth -> Color(0xFF999999)
-        DayType.Saturday -> SaturdayColor
-        DayType.SaturdayOverMonth -> Color(0xFF9999FF)
-        DayType.Holiday -> HolidayColor
-        DayType.HolidayOverMonth -> Color(0xFFFF9999)
-    }
+private fun LocalDate.color(
+    isSelected: Boolean = false,
+    isLight: Boolean = false,
+    currentMonth: Int = this.monthValue
+) = when (calculateDayType(currentMonth)) {
+    DayType.Weekday -> if (isLight || isSelected) WeekdayColorOnLight else WeekDayColorOnDark
+    DayType.WeekdayOverMonth -> WeekDayOverMonthColor
+    DayType.Saturday -> SaturdayColor
+    DayType.SaturdayOverMonth -> Color(0xFF9999FF)
+    DayType.Holiday -> HolidayColor
+    DayType.HolidayOverMonth -> Color(0xFFFF9999)
+}
 
 @Preview(showBackground = true)
 @Composable
 private fun CalendarDayPreview() {
-    HanbitCalendarTheme {
+    HanbitCalendarTheme(darkTheme = true) {
         CalendarDay(
             day = DayOfWeek.MONDAY,
-            modifier = Modifier.size(50.dp),
+            modifier = Modifier
+                .size(50.dp)
+                .background(MaterialTheme.colors.surface),
+            isLight = false
         )
     }
 }
@@ -280,8 +303,10 @@ private fun CalendarPreview() {
         month = 8,
         selectedDate = LocalDate.of(2022, 8, 12)
     )
-    HanbitCalendarTheme {
-        Calendar(calendarState = calendarState)
+    HanbitCalendarTheme(darkTheme = true) {
+        Column {
+            Calendar(calendarState = calendarState)
+        }
     }
 }
 
