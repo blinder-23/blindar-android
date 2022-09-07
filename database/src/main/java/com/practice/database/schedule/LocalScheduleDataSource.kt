@@ -6,7 +6,7 @@ import com.practice.database.schedule.room.ScheduleDao
 import com.practice.database.schedule.room.toRoomEntities
 import com.practice.database.schedule.room.toScheduleEntities
 
-class ScheduleLocalDataSource(private val scheduleDao: ScheduleDao) : ScheduleDataSource {
+class LocalScheduleDataSource(private val scheduleDao: ScheduleDao) : ScheduleDataSource {
 
     override suspend fun getSchedules(year: Int, month: Int): List<ScheduleEntity> {
         return scheduleDao.getSchedule(getDateString(year, month)).toScheduleEntities()

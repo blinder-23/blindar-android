@@ -7,7 +7,7 @@ import com.practice.neis.meal.pojo.MenuModel
 import com.practice.neis.meal.pojo.NutrientModel
 import com.practice.neis.meal.pojo.OriginModel
 
-class MealFakeRemoteDataSource : MealRemoteDataSource {
+class FakeRemoteMealDataSource : RemoteMealDataSource {
     private val mealModels = (1..20).map {
         MealModel(
             officeCode = seoulOfficeCode,

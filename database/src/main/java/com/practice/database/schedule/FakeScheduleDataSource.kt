@@ -2,7 +2,7 @@ package com.practice.database.schedule
 
 import com.practice.database.schedule.entity.ScheduleEntity
 
-class ScheduleFakeDataSource : ScheduleDataSource {
+class FakeScheduleDataSource : ScheduleDataSource {
 
     private val scheduleEntities = mutableSetOf<ScheduleEntity>()
 

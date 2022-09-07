@@ -10,9 +10,9 @@ import org.junit.jupiter.api.assertThrows
 import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ScheduleRemoteDataSourceImplTest {
+class RemoteScheduleDataSourceImplTest {
 
-    private val source: ScheduleRemoteDataSource = ScheduleRemoteDataSourceImpl(NeisApi.scheduleApi)
+    private val source: RemoteScheduleDataSource = RemoteScheduleDataSourceImpl(NeisApi.scheduleApi)
 
     @Test
     fun getSchedules() = runTest {

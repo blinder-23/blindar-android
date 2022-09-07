@@ -16,9 +16,9 @@ import org.junit.runner.RunWith
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-class MealLocalDataSourceTest {
+class LocalMealDataSourceTest {
     private lateinit var database: MealDatabase
-    private lateinit var source: MealLocalDataSource
+    private lateinit var source: LocalMealDataSource
 
     @Before
     fun init() {
@@ -27,7 +27,7 @@ class MealLocalDataSourceTest {
             context,
             MealDatabase::class.java
         ).build()
-        source = MealLocalDataSource(database.mealDao())
+        source = LocalMealDataSource(database.mealDao())
     }
 
     @After

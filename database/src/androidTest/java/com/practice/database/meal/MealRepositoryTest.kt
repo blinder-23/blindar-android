@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class MealRepositoryTest {
     private lateinit var database: MealDatabase
-    private lateinit var source: MealLocalDataSource
+    private lateinit var source: LocalMealDataSource
     private lateinit var repository: MealRepository
 
     @Before
@@ -28,7 +28,7 @@ class MealRepositoryTest {
             context,
             MealDatabase::class.java
         ).build()
-        source = MealLocalDataSource(database.mealDao())
+        source = LocalMealDataSource(database.mealDao())
         repository = MealRepository(source)
     }
 

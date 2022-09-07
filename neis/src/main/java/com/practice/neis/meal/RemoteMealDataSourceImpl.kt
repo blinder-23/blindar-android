@@ -4,7 +4,7 @@ import com.hsk.ktx.getDateString
 import com.practice.neis.meal.pojo.MealModel
 import com.practice.neis.meal.retrofit.MealApi
 
-class MealRemoteDataSourceImpl(private val api: MealApi) : MealRemoteDataSource {
+class RemoteMealDataSourceImpl(private val api: MealApi) : RemoteMealDataSource {
 
     override suspend fun getMeals(year: Int, month: Int): List<MealModel> {
         val result = api.getMealOfMonth(mealYearMonth = getDateString(year, month))
