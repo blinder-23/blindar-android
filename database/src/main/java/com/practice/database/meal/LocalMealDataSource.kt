@@ -6,7 +6,7 @@ import com.practice.database.meal.room.MealDao
 import com.practice.database.meal.room.toMealEntities
 import com.practice.database.meal.room.toRoomEntities
 
-class MealLocalDataSource(private val mealDao: MealDao) : MealDataSource {
+class LocalMealDataSource(private val mealDao: MealDao) : MealDataSource {
 
     override suspend fun getMeals(year: Int, month: Int): List<MealEntity> {
         return mealDao.getMeals(getDateString(year, month)).toMealEntities()

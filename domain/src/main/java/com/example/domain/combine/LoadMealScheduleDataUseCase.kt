@@ -5,9 +5,9 @@ import com.practice.database.meal.MealRepository
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.ScheduleRepository
 import com.practice.database.schedule.entity.ScheduleEntity
-import com.practice.neis.meal.MealRemoteRepository
+import com.practice.neis.meal.RemoteMealRepository
 import com.practice.neis.meal.pojo.MealModel
-import com.practice.neis.schedule.ScheduleRemoteRepository
+import com.practice.neis.schedule.RemoteScheduleRepository
 import com.practice.neis.schedule.pojo.ScheduleModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -16,10 +16,10 @@ import kotlinx.collections.immutable.toImmutableList
  * UI layer should depend on this use case to get meal and schedule data.
  */
 class LoadMealScheduleDataUseCase(
-    private val mealLocalRepository: MealRepository,
-    private val scheduleLocalRepository: ScheduleRepository,
-    private val mealRemoteRepository: MealRemoteRepository,
-    private val scheduleRemoteRepository: ScheduleRemoteRepository
+    private val localMealRepository: MealRepository,
+    private val localScheduleRepository: ScheduleRepository,
+    private val remoteMealRepository: RemoteMealRepository,
+    private val remoteScheduleRepository: RemoteScheduleRepository
 ) {
     suspend fun loadData(year: Int, month: Int): MealScheduleEntity {
         val mealData = loadMealData(year, month)
@@ -40,16 +40,16 @@ class LoadMealScheduleDataUseCase(
     }
 
     internal suspend fun checkMealExists(year: Int, month: Int): Boolean {
-        return mealLocalRepository.getMeals(year, month).isNotEmpty()
+        return localMealRepository.getMeals(year, month).isNotEmpty()
     }
 
     internal suspend fun checkScheduleExists(year: Int, month: Int): Boolean {
-        return scheduleLocalRepository.getSchedules(year, month).isNotEmpty()
+        return localScheduleRepository.getSchedules(year, month).isNotEmpty()
     }
 
     internal suspend fun loadMealFromRemote(year: Int, month: Int): List<MealModel> {
         return try {
-            mealRemoteRepository.getMealData(year, month)
+            remoteMealRepository.getMealData(year, month)
         } catch (e: Exception) {
             Log.e(TAG, e.message ?: "")
             emptyList()
@@ -58,23 +58,23 @@ class LoadMealScheduleDataUseCase(
 
     internal suspend fun storeMealToLocal(meals: List<MealModel>) {
         val mealEntities = meals.map { it.toMealEntity() }
-        mealLocalRepository.insertMeals(mealEntities)
+        localMealRepository.insertMeals(mealEntities)
     }
 
     internal suspend fun loadMealFromLocal(year: Int, month: Int): List<MealEntity> {
-        return mealLocalRepository.getMeals(year, month)
+        return localMealRepository.getMeals(year, month)
     }
 
     internal suspend fun loadScheduleFromRemote(year: Int, month: Int): List<ScheduleModel> {
-        return scheduleRemoteRepository.getSchedules(year, month)
+        return remoteScheduleRepository.getSchedules(year, month)
     }
 
     internal suspend fun storeScheduleToLocal(schedules: List<ScheduleModel>) {
         val scheduleEntities = schedules.map { it.toScheduleEntity() }
-        scheduleLocalRepository.insertSchedules(scheduleEntities)
+        localScheduleRepository.insertSchedules(scheduleEntities)
     }
 
     internal suspend fun loadScheduleFromLocal(year: Int, month: Int): List<ScheduleEntity> {
-        return scheduleLocalRepository.getSchedules(year, month)
+        return localScheduleRepository.getSchedules(year, month)
     }
 }

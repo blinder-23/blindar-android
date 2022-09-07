@@ -1,7 +1,7 @@
 package com.practice.di.schedule
 
 import com.practice.database.schedule.ScheduleDataSource
-import com.practice.database.schedule.ScheduleLocalDataSource
+import com.practice.database.schedule.LocalScheduleDataSource
 import com.practice.database.schedule.room.ScheduleDao
 import dagger.Module
 import dagger.Provides
@@ -13,7 +13,7 @@ import dagger.hilt.components.SingletonComponent
 object ScheduleDataSourceModule {
 
     @Provides
-    fun provideLocalDataSource(
+    fun provideLocalScheduleDataSource(
         scheduleDao: ScheduleDao
-    ): ScheduleDataSource = ScheduleLocalDataSource(scheduleDao)
+    ): ScheduleDataSource = LocalScheduleDataSource(scheduleDao)
 }

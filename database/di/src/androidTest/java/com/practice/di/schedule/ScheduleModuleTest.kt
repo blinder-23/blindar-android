@@ -1,6 +1,6 @@
 package com.practice.di.schedule
 
-import com.practice.database.schedule.ScheduleLocalDataSource
+import com.practice.database.schedule.LocalScheduleDataSource
 import com.practice.database.schedule.ScheduleRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -16,16 +16,16 @@ class ScheduleModuleTest {
     val hiltRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var scheduleLocalDataSource: ScheduleLocalDataSource
+    lateinit var localScheduleDataSource: LocalScheduleDataSource
 
     @Inject
     lateinit var scheduleRepository: ScheduleRepository
 
     @Test
-    fun injectScheduleLocalDataSource() {
-        assertFalse(::scheduleLocalDataSource.isInitialized)
+    fun injectLocalScheduleDataSource() {
+        assertFalse(::localScheduleDataSource.isInitialized)
         hiltRule.inject()
-        assertTrue(::scheduleLocalDataSource.isInitialized)
+        assertTrue(::localScheduleDataSource.isInitialized)
     }
 
     @Test

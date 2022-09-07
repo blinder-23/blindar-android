@@ -1,6 +1,6 @@
 package com.practice.di.meal
 
-import com.practice.database.meal.MealLocalDataSource
+import com.practice.database.meal.LocalMealDataSource
 import com.practice.database.meal.MealRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -16,16 +16,16 @@ class MealModuleTest {
     val hiltRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var mealLocalDataSource: MealLocalDataSource
+    lateinit var localMealDataSource: LocalMealDataSource
 
     @Inject
     lateinit var mealRepository: MealRepository
 
     @Test
-    fun injectMealLocalDataSource() {
-        assertFalse(::mealLocalDataSource.isInitialized)
+    fun injectLocalMealDataSource() {
+        assertFalse(::localMealDataSource.isInitialized)
         hiltRule.inject()
-        assertTrue(::mealLocalDataSource.isInitialized)
+        assertTrue(::localMealDataSource.isInitialized)
     }
 
     @Test

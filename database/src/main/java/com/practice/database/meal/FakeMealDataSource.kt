@@ -2,7 +2,7 @@ package com.practice.database.meal
 
 import com.practice.database.meal.entity.MealEntity
 
-class MealFakeDataSource : MealDataSource {
+class FakeMealDataSource : MealDataSource {
 
     private val mealEntities = mutableSetOf<MealEntity>()
 

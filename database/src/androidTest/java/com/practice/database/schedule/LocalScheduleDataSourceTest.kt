@@ -16,9 +16,9 @@ import org.junit.runner.RunWith
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-class ScheduleLocalDataSourceTest {
+class LocalScheduleDataSourceTest {
     private lateinit var database: ScheduleDatabase
-    private lateinit var source: ScheduleLocalDataSource
+    private lateinit var source: LocalScheduleDataSource
 
     @Before
     fun init() {
@@ -27,7 +27,7 @@ class ScheduleLocalDataSourceTest {
             context,
             ScheduleDatabase::class.java
         ).build()
-        source = ScheduleLocalDataSource(database.scheduleDao())
+        source = LocalScheduleDataSource(database.scheduleDao())
     }
 
     @After
