@@ -6,6 +6,8 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Hanbit_lunch.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Hanbit_lunch.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Hanbit_lunch.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Hanbit_lunch.app.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Hanbit_lunch.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Hanbit_lunch.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/benchmark/Hanbit_lunch.benchmark.iml" filepath="$PROJECT_DIR$/.idea/modules/benchmark/Hanbit_lunch.benchmark.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/benchmark/Hanbit_lunch.benchmark.main.iml" filepath="$PROJECT_DIR$/.idea/modules/benchmark/Hanbit_lunch.benchmark.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/database/Hanbit_lunch.database.iml" filepath="$PROJECT_DIR$/.idea/modules/database/Hanbit_lunch.database.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/database/di/Hanbit_lunch.database.di.iml" filepath="$PROJECT_DIR$/.idea/modules/database/di/Hanbit_lunch.database.di.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/database/di/Hanbit_lunch.database.di.main.iml" filepath="$PROJECT_DIR$/.idea/modules/database/di/Hanbit_lunch.database.di.main.iml" />

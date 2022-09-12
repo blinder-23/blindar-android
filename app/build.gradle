@@ -58,6 +58,7 @@ android {
         targetSdk 33
         versionCode 1
         versionName '1.0.2-beta01'
+        signingConfig signingConfigs.debug
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -86,6 +87,12 @@ android {
             minifyEnabled false
             testCoverageEnabled true
             debuggable true
+        }
+        benchmark {
+            initWith buildTypes.release
+            signingConfig signingConfigs.debug
+            matchingFallbacks = ['release']
+            debuggable false
         }
     }
     compileOptions {
@@ -167,6 +174,9 @@ dependencies {
 
     // Splash screen
     implementation 'androidx.core:core-splashscreen:1.0.0'
+
+    // Baseline Profile
+    implementation 'androidx.profileinstaller:profileinstaller:1.2.0'
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"

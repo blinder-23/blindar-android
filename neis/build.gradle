@@ -4,15 +4,15 @@ plugins {
 }
 
 Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream());
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
     namespace 'com.practice.neis'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         minSdk 23
-        targetSdk 32
+        targetSdk 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
