@@ -19,6 +19,7 @@
             <option value="$PROJECT_DIR$/neis" />
             <option value="$PROJECT_DIR$/neis/di" />
             <option value="$PROJECT_DIR$/preferences" />
+            <option value="$PROJECT_DIR$/server" />
           </set>
         </option>
       </GradleProjectSettings>
