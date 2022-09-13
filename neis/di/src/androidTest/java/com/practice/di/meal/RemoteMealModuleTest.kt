@@ -1,8 +1,7 @@
-package com.practice.di.schedule
+package com.practice.di.meal
 
-import com.practice.neis.schedule.ScheduleRemoteDataSource
-import com.practice.neis.schedule.ScheduleRemoteDataSourceImpl
-import com.practice.neis.schedule.ScheduleRemoteRepository
+import com.practice.neis.meal.RemoteMealDataSource
+import com.practice.neis.meal.RemoteMealRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertFalse
@@ -12,18 +11,18 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class ScheduleRemoteModuleTest {
+class RemoteMealModuleTest {
     @get:Rule
     val hiltRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var dataSource: ScheduleRemoteDataSource
+    lateinit var dataSource: RemoteMealDataSource
 
     @Inject
-    lateinit var repository: ScheduleRemoteRepository
+    lateinit var repository: RemoteMealRepository
 
     @Test
-    fun injectDataStore() {
+    fun injectDataSource() {
         assertFalse(::dataSource.isInitialized)
         hiltRule.inject()
         assertTrue(::dataSource.isInitialized)

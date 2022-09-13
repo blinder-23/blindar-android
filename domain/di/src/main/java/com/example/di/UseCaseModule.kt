@@ -3,8 +3,8 @@ package com.example.di
 import com.example.domain.combine.LoadMealScheduleDataUseCase
 import com.practice.database.meal.MealRepository
 import com.practice.database.schedule.ScheduleRepository
-import com.practice.neis.meal.MealRemoteRepository
-import com.practice.neis.schedule.ScheduleRemoteRepository
+import com.practice.neis.meal.RemoteMealRepository
+import com.practice.neis.schedule.RemoteScheduleRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,15 +16,15 @@ object UseCaseModule {
 
     @Provides
     fun provideLoadMealScheduleDataUseCase(
-        mealLocalRepository: MealRepository,
-        scheduleLocalRepository: ScheduleRepository,
-        mealRemoteRepository: MealRemoteRepository,
-        scheduleRemoteRepository: ScheduleRemoteRepository,
+        localMealRepository: MealRepository,
+        localScheduleRepository: ScheduleRepository,
+        remoteMealRepository: RemoteMealRepository,
+        remoteScheduleRepository: RemoteScheduleRepository,
     ) = LoadMealScheduleDataUseCase(
-        mealLocalRepository,
-        scheduleLocalRepository,
-        mealRemoteRepository,
-        scheduleRemoteRepository
+        localMealRepository,
+        localScheduleRepository,
+        remoteMealRepository,
+        remoteScheduleRepository
     )
 
 }

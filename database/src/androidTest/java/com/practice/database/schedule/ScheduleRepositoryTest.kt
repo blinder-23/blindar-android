@@ -19,7 +19,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class ScheduleRepositoryTest {
     private lateinit var database: ScheduleDatabase
-    private lateinit var source: ScheduleLocalDataSource
+    private lateinit var source: LocalScheduleDataSource
     private lateinit var repository: ScheduleRepository
 
     @Before
@@ -29,7 +29,7 @@ class ScheduleRepositoryTest {
             context,
             ScheduleDatabase::class.java
         ).build()
-        source = ScheduleLocalDataSource(database.scheduleDao())
+        source = LocalScheduleDataSource(database.scheduleDao())
         repository = ScheduleRepository(source)
     }
 

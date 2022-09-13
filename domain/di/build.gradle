@@ -6,11 +6,11 @@ plugins {
 
 android {
     namespace 'com.example.di'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         minSdk 23
-        targetSdk 32
+        targetSdk 33
 
         testInstrumentationRunner "com.example.di.HiltTestRunner"
         consumerProguardFiles "consumer-rules.pro"

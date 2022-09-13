@@ -1,6 +1,6 @@
 package com.practice.di.meal
 
-import com.practice.database.meal.MealLocalDataSource
+import com.practice.database.meal.LocalMealDataSource
 import com.practice.database.meal.MealRepository
 import com.practice.database.meal.room.MealDao
 import dagger.Module
@@ -13,13 +13,13 @@ import dagger.hilt.components.SingletonComponent
 object MealModule {
 
     @Provides
-    fun provideMealLocalDataSource(
+    fun provideLocalMealDataSource(
         mealDao: MealDao
-    ): MealLocalDataSource = MealLocalDataSource(mealDao)
+    ): LocalMealDataSource = LocalMealDataSource(mealDao)
 
     @Provides
     fun provideMealRepository(
-        mealLocalDataSource: MealLocalDataSource
-    ): MealRepository = MealRepository(mealLocalDataSource)
+        localMealDataSource: LocalMealDataSource
+    ): MealRepository = MealRepository(localMealDataSource)
 
 }

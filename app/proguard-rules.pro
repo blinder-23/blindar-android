@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# java.lang.RuntimeException: Missing type parameter 해결용
+# Gson과 관련된 에러로 보이는데, 어떻게 해결해야 하는지 몰라서 일단 전부 keep함
+-keep public class com.practice.**

@@ -4,7 +4,7 @@ import com.hsk.ktx.getDateString
 import com.practice.neis.common.seoulOfficeCode
 import com.practice.neis.schedule.pojo.ScheduleModel
 
-class ScheduleFakeRemoteDataSource : ScheduleRemoteDataSource {
+class FakeRemoteScheduleDataSource : RemoteScheduleDataSource {
     private val schedules = (1..20).map {
         ScheduleModel(
             officeCode = seoulOfficeCode,
