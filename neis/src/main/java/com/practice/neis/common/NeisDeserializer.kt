@@ -1,6 +1,10 @@
 package com.practice.neis.common
 
-import com.google.gson.*
+import com.google.gson.JsonArray
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.practice.neis.common.pojo.Header
 import com.practice.neis.common.pojo.ResponseModel
 import com.practice.neis.common.pojo.ResultCode
@@ -8,8 +12,8 @@ import java.lang.reflect.Type
 
 interface NeisDeserializer<T, R : ResponseModel<T>> : JsonDeserializer<R> {
     val dataKey: String
-    val createResult: (Header, List<T>) -> R
-    val exception: (String) -> Exception
+    fun createResult(header: Header, responses: List<T>): R
+    fun throwException(message: String): Exception
 
     fun parseData(jsonObj: JsonObject): List<T>
 
@@ -36,7 +40,7 @@ interface NeisDeserializer<T, R : ResponseModel<T>> : JsonDeserializer<R> {
 
     private fun throwException(json: JsonElement?): JsonArray {
         val message = parseErrorMessage(json)
-        throw exception(message)
+        throw throwException(message)
     }
 
     fun parseHeader(headJson: JsonObject): Header {

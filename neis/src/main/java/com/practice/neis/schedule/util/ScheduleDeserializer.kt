@@ -12,9 +12,10 @@ import com.practice.neis.schedule.pojo.ScheduleResponseModel
 
 class ScheduleDeserializer : NeisDeserializer<ScheduleModel, ScheduleResponseModel> {
     override val dataKey: String = "SchoolSchedule"
-    override val createResult: (Header, List<ScheduleModel>) -> ScheduleResponseModel =
-        ::ScheduleResponseModel
-    override val exception: (String) -> Exception = ::ScheduleDeserializerException
+    override fun createResult(header: Header, responses: List<ScheduleModel>) =
+        ScheduleResponseModel(header, responses)
+
+    override fun throwException(message: String) = ScheduleDeserializerException(message)
 
     override fun parseData(jsonObj: JsonObject): List<ScheduleModel> {
         val rows = jsonObj.get("row").asJsonArray
