@@ -134,7 +134,7 @@ dependencies {
     implementation project(path: ':domain:di')
 
     // KTX libraries
-    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation "androidx.core:core-ktx:$core_ktx_version"
     implementation 'androidx.collection:collection-ktx:1.2.0'
     implementation "androidx.palette:palette-ktx:1.0.0"
 
@@ -161,7 +161,7 @@ dependencies {
     // Integration with activities
     implementation 'androidx.activity:activity-compose:1.5.1'
     // Integration with ViewModels
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0-alpha01'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0-alpha02'
     // Integration with observables
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation "androidx.compose.runtime:runtime-rxjava2:$compose_version"

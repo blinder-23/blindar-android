@@ -1,6 +1,7 @@
 buildscript {
     ext {
         kotlin_version = '1.7.10'
+        core_ktx_version = '1.9.0'
         compose_version = '1.2.1'
         hilt_version = '2.43.2'
         retrofit_version = '2.9.0'
