@@ -6,7 +6,6 @@ import com.example.server.schedule.pojo.ScheduleResponse
 import com.google.gson.JsonParser
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import java.util.*
 
 class ScheduleDeserializerTest {
 
@@ -47,11 +46,6 @@ class ScheduleDeserializerTest {
         val jsonObj = JsonParser.parseString(json).asJsonObject
         val actual = deserializer.deserializeSchedules(jsonObj.get("response").asJsonArray)
         assertThat(actual).isEqualTo(answer)
-        // Fri Sep 02 00:00:00 KST 2022
-        // it.date is second, but Date receives millisecond
-        actual.schedules.forEach {
-            println(Date(it.date * 1000))
-        }
     }
 
 }
