@@ -126,12 +126,14 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
 
     // Module dependency
+    implementation project(path: ':preferences')
     implementation project(path: ':database')
     implementation project(path: ':database:di')
     implementation project(path: ':neis')
     implementation project(path: ':neis:di')
     implementation project(path: ':domain')
     implementation project(path: ':domain:di')
+    implementation project(path: ':work')
 
     // KTX libraries
     implementation "androidx.core:core-ktx:$core_ktx_version"
@@ -177,6 +179,18 @@ dependencies {
 
     // Baseline Profile
     implementation 'androidx.profileinstaller:profileinstaller:1.2.0'
+
+    // Preferences DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    // Android StartUp
+    implementation "androidx.startup:startup-runtime:1.1.1"
+
+    // AndroidX WorkManager
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+    androidTestImplementation "androidx.work:work-testing:$work_version"
+    // Hilt with Work
+    implementation 'androidx.hilt:hilt-work:1.0.0'
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
