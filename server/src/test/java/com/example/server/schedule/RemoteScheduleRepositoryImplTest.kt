@@ -1,7 +1,6 @@
 package com.example.server.schedule
 
 import com.example.server.schedule.api.scheduleApi
-import com.example.server.toEpochDay
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -19,7 +18,7 @@ class RemoteScheduleRepositoryImplTest {
         val result = repository.getSchedules(year, month)
 
         assertThat(result.schedules).isNotEmpty
-            .allSatisfy { LocalDate.ofEpochDay(it.date.toEpochDay()).month == Month.SEPTEMBER }
+            .allSatisfy { LocalDate.ofEpochDay(9).month == Month.SEPTEMBER }
     }
 
 }
