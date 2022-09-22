@@ -14,4 +14,5 @@ enum class ThemeMode {
 data class UserPreferences(
     val uiMode: UiMode,
     val themeMode: ThemeMode,
+    val isFirstExecution: Boolean = true,
 )

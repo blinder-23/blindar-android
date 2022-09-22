@@ -11,7 +11,11 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -102,6 +106,16 @@ class PreferencesRepositoryTest {
         assertThat(result[1]).isEqualTo(
             UserPreferences(UiMode.ScreenReader, ThemeMode.Light)
         )
+    }
+
+    @Test
+    fun repository_updateFirstExecution() = runTest {
+        update {
+            updateIsFirstExecution(true)
+        }
+
+        val isFirstExecution = testRepository.dropFirstAndTakeToList(1).first().isFirstExecution
+        assertThat(isFirstExecution).isTrue()
     }
 
     private suspend fun PreferencesRepository.dropFirstAndTakeToList(take: Int) =
