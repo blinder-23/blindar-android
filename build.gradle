@@ -11,6 +11,7 @@ buildscript {
         accompanist_version = '0.23.1'
         junit_version = '5.9.0'
         room_version = '2.4.3'
+        work_version = '2.7.1'
         hsk_ktx_version = '1.0-beta07'
     }
     repositories {
