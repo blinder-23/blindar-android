@@ -1,10 +1,10 @@
 package com.example.di
 
 import com.example.domain.combine.LoadMealScheduleDataUseCase
+import com.example.server.schedule.RemoteScheduleRepository
 import com.practice.database.meal.MealRepository
 import com.practice.database.schedule.ScheduleRepository
 import com.practice.neis.meal.RemoteMealRepository
-import com.practice.neis.schedule.RemoteScheduleRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
