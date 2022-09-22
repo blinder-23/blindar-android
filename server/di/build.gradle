@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace 'com.example.di'
+    namespace 'com.example.server.di'
     compileSdk 33
 
     defaultConfig {
