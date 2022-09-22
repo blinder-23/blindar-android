@@ -4,14 +4,14 @@ import com.example.domain.combine.LoadMealScheduleDataUseCase
 import com.example.domain.combine.MealScheduleEntity
 import com.example.domain.combine.toMealEntity
 import com.example.domain.combine.toScheduleEntity
+import com.example.server.schedule.FakeRemoteScheduleDataSource
+import com.example.server.schedule.RemoteScheduleRepository
 import com.practice.database.meal.FakeMealDataSource
 import com.practice.database.meal.MealRepository
 import com.practice.database.schedule.FakeScheduleDataSource
 import com.practice.database.schedule.ScheduleRepository
 import com.practice.neis.meal.FakeRemoteMealDataSource
 import com.practice.neis.meal.RemoteMealRepository
-import com.practice.neis.schedule.FakeRemoteScheduleDataSource
-import com.practice.neis.schedule.RemoteScheduleRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
@@ -113,17 +113,17 @@ class LoadMealScheduleDataUseCaseTest {
         val exists = useCase.checkScheduleExists(2022, 8)
         assertThat(exists).isFalse
 
-        val remoteRealData = remoteScheduleRepository.getSchedules(2022, 8)
+        val remoteRealData = remoteScheduleRepository.getSchedules(2022, 8).schedules
         val remoteUseCaseData = useCase.loadScheduleFromRemote(2022, 8)
         assertThat(remoteUseCaseData).containsExactlyInAnyOrderElementsOf(remoteRealData)
     }
 
     @Test
     fun `check if use case stores schedule data to local`() = runTest {
-        val schedules = remoteScheduleRepository.getSchedules(2022, 8)
-        useCase.storeScheduleToLocal(schedules)
+        val response = remoteScheduleRepository.getSchedules(2022, 8)
+        useCase.storeScheduleToLocal(response.schedules)
 
-        val scheduleEntities = schedules.map { it.toScheduleEntity() }
+        val scheduleEntities = response.schedules.map { it.toScheduleEntity() }
         val storedSchedules = localScheduleRepository.getSchedules(2022, 8)
         assertThat(storedSchedules).containsExactlyInAnyOrderElementsOf(scheduleEntities)
     }
@@ -146,7 +146,8 @@ class LoadMealScheduleDataUseCaseTest {
 
     @Test
     fun `check if use case loads schedule data when data doesn't exist at local`() = runTest {
-        val expected = remoteScheduleRepository.getSchedules(2022, 8).map { it.toScheduleEntity() }
+        val expected = remoteScheduleRepository.getSchedules(2022, 8).schedules
+            .map { it.toScheduleEntity() }
         val dataFromLocal = useCase.loadScheduleData(2022, 8)
         assertThat(dataFromLocal).containsExactlyInAnyOrderElementsOf(expected)
     }

@@ -1,14 +1,14 @@
 package com.example.domain.combine
 
 import android.util.Log
+import com.example.server.schedule.RemoteScheduleRepository
+import com.example.server.schedule.pojo.ScheduleModel
 import com.practice.database.meal.MealRepository
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.ScheduleRepository
 import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.neis.meal.RemoteMealRepository
 import com.practice.neis.meal.pojo.MealModel
-import com.practice.neis.schedule.RemoteScheduleRepository
-import com.practice.neis.schedule.pojo.ScheduleModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
@@ -66,7 +66,7 @@ class LoadMealScheduleDataUseCase(
     }
 
     internal suspend fun loadScheduleFromRemote(year: Int, month: Int): List<ScheduleModel> {
-        return remoteScheduleRepository.getSchedules(year, month)
+        return remoteScheduleRepository.getSchedules(year, month).schedules
     }
 
     internal suspend fun storeScheduleToLocal(schedules: List<ScheduleModel>) {
