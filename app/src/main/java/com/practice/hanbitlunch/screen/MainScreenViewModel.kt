@@ -12,6 +12,8 @@ import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.YearMonth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -24,7 +26,7 @@ class MainScreenViewModel @Inject constructor(
     private val _uiState: MutableState<MainUiState>
     val uiState: State<MainUiState>
         get() = _uiState
-    private val cache = mutableMapOf<YearMonth, MealScheduleEntity>()
+    private var cache: MealScheduleEntity?
 
     init {
         val current = LocalDate.now()
@@ -37,26 +39,26 @@ class MainScreenViewModel @Inject constructor(
                 scheduleUiState = ScheduleUiState.EmptyScheduleState,
             )
         )
-        viewModelScope.launch {
+        cache = null
+        viewModelScope.launch(Dispatchers.IO) {
             onDateClick(current)
         }
     }
 
     suspend fun onDateClick(clickedDate: LocalDate) {
-        loadMonthlyData(clickedDate.year, clickedDate.monthValue)
-
-        val monthlyData = cache[clickedDate.yearMonth]!!
+        val (clickedYear, clickedMonth) = clickedDate.yearMonth
+        if (cache == null || (cache!!.year != clickedYear) || (cache!!.month != clickedMonth)) {
+            // load..
+            loadMonthlyData(clickedYear, clickedMonth).join()
+        }
         _uiState.value = uiState.value.copy(
-            mealUiState = monthlyData.getMeal(clickedDate),
-            scheduleUiState = monthlyData.getSchedule(clickedDate)
+            mealUiState = cache!!.getMeal(clickedDate),
+            scheduleUiState = cache!!.getSchedule(clickedDate)
         )
     }
 
-    private suspend fun loadMonthlyData(year: Int, month: Int) {
-        if (!cache.containsKey(YearMonth(year, month))) {
-            val entity = loadMealScheduleDataUseCase.loadData(year, month)
-            cache[YearMonth(year, month)] = entity
-        }
+    private fun loadMonthlyData(year: Int, month: Int) = viewModelScope.launch {
+        cache = loadMealScheduleDataUseCase.loadData(year, month).first()
     }
 
     fun onSwiped(yearMonth: YearMonth) {

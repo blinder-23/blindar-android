@@ -21,6 +21,7 @@ import com.practice.hanbitlunch.components.Title
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
@@ -45,8 +46,8 @@ fun MainScreen(
             Calendar(
                 calendarState = calendarState,
                 onDateClick = { date ->
-                    coroutineScope.launch {
-                        viewModel.onDateClick(date)
+                    coroutineScope.launch(Dispatchers.IO) {
+                        viewModel.onDateClick(clickedDate = date)
                     }
                 },
                 onSwiped = viewModel::onSwiped,
@@ -102,6 +103,7 @@ private fun MainScreenContents(
             MainScreenContent(title = "식단") {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
+                    userScrollEnabled = false,
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     items(menusExcludingMilk) {

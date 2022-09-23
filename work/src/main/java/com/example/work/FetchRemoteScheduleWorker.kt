@@ -62,7 +62,7 @@ const val fetchRemoteScheduleWorkTag = "fetch_remote_schedule_work"
 
 fun setPeriodicFetchScheduleWork(workManager: WorkManager) {
     val periodicWork = PeriodicWorkRequestBuilder<FetchRemoteScheduleWorker>(1, TimeUnit.DAYS)
-        .setInitialDelay(1, TimeUnit.DAYS)
+//        .setInitialDelay(1, TimeUnit.DAYS)
         .addTag(fetchRemoteScheduleWorkTag)
         .build()
     workManager.enqueueUniquePeriodicWork(

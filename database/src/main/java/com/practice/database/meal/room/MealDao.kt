@@ -1,12 +1,17 @@
 package com.practice.database.meal.room
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MealDao {
 
     @Query("SELECT * FROM meal WHERE date LIKE :yearMonthString || '%%'")
-    suspend fun getMeals(yearMonthString: String): List<MealEntityRoom>
+    fun getMeals(yearMonthString: String): Flow<List<MealEntityRoom>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMeals(meals: List<MealEntityRoom>)
