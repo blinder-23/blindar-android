@@ -9,6 +9,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.work.WorkManager
+import com.example.work.setPeriodicFetchMealWork
 import com.example.work.setPeriodicFetchScheduleWork
 import com.practice.hanbitlunch.screen.MainScreen
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
@@ -33,18 +34,24 @@ class MainActivity : ComponentActivity() {
                     viewModel = hiltViewModel(),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    enqueueScheduleWork()
+                    enqueuePeriodicWork()
                     WindowCompat.setDecorFitsSystemWindows(window, true)
                 }
             }
         }
     }
 
-    private suspend fun enqueueScheduleWork() {
+    private suspend fun enqueuePeriodicWork() {
         val isFirstExecution = preferencesRepository.fetchInitialPreferences().isFirstExecution
         if (isFirstExecution) {
-            setPeriodicFetchScheduleWork(WorkManager.getInstance(this))
+            setPeriodicWork()
             preferencesRepository.updateIsFirstExecution(false)
         }
+    }
+
+    private fun setPeriodicWork() {
+        val workManager = WorkManager.getInstance(this)
+        setPeriodicFetchScheduleWork(workManager)
+        setPeriodicFetchMealWork(workManager)
     }
 }
