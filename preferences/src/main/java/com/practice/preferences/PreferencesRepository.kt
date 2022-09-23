@@ -2,10 +2,7 @@ package com.practice.preferences
 
 import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
@@ -20,6 +17,7 @@ class PreferencesRepository @Inject constructor(private val dataStore: DataStore
     private object PreferenceKeys {
         val UI_MODE = stringPreferencesKey("ui-mode")
         val THEME_MODE = stringPreferencesKey("theme-mode")
+        val FIRST_EXECUTION = booleanPreferencesKey("first-execution")
     }
 
     val userPreferencesFlow: Flow<UserPreferences> = dataStore.data.catch { exception ->
@@ -35,21 +33,31 @@ class PreferencesRepository @Inject constructor(private val dataStore: DataStore
     }
 
     suspend fun updateUiMode(uiMode: UiMode) {
-        dataStore.edit { preferences ->
-            preferences[PreferenceKeys.UI_MODE] = uiMode.name
+        edit {
+            it[PreferenceKeys.UI_MODE] = uiMode.name
         }
     }
 
     suspend fun updateThemeMode(themeMode: ThemeMode) {
-        dataStore.edit { preferences ->
-            preferences[PreferenceKeys.THEME_MODE] = themeMode.name
+        edit {
+            it[PreferenceKeys.THEME_MODE] = themeMode.name
+        }
+    }
+
+    suspend fun updateIsFirstExecution(isFirstExecution: Boolean) {
+        edit {
+            it[PreferenceKeys.FIRST_EXECUTION] = isFirstExecution
         }
     }
 
     suspend fun clear() {
-        dataStore.edit { preferences ->
-            preferences.clear()
+        edit {
+            it.clear()
         }
+    }
+
+    private suspend fun edit(action: (MutablePreferences) -> Unit): Preferences {
+        return dataStore.edit { action(it) }
     }
 
     /** Should only called once when **only** first preference object is needed.
@@ -66,7 +74,8 @@ class PreferencesRepository @Inject constructor(private val dataStore: DataStore
         val themeMode = ThemeMode.valueOf(
             value = preferences[PreferenceKeys.THEME_MODE] ?: ThemeMode.SystemDefault.name
         )
-        return UserPreferences(uiMode, themeMode)
+        val isFirstExecution = preferences[PreferenceKeys.FIRST_EXECUTION] ?: true
+        return UserPreferences(uiMode, themeMode, isFirstExecution)
     }
 
 }

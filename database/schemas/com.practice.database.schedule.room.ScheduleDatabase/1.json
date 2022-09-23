@@ -2,22 +2,22 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "44242204e3c555939cebe74a6e718bd8",
+    "identityHash": "14b4515605ac3bcecb12339f67d8e8fe",
     "entities": [
       {
         "tableName": "schedule",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `school_code` INTEGER NOT NULL, `event_name` TEXT NOT NULL, `event_content` TEXT NOT NULL, PRIMARY KEY(`date`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `date` TEXT NOT NULL, `event_name` TEXT NOT NULL, `event_content` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
           {
             "fieldPath": "date",
             "columnName": "date",
             "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "schoolCode",
-            "columnName": "school_code",
-            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -35,7 +35,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "date"
+            "id"
           ],
           "autoGenerate": false
         },
@@ -46,7 +46,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '44242204e3c555939cebe74a6e718bd8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '14b4515605ac3bcecb12339f67d8e8fe')"
     ]
   }
 }
