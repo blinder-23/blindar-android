@@ -15,4 +15,10 @@ class HanbitCalendarApplication : Application(), Configuration.Provider {
     override fun getWorkManagerConfiguration(): Configuration {
         return Configuration.Builder().setWorkerFactory(workerFactory).build()
     }
+
+    override fun onCreate() {
+        super.onCreate()
+
+
+    }
 }

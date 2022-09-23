@@ -3,11 +3,7 @@ package com.example.work
 import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
-import androidx.work.CoroutineWorker
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.example.domain.combine.toMealEntity
 import com.practice.database.meal.MealRepository
 import com.practice.database.meal.entity.MealEntity
@@ -25,22 +21,28 @@ class FetchRemoteMealWorker @AssistedInject constructor(
     private val remoteRepository: RemoteMealRepository
 ) : CoroutineWorker(context, workerParams) {
 
+    private val TAG = "FetchRemoteMealWorker"
+
     override suspend fun doWork(): Result {
-        return try {
-            fetchRemoteMeals()
-        } catch (e: Exception) {
-            handleException(e)
-        }
+        return fetchRemoteMeals()
     }
 
     private suspend fun fetchRemoteMeals(): Result {
         val nowYear = LocalDate.now().year
         (nowYear - 2..nowYear).forEach { year ->
             (1..12).forEach { month ->
-                fetchAndStoreMeals(year, month)
+                tryFetchAndStoreMeals(year, month)
             }
         }
         return Result.success()
+    }
+
+    private suspend fun tryFetchAndStoreMeals(year: Int, month: Int) {
+        try {
+            fetchAndStoreMeals(year, month)
+        } catch (e: Exception) {
+            Log.e(TAG, "$year $month: ${e.message}")
+        }
     }
 
     private suspend fun fetchAndStoreMeals(year: Int, month: Int) {
@@ -63,15 +65,27 @@ class FetchRemoteMealWorker @AssistedInject constructor(
     }
 }
 
-private const val fetchRemoteMealWorkTag = "fetch_remote_meal_work"
+const val fetchRemoteMealWorkTag = "fetch_remote_meal_work"
 
 fun setPeriodicFetchMealWork(workManager: WorkManager) {
     val periodicWork = PeriodicWorkRequestBuilder<FetchRemoteMealWorker>(1, TimeUnit.DAYS)
+        .setInitialDelay(1, TimeUnit.DAYS)
         .addTag(fetchRemoteMealWorkTag)
         .build()
     workManager.enqueueUniquePeriodicWork(
         fetchRemoteMealWorkTag,
         ExistingPeriodicWorkPolicy.KEEP,
         periodicWork
+    )
+}
+
+fun setOneTimeFetchMealWork(workManager:WorkManager) {
+    val oneTimeWork = OneTimeWorkRequestBuilder<FetchRemoteMealWorker>()
+        .addTag(fetchRemoteMealWorkTag)
+        .build()
+    workManager.enqueueUniqueWork(
+        fetchRemoteMealWorkTag,
+        ExistingWorkPolicy.KEEP,
+        oneTimeWork
     )
 }

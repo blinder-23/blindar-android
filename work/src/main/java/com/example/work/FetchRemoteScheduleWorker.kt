@@ -3,11 +3,7 @@ package com.example.work
 import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
-import androidx.work.CoroutineWorker
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.example.domain.combine.toScheduleEntity
 import com.example.server.schedule.RemoteScheduleRepository
 import com.practice.database.schedule.ScheduleRepository
@@ -62,15 +58,27 @@ class FetchRemoteScheduleWorker @AssistedInject constructor(
     }
 }
 
-private const val fetchRemoteScheduleWorkTag = "fetch_remote_schedule_work"
+const val fetchRemoteScheduleWorkTag = "fetch_remote_schedule_work"
 
 fun setPeriodicFetchScheduleWork(workManager: WorkManager) {
     val periodicWork = PeriodicWorkRequestBuilder<FetchRemoteScheduleWorker>(1, TimeUnit.DAYS)
+        .setInitialDelay(1, TimeUnit.DAYS)
         .addTag(fetchRemoteScheduleWorkTag)
         .build()
     workManager.enqueueUniquePeriodicWork(
         fetchRemoteScheduleWorkTag,
         ExistingPeriodicWorkPolicy.KEEP,
         periodicWork
+    )
+}
+
+fun setOneTimeFetchScheduleWork(workManager: WorkManager) {
+    val oneTimeWork = OneTimeWorkRequestBuilder<FetchRemoteScheduleWorker>()
+        .addTag(fetchRemoteScheduleWorkTag)
+        .build()
+    workManager.enqueueUniqueWork(
+        fetchRemoteScheduleWorkTag,
+        ExistingWorkPolicy.KEEP,
+        oneTimeWork
     )
 }
