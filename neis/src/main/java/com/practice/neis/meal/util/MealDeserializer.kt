@@ -5,12 +5,18 @@ import com.practice.neis.common.NeisDeserializer
 import com.practice.neis.common.getInt
 import com.practice.neis.common.getString
 import com.practice.neis.common.pojo.Header
-import com.practice.neis.meal.pojo.*
+import com.practice.neis.meal.pojo.MealModel
+import com.practice.neis.meal.pojo.MealResponseModel
+import com.practice.neis.meal.pojo.MenuModel
+import com.practice.neis.meal.pojo.NutrientModel
+import com.practice.neis.meal.pojo.OriginModel
 
 class MealDeserializer : NeisDeserializer<MealModel, MealResponseModel> {
     override val dataKey: String = "mealServiceDietInfo"
-    override val createResult: (Header, List<MealModel>) -> MealResponseModel = ::MealResponseModel
-    override val exception: (String) -> Exception = ::MealDeserializerException
+    override fun createResult(header: Header, responses: List<MealModel>) =
+        MealResponseModel(header, responses)
+
+    override fun throwException(message: String) = MealDeserializerException(message)
 
     override fun parseData(jsonObj: JsonObject): List<MealModel> {
         val rows = jsonObj.get("row").asJsonArray

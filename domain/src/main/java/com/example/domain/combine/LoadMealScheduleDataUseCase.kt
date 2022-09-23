@@ -17,6 +17,7 @@ class LoadMealScheduleDataUseCase(
     suspend fun loadData(year: Int, month: Int): MealScheduleEntity {
         val mealData = loadMealData(year, month)
         val scheduleData = loadScheduleData(year, month)
+        Log.d(TAG, "$year, $month: $mealData")
         return MealScheduleEntity(year, month, mealData, scheduleData)
     }
 
