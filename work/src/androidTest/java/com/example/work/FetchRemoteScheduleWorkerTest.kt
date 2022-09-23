@@ -39,7 +39,7 @@ class FetchRemoteScheduleWorkerTest {
             localRepository.getSchedules(2022, month)
         }.flatten()
         assertThat(allSchedules).isNotEmpty
-            .containsAll(remoteSchedules)
+            .containsExactlyInAnyOrderElementsOf(remoteSchedules)
     }
 
     private fun buildWorker(): FetchRemoteScheduleWorker =
