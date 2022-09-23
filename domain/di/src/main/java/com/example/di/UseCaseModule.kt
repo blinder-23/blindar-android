@@ -1,7 +1,6 @@
 package com.example.di
 
 import com.example.domain.combine.LoadMealScheduleDataUseCase
-import com.example.server.schedule.RemoteScheduleRepository
 import com.practice.database.meal.MealRepository
 import com.practice.database.schedule.ScheduleRepository
 import com.practice.neis.meal.RemoteMealRepository
@@ -19,12 +18,10 @@ object UseCaseModule {
         localMealRepository: MealRepository,
         localScheduleRepository: ScheduleRepository,
         remoteMealRepository: RemoteMealRepository,
-        remoteScheduleRepository: RemoteScheduleRepository,
     ) = LoadMealScheduleDataUseCase(
         localMealRepository,
         localScheduleRepository,
         remoteMealRepository,
-        remoteScheduleRepository
     )
 
 }

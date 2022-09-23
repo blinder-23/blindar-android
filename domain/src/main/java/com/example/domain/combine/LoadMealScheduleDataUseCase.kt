@@ -1,8 +1,6 @@
 package com.example.domain.combine
 
 import android.util.Log
-import com.example.server.schedule.RemoteScheduleRepository
-import com.example.server.schedule.pojo.ScheduleModel
 import com.practice.database.meal.MealRepository
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.ScheduleRepository
@@ -19,7 +17,6 @@ class LoadMealScheduleDataUseCase(
     private val localMealRepository: MealRepository,
     private val localScheduleRepository: ScheduleRepository,
     private val remoteMealRepository: RemoteMealRepository,
-    private val remoteScheduleRepository: RemoteScheduleRepository
 ) {
     suspend fun loadData(year: Int, month: Int): MealScheduleEntity {
         val mealData = loadMealData(year, month)
@@ -34,8 +31,6 @@ class LoadMealScheduleDataUseCase(
     }
 
     internal suspend fun loadScheduleData(year: Int, month: Int): ImmutableList<ScheduleEntity> {
-        val scheduleData = loadScheduleFromRemote(year, month)
-        storeScheduleToLocal(scheduleData)
         return loadScheduleFromLocal(year, month).toImmutableList()
     }
 
@@ -63,15 +58,6 @@ class LoadMealScheduleDataUseCase(
 
     internal suspend fun loadMealFromLocal(year: Int, month: Int): List<MealEntity> {
         return localMealRepository.getMeals(year, month)
-    }
-
-    internal suspend fun loadScheduleFromRemote(year: Int, month: Int): List<ScheduleModel> {
-        return remoteScheduleRepository.getSchedules(year, month).schedules
-    }
-
-    internal suspend fun storeScheduleToLocal(schedules: List<ScheduleModel>) {
-        val scheduleEntities = schedules.map { it.toScheduleEntity() }
-        localScheduleRepository.insertSchedules(scheduleEntities)
     }
 
     internal suspend fun loadScheduleFromLocal(year: Int, month: Int): List<ScheduleEntity> {
