@@ -70,7 +70,7 @@ fun setPeriodicFetchScheduleWork(workManager: WorkManager) {
         .build()
     workManager.enqueueUniquePeriodicWork(
         fetchRemoteScheduleWorkTag,
-        ExistingPeriodicWorkPolicy.REPLACE,
+        ExistingPeriodicWorkPolicy.KEEP,
         periodicWork
     )
 }

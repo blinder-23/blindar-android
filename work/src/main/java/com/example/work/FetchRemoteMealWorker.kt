@@ -58,6 +58,7 @@ class FetchRemoteMealWorker @AssistedInject constructor(
 
     private fun handleException(e: Exception): Result {
         Log.e("FetchRemoteMealWork", e.message ?: "")
+        e.printStackTrace()
         return Result.failure()
     }
 }
@@ -70,7 +71,7 @@ fun setPeriodicFetchMealWork(workManager: WorkManager) {
         .build()
     workManager.enqueueUniquePeriodicWork(
         fetchRemoteMealWorkTag,
-        ExistingPeriodicWorkPolicy.REPLACE,
+        ExistingPeriodicWorkPolicy.KEEP,
         periodicWork
     )
 }
