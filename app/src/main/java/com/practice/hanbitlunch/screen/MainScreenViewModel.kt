@@ -35,7 +35,7 @@ class MainScreenViewModel @Inject constructor(
 
     private val selectedDateFlow: MutableStateFlow<LocalDate>
 
-    private var cache: MealScheduleEntity?
+    private var cache: MutableMap<YearMonth, MealScheduleEntity>
     private var job: Job?
 
     init {
@@ -50,7 +50,7 @@ class MainScreenViewModel @Inject constructor(
             )
         )
         selectedDateFlow = MutableStateFlow(current)
-        cache = null
+        cache = mutableMapOf()
         job = null
     }
 
@@ -65,7 +65,7 @@ class MainScreenViewModel @Inject constructor(
 
     private fun updateUiState(
         selectedDate: LocalDate = uiState.value.selectedDate,
-        entity: MealScheduleEntity? = cache
+        entity: MealScheduleEntity? = cache[selectedDate.yearMonth]
     ) {
         val newMealUiState = entity?.getMeal(selectedDate) ?: uiState.value.mealUiState
         val newScheduleUiState = entity?.getSchedule(selectedDate) ?: uiState.value.scheduleUiState
@@ -78,15 +78,15 @@ class MainScreenViewModel @Inject constructor(
     }
 
     private suspend fun loadMonthlyData(date: LocalDate) {
-        val (queryYear, queryMonth) = date.yearMonth
-        if (cache?.year == queryYear && cache?.month == queryMonth) {
+        if (cache.containsKey(date.yearMonth)) {
             return
         }
+        val (queryYear, queryMonth) = date.yearMonth
         job?.cancelAndJoin()
         job = viewModelScope.launch(Dispatchers.IO) {
             loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).collectLatest {
                 Log.d(tag, "new value for $queryYear $queryMonth! $it")
-                cache = it
+                cache[date.yearMonth] = it
                 updateUiState(entity = it)
             }
         }
