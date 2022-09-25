@@ -22,21 +22,27 @@ class FetchRemoteScheduleWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        return try {
-            fetchRemoteSchedules()
-        } catch (e: Exception) {
-            handleException(e)
-        }
+        return fetchRemoteSchedules()
     }
 
     private suspend fun fetchRemoteSchedules(): Result {
-        val nowYear = LocalDate.now().year
-        (nowYear - 2..nowYear).forEach { year ->
-            (1..12).forEach { month ->
-                fetchAndStoreSchedules(year, month)
+        val now = LocalDate.now()
+        val currentYear = now.year
+        val currentMonth = now.monthValue
+        (currentYear downTo currentYear - 2).forEach { year ->
+            (0 until 12).forEach { months ->
+                tryFetchAndStoreSchedules(year, (currentMonth + months - 1) % 12 + 1)
             }
         }
         return Result.success()
+    }
+
+    private suspend fun tryFetchAndStoreSchedules(year: Int, month: Int) {
+        try {
+            fetchAndStoreSchedules(year, month)
+        } catch (e: Exception) {
+            handleException(e, year, month)
+        }
     }
 
     private suspend fun fetchAndStoreSchedules(year: Int, month: Int) {
@@ -52,8 +58,9 @@ class FetchRemoteScheduleWorker @AssistedInject constructor(
         localRepository.insertSchedules(schedules)
     }
 
-    private fun handleException(e: Exception): Result {
-        Log.e("FetchRemoteScheduleWork", e.message ?: "")
+    private fun handleException(e: Exception, year: Int, month: Int): Result {
+        Log.e("FetchRemoteScheduleWork", "$year, $month has an exception: ${e.message}")
+        e.printStackTrace()
         return Result.failure()
     }
 }
@@ -62,23 +69,11 @@ const val fetchRemoteScheduleWorkTag = "fetch_remote_schedule_work"
 
 fun setPeriodicFetchScheduleWork(workManager: WorkManager) {
     val periodicWork = PeriodicWorkRequestBuilder<FetchRemoteScheduleWorker>(1, TimeUnit.DAYS)
-//        .setInitialDelay(1, TimeUnit.DAYS)
         .addTag(fetchRemoteScheduleWorkTag)
         .build()
     workManager.enqueueUniquePeriodicWork(
         fetchRemoteScheduleWorkTag,
         ExistingPeriodicWorkPolicy.KEEP,
         periodicWork
-    )
-}
-
-fun setOneTimeFetchScheduleWork(workManager: WorkManager) {
-    val oneTimeWork = OneTimeWorkRequestBuilder<FetchRemoteScheduleWorker>()
-        .addTag(fetchRemoteScheduleWorkTag)
-        .build()
-    workManager.enqueueUniqueWork(
-        fetchRemoteScheduleWorkTag,
-        ExistingWorkPolicy.KEEP,
-        oneTimeWork
     )
 }
