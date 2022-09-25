@@ -1,5 +1,6 @@
 package com.practice.hanbitlunch.screen
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -13,7 +14,10 @@ import com.practice.hanbitlunch.calendar.YearMonth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -23,10 +27,16 @@ class MainScreenViewModel @Inject constructor(
     private val loadMealScheduleDataUseCase: LoadMealScheduleDataUseCase,
 ) : ViewModel() {
 
+    private val tag = "MainScreenViewModel"
+
     private val _uiState: MutableState<MainUiState>
     val uiState: State<MainUiState>
         get() = _uiState
+
+    private val selectedDateFlow: MutableStateFlow<LocalDate>
+
     private var cache: MealScheduleEntity?
+    private var job: Job?
 
     init {
         val current = LocalDate.now()
@@ -39,26 +49,47 @@ class MainScreenViewModel @Inject constructor(
                 scheduleUiState = ScheduleUiState.EmptyScheduleState,
             )
         )
+        selectedDateFlow = MutableStateFlow(current)
         cache = null
-        viewModelScope.launch(Dispatchers.IO) {
-            onDateClick(current)
-        }
+        job = null
+    }
+
+    fun onLaunch() = viewModelScope.launch(Dispatchers.IO) {
+        loadMonthlyData(uiState.value.selectedDate)
     }
 
     suspend fun onDateClick(clickedDate: LocalDate) {
-        val (clickedYear, clickedMonth) = clickedDate.yearMonth
-        if (cache == null || (cache!!.year != clickedYear) || (cache!!.month != clickedMonth)) {
-            // load..
-            loadMonthlyData(clickedYear, clickedMonth).join()
-        }
-        _uiState.value = uiState.value.copy(
-            mealUiState = cache!!.getMeal(clickedDate),
-            scheduleUiState = cache!!.getSchedule(clickedDate)
-        )
+        loadMonthlyData(clickedDate)
+        updateUiState(selectedDate = clickedDate)
     }
 
-    private fun loadMonthlyData(year: Int, month: Int) = viewModelScope.launch {
-        cache = loadMealScheduleDataUseCase.loadData(year, month).first()
+    private fun updateUiState(
+        selectedDate: LocalDate = uiState.value.selectedDate,
+        entity: MealScheduleEntity? = cache
+    ) {
+        val newMealUiState = entity?.getMeal(selectedDate) ?: uiState.value.mealUiState
+        val newScheduleUiState = entity?.getSchedule(selectedDate) ?: uiState.value.scheduleUiState
+        _uiState.value = uiState.value.copy(
+            selectedDate = selectedDate,
+            mealUiState = newMealUiState,
+            scheduleUiState = newScheduleUiState
+        )
+        Log.d(tag, "$selectedDate, $newMealUiState, $newScheduleUiState")
+    }
+
+    private suspend fun loadMonthlyData(date: LocalDate) {
+        val (queryYear, queryMonth) = date.yearMonth
+        if (cache?.year == queryYear && cache?.month == queryMonth) {
+            return
+        }
+        job?.cancelAndJoin()
+        job = viewModelScope.launch(Dispatchers.IO) {
+            loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).collectLatest {
+                Log.d(tag, "new value for $queryYear $queryMonth! $it")
+                cache = it
+                updateUiState(entity = it)
+            }
+        }
     }
 
     fun onSwiped(yearMonth: YearMonth) {

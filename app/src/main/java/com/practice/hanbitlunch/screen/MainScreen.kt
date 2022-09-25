@@ -35,6 +35,7 @@ fun MainScreen(
     LaunchedEffect(true) {
         systemUiController.setStatusBarColor(systemBarColor)
         onLaunch()
+        viewModel.onLaunch()
     }
 
     val uiState = viewModel.uiState.value
