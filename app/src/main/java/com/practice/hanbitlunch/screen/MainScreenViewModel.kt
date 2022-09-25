@@ -74,7 +74,7 @@ class MainScreenViewModel @Inject constructor(
             mealUiState = newMealUiState,
             scheduleUiState = newScheduleUiState
         )
-        Log.d(tag, "$selectedDate, $newMealUiState, $newScheduleUiState")
+//        Log.d(tag, "$selectedDate, $newMealUiState, $newScheduleUiState")
     }
 
     private suspend fun loadMonthlyData(date: LocalDate) {
@@ -85,7 +85,7 @@ class MainScreenViewModel @Inject constructor(
         job?.cancelAndJoin()
         job = viewModelScope.launch(Dispatchers.IO) {
             loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).collectLatest {
-                Log.d(tag, "new value for $queryYear $queryMonth! $it")
+//                Log.d(tag, "new value for $queryYear $queryMonth! $it")
                 cache[date.yearMonth] = it
                 updateUiState(entity = it)
             }
