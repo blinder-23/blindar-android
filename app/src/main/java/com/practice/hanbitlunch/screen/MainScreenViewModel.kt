@@ -58,7 +58,7 @@ class MainScreenViewModel @Inject constructor(
         loadMonthlyData(uiState.value.selectedDate)
     }
 
-    suspend fun onDateClick(clickedDate: LocalDate) {
+    fun onDateClick(clickedDate: LocalDate) = viewModelScope.launch(Dispatchers.IO) {
         loadMonthlyData(clickedDate)
         updateUiState(selectedDate = clickedDate)
     }
