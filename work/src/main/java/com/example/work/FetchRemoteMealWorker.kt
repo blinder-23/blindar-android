@@ -23,7 +23,9 @@ class FetchRemoteMealWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        return fetchRemoteMeals()
+        val result = fetchRemoteMeals()
+        Log.d("FetchRemoteMealWorker", "finished!")
+        return result
     }
 
     private suspend fun fetchRemoteMeals(): Result {
