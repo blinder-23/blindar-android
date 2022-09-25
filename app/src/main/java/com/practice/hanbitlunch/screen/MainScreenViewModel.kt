@@ -1,6 +1,5 @@
 package com.practice.hanbitlunch.screen
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -27,8 +26,6 @@ class MainScreenViewModel @Inject constructor(
     private val loadMealScheduleDataUseCase: LoadMealScheduleDataUseCase,
 ) : ViewModel() {
 
-    private val tag = "MainScreenViewModel"
-
     private val _uiState: MutableState<MainUiState>
     val uiState: State<MainUiState>
         get() = _uiState
@@ -54,15 +51,17 @@ class MainScreenViewModel @Inject constructor(
         job = null
     }
 
+    /**
+     * init 블럭에서 실행하지 않은 이유는 [IllegalStateException]이 발생하기 때문이다.
+     * 아직 UI에 반영되지 않은 값을 참조하기 때문에 예외가 발생한다.
+     */
     fun onLaunch() = viewModelScope.launch(Dispatchers.IO) {
         loadMonthlyData(uiState.value.selectedDate)
     }
 
-    fun onDateClick(clickedDate: LocalDate) = viewModelScope.launch(Dispatchers.IO) {
-        loadMonthlyData(clickedDate)
-        updateUiState(selectedDate = clickedDate)
-    }
-
+    /**
+     * Kotlin Flow의 combine 함수를 본따 작성했다.
+     */
     private fun updateUiState(
         selectedDate: LocalDate = uiState.value.selectedDate,
         entity: MealScheduleEntity? = cache[selectedDate.yearMonth]
@@ -74,7 +73,11 @@ class MainScreenViewModel @Inject constructor(
             mealUiState = newMealUiState,
             scheduleUiState = newScheduleUiState
         )
-//        Log.d(tag, "$selectedDate, $newMealUiState, $newScheduleUiState")
+    }
+
+    fun onDateClick(clickedDate: LocalDate) = viewModelScope.launch(Dispatchers.IO) {
+        loadMonthlyData(clickedDate)
+        updateUiState(selectedDate = clickedDate)
     }
 
     private suspend fun loadMonthlyData(date: LocalDate) {
@@ -85,7 +88,6 @@ class MainScreenViewModel @Inject constructor(
         job?.cancelAndJoin()
         job = viewModelScope.launch(Dispatchers.IO) {
             loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).collectLatest {
-//                Log.d(tag, "new value for $queryYear $queryMonth! $it")
                 cache[date.yearMonth] = it
                 updateUiState(entity = it)
             }
