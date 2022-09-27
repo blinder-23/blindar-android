@@ -8,6 +8,7 @@ import com.example.domain.combine.toMealEntity
 import com.practice.database.meal.MealRepository
 import com.practice.database.meal.entity.MealEntity
 import com.practice.neis.meal.RemoteMealRepository
+import com.practice.neis.meal.util.MealDeserializerException
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.time.LocalDate
@@ -21,17 +22,19 @@ class FetchRemoteMealWorker @AssistedInject constructor(
     private val remoteRepository: RemoteMealRepository
 ) : CoroutineWorker(context, workerParams) {
 
-    private val TAG = "FetchRemoteMealWorker"
-
     override suspend fun doWork(): Result {
-        return fetchRemoteMeals()
+        val result = fetchRemoteMeals()
+        Log.d("FetchRemoteMealWorker", "finished!")
+        return result
     }
 
     private suspend fun fetchRemoteMeals(): Result {
-        val nowYear = LocalDate.now().year
-        (nowYear - 2..nowYear).forEach { year ->
-            (1..12).forEach { month ->
-                tryFetchAndStoreMeals(year, month)
+        val now = LocalDate.now()
+        val currentYear = now.year
+        val currentMonth = now.monthValue
+        (currentYear downTo currentYear - 2).forEach { year ->
+            (0 until 12).forEach { months ->
+                tryFetchAndStoreMeals(year, (currentMonth + months - 1) % 12 + 1)
             }
         }
         return Result.success()
@@ -40,8 +43,10 @@ class FetchRemoteMealWorker @AssistedInject constructor(
     private suspend fun tryFetchAndStoreMeals(year: Int, month: Int) {
         try {
             fetchAndStoreMeals(year, month)
+        } catch (e: MealDeserializerException) {
+            handleException(e, year, month)
         } catch (e: Exception) {
-            Log.e(TAG, "$year $month: ${e.message}")
+            e.printStackTrace()
         }
     }
 
@@ -58,9 +63,8 @@ class FetchRemoteMealWorker @AssistedInject constructor(
         localRepository.insertMeals(meals)
     }
 
-    private fun handleException(e: Exception): Result {
-        Log.e("FetchRemoteMealWork", e.message ?: "")
-        e.printStackTrace()
+    private fun handleException(e: Exception, year: Int, month: Int): Result {
+        Log.e("FetchRemoteMealWorker", "$year, $month has an exception: ${e.message}")
         return Result.failure()
     }
 }
@@ -69,23 +73,11 @@ const val fetchRemoteMealWorkTag = "fetch_remote_meal_work"
 
 fun setPeriodicFetchMealWork(workManager: WorkManager) {
     val periodicWork = PeriodicWorkRequestBuilder<FetchRemoteMealWorker>(1, TimeUnit.DAYS)
-        .setInitialDelay(1, TimeUnit.DAYS)
         .addTag(fetchRemoteMealWorkTag)
         .build()
     workManager.enqueueUniquePeriodicWork(
         fetchRemoteMealWorkTag,
         ExistingPeriodicWorkPolicy.KEEP,
         periodicWork
-    )
-}
-
-fun setOneTimeFetchMealWork(workManager:WorkManager) {
-    val oneTimeWork = OneTimeWorkRequestBuilder<FetchRemoteMealWorker>()
-        .addTag(fetchRemoteMealWorkTag)
-        .build()
-    workManager.enqueueUniqueWork(
-        fetchRemoteMealWorkTag,
-        ExistingWorkPolicy.KEEP,
-        oneTimeWork
     )
 }

@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,7 +20,6 @@ import com.practice.hanbitlunch.components.Title
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
@@ -34,21 +32,17 @@ fun MainScreen(
     LaunchedEffect(true) {
         systemUiController.setStatusBarColor(systemBarColor)
         onLaunch()
+        viewModel.onLaunch()
     }
 
     val uiState = viewModel.uiState.value
     val calendarState = rememberCalendarState()
-    val coroutineScope = rememberCoroutineScope()
     Column(modifier = modifier.background(MaterialTheme.colors.surface)) {
         Column {
             MainScreenHeader(year = uiState.year, month = uiState.month)
             Calendar(
                 calendarState = calendarState,
-                onDateClick = { date ->
-                    coroutineScope.launch {
-                        viewModel.onDateClick(date)
-                    }
-                },
+                onDateClick = viewModel::onDateClick,
                 onSwiped = viewModel::onSwiped,
             )
         }
@@ -102,6 +96,7 @@ private fun MainScreenContents(
             MainScreenContent(title = "식단") {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
+                    userScrollEnabled = false,
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     items(menusExcludingMilk) {

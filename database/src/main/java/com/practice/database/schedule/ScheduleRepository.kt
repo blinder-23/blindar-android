@@ -1,10 +1,11 @@
 package com.practice.database.schedule
 
 import com.practice.database.schedule.entity.ScheduleEntity
+import kotlinx.coroutines.flow.Flow
 
 class ScheduleRepository(private val dataSource: ScheduleDataSource) {
 
-    suspend fun getSchedules(year: Int, month: Int): List<ScheduleEntity> {
+    suspend fun getSchedules(year: Int, month: Int): Flow<List<ScheduleEntity>> {
         return dataSource.getSchedules(year, month)
     }
 

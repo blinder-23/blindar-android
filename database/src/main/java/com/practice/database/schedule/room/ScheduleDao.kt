@@ -1,12 +1,17 @@
 package com.practice.database.schedule.room
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ScheduleDao {
 
     @Query("SELECT * FROM schedule WHERE date LIKE :yearMonth || '%%'")
-    suspend fun getSchedule(yearMonth: String): List<ScheduleEntityRoom>
+    fun getSchedule(yearMonth: String): Flow<List<ScheduleEntityRoom>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSchedules(schedules: List<ScheduleEntityRoom>)

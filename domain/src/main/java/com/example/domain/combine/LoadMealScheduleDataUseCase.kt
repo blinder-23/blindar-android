@@ -6,6 +6,15 @@ import com.practice.database.schedule.ScheduleRepository
 import com.practice.database.schedule.entity.ScheduleEntity
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlin.coroutines.CoroutineContext
 
 /**
  * UI layer should depend on this use case to get meal and schedule data.
@@ -13,26 +22,34 @@ import kotlinx.collections.immutable.toImmutableList
 class LoadMealScheduleDataUseCase(
     private val localMealRepository: MealRepository,
     private val localScheduleRepository: ScheduleRepository,
-) {
-    suspend fun loadData(year: Int, month: Int): MealScheduleEntity {
-        val mealData = loadMealData(year, month)
-        val scheduleData = loadScheduleData(year, month)
-        return MealScheduleEntity(year, month, mealData, scheduleData)
+) : CoroutineScope {
+    override val coroutineContext: CoroutineContext
+        get() = SupervisorJob() + Dispatchers.IO
+
+    suspend fun loadData(year: Int, month: Int): StateFlow<MealScheduleEntity> =
+        combine(
+            loadMealData(year, month),
+            loadScheduleData(year, month)
+        ) { mealData, scheduleData ->
+            MealScheduleEntity(year, month, mealData, scheduleData)
+        }.stateIn(this)
+
+    internal suspend fun loadMealData(year: Int, month: Int): Flow<ImmutableList<MealEntity>> {
+        return loadMealFromLocal(year, month).map { it.toImmutableList() }
     }
 
-    internal suspend fun loadMealData(year: Int, month: Int): ImmutableList<MealEntity> {
-        return loadMealFromLocal(year, month).toImmutableList()
+    internal suspend fun loadScheduleData(
+        year: Int,
+        month: Int
+    ): Flow<ImmutableList<ScheduleEntity>> {
+        return loadScheduleFromLocal(year, month).map { it.toImmutableList() }
     }
 
-    internal suspend fun loadScheduleData(year: Int, month: Int): ImmutableList<ScheduleEntity> {
-        return loadScheduleFromLocal(year, month).toImmutableList()
-    }
-
-    internal suspend fun loadMealFromLocal(year: Int, month: Int): List<MealEntity> {
+    internal suspend fun loadMealFromLocal(year: Int, month: Int): Flow<List<MealEntity>> {
         return localMealRepository.getMeals(year, month)
     }
 
-    internal suspend fun loadScheduleFromLocal(year: Int, month: Int): List<ScheduleEntity> {
+    internal suspend fun loadScheduleFromLocal(year: Int, month: Int): Flow<List<ScheduleEntity>> {
         return localScheduleRepository.getSchedules(year, month)
     }
 }

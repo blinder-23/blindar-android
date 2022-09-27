@@ -5,11 +5,13 @@ import com.practice.database.meal.entity.MealEntity
 import com.practice.database.meal.room.MealDao
 import com.practice.database.meal.room.toMealEntities
 import com.practice.database.meal.room.toRoomEntities
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class LocalMealDataSource(private val mealDao: MealDao) : MealDataSource {
 
-    override suspend fun getMeals(year: Int, month: Int): List<MealEntity> {
-        return mealDao.getMeals(getDateString(year, month)).toMealEntities()
+    override suspend fun getMeals(year: Int, month: Int): Flow<List<MealEntity>> {
+        return mealDao.getMeals(getDateString(year, month)).map { it.toMealEntities() }
     }
 
     override suspend fun insertMeals(meals: List<MealEntity>) {

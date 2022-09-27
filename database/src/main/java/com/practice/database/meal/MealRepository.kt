@@ -1,10 +1,11 @@
 package com.practice.database.meal
 
 import com.practice.database.meal.entity.MealEntity
+import kotlinx.coroutines.flow.Flow
 
 class MealRepository(private val dataSource: MealDataSource) {
 
-    suspend fun getMeals(year: Int, month: Int): List<MealEntity> {
+    suspend fun getMeals(year: Int, month: Int): Flow<List<MealEntity>> {
         return dataSource.getMeals(year, month)
     }
 
