@@ -10,7 +10,7 @@ class FakeScheduleDataSource : ScheduleDataSource {
 
     override suspend fun getSchedules(year: Int, month: Int): Flow<List<ScheduleEntity>> {
         return flow {
-            scheduleEntities.filter { it.year == year && it.month == month }
+            emit(scheduleEntities.filter { it.year == year && it.month == month })
         }
     }
 

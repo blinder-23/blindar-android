@@ -10,7 +10,7 @@ class FakeMealDataSource : MealDataSource {
 
     override suspend fun getMeals(year: Int, month: Int): Flow<List<MealEntity>> {
         return flow {
-            mealEntities.filter { it.year == year && it.month == month }
+            emit(mealEntities.filter { it.year == year && it.month == month })
         }
     }
 
