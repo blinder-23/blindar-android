@@ -92,14 +92,13 @@ private fun MainScreenContents(
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
         if (!mealUiState.isEmpty) {
-            val menusExcludingMilk = mealUiState.menus.filter { it.name != "급식우유" }
             MainScreenContent(title = "식단") {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     userScrollEnabled = false,
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    items(menusExcludingMilk) {
+                    items(mealUiState.menus) {
                         Body(text = it.name)
                     }
                 }
