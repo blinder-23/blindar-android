@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.work.WorkManager
 import com.example.work.setPeriodicFetchMealWork
@@ -27,7 +26,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // Splash screen will dismiss as soon as the app draws its first frame
         installSplashScreen()
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             HanbitCalendarTheme {
                 MainScreen(
@@ -35,7 +33,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) {
                     enqueuePeriodicWork()
-                    WindowCompat.setDecorFitsSystemWindows(window, true)
                 }
             }
         }

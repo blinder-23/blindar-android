@@ -57,7 +57,7 @@ android {
         minSdk 26
         targetSdk 33
         versionCode 1
-        versionName '1.1-beta02'
+        versionName '1.1-beta03'
         signingConfig signingConfigs.debug
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
