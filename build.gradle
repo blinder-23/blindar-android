@@ -1,6 +1,7 @@
 buildscript {
     ext {
         kotlin_version = '1.7.10'
+        core_ktx_version = '1.9.0'
         compose_version = '1.2.1'
         hilt_version = '2.43.2'
         retrofit_version = '2.9.0'
@@ -10,6 +11,7 @@ buildscript {
         accompanist_version = '0.23.1'
         junit_version = '5.9.0'
         room_version = '2.4.3'
+        work_version = '2.7.1'
         hsk_ktx_version = '1.0-beta07'
     }
     repositories {
@@ -17,7 +19,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0-rc01'
+        classpath 'com.android.tools.build:gradle:7.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
         classpath 'org.jacoco:org.jacoco.core:0.8.7'

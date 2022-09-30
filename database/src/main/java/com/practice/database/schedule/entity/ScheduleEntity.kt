@@ -1,7 +1,7 @@
 package com.practice.database.schedule.entity
 
 data class ScheduleEntity(
-    val schoolCode: Int,
+    val id: Int,
     val year: Int,
     val month: Int,
     val day: Int,

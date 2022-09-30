@@ -12,7 +12,7 @@ class ConverterTest {
     @Test
     fun scheduleEntity_toRoomEntity() {
         val scheduleEntity = ScheduleEntity(
-            schoolCode = 10,
+            id = 1,
             year = 2022,
             month = 5,
             day = 1,
@@ -21,8 +21,8 @@ class ConverterTest {
         )
         val expected = with(scheduleEntity) {
             ScheduleEntityRoom(
+                id = id,
                 date = getDateString(year, month, day),
-                schoolCode = schoolCode,
                 eventName = eventName,
                 eventContent = eventContent
             )
@@ -33,14 +33,14 @@ class ConverterTest {
     @Test
     fun scheduleEntityRoom_toEntity() {
         val roomEntity = ScheduleEntityRoom(
+            id = 1,
             date = "20050105",
-            schoolCode = 100,
             eventName = "개교기념일",
             eventContent = "와!"
         )
         val expected = with(roomEntity) {
             ScheduleEntity(
-                schoolCode = schoolCode,
+                id = id,
                 year = date.slice(0..3).toInt(),
                 month = date.slice(4..5).toInt(),
                 day = date.slice(6..7).toInt(),

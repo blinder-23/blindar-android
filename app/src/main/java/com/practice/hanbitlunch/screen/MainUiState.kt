@@ -32,7 +32,7 @@ data class MealUiState(
 fun MealEntity.toMealUiState() = if (this.menus.isEmpty()) {
     MealUiState.EmptyMealState
 } else {
-    MealUiState(menus.map { Menu(it.name) }.toPersistentList())
+    MealUiState(menus.filter { it.name != "급식우유" }.map { Menu(it.name) }.toPersistentList())
 }
 
 data class Menu(

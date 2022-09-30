@@ -35,6 +35,7 @@ android {
 
 dependencies {
     implementation project(path: ':neis')
+    implementation project(path: ':server')
     implementation project(path: ':database')
 
     // mwy3055 library

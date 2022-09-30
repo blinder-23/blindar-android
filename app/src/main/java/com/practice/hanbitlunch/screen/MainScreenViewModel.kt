@@ -12,6 +12,11 @@ import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.YearMonth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -24,7 +29,11 @@ class MainScreenViewModel @Inject constructor(
     private val _uiState: MutableState<MainUiState>
     val uiState: State<MainUiState>
         get() = _uiState
-    private val cache = mutableMapOf<YearMonth, MealScheduleEntity>()
+
+    private val selectedDateFlow: MutableStateFlow<LocalDate>
+
+    private var cache: MutableMap<YearMonth, MealScheduleEntity>
+    private var job: Job?
 
     init {
         val current = LocalDate.now()
@@ -37,25 +46,51 @@ class MainScreenViewModel @Inject constructor(
                 scheduleUiState = ScheduleUiState.EmptyScheduleState,
             )
         )
-        viewModelScope.launch {
-            onDateClick(current)
-        }
+        selectedDateFlow = MutableStateFlow(current)
+        cache = mutableMapOf()
+        job = null
     }
 
-    suspend fun onDateClick(clickedDate: LocalDate) {
-        loadMonthlyData(clickedDate.year, clickedDate.monthValue)
+    /**
+     * init 블럭에서 실행하지 않은 이유는 [IllegalStateException]이 발생하기 때문이다.
+     * 아직 UI에 반영되지 않은 값을 참조하기 때문에 예외가 발생한다.
+     */
+    fun onLaunch() = viewModelScope.launch(Dispatchers.IO) {
+        loadMonthlyData(uiState.value.selectedDate)
+    }
 
-        val monthlyData = cache[clickedDate.yearMonth]!!
+    /**
+     * Kotlin Flow의 combine 함수를 본따 작성했다.
+     */
+    private fun updateUiState(
+        selectedDate: LocalDate = uiState.value.selectedDate,
+        entity: MealScheduleEntity? = cache[selectedDate.yearMonth]
+    ) {
+        val newMealUiState = entity?.getMeal(selectedDate) ?: uiState.value.mealUiState
+        val newScheduleUiState = entity?.getSchedule(selectedDate) ?: uiState.value.scheduleUiState
         _uiState.value = uiState.value.copy(
-            mealUiState = monthlyData.getMeal(clickedDate),
-            scheduleUiState = monthlyData.getSchedule(clickedDate)
+            selectedDate = selectedDate,
+            mealUiState = newMealUiState,
+            scheduleUiState = newScheduleUiState
         )
     }
 
-    private suspend fun loadMonthlyData(year: Int, month: Int) {
-        if (!cache.containsKey(YearMonth(year, month))) {
-            val entity = loadMealScheduleDataUseCase.loadData(year, month)
-            cache[YearMonth(year, month)] = entity
+    fun onDateClick(clickedDate: LocalDate) = viewModelScope.launch(Dispatchers.IO) {
+        loadMonthlyData(clickedDate)
+        updateUiState(selectedDate = clickedDate)
+    }
+
+    private suspend fun loadMonthlyData(date: LocalDate) {
+        if (cache.containsKey(date.yearMonth)) {
+            return
+        }
+        val (queryYear, queryMonth) = date.yearMonth
+        job?.cancelAndJoin()
+        job = viewModelScope.launch(Dispatchers.IO) {
+            loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).collectLatest {
+                cache[date.yearMonth] = it
+                updateUiState(entity = it)
+            }
         }
     }
 

@@ -26,7 +26,7 @@ object TestUtil {
         eventName: String = "",
         eventContent: String = ""
     ) = ScheduleEntity(
-        schoolCode = 900,
+        id = 1,
         year = year,
         month = month,
         day = day,
