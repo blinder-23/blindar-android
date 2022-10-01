@@ -21,8 +21,8 @@
 -renamesourcefileattribute SourceFile
 
 # Application classes that will be serialized/deserialized over Gson
--keep class com.practice.database.** { <fields>; }
--keep class com.example.domain.** { <fields>; }
+-keep class com.practice.** { <fields>; }
+-keep class com.example.** { <fields>; }
 
 # Prevent proguard from stripping interface information from TypeAdapter, TypeAdapterFactory,
 # JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
