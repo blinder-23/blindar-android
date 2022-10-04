@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.practice.database.TestUtil
 import com.practice.database.meal.room.MealDatabase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -40,7 +41,7 @@ class LocalMealDataSourceTest {
         val meals = TestUtil.createMealEntity(10)
         source.insertMeals(meals)
 
-        val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month)
+        val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month).first()
         assertEquals(meals, mealsInDatabase)
     }
 
@@ -50,7 +51,7 @@ class LocalMealDataSourceTest {
         source.insertMeals(meals)
         source.deleteMeals(meals)
 
-        val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month)
+        val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month).first()
         assert(mealsInDatabase.isEmpty())
     }
 
@@ -60,7 +61,7 @@ class LocalMealDataSourceTest {
         source.insertMeals(meals)
         source.deleteMeals(meals[0].year, meals[0].month)
 
-        val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month)
+        val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month).first()
         assert(mealsInDatabase.isEmpty())
     }
 
@@ -70,7 +71,7 @@ class LocalMealDataSourceTest {
         source.insertMeals(meals)
         source.clear()
 
-        val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month)
+        val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month).first()
         assert(mealsInDatabase.isEmpty())
     }
 

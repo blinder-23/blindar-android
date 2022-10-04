@@ -37,8 +37,6 @@ dependencies {
     implementation project(path: ':database:di')
     implementation project(path: ':server')
     implementation project(path: ':server:di')
-    implementation project(path: ':neis')
-    implementation project(path: ':neis:di')
     implementation project(path: ':domain')
 
     // Kotlin immutable collections

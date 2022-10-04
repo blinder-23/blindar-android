@@ -12,6 +12,7 @@ import com.example.server.schedule.FakeRemoteScheduleDataSource
 import com.example.server.schedule.RemoteScheduleRepository
 import com.practice.database.schedule.FakeScheduleDataSource
 import com.practice.database.schedule.ScheduleRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -36,7 +37,7 @@ class FetchRemoteScheduleWorkerTest {
         assertThat(result).isEqualTo(ListenableWorker.Result.success())
 
         val allSchedules = months.map { month ->
-            localRepository.getSchedules(2022, month)
+            localRepository.getSchedules(2022, month).first()
         }.flatten()
         assertThat(allSchedules).isNotEmpty
             .containsExactlyInAnyOrderElementsOf(remoteSchedules)
