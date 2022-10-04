@@ -12,6 +12,7 @@ import com.practice.database.meal.FakeMealDataSource
 import com.practice.database.meal.MealRepository
 import com.practice.neis.meal.FakeRemoteMealDataSource
 import com.practice.neis.meal.RemoteMealRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -36,7 +37,7 @@ class FetchRemoteMealWorkerTest {
         assertThat(result).isEqualTo(ListenableWorker.Result.success())
 
         val storedMeals = months.map { month ->
-            localRepository.getMeals(2022, month)
+            localRepository.getMeals(2022, month).first()
         }.flatten()
         assertThat(remoteMeals).isNotEmpty
             .containsExactlyInAnyOrderElementsOf(storedMeals)
