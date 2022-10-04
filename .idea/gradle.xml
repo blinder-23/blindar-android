@@ -16,8 +16,6 @@
             <option value="$PROJECT_DIR$/database/di" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/domain/di" />
-            <option value="$PROJECT_DIR$/neis" />
-            <option value="$PROJECT_DIR$/neis/di" />
             <option value="$PROJECT_DIR$/preferences" />
             <option value="$PROJECT_DIR$/server" />
             <option value="$PROJECT_DIR$/server/di" />
