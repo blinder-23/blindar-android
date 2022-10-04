@@ -8,10 +8,10 @@ import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
 import com.example.domain.combine.toMealEntity
+import com.example.server.meal.FakeRemoteMealDataSource
+import com.example.server.meal.RemoteMealRepository
 import com.practice.database.meal.FakeMealDataSource
 import com.practice.database.meal.MealRepository
-import com.practice.neis.meal.FakeRemoteMealDataSource
-import com.practice.neis.meal.RemoteMealRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -29,7 +29,7 @@ class FetchRemoteMealWorkerTest {
     fun doWork(): Unit = runBlocking {
         val months = (1..12)
         val remoteMeals = months.map { month ->
-            remoteRepository.getMealData(2022, month)
+            remoteRepository.getMeals(2022, month).response
         }.flatten().map { it.toMealEntity() }
 
         val worker = buildWorker()
