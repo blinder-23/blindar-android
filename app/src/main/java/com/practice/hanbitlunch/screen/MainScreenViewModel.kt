@@ -1,5 +1,6 @@
 package com.practice.hanbitlunch.screen
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -89,6 +90,7 @@ class MainScreenViewModel @Inject constructor(
         job = viewModelScope.launch(Dispatchers.IO) {
             loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).collectLatest {
                 cache[date.yearMonth] = it
+                Log.d("MainScreenViewModel", "meal for ${date.month}: ${it.meals.size}")
                 updateUiState(entity = it)
             }
         }

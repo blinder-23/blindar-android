@@ -57,7 +57,9 @@ class FetchRemoteMealWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchMeals(year: Int, month: Int): List<MealEntity> =
-        remoteRepository.getMeals(year, month).response.map { it.toMealEntity() }
+        remoteRepository.getMeals(year, month).response.map { it.toMealEntity() }.apply {
+            Log.d("FetchRemoteMealWorker", "meal $year $month: $size")
+        }
 
     private suspend fun storeMeals(meals: List<MealEntity>) {
         localRepository.insertMeals(meals)
