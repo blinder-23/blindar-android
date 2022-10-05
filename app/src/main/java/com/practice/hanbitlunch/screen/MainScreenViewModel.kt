@@ -1,6 +1,5 @@
 package com.practice.hanbitlunch.screen
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -52,14 +51,6 @@ class MainScreenViewModel @Inject constructor(
         selectedDateFlow = MutableStateFlow(current)
         cache = mutableMapOf()
         job = null
-        onTest()
-    }
-
-    private fun onTest() = viewModelScope.launch(Dispatchers.IO) {
-        (1..12).forEach { month ->
-            val fromRemote = remoteMealRepository.getMeals(2022, month)
-            Log.d("MainScreenViewModel", "meal $month from remote: ${fromRemote.response.size}")
-        }
     }
 
     /**
@@ -100,7 +91,6 @@ class MainScreenViewModel @Inject constructor(
         job = viewModelScope.launch(Dispatchers.IO) {
             loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).collectLatest {
                 cache[date.yearMonth] = it
-                Log.d("MainScreenViewModel", "meal for ${date.month}: ${it.meals.size}")
                 updateUiState(entity = it)
             }
         }

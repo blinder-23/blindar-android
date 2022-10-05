@@ -1,6 +1,5 @@
 package com.practice.database.meal
 
-import android.util.Log
 import com.hsk.ktx.getDateString
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.meal.room.MealDao
@@ -13,13 +12,13 @@ class LocalMealDataSource(private val mealDao: MealDao) : MealDataSource {
 
     override suspend fun getMeals(year: Int, month: Int): Flow<List<MealEntity>> {
         return mealDao.getMeals(getDateString(year, month)).map {
-            Log.d("LocalMealDataSource", "meal $year $month: ${it.size}")
+//            Log.d("LocalMealDataSource", "meal $year $month: ${it.size}")
             it.toMealEntities()
         }
     }
 
     override suspend fun insertMeals(meals: List<MealEntity>) {
-        Log.d("LocalMealDataSource", "Inserted: ${meals[0].year} ${meals[0].month} ${meals.size}")
+//        Log.d("LocalMealDataSource", "Inserted: ${meals[0].year} ${meals[0].month} ${meals.size}")
         mealDao.insertMeals(meals.toRoomEntities())
     }
 
