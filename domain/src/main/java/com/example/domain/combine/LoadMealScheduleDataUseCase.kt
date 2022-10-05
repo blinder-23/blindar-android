@@ -1,5 +1,6 @@
 package com.example.domain.combine
 
+import android.util.Log
 import com.practice.database.meal.MealRepository
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.ScheduleRepository
@@ -9,11 +10,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -35,7 +32,10 @@ class LoadMealScheduleDataUseCase(
         }.stateIn(this)
 
     internal suspend fun loadMealData(year: Int, month: Int): Flow<ImmutableList<MealEntity>> {
-        return loadMealFromLocal(year, month).map { it.toImmutableList() }
+        return loadMealFromLocal(year, month).map {
+            Log.d("CombineUseCase", "meal $year $month: ${it.size}")
+            it.toImmutableList()
+        }
     }
 
     internal suspend fun loadScheduleData(

@@ -57,7 +57,7 @@ android {
         minSdk 26
         targetSdk 33
         versionCode 1
-        versionName '1.2.0-beta01'
+        versionName '1.2.0-beta02'
         signingConfig signingConfigs.debug
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -129,8 +129,6 @@ dependencies {
     implementation project(path: ':preferences')
     implementation project(path: ':database')
     implementation project(path: ':database:di')
-    implementation project(path: ':neis')
-    implementation project(path: ':neis:di')
     implementation project(path: ':domain')
     implementation project(path: ':domain:di')
     implementation project(path: ':work')
