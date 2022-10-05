@@ -35,7 +35,10 @@ class LoadMealScheduleDataUseCase(
         }.stateIn(this)
 
     internal suspend fun loadMealData(year: Int, month: Int): Flow<ImmutableList<MealEntity>> {
-        return loadMealFromLocal(year, month).map { it.toImmutableList() }
+        return loadMealFromLocal(year, month).map {
+//            Log.d("CombineUseCase", "meal $year $month: ${it.size}")
+            it.toImmutableList()
+        }
     }
 
     internal suspend fun loadScheduleData(

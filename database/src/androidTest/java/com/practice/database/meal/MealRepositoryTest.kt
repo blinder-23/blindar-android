@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.practice.database.TestUtil
 import com.practice.database.meal.room.MealDatabase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -42,7 +43,7 @@ class MealRepositoryTest {
         val meals = TestUtil.createMealEntity(10)
         repository.insertMeals(meals)
 
-        val actual = repository.getMeals(meals[0].year, meals[0].month)
+        val actual = repository.getMeals(meals[0].year, meals[0].month).first()
         assertEquals(meals, actual)
     }
 
@@ -51,7 +52,7 @@ class MealRepositoryTest {
         val (meal1, meal2, meal3) = TestUtil.createMealEntity(3)
         repository.insertMeals(meal1, meal2, meal3)
 
-        val actual = repository.getMeals(meal1.year, meal1.month)
+        val actual = repository.getMeals(meal1.year, meal1.month).first()
         assertEquals(listOf(meal1, meal2, meal3), actual)
     }
 
@@ -61,7 +62,7 @@ class MealRepositoryTest {
         repository.insertMeals(meal1, meal2, meal3)
         repository.deleteMeals(meal1, meal2, meal3)
 
-        val actual = repository.getMeals(meal1.year, meal1.month)
+        val actual = repository.getMeals(meal1.year, meal1.month).first()
         assert(actual.isEmpty())
     }
 
@@ -71,7 +72,7 @@ class MealRepositoryTest {
         repository.insertMeals(meals)
         repository.deleteMeals(meals[0].year, meals[0].month)
 
-        val actual = repository.getMeals(meals[0].year, meals[0].month)
+        val actual = repository.getMeals(meals[0].year, meals[0].month).first()
         assert(actual.isEmpty())
     }
 
@@ -81,7 +82,7 @@ class MealRepositoryTest {
         repository.insertMeals(meals)
         repository.clear()
 
-        val actual = repository.getMeals(meals[0].year, meals[0].month)
+        val actual = repository.getMeals(meals[0].year, meals[0].month).first()
         assert(actual.isEmpty())
     }
 }

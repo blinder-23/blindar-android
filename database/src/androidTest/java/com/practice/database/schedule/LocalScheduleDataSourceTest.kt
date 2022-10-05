@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.practice.database.TestUtil
 import com.practice.database.schedule.room.ScheduleDatabase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -40,7 +41,7 @@ class LocalScheduleDataSourceTest {
         val schedules = TestUtil.createScheduleEntity(5)
         source.insertSchedules(schedules)
 
-        val actual = source.getSchedules(schedules[0].year, schedules[0].month)
+        val actual = source.getSchedules(schedules[0].year, schedules[0].month).first()
         assertEquals(schedules, actual)
     }
 
@@ -50,7 +51,7 @@ class LocalScheduleDataSourceTest {
         source.insertSchedules(schedules)
         source.deleteSchedules(schedules.subList(0, 2))
 
-        val actual = source.getSchedules(schedules[0].year, schedules[0].month)
+        val actual = source.getSchedules(schedules[0].year, schedules[0].month).first()
         assertEquals(schedules.subList(2, 5), actual)
     }
 
@@ -60,7 +61,7 @@ class LocalScheduleDataSourceTest {
         source.insertSchedules(schedules)
         source.deleteSchedules(schedules[0].year, schedules[0].month)
 
-        val actual = source.getSchedules(schedules[0].year, schedules[0].month)
+        val actual = source.getSchedules(schedules[0].year, schedules[0].month).first()
         assert(actual.isEmpty())
     }
 
@@ -70,7 +71,7 @@ class LocalScheduleDataSourceTest {
         source.insertSchedules(schedules)
         source.clear()
 
-        val actual = source.getSchedules(schedules[0].year, schedules[0].month)
+        val actual = source.getSchedules(schedules[0].year, schedules[0].month).first()
         assert(actual.isEmpty())
     }
 }

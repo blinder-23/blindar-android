@@ -3,12 +3,15 @@ package com.example.work
 import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
-import androidx.work.*
+import androidx.work.CoroutineWorker
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
 import com.example.domain.combine.toMealEntity
+import com.example.server.meal.RemoteMealRepository
 import com.practice.database.meal.MealRepository
 import com.practice.database.meal.entity.MealEntity
-import com.practice.neis.meal.RemoteMealRepository
-import com.practice.neis.meal.util.MealDeserializerException
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.time.LocalDate
@@ -43,10 +46,8 @@ class FetchRemoteMealWorker @AssistedInject constructor(
     private suspend fun tryFetchAndStoreMeals(year: Int, month: Int) {
         try {
             fetchAndStoreMeals(year, month)
-        } catch (e: MealDeserializerException) {
-            handleException(e, year, month)
         } catch (e: Exception) {
-            e.printStackTrace()
+            handleException(e, year, month)
         }
     }
 
@@ -55,9 +56,10 @@ class FetchRemoteMealWorker @AssistedInject constructor(
         storeMeals(meals)
     }
 
-    private suspend fun fetchMeals(year: Int, month: Int) =
-        remoteRepository.getMealData(year, month)
-            .map { it.toMealEntity() }
+    private suspend fun fetchMeals(year: Int, month: Int): List<MealEntity> =
+        remoteRepository.getMeals(year, month).response.map { it.toMealEntity() }.apply {
+            Log.d("FetchRemoteMealWorker", "meal $year $month: $size")
+        }
 
     private suspend fun storeMeals(meals: List<MealEntity>) {
         localRepository.insertMeals(meals)

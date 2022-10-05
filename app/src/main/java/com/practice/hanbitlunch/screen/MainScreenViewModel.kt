@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.combine.LoadMealScheduleDataUseCase
 import com.example.domain.combine.MealScheduleEntity
+import com.example.server.meal.RemoteMealRepository
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.YearMonth
@@ -24,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
     private val loadMealScheduleDataUseCase: LoadMealScheduleDataUseCase,
+    private val remoteMealRepository: RemoteMealRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableState<MainUiState>

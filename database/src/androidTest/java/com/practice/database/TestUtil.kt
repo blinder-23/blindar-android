@@ -37,8 +37,8 @@ object TestUtil {
 
     fun createScheduleEntityRoom(count: Int): List<ScheduleEntityRoom> = (0 until count).map {
         ScheduleEntityRoom(
+            id = it,
             date = (20220601 + it).toString(),
-            schoolCode = 100,
             eventName = "event $it",
             eventContent = "content $it",
         )
@@ -46,7 +46,7 @@ object TestUtil {
 
     fun createScheduleEntity(count: Int): List<ScheduleEntity> = (0 until count).map {
         ScheduleEntity(
-            schoolCode = 100,
+            id = it,
             year = 2022,
             month = 6,
             day = 1 + it,

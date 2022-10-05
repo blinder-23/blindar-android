@@ -1,5 +1,9 @@
 package com.example.domain.combine
 
+import com.example.server.meal.pojo.MealModel
+import com.example.server.meal.pojo.MenuModel
+import com.example.server.meal.pojo.NutrientModel
+import com.example.server.meal.pojo.OriginModel
 import com.example.server.schedule.pojo.ScheduleModel
 import com.example.server.toEpochDate
 import com.practice.database.meal.entity.MealEntity
@@ -7,36 +11,33 @@ import com.practice.database.meal.entity.MenuEntity
 import com.practice.database.meal.entity.NutrientEntity
 import com.practice.database.meal.entity.OriginEntity
 import com.practice.database.schedule.entity.ScheduleEntity
-import com.practice.neis.meal.pojo.MealModel
-import com.practice.neis.meal.pojo.MenuModel
-import com.practice.neis.meal.pojo.NutrientModel
-import com.practice.neis.meal.pojo.OriginModel
 
+// TODO: implement calorie from server
 fun MealModel.toMealEntity() = MealEntity(
-    schoolCode = schoolCode,
-    year = date.substring(0..3).toInt(),
-    month = date.substring(4..5).toInt(),
-    day = date.substring(6..7).toInt(),
-    menus = menu.map { it.toMenuEntity() },
-    origins = originCountries.map { it.toOriginEntity() },
+    schoolCode = 7010578,
+    year = ymd.substring(0..3).toInt(),
+    month = ymd.substring(4..5).toInt(),
+    day = ymd.substring(6..7).toInt(),
+    menus = dishes.map { it.toMenuEntity() },
+    origins = origins.map { it.toOriginEntity() },
     nutrients = nutrients.map { it.toNutrientEntity() },
-    calorie = calorie,
+    calorie = 0.0,
 )
 
 fun MenuModel.toMenuEntity() = MenuEntity(
-    name = name,
-    allergies = allergic,
+    name = menu,
+    allergies = allergies,
 )
 
 fun OriginModel.toOriginEntity() = OriginEntity(
     ingredient = ingredient,
-    origin = originCountry,
+    origin = origin,
 )
 
 fun NutrientModel.toNutrientEntity() = NutrientEntity(
-    name = name,
+    name = nutrient,
     unit = unit,
-    amount = amount,
+    amount = amount.toDouble(),
 )
 
 fun ScheduleModel.toScheduleEntity(): ScheduleEntity {
