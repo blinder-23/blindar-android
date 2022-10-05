@@ -1,6 +1,5 @@
 package com.practice.hanbitlunch.screen
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -8,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.combine.LoadMealScheduleDataUseCase
 import com.example.domain.combine.MealScheduleEntity
+import com.example.server.meal.RemoteMealRepository
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.YearMonth
@@ -25,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
     private val loadMealScheduleDataUseCase: LoadMealScheduleDataUseCase,
+    private val remoteMealRepository: RemoteMealRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableState<MainUiState>
@@ -90,7 +91,6 @@ class MainScreenViewModel @Inject constructor(
         job = viewModelScope.launch(Dispatchers.IO) {
             loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).collectLatest {
                 cache[date.yearMonth] = it
-                Log.d("MainScreenViewModel", "meal for ${date.month}: ${it.meals.size}")
                 updateUiState(entity = it)
             }
         }
