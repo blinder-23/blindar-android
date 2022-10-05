@@ -132,6 +132,8 @@ dependencies {
     implementation project(path: ':domain')
     implementation project(path: ':domain:di')
     implementation project(path: ':work')
+    implementation project(path: ':server')
+    implementation project(path: ':server:di')
 
     // KTX libraries
     implementation "androidx.core:core-ktx:$core_ktx_version"
