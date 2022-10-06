@@ -29,6 +29,12 @@ class MainScreenViewModel @Inject constructor(
     private val _uiState: MutableState<MainUiState>
     val uiState: State<MainUiState>
         get() = _uiState
+    // For internal use only
+    private var state: MainUiState
+        get() = _uiState.value
+        set(value) {
+            _uiState.value = value
+        }
 
     private val selectedDateFlow: MutableStateFlow<LocalDate>
 
@@ -56,19 +62,19 @@ class MainScreenViewModel @Inject constructor(
      * 아직 UI에 반영되지 않은 값을 참조하기 때문에 예외가 발생한다.
      */
     fun onLaunch() = viewModelScope.launch(Dispatchers.IO) {
-        loadMonthlyData(uiState.value.selectedDate)
+        loadMonthlyData(state.selectedDate)
     }
 
     /**
      * Kotlin Flow의 combine 함수를 본따 작성했다.
      */
     private fun updateUiState(
-        selectedDate: LocalDate = uiState.value.selectedDate,
+        selectedDate: LocalDate = state.selectedDate,
         entity: MealScheduleEntity? = cache[selectedDate.yearMonth]
     ) {
-        val newMealUiState = entity?.getMeal(selectedDate) ?: uiState.value.mealUiState
-        val newScheduleUiState = entity?.getSchedule(selectedDate) ?: uiState.value.scheduleUiState
-        _uiState.value = uiState.value.copy(
+        val newMealUiState = entity?.getMeal(selectedDate) ?: state.mealUiState
+        val newScheduleUiState = entity?.getSchedule(selectedDate) ?: state.scheduleUiState
+        state = state.copy(
             selectedDate = selectedDate,
             mealUiState = newMealUiState,
             scheduleUiState = newScheduleUiState
@@ -96,7 +102,7 @@ class MainScreenViewModel @Inject constructor(
 
     fun onSwiped(yearMonth: YearMonth) {
         val (year, month) = yearMonth
-        _uiState.value = uiState.value.copy(
+        state = state.copy(
             year = year,
             month = month,
         )
