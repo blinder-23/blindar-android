@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.practice.database.TestUtil
 import com.practice.database.schedule.room.ScheduleDao
 import com.practice.database.schedule.room.ScheduleDatabase
+import com.practice.database.schedule.room.yearMonth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -42,7 +43,7 @@ class ScheduleDaoTest {
         val schedules = TestUtil.createScheduleEntityRoom(5)
         dao.insertSchedules(schedules)
 
-        val actual = dao.getSchedule(schedules[0].date.slice(0..5)).first()
+        val actual = dao.getSchedule(schedules[0].yearMonth).first()
         assertThat(actual).containsExactlyInAnyOrderElementsOf(schedules)
     }
 
@@ -55,14 +56,14 @@ class ScheduleDaoTest {
         val remain = schedules.subList(2, 5)
         dao.deleteSchedules(deleted)
 
-        val actual = dao.getSchedule(schedules[0].date.slice(0..5)).first()
+        val actual = dao.getSchedule(schedules[0].yearMonth).first()
         assertThat(actual).containsExactlyInAnyOrderElementsOf(remain)
     }
 
     @Test
     fun dao_deleteSchedules_byDate() = runTest {
         val schedules = TestUtil.createScheduleEntityRoom(5)
-        val date = schedules[0].date.slice(0..5)
+        val date = schedules[0].yearMonth
         dao.insertSchedules(schedules)
         dao.deleteSchedules(date)
 
@@ -76,7 +77,7 @@ class ScheduleDaoTest {
         dao.insertSchedules(schedules)
         dao.clear()
 
-        val actual = dao.getSchedule(schedules[0].date.slice(0..5)).first()
+        val actual = dao.getSchedule(schedules[0].yearMonth).first()
         assertThat(actual).isEmpty()
     }
 
