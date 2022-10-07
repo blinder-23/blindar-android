@@ -9,8 +9,8 @@ import com.practice.database.meal.room.MealDatabase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -44,7 +44,7 @@ class MealRepositoryTest {
         repository.insertMeals(meals)
 
         val actual = repository.getMeals(meals[0].year, meals[0].month).first()
-        assertEquals(meals, actual)
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(meals)
     }
 
     @Test
@@ -53,7 +53,7 @@ class MealRepositoryTest {
         repository.insertMeals(meal1, meal2, meal3)
 
         val actual = repository.getMeals(meal1.year, meal1.month).first()
-        assertEquals(listOf(meal1, meal2, meal3), actual)
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(listOf(meal1, meal2, meal3))
     }
 
     @Test
@@ -63,7 +63,7 @@ class MealRepositoryTest {
         repository.deleteMeals(meal1, meal2, meal3)
 
         val actual = repository.getMeals(meal1.year, meal1.month).first()
-        assert(actual.isEmpty())
+        assertThat(actual).isEmpty()
     }
 
     @Test
@@ -73,7 +73,7 @@ class MealRepositoryTest {
         repository.deleteMeals(meals[0].year, meals[0].month)
 
         val actual = repository.getMeals(meals[0].year, meals[0].month).first()
-        assert(actual.isEmpty())
+        assertThat(actual).isEmpty()
     }
 
     @Test
@@ -83,6 +83,6 @@ class MealRepositoryTest {
         repository.clear()
 
         val actual = repository.getMeals(meals[0].year, meals[0].month).first()
-        assert(actual.isEmpty())
+        assertThat(actual).isEmpty()
     }
 }

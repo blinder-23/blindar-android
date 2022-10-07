@@ -10,8 +10,8 @@ import com.practice.database.schedule.room.ScheduleDatabase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -43,17 +43,20 @@ class ScheduleDaoTest {
         dao.insertSchedules(schedules)
 
         val actual = dao.getSchedule(schedules[0].date.slice(0..5)).first()
-        assertEquals(schedules, actual)
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(schedules)
     }
 
     @Test
     fun dao_deleteSchedules() = runTest {
         val schedules = TestUtil.createScheduleEntityRoom(5)
         dao.insertSchedules(schedules)
-        dao.deleteSchedules(schedules.subList(0, 2))
+
+        val deleted = schedules.subList(0, 2)
+        val remain = schedules.subList(2, 5)
+        dao.deleteSchedules(deleted)
 
         val actual = dao.getSchedule(schedules[0].date.slice(0..5)).first()
-        assertEquals(schedules.subList(2, 5), actual)
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(remain)
     }
 
     @Test
@@ -64,7 +67,7 @@ class ScheduleDaoTest {
         dao.deleteSchedules(date)
 
         val actual = dao.getSchedule(date).first()
-        assert(actual.isEmpty())
+        assertThat(actual).isEmpty()
     }
 
     @Test
@@ -74,7 +77,7 @@ class ScheduleDaoTest {
         dao.clear()
 
         val actual = dao.getSchedule(schedules[0].date.slice(0..5)).first()
-        assert(actual.isEmpty())
+        assertThat(actual).isEmpty()
     }
 
 
