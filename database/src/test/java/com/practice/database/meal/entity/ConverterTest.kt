@@ -3,7 +3,7 @@ package com.practice.database.meal.entity
 import com.practice.database.meal.room.MealEntityRoom
 import com.practice.database.meal.room.toMealEntity
 import com.practice.database.meal.room.toRoomEntity
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class ConverterTest {
@@ -27,7 +27,7 @@ class ConverterTest {
             nutrient = """[{"name":"protein","unit":"g","amount":10.0}]""",
             schoolCode = mealEntity.schoolCode
         )
-        assertEquals(expected, mealEntity.toRoomEntity())
+        assertThat(mealEntity.toRoomEntity()).isEqualTo(expected)
     }
 
     @Test
@@ -50,6 +50,6 @@ class ConverterTest {
             calorie = roomMealEntity.calorie,
             nutrients = listOf(NutrientEntity("protein", "g", 10.0))
         )
-        assertEquals(expected, roomMealEntity.toMealEntity())
+        assertThat(roomMealEntity.toMealEntity()).isEqualTo(expected)
     }
 }

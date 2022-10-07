@@ -5,7 +5,7 @@ import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.database.schedule.room.ScheduleEntityRoom
 import com.practice.database.schedule.room.toRoomEntity
 import com.practice.database.schedule.room.toScheduleEntity
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class ConverterTest {
@@ -27,7 +27,7 @@ class ConverterTest {
                 eventContent = eventContent
             )
         }
-        assertEquals(expected, scheduleEntity.toRoomEntity())
+        assertThat(scheduleEntity.toRoomEntity()).isEqualTo(expected)
     }
 
     @Test
@@ -48,6 +48,6 @@ class ConverterTest {
                 eventContent = eventContent
             )
         }
-        assertEquals(expected, roomEntity.toScheduleEntity())
+        assertThat(roomEntity.toScheduleEntity()).isEqualTo(expected)
     }
 }
