@@ -8,7 +8,6 @@ import com.practice.database.TestUtil
 import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.database.schedule.room.ScheduleDatabase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
@@ -50,7 +49,7 @@ class ScheduleRepositoryTest {
     fun repository_insertSchedules() = runTest {
         val insertedSchedules = insertEntities(10)
 
-        val actual = getSchedules(insertedSchedules[0]).first()
+        val actual = getSchedules(insertedSchedules[0])
         assertThat(actual).containsExactlyInAnyOrderElementsOf(insertedSchedules)
     }
 
@@ -59,7 +58,7 @@ class ScheduleRepositoryTest {
         val schedules = insertEntities(10)
         repository.deleteSchedules(*schedules.toTypedArray())
 
-        val actual = getSchedules(schedules[0]).first()
+        val actual = getSchedules(schedules[0])
         assert(actual.isEmpty())
     }
 
@@ -71,7 +70,7 @@ class ScheduleRepositoryTest {
         val remain = schedules.subList(2, 10)
         repository.deleteSchedules(deleted)
 
-        val actual = getSchedules(schedules[3]).first()
+        val actual = getSchedules(schedules[3])
         assertThat(actual).containsExactlyInAnyOrderElementsOf(remain)
     }
 
@@ -80,7 +79,7 @@ class ScheduleRepositoryTest {
         val schedules = insertEntities(10)
         repository.deleteSchedules(schedules[0].year, schedules[0].month)
 
-        val actual = getSchedules(schedules[0]).first()
+        val actual = getSchedules(schedules[0])
         assertThat(actual).isEmpty()
     }
 
@@ -89,7 +88,7 @@ class ScheduleRepositoryTest {
         val schedule = insertEntities(100).first()
         repository.clear()
 
-        val actual = getSchedules(schedule).first()
+        val actual = getSchedules(schedule)
         assertThat(actual).isEmpty()
     }
 
@@ -99,7 +98,7 @@ class ScheduleRepositoryTest {
         return schedules
     }
 
-    private suspend fun getSchedules(schedule: ScheduleEntity): Flow<List<ScheduleEntity>> {
-        return repository.getSchedules(schedule.year, schedule.month)
+    private suspend fun getSchedules(schedule: ScheduleEntity): List<ScheduleEntity> {
+        return repository.getSchedules(schedule.year, schedule.month).first()
     }
 }
