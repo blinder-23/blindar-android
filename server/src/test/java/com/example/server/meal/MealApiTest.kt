@@ -11,6 +11,8 @@ class MealApiTest {
     @Test
     fun testMealApi() = runBlocking {
         val response = api.getMeals(2022, 10)
-        println(response.response.map { it.ymd })
+        println(response.response.map { it.ymd }.all {
+            it.substring(0..3) == "2022" && it.substring(4..5) == "10"
+        })
     }
 }
