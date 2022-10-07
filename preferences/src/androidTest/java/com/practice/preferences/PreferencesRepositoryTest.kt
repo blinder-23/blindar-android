@@ -35,7 +35,7 @@ class PreferencesRepositoryTest {
         scope = testScope,
         produceFile = { testContext.preferencesDataStoreFile(TEST_DATASTORE_NAME) }
     )
-    private val testRepository = PreferencesRepository(testDataStore)
+    private val preferences = PreferencesRepository(testDataStore)
 
     @Before
     fun setup() {
@@ -45,13 +45,13 @@ class PreferencesRepositoryTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        testScope.runTest { testRepository.clear() }
+        testScope.runTest { preferences.clear() }
         testDispatcher.cancel()
     }
 
     @Test
     fun repository_fetchInitialPreferences() = runTest {
-        val initialPreferences = testRepository.fetchInitialPreferences()
+        val initialPreferences = preferences.fetchInitialPreferences()
         assertThat(initialPreferences.uiMode).isEqualTo(UiMode.Graphic)
         assertThat(initialPreferences.themeMode).isEqualTo(ThemeMode.SystemDefault)
     }
@@ -63,7 +63,7 @@ class PreferencesRepositoryTest {
             updateUiMode(UiMode.Graphic)
             updateUiMode(UiMode.ScreenReader)
         }
-        val result = testRepository.dropFirstAndTakeToList(3)
+        val result = preferences.dropFirstAndTake(3)
 
         assertThat(result[0]).isEqualTo(
             UserPreferences(UiMode.ScreenReader, ThemeMode.SystemDefault)
@@ -82,7 +82,7 @@ class PreferencesRepositoryTest {
             updateThemeMode(ThemeMode.Dark)
             updateThemeMode(ThemeMode.Light)
         }
-        val result = testRepository.dropFirstAndTakeToList(2)
+        val result = preferences.dropFirstAndTake(2)
 
         assertThat(result[0]).isEqualTo(
             UserPreferences(UiMode.Graphic, ThemeMode.Dark)
@@ -98,7 +98,7 @@ class PreferencesRepositoryTest {
             updateThemeMode(ThemeMode.Light)
             updateUiMode(UiMode.ScreenReader)
         }
-        val result = testRepository.dropFirstAndTakeToList(2)
+        val result = preferences.dropFirstAndTake(2)
 
         assertThat(result[0]).isEqualTo(
             UserPreferences(UiMode.Graphic, ThemeMode.Light)
@@ -114,15 +114,15 @@ class PreferencesRepositoryTest {
             updateIsFirstExecution(true)
         }
 
-        val isFirstExecution = testRepository.dropFirstAndTakeToList(1).first().isFirstExecution
-        assertThat(isFirstExecution).isTrue()
+        val isFirstExecution = preferences.dropFirstAndTake(1).first().isFirstExecution
+        assertThat(isFirstExecution).isTrue
     }
 
-    private suspend fun PreferencesRepository.dropFirstAndTakeToList(take: Int) =
+    private suspend fun PreferencesRepository.dropFirstAndTake(take: Int) =
         userPreferencesFlow.drop(1).take(take).toList()
 
     private fun CoroutineScope.update(block: suspend PreferencesRepository.() -> Unit) =
         launch {
-            block(testRepository)
+            block(preferences)
         }
 }

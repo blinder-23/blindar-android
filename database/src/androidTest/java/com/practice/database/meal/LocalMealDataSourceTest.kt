@@ -9,8 +9,8 @@ import com.practice.database.meal.room.MealDatabase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,7 +42,7 @@ class LocalMealDataSourceTest {
         source.insertMeals(meals)
 
         val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month).first()
-        assertEquals(meals, mealsInDatabase)
+        assertThat(mealsInDatabase).containsExactlyInAnyOrderElementsOf(meals)
     }
 
     @Test
@@ -52,7 +52,7 @@ class LocalMealDataSourceTest {
         source.deleteMeals(meals)
 
         val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month).first()
-        assert(mealsInDatabase.isEmpty())
+        assertThat(mealsInDatabase).isEmpty()
     }
 
     @Test
@@ -62,7 +62,7 @@ class LocalMealDataSourceTest {
         source.deleteMeals(meals[0].year, meals[0].month)
 
         val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month).first()
-        assert(mealsInDatabase.isEmpty())
+        assertThat(mealsInDatabase).isEmpty()
     }
 
     @Test
@@ -72,7 +72,7 @@ class LocalMealDataSourceTest {
         source.clear()
 
         val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month).first()
-        assert(mealsInDatabase.isEmpty())
+        assertThat(mealsInDatabase).isEmpty()
     }
 
 }

@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.practice.database.TestUtil
 import com.practice.database.meal.room.MealDao
 import com.practice.database.meal.room.MealDatabase
+import com.practice.database.meal.room.yearMonth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -44,7 +45,8 @@ class MealDaoTest {
     fun writeMealAndRead() = runTest {
         val meals = TestUtil.createMealEntityRoom(5)
         dao.insertMeals(meals)
-        val mealInDatabase = dao.getMeals(meals[0].date.substring(0..5)).first()
+
+        val mealInDatabase = dao.getMeals(meals[0].yearMonth).first()
         assertThat(mealInDatabase).isEqualTo(meals)
     }
 }
