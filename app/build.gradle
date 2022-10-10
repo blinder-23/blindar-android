@@ -87,6 +87,7 @@ android {
             minifyEnabled false
             testCoverageEnabled true
             debuggable true
+            applicationIdSuffix ".debug"
         }
         benchmark {
             initWith buildTypes.release
