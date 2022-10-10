@@ -22,7 +22,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,8 +50,11 @@ fun Calendar(
         modifier = modifier
             .background(MaterialTheme.colors.surface)
     ) {
-        CalendarDays(days = calendarDays(), isLight = isLight,
-            modifier = Modifier.semantics(mergeDescendants = true) { })
+        CalendarDays(
+            days = calendarDays(),
+            isLight = isLight,
+            modifier = Modifier.clearAndSetSemantics {}
+        )
         SwipeableCalendarDates(
             getContentDescription = getContentDescription,
             modifier = Modifier
