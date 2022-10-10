@@ -44,6 +44,8 @@ fun MainScreen(
                 calendarState = calendarState,
                 onDateClick = viewModel::onDateClick,
                 onSwiped = viewModel::onSwiped,
+                getContentDescription = viewModel::getContentDescription,
+                getClickLabel = viewModel::getClickLabel,
             )
         }
         MainScreenContents(

@@ -3,7 +3,8 @@ package com.practice.hanbitlunch.calendar
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -11,11 +12,16 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,8 +32,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.util.*
@@ -38,21 +42,29 @@ fun Calendar(
     calendarState: CalendarState = rememberCalendarState(),
     onDateClick: (LocalDate) -> Unit = {},
     onSwiped: (YearMonth) -> Unit = {},
-    isLight: Boolean = MaterialTheme.colors.isLight
+    isLight: Boolean = MaterialTheme.colors.isLight,
+    getContentDescription: (LocalDate) -> String = { "" },
+    getClickLabel: (LocalDate) -> String? = { null },
 ) {
     Column(
         modifier = modifier
             .background(MaterialTheme.colors.surface)
     ) {
-        CalendarDays(days = calendarDays(), isLight = isLight)
+        CalendarDays(
+            days = calendarDays(),
+            isLight = isLight,
+            modifier = Modifier.clearAndSetSemantics {}
+        )
         SwipeableCalendarDates(
+            getContentDescription = getContentDescription,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colors.surface),
             calendarState = calendarState,
             onDateClick = onDateClick,
             onSwiped = onSwiped,
-            isLight = isLight
+            isLight = isLight,
+            getClickLabel = getClickLabel,
         )
     }
 }
@@ -82,6 +94,8 @@ private fun CalendarDays(
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SwipeableCalendarDates(
+    getContentDescription: (LocalDate) -> String,
+    getClickLabel: (LocalDate) -> String?,
     modifier: Modifier = Modifier,
     calendarState: CalendarState = rememberCalendarState(),
     onDateClick: (LocalDate) -> Unit = {},
@@ -117,11 +131,13 @@ fun SwipeableCalendarDates(
         CalendarDates(
             yearMonth = shownYearMonth,
             selectedDate = calendarState.selectedDate,
+            getContentDescription = getContentDescription,
+            getClickLabel = getClickLabel,
             onDateClick = {
                 calendarState.selectedDate = it
                 onDateClick(it)
             },
-            isLight = isLight
+            isLight = isLight,
         )
     }
 }
@@ -158,6 +174,8 @@ private fun DayOfWeek.color(isLight: Boolean = true) = when (this) {
 private fun CalendarDates(
     yearMonth: YearMonth,
     selectedDate: LocalDate,
+    getContentDescription: (LocalDate) -> String,
+    getClickLabel: (LocalDate) -> String?,
     modifier: Modifier = Modifier,
     onDateClick: (LocalDate) -> Unit = {},
     isLight: Boolean = true,
@@ -175,7 +193,9 @@ private fun CalendarDates(
                 },
                 currentMonth = yearMonth.month,
                 isSelected = (date == selectedDate),
-                isLight = isLight
+                isLight = isLight,
+                getContentDescription = getContentDescription,
+                getClickLabel = getClickLabel,
             )
         }
     }
@@ -188,10 +208,12 @@ private fun CalendarDates(
 private fun CalendarDate(
     date: LocalDate,
     onClick: (LocalDate) -> Unit,
+    getContentDescription: (LocalDate) -> String,
+    getClickLabel: (LocalDate) -> String?,
     modifier: Modifier = Modifier,
     currentMonth: Int = date.monthValue,
     isSelected: Boolean = false,
-    isLight: Boolean = true
+    isLight: Boolean = true,
 ) {
     val background by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.surface,
@@ -206,7 +228,10 @@ private fun CalendarDate(
         modifier = modifier
             .clip(shape = CircleShape)
             .background(color = background)
-            .clickable { onClick(date) },
+            .clickable(onClickLabel = getClickLabel(date)) { onClick(date) }
+            .clearAndSetSemantics {
+                contentDescription = "${date.clickLabel}\n${getContentDescription(date)}"
+            },
         textColor = date.color(
             isSelected = isSelected,
             isLight = isLight,
@@ -276,6 +301,8 @@ private fun CalendarDatePreview() {
             date = LocalDate.of(2022, 8, 12),
             onClick = {},
             modifier = Modifier.size(50.dp),
+            getContentDescription = { "" },
+            getClickLabel = { null },
         )
     }
 }
@@ -289,6 +316,8 @@ private fun CalendarDatePreview_Selected() {
             onClick = {},
             isSelected = true,
             modifier = Modifier.size(50.dp),
+            getContentDescription = { "" },
+            getClickLabel = { null },
         )
     }
 }
@@ -318,7 +347,9 @@ private fun SwipeableCalendarDatesPreview() {
                     .fillMaxWidth()
                     .weight(1f)
                     .background(MaterialTheme.colors.surface),
-                calendarState = rememberCalendarState()
+                calendarState = rememberCalendarState(),
+                getContentDescription = { "" },
+                getClickLabel = { null },
             )
             Spacer(modifier = Modifier.weight(1f))
         }

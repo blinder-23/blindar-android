@@ -24,6 +24,9 @@ data class MealUiState(
     val isEmpty: Boolean
         get() = menus.isEmpty()
 
+    val description: String
+        get() = if (menus.isEmpty()) "식단이 없습니다." else menus.joinToString(", ") { it.name }
+
     companion object {
         val EmptyMealState = MealUiState(persistentListOf())
     }
@@ -48,6 +51,9 @@ data class ScheduleUiState(
 ) {
     val isEmpty: Boolean
         get() = schedules.isEmpty()
+
+    val description: String
+        get() = if (schedules.isEmpty()) "학사일정이 없습니다." else schedules.joinToString(", ") { it.scheduleName }
 
     companion object {
         val EmptyScheduleState = ScheduleUiState(persistentListOf())
