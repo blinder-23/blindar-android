@@ -29,6 +29,7 @@ class MainScreenViewModel @Inject constructor(
     private val _uiState: MutableState<MainUiState>
     val uiState: State<MainUiState>
         get() = _uiState
+
     // For internal use only
     private var state: MainUiState
         get() = _uiState.value
@@ -107,6 +108,19 @@ class MainScreenViewModel @Inject constructor(
             month = month,
         )
     }
+
+    fun getContentDescription(date: LocalDate): String {
+        return if (date == state.selectedDate) {
+            val mealState = state.mealUiState
+            val scheduleUiState = state.scheduleUiState
+            "식단: ${mealState.description}\n학사일정:${scheduleUiState.description}"
+        } else {
+            ""
+        }
+    }
+
+    fun getClickLabel(date: LocalDate): String =
+        if (date == state.selectedDate) "" else "식단 및 학사일정 보기"
 
 }
 
