@@ -38,7 +38,7 @@ fun MainScreen(
     val uiState = viewModel.uiState.value
     val calendarState = rememberCalendarState()
     Column(modifier = modifier.background(MaterialTheme.colors.surface)) {
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             MainScreenHeader(year = uiState.year, month = uiState.month)
             Calendar(
                 calendarState = calendarState,
