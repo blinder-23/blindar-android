@@ -33,8 +33,9 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.util.*
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun Calendar(
+fun SwipeableCalendar(
     modifier: Modifier = Modifier,
     calendarState: CalendarState = rememberCalendarState(),
     onDateClick: (LocalDate) -> Unit = {},
@@ -43,17 +44,76 @@ fun Calendar(
     getContentDescription: (LocalDate) -> String = { "" },
     getClickLabel: (LocalDate) -> String? = { null },
 ) {
-    SwipeableCalendarDates(
-        getContentDescription = getContentDescription,
+    // shows from a year ago to a year after
+    val itemCount = 13
+    val firstItemIndex = itemCount / 2
+    val pagerState = rememberPagerState(initialPage = firstItemIndex)
+
+    val currentYearMonth = LocalDate.now().let {
+        YearMonth(it.year, it.monthValue)
+    }
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect { pageIndex ->
+            val offset = pageIndex - firstItemIndex
+            val (newYear, newMonth) = currentYearMonth.offset(offset)
+            calendarState.apply {
+                year = newYear
+                month = newMonth
+            }
+            onSwiped(YearMonth(newYear, newMonth))
+        }
+    }
+
+    HorizontalPager(
+        count = itemCount,
+        state = pagerState,
         modifier = modifier
             .background(MaterialTheme.colors.surface)
             .fillMaxWidth(),
-        calendarState = calendarState,
-        onDateClick = onDateClick,
-        onSwiped = onSwiped,
-        isLight = isLight,
-        getClickLabel = getClickLabel,
-    )
+    ) { index ->
+        val shownYearMonth = currentYearMonth.offset(index - firstItemIndex)
+        val calendarPage = CalendarPage.getInstance(shownYearMonth)
+        Calendar(
+            isLight = isLight,
+            calendarPage = calendarPage,
+            calendarState = calendarState,
+            getContentDescription = getContentDescription,
+            getClickLabel = getClickLabel,
+            onDateClick = onDateClick
+        )
+    }
+}
+
+@Composable
+private fun Calendar(
+    isLight: Boolean,
+    calendarPage: CalendarPage,
+    calendarState: CalendarState,
+    getContentDescription: (LocalDate) -> String,
+    getClickLabel: (LocalDate) -> String?,
+    onDateClick: (LocalDate) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        CalendarDays(
+            days = calendarDays(),
+            isLight = isLight,
+            modifier = Modifier
+                .clearAndSetSemantics {}
+        )
+        CalendarDates(
+            page = calendarPage,
+            selectedDate = calendarState.selectedDate,
+            getContentDescription = getContentDescription,
+            getClickLabel = getClickLabel,
+            onDateClick = {
+                calendarState.selectedDate = it
+                onDateClick(it)
+            },
+            isLight = isLight,
+        )
+    }
 }
 
 private fun calendarDays(): List<DayOfWeek> {
@@ -76,66 +136,6 @@ private fun CalendarDays(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .weight(1f)
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun SwipeableCalendarDates(
-    getContentDescription: (LocalDate) -> String,
-    getClickLabel: (LocalDate) -> String?,
-    modifier: Modifier = Modifier,
-    calendarState: CalendarState = rememberCalendarState(),
-    onDateClick: (LocalDate) -> Unit = {},
-    onSwiped: (YearMonth) -> Unit = {},
-    isLight: Boolean = true,
-) {
-    // shows from a year ago to a year after
-    val itemCount = 13
-    val firstItemIndex = itemCount / 2
-    val pagerState = rememberPagerState(initialPage = firstItemIndex)
-
-    val currentYearMonth = LocalDate.now().let {
-        YearMonth(it.year, it.monthValue)
-    }
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }.collect { pageIndex ->
-            val offset = pageIndex - firstItemIndex
-            val (newYear, newMonth) = currentYearMonth.offset(offset)
-            calendarState.apply {
-                year = newYear
-                month = newMonth
-            }
-            onSwiped(YearMonth(newYear, newMonth))
-        }
-    }
-
-    HorizontalPager(
-        count = itemCount,
-        state = pagerState,
-        modifier = modifier,
-    ) { index ->
-        val shownYearMonth = currentYearMonth.offset(index - firstItemIndex)
-        val calendarPage = CalendarPage.getInstance(shownYearMonth)
-        Column {
-            CalendarDays(
-                days = calendarDays(),
-                isLight = isLight,
-                modifier = Modifier
-                    .clearAndSetSemantics {}
-            )
-            CalendarContents(
-                page = calendarPage,
-                selectedDate = calendarState.selectedDate,
-                getContentDescription = getContentDescription,
-                getClickLabel = getClickLabel,
-                onDateClick = {
-                    calendarState.selectedDate = it
-                    onDateClick(it)
-                },
-                isLight = isLight,
             )
         }
     }
@@ -171,7 +171,7 @@ private fun DayOfWeek.color(isLight: Boolean = true) = when (this) {
 }
 
 @Composable
-private fun CalendarContents(
+private fun CalendarDates(
     page: CalendarPage,
     selectedDate: LocalDate,
     getContentDescription: (LocalDate) -> String,
@@ -360,29 +360,10 @@ private fun CalendarPreview() {
     )
     HanbitCalendarTheme(darkTheme = true) {
         Column {
-            Calendar(
+            SwipeableCalendar(
                 calendarState = calendarState,
                 modifier = Modifier.size(width = 400.dp, height = 300.dp)
             )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SwipeableCalendarDatesPreview() {
-    HanbitCalendarTheme {
-        Column(modifier = Modifier.fillMaxSize()) {
-            SwipeableCalendarDates(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .background(MaterialTheme.colors.surface),
-                calendarState = rememberCalendarState(),
-                getContentDescription = { "" },
-                getClickLabel = { null },
-            )
-            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }

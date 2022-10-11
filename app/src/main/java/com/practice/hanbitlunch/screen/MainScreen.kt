@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.practice.hanbitlunch.calendar.Calendar
+import com.practice.hanbitlunch.calendar.SwipeableCalendar
 import com.practice.hanbitlunch.calendar.rememberCalendarState
 import com.practice.hanbitlunch.components.Body
 import com.practice.hanbitlunch.components.SubTitle
@@ -40,7 +40,7 @@ fun MainScreen(
     Column(modifier = modifier.background(MaterialTheme.colors.surface)) {
         Column(modifier = Modifier.weight(1f)) {
             MainScreenHeader(year = uiState.year, month = uiState.month)
-            Calendar(
+            SwipeableCalendar(
                 calendarState = calendarState,
                 onDateClick = viewModel::onDateClick,
                 onSwiped = viewModel::onSwiped,
