@@ -6,9 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -46,27 +43,17 @@ fun Calendar(
     getContentDescription: (LocalDate) -> String = { "" },
     getClickLabel: (LocalDate) -> String? = { null },
 ) {
-    Column(
+    SwipeableCalendarDates(
+        getContentDescription = getContentDescription,
         modifier = modifier
             .background(MaterialTheme.colors.surface)
-    ) {
-        CalendarDays(
-            days = calendarDays(),
-            isLight = isLight,
-            modifier = Modifier.clearAndSetSemantics {}
-        )
-        SwipeableCalendarDates(
-            getContentDescription = getContentDescription,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colors.surface),
-            calendarState = calendarState,
-            onDateClick = onDateClick,
-            onSwiped = onSwiped,
-            isLight = isLight,
-            getClickLabel = getClickLabel,
-        )
-    }
+            .fillMaxWidth(),
+        calendarState = calendarState,
+        onDateClick = onDateClick,
+        onSwiped = onSwiped,
+        isLight = isLight,
+        getClickLabel = getClickLabel,
+    )
 }
 
 private fun calendarDays(): List<DayOfWeek> {
@@ -81,12 +68,15 @@ private fun CalendarDays(
     modifier: Modifier = Modifier,
     isLight: Boolean = true,
 ) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(7),
-        modifier = modifier,
-    ) {
-        items(items = days, key = { it.ordinal }) {
-            CalendarDay(day = it, isLight = isLight)
+    Row(modifier = modifier) {
+        days.forEach { day ->
+            CalendarDay(
+                day = day,
+                isLight = isLight,
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .weight(1f)
+            )
         }
     }
 }
@@ -128,17 +118,26 @@ fun SwipeableCalendarDates(
         modifier = modifier,
     ) { index ->
         val shownYearMonth = currentYearMonth.offset(index - firstItemIndex)
-        CalendarDates(
-            yearMonth = shownYearMonth,
-            selectedDate = calendarState.selectedDate,
-            getContentDescription = getContentDescription,
-            getClickLabel = getClickLabel,
-            onDateClick = {
-                calendarState.selectedDate = it
-                onDateClick(it)
-            },
-            isLight = isLight,
-        )
+        val calendarPage = CalendarPage.getInstance(shownYearMonth)
+        Column {
+            CalendarDays(
+                days = calendarDays(),
+                isLight = isLight,
+                modifier = Modifier
+                    .clearAndSetSemantics {}
+            )
+            CalendarContents(
+                page = calendarPage,
+                selectedDate = calendarState.selectedDate,
+                getContentDescription = getContentDescription,
+                getClickLabel = getClickLabel,
+                onDateClick = {
+                    calendarState.selectedDate = it
+                    onDateClick(it)
+                },
+                isLight = isLight,
+            )
+        }
     }
 }
 
@@ -158,6 +157,7 @@ private fun CalendarDay(
     )
 }
 
+private val Transparent = Color(0x00000000)
 private val WeekdayColorOnLight = Color(0xFF000000)
 private val WeekDayColorOnDark = Color(0xFFFFFFFF)
 private val SaturdayColor = Color(0xFF5151FF)
@@ -171,8 +171,8 @@ private fun DayOfWeek.color(isLight: Boolean = true) = when (this) {
 }
 
 @Composable
-private fun CalendarDates(
-    yearMonth: YearMonth,
+private fun CalendarContents(
+    page: CalendarPage,
     selectedDate: LocalDate,
     getContentDescription: (LocalDate) -> String,
     getClickLabel: (LocalDate) -> String?,
@@ -180,22 +180,54 @@ private fun CalendarDates(
     onDateClick: (LocalDate) -> Unit = {},
     isLight: Boolean = true,
 ) {
-    val dates = CalendarRow.getInstance(yearMonth).dates
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(7),
+    Column(
         modifier = modifier,
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        items(items = dates, key = { it.hashCode() }) { date ->
-            CalendarDate(
-                date = date,
-                onClick = { clickedDate ->
-                    onDateClick(clickedDate)
-                },
-                currentMonth = yearMonth.month,
-                isSelected = (date == selectedDate),
-                isLight = isLight,
+        page.forEachWeeks { week ->
+            CalendarWeek(
+                modifier = Modifier.weight(1f),
+                week = week,
+                selectedDate = selectedDate,
                 getContentDescription = getContentDescription,
                 getClickLabel = getClickLabel,
+                currentMonth = page.month,
+                onDateClick = onDateClick,
+                isLight = isLight
+            )
+        }
+    }
+}
+
+@Composable
+private fun CalendarWeek(
+    week: Week,
+    selectedDate: LocalDate,
+    getContentDescription: (LocalDate) -> String,
+    getClickLabel: (LocalDate) -> String?,
+    currentMonth: Int,
+    modifier: Modifier = Modifier,
+    onDateClick: (LocalDate) -> Unit = {},
+    isLight: Boolean = true,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        week.forEach { dayOfWeek ->
+            CalendarDate(
+                date = dayOfWeek,
+                onClick = onDateClick,
+                getContentDescription = getContentDescription,
+                getClickLabel = getClickLabel,
+                currentMonth = currentMonth,
+                isSelected = dayOfWeek == selectedDate,
+                isLight = isLight,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .aspectRatio(1f),
             )
         }
     }
@@ -216,13 +248,14 @@ private fun CalendarDate(
     isLight: Boolean = true,
 ) {
     val background by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.surface,
+        targetValue = if (isSelected) MaterialTheme.colors.secondary else Transparent,
         animationSpec = tween(
             durationMillis = 500,
             easing = FastOutSlowInEasing,
         )
     )
     val text = if (date == LocalDate.MAX) "" else date.dayOfMonth.toString()
+
     CalendarElement(
         text = text,
         modifier = modifier
@@ -248,12 +281,7 @@ private fun CalendarElement(
     textColor: Color = Color.Unspecified,
     textStyle: TextStyle = MaterialTheme.typography.body1,
 ) {
-    Box(
-        modifier = Modifier
-            .padding(4.dp)
-            .then(modifier)
-            .aspectRatio(1f)
-    ) {
+    Box(modifier = modifier) {
         Text(
             text = text,
             modifier = Modifier.align(Alignment.Center),
@@ -332,7 +360,10 @@ private fun CalendarPreview() {
     )
     HanbitCalendarTheme(darkTheme = true) {
         Column {
-            Calendar(calendarState = calendarState)
+            Calendar(
+                calendarState = calendarState,
+                modifier = Modifier.size(width = 400.dp, height = 300.dp)
+            )
         }
     }
 }
