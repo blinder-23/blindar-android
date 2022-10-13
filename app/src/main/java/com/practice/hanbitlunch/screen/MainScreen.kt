@@ -2,9 +2,7 @@ package com.practice.hanbitlunch.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,8 +16,7 @@ import com.practice.hanbitlunch.components.Body
 import com.practice.hanbitlunch.components.SubTitle
 import com.practice.hanbitlunch.components.Title
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun MainScreen(
@@ -87,32 +84,62 @@ private fun MainScreenContents(
     scheduleUiState: ScheduleUiState,
     modifier: Modifier = Modifier
 ) {
-    Column(
+    LazyColumn(
         modifier = modifier
             .padding(16.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
         if (!mealUiState.isEmpty) {
-            MainScreenContent(title = "식단") {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    userScrollEnabled = false,
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    items(mealUiState.menus) {
-                        Body(text = it.name)
-                    }
-                }
+            item {
+                MealContent(mealUiState)
             }
         }
         if (!scheduleUiState.isEmpty) {
-            MainScreenContent(title = "학사일정") {
-                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    scheduleUiState.schedules.forEach { schedule ->
-                        Body(text = schedule.scheduleName)
-                    }
-                }
+            item {
+                ScheduleContent(scheduleUiState)
+            }
+        }
+    }
+}
+
+@Composable
+private fun MealContent(mealUiState: MealUiState) {
+    val rowCount = mealUiState.menus.size.let { it / 2 + it % 2 }
+    MainScreenContent(title = "식단") {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            mealUiState.menus.divide(rowCount).forEach { menus ->
+                MenuRow(menus = menus)
+            }
+        }
+    }
+}
+
+@Composable
+fun MenuRow(
+    menus: List<Menu>,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier) {
+        menus.forEach {
+            Body(
+                text = it.name,
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ScheduleContent(scheduleUiState: ScheduleUiState) {
+    MainScreenContent(title = "학사일정") {
+        // 여기를 lazycolumn으로 바꾸면 됨
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            scheduleUiState.schedules.forEach { schedule ->
+                Body(text = schedule.scheduleName)
             }
         }
     }
@@ -145,39 +172,28 @@ private fun MainScreenHeaderPreview() {
     }
 }
 
+
+val previewMenus = listOf("찰보리밥", "망고마들렌", "쇠고기미역국", "콩나물파채무침", "돼지양념구이", "포기김치", "오렌지주스")
+    .map { Menu(it) }.toImmutableList()
+val previewSchedules = (0..6).map { Schedule("학사일정 $it") }
+    .toImmutableList()
+
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenContentsPreview() {
-    val data = listOf("찰보리밥", "망고마들렌", "쇠고기미역국", "콩나물파채무침", "돼지양념구이", "포기김치")
     HanbitCalendarTheme {
         MainScreenContents(
-            mealUiState = MealUiState(menus = data.map { Menu(it) }.toPersistentList()),
-            scheduleUiState = ScheduleUiState(schedules = persistentListOf(Schedule("방학식"))),
-            modifier = Modifier
-                .padding(16.dp)
-                .height(400.dp),
+            modifier = Modifier.height(320.dp),
+            mealUiState = MealUiState(previewMenus),
+            scheduleUiState = ScheduleUiState(previewSchedules)
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun MainScreenContentPreview() {
-    val data = listOf("찰보리밥", "망고마들렌", "쇠고기미역국", "콩나물파채무침", "돼지양념구이", "포기김치")
+private fun MealContentPreview() {
     HanbitCalendarTheme {
-        MainScreenContent(
-            title = "식단",
-            modifier = Modifier
-                .padding(16.dp),
-        ) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                items(data) {
-                    Body(text = it)
-                }
-            }
-        }
+        MealContent(mealUiState = MealUiState(previewMenus))
     }
 }
