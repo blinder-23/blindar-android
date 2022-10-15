@@ -226,8 +226,7 @@ private fun CalendarWeek(
                 isLight = isLight,
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxHeight()
-                    .aspectRatio(1f),
+                    .fillMaxHeight(),
             )
         }
     }
@@ -261,6 +260,10 @@ private fun CalendarDate(
         modifier = modifier
             .clip(shape = CircleShape)
             .background(color = background)
+            .aspectRatio(
+                ratio = 1f,
+                matchHeightConstraintsFirst = true
+            )
             .clickable(onClickLabel = getClickLabel(date)) { onClick(date) }
             .clearAndSetSemantics {
                 contentDescription = "${date.clickLabel}\n${getContentDescription(date)}"
