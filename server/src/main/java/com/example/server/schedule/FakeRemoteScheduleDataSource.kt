@@ -13,7 +13,8 @@ class FakeRemoteScheduleDataSource : RemoteScheduleDataSource {
             date = LocalDate.of(2022, it, 10)
                 .atStartOfDay()
                 .toEpochSecond(ZoneOffset.ofHours(9)),
-            title = "${it}번 학사일정"
+            title = "${it}번 학사일정",
+            contents = "$it",
         )
     }
 

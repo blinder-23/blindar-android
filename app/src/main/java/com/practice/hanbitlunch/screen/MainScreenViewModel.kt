@@ -139,7 +139,7 @@ private fun MealScheduleEntity.getMeal(date: LocalDate): MealUiState {
 private fun MealScheduleEntity.getSchedule(date: LocalDate): ScheduleUiState {
     return try {
         val schedules = schedules.filter { it.dateEquals(date) }
-            .map { Schedule(it.eventName) }
+            .map { Schedule(it.eventName, it.eventContent) }
         ScheduleUiState(schedules.toPersistentList())
     } catch (e: NoSuchElementException) {
         ScheduleUiState.EmptyScheduleState

@@ -62,4 +62,5 @@ data class ScheduleUiState(
 
 data class Schedule(
     val scheduleName: String,
+    val scheduleContent: String,
 )

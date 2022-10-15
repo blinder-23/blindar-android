@@ -48,7 +48,7 @@ fun ScheduleModel.toScheduleEntity(): ScheduleEntity {
         month = date.monthValue,
         day = date.dayOfMonth,
         eventName = title,
-        eventContent = ""
+        eventContent = contents
     )
 }
 

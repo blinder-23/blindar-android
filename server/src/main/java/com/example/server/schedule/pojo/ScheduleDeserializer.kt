@@ -23,7 +23,8 @@ class ScheduleDeserializer : JsonDeserializer<ScheduleResponse> {
             ScheduleModel(
                 id = element.get("id").asInt,
                 date = element.get("date").asLong,
-                title = element.get("schedule").asString
+                title = element.get("schedule").asString,
+                contents = element.get("contents").asString,
             )
         }
         return ScheduleResponse(schedules)

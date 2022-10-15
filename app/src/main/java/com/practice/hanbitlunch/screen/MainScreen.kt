@@ -175,7 +175,7 @@ private fun MainScreenHeaderPreview() {
 
 val previewMenus = listOf("찰보리밥", "망고마들렌", "쇠고기미역국", "콩나물파채무침", "돼지양념구이", "포기김치", "오렌지주스")
     .map { Menu(it) }.toImmutableList()
-val previewSchedules = (0..6).map { Schedule("학사일정 $it") }
+val previewSchedules = (0..6).map { Schedule("학사일정 $it", "$it") }
     .toImmutableList()
 
 @Preview(showBackground = true)
