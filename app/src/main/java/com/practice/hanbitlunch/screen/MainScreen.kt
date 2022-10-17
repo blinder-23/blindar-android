@@ -111,7 +111,7 @@ private fun MealContent(mealUiState: MealUiState) {
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            mealUiState.menus.divide(rowCount).forEach { menus ->
+            mealUiState.menus.chunked(rowCount).forEach { menus ->
                 MenuRow(menus = menus)
             }
         }
