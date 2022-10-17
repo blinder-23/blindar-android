@@ -57,7 +57,7 @@ android {
         minSdk 26
         targetSdk 33
         versionCode 1
-        versionName '1.2.0'
+        versionName '1.2.1'
         signingConfig signingConfigs.debug
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -87,6 +87,7 @@ android {
             minifyEnabled false
             testCoverageEnabled true
             debuggable true
+            applicationIdSuffix ".debug"
         }
         benchmark {
             initWith buildTypes.release

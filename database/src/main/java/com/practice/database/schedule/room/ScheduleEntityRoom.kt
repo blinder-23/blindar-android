@@ -14,6 +14,9 @@ data class ScheduleEntityRoom(
     @ColumnInfo(name = "event_content") val eventContent: String,
 )
 
+val ScheduleEntityRoom.yearMonth: String
+    get() = date.substring(0..5)
+
 fun ScheduleEntity.toRoomEntity() = ScheduleEntityRoom(
     id = id,
     date = getDateString(year, month, day),

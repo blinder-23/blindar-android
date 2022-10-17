@@ -8,11 +8,10 @@ import com.practice.database.TestUtil
 import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.database.schedule.room.ScheduleDatabase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -43,15 +42,15 @@ class ScheduleRepositoryTest {
     @Test
     fun repository_getSchedules_empty() = runTest {
         val actual = repository.getSchedules(2022, 5).first()
-        assert(actual.isEmpty())
+        assertThat(actual).isEmpty()
     }
 
     @Test
     fun repository_insertSchedules() = runTest {
-        val schedules = insertEntities(10)
-        val actual = getSchedules(schedules[0]).first()
+        val insertedSchedules = insertEntities(10)
 
-        assertEquals(schedules, actual)
+        val actual = getSchedules(insertedSchedules[0])
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(insertedSchedules)
     }
 
     @Test
@@ -59,17 +58,20 @@ class ScheduleRepositoryTest {
         val schedules = insertEntities(10)
         repository.deleteSchedules(*schedules.toTypedArray())
 
-        val actual = getSchedules(schedules[0]).first()
+        val actual = getSchedules(schedules[0])
         assert(actual.isEmpty())
     }
 
     @Test
     fun repository_deleteSchedules_deleteOnlyPart() = runTest {
         val schedules = insertEntities(10)
-        repository.deleteSchedules(schedules.subList(0, 2))
 
-        val actual = getSchedules(schedules[3]).first()
-        assertEquals(schedules.subList(2, 10), actual)
+        val deleted = schedules.subList(0, 2)
+        val remain = schedules.subList(2, 10)
+        repository.deleteSchedules(deleted)
+
+        val actual = getSchedules(schedules[3])
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(remain)
     }
 
     @Test
@@ -77,8 +79,8 @@ class ScheduleRepositoryTest {
         val schedules = insertEntities(10)
         repository.deleteSchedules(schedules[0].year, schedules[0].month)
 
-        val actual = getSchedules(schedules[0]).first()
-        assert(actual.isEmpty())
+        val actual = getSchedules(schedules[0])
+        assertThat(actual).isEmpty()
     }
 
     @Test
@@ -86,8 +88,8 @@ class ScheduleRepositoryTest {
         val schedule = insertEntities(100).first()
         repository.clear()
 
-        val actual = getSchedules(schedule).first()
-        assert(actual.isEmpty())
+        val actual = getSchedules(schedule)
+        assertThat(actual).isEmpty()
     }
 
     private suspend fun insertEntities(count: Int): List<ScheduleEntity> {
@@ -96,7 +98,7 @@ class ScheduleRepositoryTest {
         return schedules
     }
 
-    private suspend fun getSchedules(schedule: ScheduleEntity): Flow<List<ScheduleEntity>> {
-        return repository.getSchedules(schedule.year, schedule.month)
+    private suspend fun getSchedules(schedule: ScheduleEntity): List<ScheduleEntity> {
+        return repository.getSchedules(schedule.year, schedule.month).first()
     }
 }

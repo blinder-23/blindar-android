@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.combine.LoadMealScheduleDataUseCase
 import com.example.domain.combine.MealScheduleEntity
-import com.example.server.meal.RemoteMealRepository
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.YearMonth
@@ -25,12 +24,18 @@ import javax.inject.Inject
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
     private val loadMealScheduleDataUseCase: LoadMealScheduleDataUseCase,
-    private val remoteMealRepository: RemoteMealRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableState<MainUiState>
     val uiState: State<MainUiState>
         get() = _uiState
+
+    // For internal use only
+    private var state: MainUiState
+        get() = _uiState.value
+        set(value) {
+            _uiState.value = value
+        }
 
     private val selectedDateFlow: MutableStateFlow<LocalDate>
 
@@ -58,19 +63,19 @@ class MainScreenViewModel @Inject constructor(
      * 아직 UI에 반영되지 않은 값을 참조하기 때문에 예외가 발생한다.
      */
     fun onLaunch() = viewModelScope.launch(Dispatchers.IO) {
-        loadMonthlyData(uiState.value.selectedDate)
+        loadMonthlyData(state.selectedDate)
     }
 
     /**
      * Kotlin Flow의 combine 함수를 본따 작성했다.
      */
     private fun updateUiState(
-        selectedDate: LocalDate = uiState.value.selectedDate,
+        selectedDate: LocalDate = state.selectedDate,
         entity: MealScheduleEntity? = cache[selectedDate.yearMonth]
     ) {
-        val newMealUiState = entity?.getMeal(selectedDate) ?: uiState.value.mealUiState
-        val newScheduleUiState = entity?.getSchedule(selectedDate) ?: uiState.value.scheduleUiState
-        _uiState.value = uiState.value.copy(
+        val newMealUiState = entity?.getMeal(selectedDate) ?: state.mealUiState
+        val newScheduleUiState = entity?.getSchedule(selectedDate) ?: state.scheduleUiState
+        state = state.copy(
             selectedDate = selectedDate,
             mealUiState = newMealUiState,
             scheduleUiState = newScheduleUiState
@@ -98,11 +103,24 @@ class MainScreenViewModel @Inject constructor(
 
     fun onSwiped(yearMonth: YearMonth) {
         val (year, month) = yearMonth
-        _uiState.value = uiState.value.copy(
+        state = state.copy(
             year = year,
             month = month,
         )
     }
+
+    fun getContentDescription(date: LocalDate): String {
+        return if (date == state.selectedDate) {
+            val mealState = state.mealUiState
+            val scheduleUiState = state.scheduleUiState
+            "식단: ${mealState.description}\n학사일정:${scheduleUiState.description}"
+        } else {
+            ""
+        }
+    }
+
+    fun getClickLabel(date: LocalDate): String =
+        if (date == state.selectedDate) "" else "식단 및 학사일정 보기"
 
 }
 
@@ -121,7 +139,7 @@ private fun MealScheduleEntity.getMeal(date: LocalDate): MealUiState {
 private fun MealScheduleEntity.getSchedule(date: LocalDate): ScheduleUiState {
     return try {
         val schedules = schedules.filter { it.dateEquals(date) }
-            .map { Schedule(it.eventName) }
+            .map { Schedule(it.eventName, it.eventContent) }
         ScheduleUiState(schedules.toPersistentList())
     } catch (e: NoSuchElementException) {
         ScheduleUiState.EmptyScheduleState

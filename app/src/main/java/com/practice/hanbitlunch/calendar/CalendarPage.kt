@@ -3,8 +3,10 @@ package com.practice.hanbitlunch.calendar
 import java.time.DayOfWeek
 import java.time.LocalDate
 
-class CalendarRow private constructor(
-    val dates: List<LocalDate>
+class CalendarPage private constructor(
+    val year: Int,
+    val month: Int,
+    val weeks: List<Week>
 ) {
 
     /**
@@ -15,10 +17,14 @@ class CalendarRow private constructor(
      */
     fun getDate(week: Int, day: Int): LocalDate {
         try {
-            return dates[(week - 1) * 7 + (day - 1)]
+            return weeks[(week - 1)][day - 1]
         } catch (e: IndexOutOfBoundsException) {
             throw CalendarException("Week should be in [1, 5] and day in [1, 7] but actual: $week, $day.")
         }
+    }
+
+    inline fun forEachWeeks(action: (Week) -> Unit) {
+        weeks.forEach { action(it) }
     }
 
     companion object {
@@ -26,20 +32,47 @@ class CalendarRow private constructor(
             getInstance(year, month)
         }
 
-        fun getInstance(year: Int, month: Int): CalendarRow {
-            val range = getCalendarRange(year, month)
+        fun getInstance(year: Int, month: Int): CalendarPage {
+            val weeks = makeWeeks(getCalendarRange(year, month))
+            return CalendarPage(year, month, weeks)
+        }
 
+        private fun makeWeeks(range: ClosedRange<LocalDate>): List<Week> {
+            val weeks = mutableListOf<Week>()
             val dates = mutableListOf<LocalDate>()
+
             var currentDate = range.start
             while (range.contains(currentDate)) {
                 dates.add(currentDate)
                 currentDate = currentDate.plusDays(1)
+
+                if (dates.size == 7) {
+                    // dates를 그대로 넣을 경우, reference 참조에 의해
+                    // 모든 week의 dates가 같은 객체를 참조한다.
+                    weeks.add(Week.create(dates))
+                    dates.clear()
+                }
             }
-            if (dates.size <= 35) {
-                dates.add(LocalDate.MAX)
+            if (dates.isNotEmpty()) {
+                weeks.add(Week.create(dates))
             }
-            return CalendarRow(dates)
+            return weeks
         }
+    }
+}
+
+class Week private constructor(val dates: List<LocalDate>) {
+
+    companion object {
+        fun create(dates: List<LocalDate>): Week {
+            return Week(dates.toList())
+        }
+    }
+
+    operator fun get(index: Int) = dates[index]
+
+    inline fun forEach(action: (LocalDate) -> Unit) {
+        dates.forEach { action(it) }
     }
 }
 

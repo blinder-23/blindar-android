@@ -18,6 +18,9 @@ data class MealEntityRoom(
     @ColumnInfo(name = "school_code") val schoolCode: Int,
 )
 
+val MealEntityRoom.yearMonth: String
+    get() = date.substring(0..5)
+
 fun MealEntity.toRoomEntity() = MealEntityRoom(
     date = getDateString(year, month, day),
     menu = menus.toJson(),

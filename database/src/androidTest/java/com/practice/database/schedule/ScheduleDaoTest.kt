@@ -7,11 +7,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.practice.database.TestUtil
 import com.practice.database.schedule.room.ScheduleDao
 import com.practice.database.schedule.room.ScheduleDatabase
+import com.practice.database.schedule.room.yearMonth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,29 +43,32 @@ class ScheduleDaoTest {
         val schedules = TestUtil.createScheduleEntityRoom(5)
         dao.insertSchedules(schedules)
 
-        val actual = dao.getSchedule(schedules[0].date.slice(0..5)).first()
-        assertEquals(schedules, actual)
+        val actual = dao.getSchedule(schedules[0].yearMonth).first()
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(schedules)
     }
 
     @Test
     fun dao_deleteSchedules() = runTest {
         val schedules = TestUtil.createScheduleEntityRoom(5)
         dao.insertSchedules(schedules)
-        dao.deleteSchedules(schedules.subList(0, 2))
 
-        val actual = dao.getSchedule(schedules[0].date.slice(0..5)).first()
-        assertEquals(schedules.subList(2, 5), actual)
+        val deleted = schedules.subList(0, 2)
+        val remain = schedules.subList(2, 5)
+        dao.deleteSchedules(deleted)
+
+        val actual = dao.getSchedule(schedules[0].yearMonth).first()
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(remain)
     }
 
     @Test
     fun dao_deleteSchedules_byDate() = runTest {
         val schedules = TestUtil.createScheduleEntityRoom(5)
-        val date = schedules[0].date.slice(0..5)
+        val date = schedules[0].yearMonth
         dao.insertSchedules(schedules)
         dao.deleteSchedules(date)
 
         val actual = dao.getSchedule(date).first()
-        assert(actual.isEmpty())
+        assertThat(actual).isEmpty()
     }
 
     @Test
@@ -73,8 +77,8 @@ class ScheduleDaoTest {
         dao.insertSchedules(schedules)
         dao.clear()
 
-        val actual = dao.getSchedule(schedules[0].date.slice(0..5)).first()
-        assert(actual.isEmpty())
+        val actual = dao.getSchedule(schedules[0].yearMonth).first()
+        assertThat(actual).isEmpty()
     }
 
 
