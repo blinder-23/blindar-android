@@ -89,8 +89,8 @@ private fun HorizontalMainScreen(
             MainScreenContents(
                 mealUiState = uiState.mealUiState,
                 scheduleUiState = uiState.scheduleUiState,
-                modifier = Modifier
-                    .weight(1f),
+                modifier = Modifier.weight(1f),
+                mealColumns = 3,
             )
         }
     }
@@ -121,6 +121,7 @@ private fun VerticalMainScreen(
             mealUiState = uiState.mealUiState,
             scheduleUiState = uiState.scheduleUiState,
             modifier = Modifier.weight(1f),
+            mealColumns = 2,
         )
     }
 }
@@ -154,6 +155,7 @@ private fun MainScreenHeader(
 private fun MainScreenContents(
     mealUiState: MealUiState,
     scheduleUiState: ScheduleUiState,
+    mealColumns: Int,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -164,7 +166,7 @@ private fun MainScreenContents(
     ) {
         if (!mealUiState.isEmpty) {
             item {
-                MealContent(mealUiState)
+                MealContent(mealUiState = mealUiState, columns = mealColumns)
             }
         }
         if (!scheduleUiState.isEmpty) {
@@ -176,13 +178,16 @@ private fun MainScreenContents(
 }
 
 @Composable
-private fun MealContent(mealUiState: MealUiState) {
+private fun MealContent(
+    mealUiState: MealUiState,
+    columns: Int,
+) {
     MainScreenContent(title = "식단") {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            mealUiState.menus.chunked(2).forEach { menus ->
+            mealUiState.menus.chunked(columns).forEach { menus ->
                 MenuRow(menus = menus)
             }
         }
@@ -256,7 +261,8 @@ private fun MainScreenContentsPreview() {
         MainScreenContents(
             modifier = Modifier.height(320.dp),
             mealUiState = MealUiState(previewMenus),
-            scheduleUiState = ScheduleUiState(previewSchedules)
+            scheduleUiState = ScheduleUiState(previewSchedules),
+            mealColumns = 2,
         )
     }
 }
@@ -265,7 +271,10 @@ private fun MainScreenContentsPreview() {
 @Composable
 private fun MealContentPreview() {
     HanbitCalendarTheme {
-        MealContent(mealUiState = MealUiState(previewMenus))
+        MealContent(
+            mealUiState = MealUiState(previewMenus),
+            columns = 2,
+        )
     }
 }
 
