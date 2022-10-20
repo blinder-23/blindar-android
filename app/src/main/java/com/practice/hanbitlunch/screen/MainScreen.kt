@@ -105,13 +105,12 @@ private fun MainScreenContents(
 
 @Composable
 private fun MealContent(mealUiState: MealUiState) {
-    val rowCount = mealUiState.menus.size.let { it / 2 + it % 2 }
     MainScreenContent(title = "식단") {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            mealUiState.menus.chunked(rowCount).forEach { menus ->
+            mealUiState.menus.chunked(2).forEach { menus ->
                 MenuRow(menus = menus)
             }
         }
