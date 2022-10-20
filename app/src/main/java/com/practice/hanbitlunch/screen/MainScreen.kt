@@ -42,11 +42,13 @@ fun MainScreen(
     val calendarState = rememberCalendarState()
 
     val backgroundModifier = modifier.background(MaterialTheme.colors.surface)
+    val mealColumns = if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) 2 else 3
     if (windowSize.widthSizeClass == WindowWidthSizeClass.Expanded) {
         HorizontalMainScreen(
             modifier = backgroundModifier,
             uiState = uiState,
             calendarState = calendarState,
+            mealColumns = mealColumns,
             onDateClick = viewModel::onDateClick,
             onSwiped = viewModel::onSwiped,
             getContentDescription = viewModel::getContentDescription,
@@ -57,6 +59,7 @@ fun MainScreen(
             modifier = backgroundModifier,
             uiState = uiState,
             calendarState = calendarState,
+            mealColumns = mealColumns,
             onDateClick = viewModel::onDateClick,
             onSwiped = viewModel::onSwiped,
             getContentDescription = viewModel::getContentDescription,
@@ -70,6 +73,7 @@ private fun HorizontalMainScreen(
     modifier: Modifier = Modifier,
     uiState: MainUiState,
     calendarState: CalendarState,
+    mealColumns: Int,
     onDateClick: (LocalDate) -> Unit,
     onSwiped: (YearMonth) -> Unit,
     getContentDescription: (LocalDate) -> String,
@@ -90,7 +94,7 @@ private fun HorizontalMainScreen(
                 mealUiState = uiState.mealUiState,
                 scheduleUiState = uiState.scheduleUiState,
                 modifier = Modifier.weight(1f),
-                mealColumns = 3,
+                mealColumns = mealColumns,
             )
         }
     }
@@ -100,7 +104,7 @@ private fun HorizontalMainScreen(
 private fun VerticalMainScreen(
     modifier: Modifier = Modifier,
     uiState: MainUiState,
-    calendarState: CalendarState,
+    calendarState: CalendarState, mealColumns: Int,
     onDateClick: (LocalDate) -> Unit,
     onSwiped: (YearMonth) -> Unit,
     getContentDescription: (LocalDate) -> String,
@@ -121,7 +125,7 @@ private fun VerticalMainScreen(
             mealUiState = uiState.mealUiState,
             scheduleUiState = uiState.scheduleUiState,
             modifier = Modifier.weight(1f),
-            mealColumns = 2,
+            mealColumns = mealColumns,
         )
     }
 }
@@ -302,6 +306,7 @@ private fun HorizontalMainScreenPreview() {
             modifier = Modifier.background(MaterialTheme.colors.surface),
             uiState = uiState,
             calendarState = calendarState,
+            mealColumns = 3,
             onDateClick = {},
             onSwiped = { },
             getContentDescription = { "" },
@@ -335,6 +340,7 @@ private fun VerticalMainScreenPreview() {
                 modifier = Modifier.background(MaterialTheme.colors.surface),
                 uiState = uiState,
                 calendarState = calendarState,
+                mealColumns = 2,
                 onDateClick = {},
                 onSwiped = {},
                 getContentDescription = { "" },
