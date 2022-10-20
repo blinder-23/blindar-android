@@ -175,6 +175,10 @@ dependencies {
     // Integration with Paging
     implementation 'androidx.paging:paging-compose:1.0.0-alpha16'
 
+    // Material 3
+    implementation "androidx.compose.material3:material3:$material3_version"
+    implementation "androidx.compose.material3:material3-window-size-class:$material3_version"
+
     // Splash screen
     implementation 'androidx.core:core-splashscreen:1.0.0'
 
