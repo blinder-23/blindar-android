@@ -20,6 +20,7 @@ import com.practice.hanbitlunch.components.Body
 import com.practice.hanbitlunch.components.SubTitle
 import com.practice.hanbitlunch.components.Title
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import java.time.LocalDate
 
@@ -192,18 +193,31 @@ private fun MealContent(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             mealUiState.menus.chunked(columns).forEach { menus ->
-                MenuRow(menus = menus)
+                val filledMenus = fillMenus(menus, columns)
+                MenuRow(menus = filledMenus)
             }
         }
     }
 }
 
+private fun fillMenus(menus: List<Menu>, targetCount: Int): ImmutableList<Menu> {
+    return if (menus.size == targetCount) {
+        menus
+    } else {
+        val mutableMenus = menus.toMutableList()
+        repeat(targetCount - menus.size) {
+            mutableMenus.add(Menu(""))
+        }
+        mutableMenus
+    }.toImmutableList()
+}
+
 @Composable
 fun MenuRow(
-    menus: List<Menu>,
+    menus: ImmutableList<Menu>,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = modifier) {
+    Row(modifier = modifier, horizontalArrangement = Arrangement.Start) {
         menus.forEach {
             Body(
                 text = it.name,
@@ -216,7 +230,6 @@ fun MenuRow(
 @Composable
 private fun ScheduleContent(scheduleUiState: ScheduleUiState) {
     MainScreenContent(title = "학사일정") {
-        // 여기를 lazycolumn으로 바꾸면 됨
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             scheduleUiState.schedules.forEach { schedule ->
                 Body(text = schedule.scheduleName)
@@ -253,7 +266,7 @@ private fun MainScreenHeaderPreview() {
 }
 
 
-val previewMenus = listOf("찰보리밥", "망고마들렌", "쇠고기미역국", "콩나물파채무침", "돼지양념구이", "포기김치", "오렌지주스")
+val previewMenus = listOf("찰보리밥", "망고마들렌", "쇠고기미역국", "콩나물파채무침", "돼지양념구이", "포기김치", "오렌지주스", "기타등등")
     .map { Menu(it) }.toImmutableList()
 val previewSchedules = (0..6).map { Schedule("학사일정 $it", "$it") }
     .toImmutableList()
