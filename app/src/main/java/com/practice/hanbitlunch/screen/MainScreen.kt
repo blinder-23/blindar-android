@@ -4,24 +4,30 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.practice.hanbitlunch.calendar.CalendarState
 import com.practice.hanbitlunch.calendar.SwipeableCalendar
+import com.practice.hanbitlunch.calendar.YearMonth
 import com.practice.hanbitlunch.calendar.rememberCalendarState
 import com.practice.hanbitlunch.components.Body
 import com.practice.hanbitlunch.components.SubTitle
 import com.practice.hanbitlunch.components.Title
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
 import kotlinx.collections.immutable.toImmutableList
+import java.time.LocalDate
 
 @Composable
 fun MainScreen(
-    modifier: Modifier = Modifier,
+    windowSize: WindowSizeClass,
     viewModel: MainScreenViewModel,
+    modifier: Modifier = Modifier,
     onLaunch: suspend () -> Unit = {},
 ) {
     val systemUiController = rememberSystemUiController()
@@ -34,15 +40,81 @@ fun MainScreen(
 
     val uiState = viewModel.uiState.value
     val calendarState = rememberCalendarState()
-    Column(modifier = modifier.background(MaterialTheme.colors.surface)) {
+
+    val backgroundModifier = modifier.background(MaterialTheme.colors.surface)
+    if (windowSize.widthSizeClass == WindowWidthSizeClass.Expanded) {
+        HorizontalMainScreen(
+            modifier = backgroundModifier,
+            uiState = uiState,
+            calendarState = calendarState,
+            onDateClick = viewModel::onDateClick,
+            onSwiped = viewModel::onSwiped,
+            getContentDescription = viewModel::getContentDescription,
+            getClickLabel = viewModel::getClickLabel,
+        )
+    } else {
+        VerticalMainScreen(
+            modifier = backgroundModifier,
+            uiState = uiState,
+            calendarState = calendarState,
+            onDateClick = viewModel::onDateClick,
+            onSwiped = viewModel::onSwiped,
+            getContentDescription = viewModel::getContentDescription,
+            getClickLabel = viewModel::getClickLabel,
+        )
+    }
+}
+
+@Composable
+private fun HorizontalMainScreen(
+    modifier: Modifier = Modifier,
+    uiState: MainUiState,
+    calendarState: CalendarState,
+    onDateClick: (LocalDate) -> Unit,
+    onSwiped: (YearMonth) -> Unit,
+    getContentDescription: (LocalDate) -> String,
+    getClickLabel: (LocalDate) -> String,
+) {
+    Column(modifier = modifier) {
+        MainScreenHeader(year = uiState.year, month = uiState.month)
+        Row {
+            SwipeableCalendar(
+                modifier = Modifier.weight(1f),
+                calendarState = calendarState,
+                onDateClick = onDateClick,
+                onSwiped = onSwiped,
+                getContentDescription = getContentDescription,
+                getClickLabel = getClickLabel,
+            )
+            MainScreenContents(
+                mealUiState = uiState.mealUiState,
+                scheduleUiState = uiState.scheduleUiState,
+                modifier = Modifier
+                    .weight(1f),
+            )
+        }
+    }
+}
+
+@Composable
+private fun VerticalMainScreen(
+    modifier: Modifier = Modifier,
+    uiState: MainUiState,
+    calendarState: CalendarState,
+    onDateClick: (LocalDate) -> Unit,
+    onSwiped: (YearMonth) -> Unit,
+    getContentDescription: (LocalDate) -> String,
+    getClickLabel: (LocalDate) -> String,
+) {
+    Column(modifier = modifier) {
         Column(modifier = Modifier.weight(1f)) {
             MainScreenHeader(year = uiState.year, month = uiState.month)
             SwipeableCalendar(
                 calendarState = calendarState,
-                onDateClick = viewModel::onDateClick,
-                onSwiped = viewModel::onSwiped,
-                getContentDescription = viewModel::getContentDescription,
-                getClickLabel = viewModel::getClickLabel,
+                onDateClick = onDateClick,
+                onSwiped = onSwiped,
+                getContentDescription = getContentDescription,
+                getClickLabel = getClickLabel,
             )
         }
         MainScreenContents(
@@ -194,5 +266,71 @@ private fun MainScreenContentsPreview() {
 private fun MealContentPreview() {
     HanbitCalendarTheme {
         MealContent(mealUiState = MealUiState(previewMenus))
+    }
+}
+
+@Preview(showBackground = true, widthDp = 960, heightDp = 540)
+@Composable
+private fun HorizontalMainScreenPreview() {
+    val year = 2022
+    val month = 10
+    val selectedDate = LocalDate.of(2022, 10, 11)
+
+    val uiState = MainUiState(
+        year = year,
+        month = month,
+        selectedDate = selectedDate,
+        mealUiState = MealUiState(previewMenus),
+        scheduleUiState = ScheduleUiState(previewSchedules),
+    )
+    val calendarState = rememberCalendarState(
+        year = year,
+        month = month,
+        selectedDate = selectedDate,
+    )
+    HanbitCalendarTheme {
+        HorizontalMainScreen(
+            modifier = Modifier.background(MaterialTheme.colors.surface),
+            uiState = uiState,
+            calendarState = calendarState,
+            onDateClick = {},
+            onSwiped = { },
+            getContentDescription = { "" },
+            getClickLabel = { "" },
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun VerticalMainScreenPreview() {
+    HanbitCalendarTheme {
+        val year = 2022
+        val month = 10
+        val selectedDate = LocalDate.of(2022, 10, 11)
+
+        val uiState = MainUiState(
+            year = year,
+            month = month,
+            selectedDate = selectedDate,
+            mealUiState = MealUiState(previewMenus),
+            scheduleUiState = ScheduleUiState(previewSchedules),
+        )
+        val calendarState = rememberCalendarState(
+            year = year,
+            month = month,
+            selectedDate = selectedDate,
+        )
+        HanbitCalendarTheme {
+            VerticalMainScreen(
+                modifier = Modifier.background(MaterialTheme.colors.surface),
+                uiState = uiState,
+                calendarState = calendarState,
+                onDateClick = {},
+                onSwiped = {},
+                getContentDescription = { "" },
+                getClickLabel = { "" },
+            )
+        }
     }
 }
