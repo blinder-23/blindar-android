@@ -18,6 +18,7 @@ class PreferencesRepository @Inject constructor(private val dataStore: DataStore
         val UI_MODE = stringPreferencesKey("ui-mode")
         val THEME_MODE = stringPreferencesKey("theme-mode")
         val FIRST_EXECUTION = booleanPreferencesKey("first-execution")
+        val FETCHING_DATA = booleanPreferencesKey("fetching_data")
     }
 
     val userPreferencesFlow: Flow<UserPreferences> = dataStore.data.catch { exception ->
@@ -50,6 +51,12 @@ class PreferencesRepository @Inject constructor(private val dataStore: DataStore
         }
     }
 
+    suspend fun updateIsFetching(isFetching: Boolean) {
+        edit {
+            it[PreferenceKeys.FETCHING_DATA] = isFetching
+        }
+    }
+
     suspend fun clear() {
         edit {
             it.clear()
@@ -75,7 +82,8 @@ class PreferencesRepository @Inject constructor(private val dataStore: DataStore
             value = preferences[PreferenceKeys.THEME_MODE] ?: ThemeMode.SystemDefault.name
         )
         val isFirstExecution = preferences[PreferenceKeys.FIRST_EXECUTION] ?: true
-        return UserPreferences(uiMode, themeMode, isFirstExecution)
+        val isFetching = preferences[PreferenceKeys.FETCHING_DATA] ?: false
+        return UserPreferences(uiMode, themeMode, isFirstExecution, isFetching)
     }
 
 }
