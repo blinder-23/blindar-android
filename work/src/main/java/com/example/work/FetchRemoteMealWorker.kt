@@ -8,6 +8,7 @@ import com.example.domain.combine.toMealEntity
 import com.example.server.meal.RemoteMealRepository
 import com.practice.database.meal.MealRepository
 import com.practice.database.meal.entity.MealEntity
+import com.practice.preferences.PreferencesRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.time.LocalDate
@@ -18,11 +19,14 @@ class FetchRemoteMealWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val localRepository: MealRepository,
-    private val remoteRepository: RemoteMealRepository
+    private val remoteRepository: RemoteMealRepository,
+    private val preferencesRepository: PreferencesRepository,
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
+        preferencesRepository.updateIsFetching(true)
         val result = fetchRemoteMeals()
+        preferencesRepository.updateIsFetching(false)
         Log.d("FetchRemoteMealWorker", "finished!")
         return result
     }

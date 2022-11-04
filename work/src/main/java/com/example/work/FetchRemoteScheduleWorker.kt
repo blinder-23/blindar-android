@@ -8,6 +8,7 @@ import com.example.domain.combine.toScheduleEntity
 import com.example.server.schedule.RemoteScheduleRepository
 import com.practice.database.schedule.ScheduleRepository
 import com.practice.database.schedule.entity.ScheduleEntity
+import com.practice.preferences.PreferencesRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.time.LocalDate
@@ -18,11 +19,14 @@ class FetchRemoteScheduleWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val localRepository: ScheduleRepository,
-    private val remoteRepository: RemoteScheduleRepository
+    private val remoteRepository: RemoteScheduleRepository,
+    private val preferencesRepository: PreferencesRepository,
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
+        preferencesRepository.updateIsFetching(true)
         val result = fetchRemoteSchedules()
+        preferencesRepository.updateIsFetching(false)
         Log.d("FetchRemoteScheduleWorker", "finished!")
         return result
     }
