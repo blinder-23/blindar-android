@@ -3,11 +3,15 @@ package com.practice.hanbitlunch.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -137,13 +141,37 @@ private fun MainScreenHeader(
     month: Int,
     modifier: Modifier = Modifier
 ) {
-    val textColor = MaterialTheme.colors.onPrimary
-    Column(
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.primary)
-            .padding(start = 16.dp, top = 13.dp, end = 16.dp, bottom = 23.dp),
+            .padding(start = 16.dp, top = 13.dp, end = 16.dp, bottom = 23.dp)
+    ) {
+        VerticalYearMonth(
+            year = year,
+            month = month,
+            modifier = Modifier.align(Alignment.CenterStart)
+        )
+
+        Icon(
+            imageVector = Icons.Filled.Refresh,
+            contentDescription = "새로고침",
+            modifier = Modifier.align(Alignment.BottomEnd),
+            tint = MaterialTheme.colors.onPrimary
+        )
+    }
+}
+
+@Composable
+fun VerticalYearMonth(
+    year: Int,
+    month: Int,
+    modifier: Modifier = Modifier
+) {
+    val textColor = MaterialTheme.colors.onPrimary
+    Column(
         verticalArrangement = Arrangement.spacedBy(13.dp),
+        modifier = modifier,
     ) {
         SubTitle(
             text = "${year}년",
