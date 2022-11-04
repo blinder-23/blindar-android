@@ -67,15 +67,27 @@ class FetchRemoteScheduleWorker @AssistedInject constructor(
     }
 }
 
-const val fetchRemoteScheduleWorkTag = "fetch_remote_schedule_work"
+const val periodicScheduleWorkTag = "periodic_schedule_work"
+const val oneTimeScheduleWorkTag = "onetime_schedule_work"
 
 fun setPeriodicFetchScheduleWork(workManager: WorkManager) {
     val periodicWork = PeriodicWorkRequestBuilder<FetchRemoteScheduleWorker>(1, TimeUnit.DAYS)
-        .addTag(fetchRemoteScheduleWorkTag)
+        .addTag(periodicScheduleWorkTag)
         .build()
     workManager.enqueueUniquePeriodicWork(
-        fetchRemoteScheduleWorkTag,
+        periodicScheduleWorkTag,
         ExistingPeriodicWorkPolicy.KEEP,
         periodicWork
+    )
+}
+
+fun setOneTimeFetchScheduleWork(workManager: WorkManager) {
+    val oneTimeWork = OneTimeWorkRequestBuilder<FetchRemoteScheduleWorker>()
+        .addTag(oneTimeScheduleWorkTag)
+        .build()
+    workManager.enqueueUniqueWork(
+        oneTimeScheduleWorkTag,
+        ExistingWorkPolicy.KEEP,
+        oneTimeWork
     )
 }

@@ -3,11 +3,7 @@ package com.example.work
 import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
-import androidx.work.CoroutineWorker
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.example.domain.combine.toMealEntity
 import com.example.server.meal.RemoteMealRepository
 import com.practice.database.meal.MealRepository
@@ -71,15 +67,27 @@ class FetchRemoteMealWorker @AssistedInject constructor(
     }
 }
 
-const val fetchRemoteMealWorkTag = "fetch_remote_meal_work"
+const val periodicMealWorkTag = "periodic_meal_work"
+const val oneTimeMealWorkTag = "onetime_meal_work"
 
 fun setPeriodicFetchMealWork(workManager: WorkManager) {
     val periodicWork = PeriodicWorkRequestBuilder<FetchRemoteMealWorker>(1, TimeUnit.DAYS)
-        .addTag(fetchRemoteMealWorkTag)
+        .addTag(periodicMealWorkTag)
         .build()
     workManager.enqueueUniquePeriodicWork(
-        fetchRemoteMealWorkTag,
+        periodicMealWorkTag,
         ExistingPeriodicWorkPolicy.KEEP,
         periodicWork
+    )
+}
+
+fun setOneTimeFetchMealWork(workManager: WorkManager) {
+    val oneTimeWork = OneTimeWorkRequestBuilder<FetchRemoteMealWorker>()
+        .addTag(oneTimeMealWorkTag)
+        .build()
+    workManager.enqueueUniqueWork(
+        oneTimeMealWorkTag,
+        ExistingWorkPolicy.KEEP,
+        oneTimeWork
     )
 }
