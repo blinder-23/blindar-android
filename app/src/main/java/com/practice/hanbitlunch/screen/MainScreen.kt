@@ -1,6 +1,7 @@
 package com.practice.hanbitlunch.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
@@ -34,6 +35,7 @@ fun MainScreen(
     viewModel: MainScreenViewModel,
     modifier: Modifier = Modifier,
     onLaunch: suspend () -> Unit = {},
+    onRefresh: () -> Unit = {},
 ) {
     val systemUiController = rememberSystemUiController()
     val systemBarColor = MaterialTheme.colors.primary
@@ -52,6 +54,7 @@ fun MainScreen(
         HorizontalMainScreen(
             modifier = backgroundModifier,
             uiState = uiState,
+            onRefresh = onRefresh,
             calendarState = calendarState,
             mealColumns = mealColumns,
             onDateClick = viewModel::onDateClick,
@@ -63,6 +66,7 @@ fun MainScreen(
         VerticalMainScreen(
             modifier = backgroundModifier,
             uiState = uiState,
+            onRefresh = onRefresh,
             calendarState = calendarState,
             mealColumns = mealColumns,
             onDateClick = viewModel::onDateClick,
@@ -77,6 +81,7 @@ fun MainScreen(
 private fun HorizontalMainScreen(
     modifier: Modifier = Modifier,
     uiState: MainUiState,
+    onRefresh: () -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
     onDateClick: (LocalDate) -> Unit,
@@ -85,7 +90,7 @@ private fun HorizontalMainScreen(
     getClickLabel: (LocalDate) -> String,
 ) {
     Column(modifier = modifier) {
-        MainScreenHeader(year = uiState.year, month = uiState.month)
+        MainScreenHeader(year = uiState.year, month = uiState.month, onRefresh = onRefresh)
         Row {
             SwipeableCalendar(
                 modifier = Modifier.weight(1f),
@@ -109,7 +114,9 @@ private fun HorizontalMainScreen(
 private fun VerticalMainScreen(
     modifier: Modifier = Modifier,
     uiState: MainUiState,
-    calendarState: CalendarState, mealColumns: Int,
+    onRefresh: () -> Unit,
+    calendarState: CalendarState,
+    mealColumns: Int,
     onDateClick: (LocalDate) -> Unit,
     onSwiped: (YearMonth) -> Unit,
     getContentDescription: (LocalDate) -> String,
@@ -117,7 +124,7 @@ private fun VerticalMainScreen(
 ) {
     Column(modifier = modifier) {
         Column(modifier = Modifier.weight(1f)) {
-            MainScreenHeader(year = uiState.year, month = uiState.month)
+            MainScreenHeader(year = uiState.year, month = uiState.month, onRefresh = onRefresh)
             SwipeableCalendar(
                 calendarState = calendarState,
                 onDateClick = onDateClick,
@@ -139,7 +146,8 @@ private fun VerticalMainScreen(
 private fun MainScreenHeader(
     year: Int,
     month: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRefresh: () -> Unit = {},
 ) {
     Box(
         modifier = modifier
@@ -156,7 +164,9 @@ private fun MainScreenHeader(
         Icon(
             imageVector = Icons.Filled.Refresh,
             contentDescription = "새로고침",
-            modifier = Modifier.align(Alignment.BottomEnd),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .clickable(onClick = onRefresh),
             tint = MaterialTheme.colors.onPrimary
         )
     }
@@ -346,6 +356,7 @@ private fun HorizontalMainScreenPreview() {
         HorizontalMainScreen(
             modifier = Modifier.background(MaterialTheme.colors.surface),
             uiState = uiState,
+            onRefresh = {},
             calendarState = calendarState,
             mealColumns = 3,
             onDateClick = {},
@@ -380,6 +391,7 @@ private fun VerticalMainScreenPreview() {
             VerticalMainScreen(
                 modifier = Modifier.background(MaterialTheme.colors.surface),
                 uiState = uiState,
+                onRefresh = {},
                 calendarState = calendarState,
                 mealColumns = 2,
                 onDateClick = {},

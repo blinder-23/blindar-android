@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.work.WorkManager
+import com.example.work.setOneTimeFetchMealWork
+import com.example.work.setOneTimeFetchScheduleWork
 import com.example.work.setPeriodicFetchMealWork
 import com.example.work.setPeriodicFetchScheduleWork
 import com.practice.hanbitlunch.screen.MainScreen
@@ -35,10 +37,10 @@ class MainActivity : ComponentActivity() {
                 MainScreen(
                     windowSize = windowSizeClass,
                     viewModel = hiltViewModel(),
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    enqueuePeriodicWork()
-                }
+                    modifier = Modifier.fillMaxSize(),
+                    onLaunch = ::enqueuePeriodicWork,
+                    onRefresh = ::setOneTimeWork,
+                )
             }
         }
     }
@@ -52,5 +54,11 @@ class MainActivity : ComponentActivity() {
         val workManager = WorkManager.getInstance(this)
         setPeriodicFetchScheduleWork(workManager)
         setPeriodicFetchMealWork(workManager)
+    }
+
+    private fun setOneTimeWork() {
+        val workManager = WorkManager.getInstance(this)
+        setOneTimeFetchScheduleWork(workManager)
+        setOneTimeFetchMealWork(workManager)
     }
 }
