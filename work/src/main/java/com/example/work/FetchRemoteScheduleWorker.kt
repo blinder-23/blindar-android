@@ -24,9 +24,9 @@ class FetchRemoteScheduleWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        preferencesRepository.updateIsFetching(true)
+        preferencesRepository.increaseRunningWorkCount()
         val result = fetchRemoteSchedules()
-        preferencesRepository.updateIsFetching(false)
+        preferencesRepository.decreaseRunningWorkCount()
         Log.d("FetchRemoteScheduleWorker", "finished!")
         return result
     }

@@ -66,9 +66,24 @@ class PreferencesRepository @Inject constructor(private val dataStore: DataStore
         }
     }
 
-    suspend fun updateIsFetching(isFetching: Boolean) {
+    suspend fun increaseRunningWorkCount() {
+        requestUpdateWorkCounts.send(1)
+    }
+
+    suspend fun decreaseRunningWorkCount() {
+        requestUpdateWorkCounts.send(-1)
+    }
+
+    private fun consumeUpdateWorkCountRequests() = launch {
+        for (diff in requestUpdateWorkCounts) {
+            updateRunningWorkCount(diff)
+        }
+    }
+
+    private suspend fun updateRunningWorkCount(diff: Int) {
         edit {
-            it[PreferenceKeys.FETCHING_DATA] = isFetching
+            val currentCount = it[PreferenceKeys.RUNNING_WORKS_COUNT] ?: 0
+            it[PreferenceKeys.RUNNING_WORKS_COUNT] = currentCount + diff
         }
     }
 
@@ -78,12 +93,15 @@ class PreferencesRepository @Inject constructor(private val dataStore: DataStore
         }
     }
 
-    private suspend fun edit(action: (MutablePreferences) -> Unit): Preferences {
-        return dataStore.edit { action(it) }
+    private suspend fun edit(action: (MutablePreferences) -> Unit) {
+        dataStore.edit {
+            action(it)
+        }
     }
 
-    /** Should only called once when **only** first preference object is needed.
-     *  This function will cancel the collection of [userPreferencesFlow].
+    /**
+     * Should be called when a single preference object is needed.
+     * This function doesn't cancel the collection of [dataStore].
      */
     suspend fun fetchInitialPreferences() =
         mapUserPreferences(dataStore.data.first().toPreferences())
@@ -97,8 +115,8 @@ class PreferencesRepository @Inject constructor(private val dataStore: DataStore
             value = preferences[PreferenceKeys.THEME_MODE] ?: ThemeMode.SystemDefault.name
         )
         val isFirstExecution = preferences[PreferenceKeys.FIRST_EXECUTION] ?: true
-        val isFetching = preferences[PreferenceKeys.FETCHING_DATA] ?: false
-        return UserPreferences(uiMode, themeMode, isFirstExecution, isFetching)
+        val runningWorksCount = preferences[PreferenceKeys.RUNNING_WORKS_COUNT] ?: 0
+        return UserPreferences(uiMode, themeMode, isFirstExecution, runningWorksCount)
     }
 
 }
