@@ -10,6 +10,7 @@ import com.example.domain.combine.MealScheduleEntity
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.YearMonth
+import com.practice.preferences.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
     private val loadMealScheduleDataUseCase: LoadMealScheduleDataUseCase,
+    private val preferencesRepository: PreferencesRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableState<MainUiState>
@@ -62,8 +64,13 @@ class MainScreenViewModel @Inject constructor(
      * init 블럭에서 실행하지 않은 이유는 [IllegalStateException]이 발생하기 때문이다.
      * 아직 UI에 반영되지 않은 값을 참조하기 때문에 예외가 발생한다.
      */
-    fun onLaunch() = viewModelScope.launch(Dispatchers.IO) {
-        loadMonthlyData(state.selectedDate)
+    fun onLaunch() {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadMonthlyData(state.selectedDate)
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            collectPreferences()
+        }
     }
 
     /**
@@ -71,15 +78,19 @@ class MainScreenViewModel @Inject constructor(
      */
     private fun updateUiState(
         selectedDate: LocalDate = state.selectedDate,
-        entity: MealScheduleEntity? = cache[selectedDate.yearMonth]
+        entity: MealScheduleEntity? = cache[selectedDate.yearMonth],
+        isLoading: Boolean = false,
     ) {
         val newMealUiState = entity?.getMeal(selectedDate) ?: state.mealUiState
         val newScheduleUiState = entity?.getSchedule(selectedDate) ?: state.scheduleUiState
-        state = state.copy(
-            selectedDate = selectedDate,
-            mealUiState = newMealUiState,
-            scheduleUiState = newScheduleUiState
-        )
+        synchronized(state) {
+            state = state.copy(
+                selectedDate = selectedDate,
+                mealUiState = newMealUiState,
+                scheduleUiState = newScheduleUiState,
+                isLoading = isLoading,
+            )
+        }
     }
 
     fun onDateClick(clickedDate: LocalDate) = viewModelScope.launch(Dispatchers.IO) {
@@ -107,6 +118,12 @@ class MainScreenViewModel @Inject constructor(
             year = year,
             month = month,
         )
+    }
+
+    private suspend fun collectPreferences() {
+        preferencesRepository.userPreferencesFlow.collectLatest {
+            updateUiState(isLoading = (it.runningWorksCount != 0))
+        }
     }
 
     fun getContentDescription(date: LocalDate): String {

@@ -12,6 +12,7 @@ data class MainUiState(
     val selectedDate: LocalDate,
     val mealUiState: MealUiState,
     val scheduleUiState: ScheduleUiState,
+    val isLoading: Boolean = false,
 )
 
 /**
