@@ -15,5 +15,5 @@ data class UserPreferences(
     val uiMode: UiMode,
     val themeMode: ThemeMode,
     val isFirstExecution: Boolean = true,
-    val isFetching: Boolean = false,
+    val runningWorksCount: Int = 0,
 )

@@ -3,14 +3,29 @@ package com.practice.preferences
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
-class PreferencesRepository @Inject constructor(private val dataStore: DataStore<Preferences>) {
+class PreferencesRepository @Inject constructor(private val dataStore: DataStore<Preferences>) :
+    CoroutineScope {
+    override val coroutineContext: CoroutineContext
+        get() = SupervisorJob() + Dispatchers.Default
+
+    private val requestUpdateWorkCounts = Channel<Int>()
+
+    init {
+        consumeUpdateWorkCountRequests()
+    }
 
     private val TAG = "PreferencesRepository"
 
@@ -18,7 +33,7 @@ class PreferencesRepository @Inject constructor(private val dataStore: DataStore
         val UI_MODE = stringPreferencesKey("ui-mode")
         val THEME_MODE = stringPreferencesKey("theme-mode")
         val FIRST_EXECUTION = booleanPreferencesKey("first-execution")
-        val FETCHING_DATA = booleanPreferencesKey("fetching_data")
+        val RUNNING_WORKS_COUNT = intPreferencesKey("running-works-count")
     }
 
     val userPreferencesFlow: Flow<UserPreferences> = dataStore.data.catch { exception ->
