@@ -1,14 +1,22 @@
 package com.practice.hanbitlunch.screen
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cached
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -30,6 +38,7 @@ fun MainScreen(
     viewModel: MainScreenViewModel,
     modifier: Modifier = Modifier,
     onLaunch: suspend () -> Unit = {},
+    onRefresh: () -> Unit = {},
 ) {
     val systemUiController = rememberSystemUiController()
     val systemBarColor = MaterialTheme.colors.primary
@@ -48,6 +57,7 @@ fun MainScreen(
         HorizontalMainScreen(
             modifier = backgroundModifier,
             uiState = uiState,
+            onRefresh = onRefresh,
             calendarState = calendarState,
             mealColumns = mealColumns,
             onDateClick = viewModel::onDateClick,
@@ -59,6 +69,7 @@ fun MainScreen(
         VerticalMainScreen(
             modifier = backgroundModifier,
             uiState = uiState,
+            onRefresh = onRefresh,
             calendarState = calendarState,
             mealColumns = mealColumns,
             onDateClick = viewModel::onDateClick,
@@ -73,6 +84,7 @@ fun MainScreen(
 private fun HorizontalMainScreen(
     modifier: Modifier = Modifier,
     uiState: MainUiState,
+    onRefresh: () -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
     onDateClick: (LocalDate) -> Unit,
@@ -81,7 +93,12 @@ private fun HorizontalMainScreen(
     getClickLabel: (LocalDate) -> String,
 ) {
     Column(modifier = modifier) {
-        MainScreenHeader(year = uiState.year, month = uiState.month)
+        MainScreenHeader(
+            year = uiState.year,
+            month = uiState.month,
+            isLoading = uiState.isLoading,
+            onRefresh = onRefresh
+        )
         Row {
             SwipeableCalendar(
                 modifier = Modifier.weight(1f),
@@ -105,7 +122,9 @@ private fun HorizontalMainScreen(
 private fun VerticalMainScreen(
     modifier: Modifier = Modifier,
     uiState: MainUiState,
-    calendarState: CalendarState, mealColumns: Int,
+    onRefresh: () -> Unit,
+    calendarState: CalendarState,
+    mealColumns: Int,
     onDateClick: (LocalDate) -> Unit,
     onSwiped: (YearMonth) -> Unit,
     getContentDescription: (LocalDate) -> String,
@@ -113,7 +132,12 @@ private fun VerticalMainScreen(
 ) {
     Column(modifier = modifier) {
         Column(modifier = Modifier.weight(1f)) {
-            MainScreenHeader(year = uiState.year, month = uiState.month)
+            MainScreenHeader(
+                year = uiState.year,
+                month = uiState.month,
+                isLoading = uiState.isLoading,
+                onRefresh = onRefresh
+            )
             SwipeableCalendar(
                 calendarState = calendarState,
                 onDateClick = onDateClick,
@@ -135,15 +159,63 @@ private fun VerticalMainScreen(
 private fun MainScreenHeader(
     year: Int,
     month: Int,
+    isLoading: Boolean,
+    modifier: Modifier = Modifier,
+    onRefresh: () -> Unit = {},
+) {
+    val refreshIconAlpha by animateFloatAsState(targetValue = if (isLoading) 0.5f else 1f)
+    val infiniteTransition = rememberInfiniteTransition()
+    val angle by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = if (isLoading) 180f else 0f,
+        animationSpec = InfiniteRepeatableSpec(
+            animation = tween(
+                durationMillis = 750,
+                easing = CubicBezierEasing(0.3f, 0f, 0.7f, 1f),
+            ),
+        )
+    )
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.primary)
+            .padding(start = 16.dp, top = 13.dp, end = 16.dp, bottom = 13.dp)
+    ) {
+        VerticalYearMonth(
+            year = year,
+            month = month,
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(bottom = 11.dp)
+        )
+
+        IconButton(
+            enabled = !isLoading,
+            onClick = onRefresh,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .rotate(angle)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Cached,
+                contentDescription = "새로고침하기",
+                tint = MaterialTheme.colors.onPrimary.copy(alpha = refreshIconAlpha),
+            )
+        }
+    }
+}
+
+@Composable
+fun VerticalYearMonth(
+    year: Int,
+    month: Int,
     modifier: Modifier = Modifier
 ) {
     val textColor = MaterialTheme.colors.onPrimary
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colors.primary)
-            .padding(start = 16.dp, top = 13.dp, end = 16.dp, bottom = 23.dp),
         verticalArrangement = Arrangement.spacedBy(13.dp),
+        modifier = modifier,
     ) {
         SubTitle(
             text = "${year}년",
@@ -260,6 +332,7 @@ private fun MainScreenHeaderPreview() {
         MainScreenHeader(
             year = 2022,
             month = 8,
+            isLoading = false,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -318,6 +391,7 @@ private fun HorizontalMainScreenPreview() {
         HorizontalMainScreen(
             modifier = Modifier.background(MaterialTheme.colors.surface),
             uiState = uiState,
+            onRefresh = {},
             calendarState = calendarState,
             mealColumns = 3,
             onDateClick = {},
@@ -352,6 +426,7 @@ private fun VerticalMainScreenPreview() {
             VerticalMainScreen(
                 modifier = Modifier.background(MaterialTheme.colors.surface),
                 uiState = uiState,
+                onRefresh = {},
                 calendarState = calendarState,
                 mealColumns = 2,
                 onDateClick = {},

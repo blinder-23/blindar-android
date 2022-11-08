@@ -38,6 +38,7 @@ dependencies {
     implementation project(path: ':server')
     implementation project(path: ':server:di')
     implementation project(path: ':domain')
+    implementation project(path: ':preferences')
 
     // Kotlin immutable collections
     implementation "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
