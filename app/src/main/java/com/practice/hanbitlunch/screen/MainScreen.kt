@@ -1,19 +1,22 @@
 package com.practice.hanbitlunch.screen
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Cached
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -90,7 +93,12 @@ private fun HorizontalMainScreen(
     getClickLabel: (LocalDate) -> String,
 ) {
     Column(modifier = modifier) {
-        MainScreenHeader(year = uiState.year, month = uiState.month, onRefresh = onRefresh)
+        MainScreenHeader(
+            year = uiState.year,
+            month = uiState.month,
+            isLoading = uiState.isLoading,
+            onRefresh = onRefresh
+        )
         Row {
             SwipeableCalendar(
                 modifier = Modifier.weight(1f),
@@ -124,7 +132,12 @@ private fun VerticalMainScreen(
 ) {
     Column(modifier = modifier) {
         Column(modifier = Modifier.weight(1f)) {
-            MainScreenHeader(year = uiState.year, month = uiState.month, onRefresh = onRefresh)
+            MainScreenHeader(
+                year = uiState.year,
+                month = uiState.month,
+                isLoading = uiState.isLoading,
+                onRefresh = onRefresh
+            )
             SwipeableCalendar(
                 calendarState = calendarState,
                 onDateClick = onDateClick,
@@ -146,29 +159,50 @@ private fun VerticalMainScreen(
 private fun MainScreenHeader(
     year: Int,
     month: Int,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
     onRefresh: () -> Unit = {},
 ) {
+    val refreshIconAlpha by animateFloatAsState(targetValue = if (isLoading) 0.5f else 1f)
+    val infiniteTransition = rememberInfiniteTransition()
+    val angle by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = if (isLoading) 180f else 0f,
+        animationSpec = InfiniteRepeatableSpec(
+            animation = tween(
+                durationMillis = 750,
+                easing = CubicBezierEasing(0.3f, 0f, 0.7f, 1f),
+            ),
+        )
+    )
+
     Box(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.primary)
-            .padding(start = 16.dp, top = 13.dp, end = 16.dp, bottom = 23.dp)
+            .padding(start = 16.dp, top = 13.dp, end = 16.dp, bottom = 13.dp)
     ) {
         VerticalYearMonth(
             year = year,
             month = month,
-            modifier = Modifier.align(Alignment.CenterStart)
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(bottom = 11.dp)
         )
 
-        Icon(
-            imageVector = Icons.Filled.Refresh,
-            contentDescription = "새로고침",
+        IconButton(
+            enabled = !isLoading,
+            onClick = onRefresh,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .clickable(onClick = onRefresh),
-            tint = MaterialTheme.colors.onPrimary
-        )
+                .rotate(angle)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Cached,
+                contentDescription = "새로고침하기",
+                tint = MaterialTheme.colors.onPrimary.copy(alpha = refreshIconAlpha),
+            )
+        }
     }
 }
 
@@ -298,6 +332,7 @@ private fun MainScreenHeaderPreview() {
         MainScreenHeader(
             year = 2022,
             month = 8,
+            isLoading = false,
             modifier = Modifier.fillMaxWidth()
         )
     }
