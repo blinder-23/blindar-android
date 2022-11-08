@@ -10,14 +10,17 @@
 
 ## 주요 기능
 * 식단 및 학사일정 정보 제공
+* 시각장애인을 위한 접근성 구현 (TalkBack 지원)
 
 ## 향후 제공할 기능
-* **스크린 리더 등 접근성 기능 강화**
 * 커뮤니티 기능
 
 ## 연락처
 버그 제보 및 기능 개선 등 건의사항은 [이메일](mailto:mwy3055@gmail.com)로 보내주세요.
 
-## 기술적인 특징
-* Jetpack Compose만을 사용하여 모든 UI를 개발했습니다.
+## 기술 스택
+* Jetpack Compose를 사용하여 UI를 작성했습니다.
 * Clean Architecture와 멀티 모듈 구조를 적용했습니다.
+
+## 아키텍쳐
+![image](https://user-images.githubusercontent.com/45386920/199899256-55498b26-2064-4227-9817-9771ed0493af.png)
