@@ -304,7 +304,7 @@ private fun ScheduleContent(scheduleUiState: ScheduleUiState) {
     MainScreenContent(title = "학사일정") {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             scheduleUiState.schedules.forEach { schedule ->
-                Body(text = schedule.scheduleName)
+                Body(text = schedule.displayText)
             }
         }
     }
