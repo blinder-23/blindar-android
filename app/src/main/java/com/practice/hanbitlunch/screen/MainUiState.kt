@@ -1,6 +1,7 @@
 package com.practice.hanbitlunch.screen
 
 import com.practice.database.meal.entity.MealEntity
+import com.practice.database.schedule.entity.ScheduleEntity
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -12,6 +13,7 @@ data class MainUiState(
     val selectedDate: LocalDate,
     val mealUiState: MealUiState,
     val scheduleUiState: ScheduleUiState,
+    val isLoading: Boolean = false,
 )
 
 /**
@@ -53,7 +55,7 @@ data class ScheduleUiState(
         get() = schedules.isEmpty()
 
     val description: String
-        get() = if (schedules.isEmpty()) "학사일정이 없습니다." else schedules.joinToString(", ") { it.scheduleName }
+        get() = if (schedules.isEmpty()) "학사일정이 없습니다." else schedules.joinToString(", ") { it.displayText }
 
     companion object {
         val EmptyScheduleState = ScheduleUiState(persistentListOf())
@@ -61,6 +63,14 @@ data class ScheduleUiState(
 }
 
 data class Schedule(
-    val scheduleName: String,
-    val scheduleContent: String,
+    private val scheduleName: String,
+    private val scheduleContent: String,
+) {
+    val displayText =
+        if (scheduleName == scheduleContent) scheduleName else "$scheduleName - $scheduleContent"
+}
+
+fun ScheduleEntity.toSchedule() = Schedule(
+    scheduleName = eventName,
+    scheduleContent = eventContent,
 )
