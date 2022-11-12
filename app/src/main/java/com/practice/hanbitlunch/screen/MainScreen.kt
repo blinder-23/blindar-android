@@ -237,9 +237,9 @@ private fun MainScreenContents(
 ) {
     LazyColumn(
         modifier = modifier
-            .padding(16.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(32.dp),
+        contentPadding = PaddingValues(16.dp),
     ) {
         if (!mealUiState.isEmpty) {
             item {
