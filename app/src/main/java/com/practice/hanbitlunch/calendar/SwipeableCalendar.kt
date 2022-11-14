@@ -16,7 +16,9 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.TextStyle
@@ -43,6 +45,7 @@ fun SwipeableCalendar(
     isLight: Boolean = MaterialTheme.colors.isLight,
     getContentDescription: (LocalDate) -> String = { "" },
     getClickLabel: (LocalDate) -> String? = { null },
+    drawBehindElement: DrawScope.() -> Unit = {},
 ) {
     // shows from a year ago to a year after
     val itemCount = 13
@@ -80,7 +83,8 @@ fun SwipeableCalendar(
             calendarState = calendarState,
             getContentDescription = getContentDescription,
             getClickLabel = getClickLabel,
-            onDateClick = onDateClick
+            onDateClick = onDateClick,
+            drawBehindElement = drawBehindElement,
         )
     }
 }
@@ -94,6 +98,7 @@ private fun Calendar(
     getClickLabel: (LocalDate) -> String?,
     onDateClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
+    drawBehindElement: DrawScope.() -> Unit = {},
 ) {
     Column(modifier = modifier) {
         CalendarDays(
@@ -112,6 +117,7 @@ private fun Calendar(
                 onDateClick(it)
             },
             isLight = isLight,
+            drawBehindElement = drawBehindElement,
         )
     }
 }
@@ -179,6 +185,7 @@ private fun CalendarDates(
     modifier: Modifier = Modifier,
     onDateClick: (LocalDate) -> Unit = {},
     isLight: Boolean = true,
+    drawBehindElement: DrawScope.() -> Unit = {},
 ) {
     Column(
         modifier = modifier,
@@ -193,7 +200,8 @@ private fun CalendarDates(
                 getClickLabel = getClickLabel,
                 currentMonth = page.month,
                 onDateClick = onDateClick,
-                isLight = isLight
+                isLight = isLight,
+                drawBehindElement = drawBehindElement,
             )
         }
     }
@@ -209,6 +217,7 @@ private fun CalendarWeek(
     modifier: Modifier = Modifier,
     onDateClick: (LocalDate) -> Unit = {},
     isLight: Boolean = true,
+    drawBehindElement: DrawScope.() -> Unit = {},
 ) {
     Row(
         modifier = modifier,
@@ -227,6 +236,7 @@ private fun CalendarWeek(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
+                drawBehindElement = drawBehindElement,
             )
         }
     }
@@ -245,6 +255,7 @@ private fun CalendarDate(
     currentMonth: Int = date.monthValue,
     isSelected: Boolean = false,
     isLight: Boolean = true,
+    drawBehindElement: DrawScope.() -> Unit = {},
 ) {
     val background by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colors.secondary else Transparent,
@@ -274,6 +285,7 @@ private fun CalendarDate(
             currentMonth = currentMonth
         ),
         textStyle = MaterialTheme.typography.body2,
+        drawBehindElement = drawBehindElement,
     )
 }
 
@@ -283,11 +295,14 @@ private fun CalendarElement(
     modifier: Modifier = Modifier,
     textColor: Color = Color.Unspecified,
     textStyle: TextStyle = MaterialTheme.typography.body1,
+    drawBehindElement: DrawScope.() -> Unit = {},
 ) {
     Box(modifier = modifier) {
         Text(
             text = text,
-            modifier = Modifier.align(Alignment.Center),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .drawBehind { drawBehindElement() },
             color = textColor,
             style = textStyle,
         )
@@ -368,5 +383,22 @@ private fun CalendarPreview() {
                 modifier = Modifier.size(width = 400.dp, height = 300.dp)
             )
         }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 48, heightDp = 48)
+@Composable
+private fun UnderlinedCalendarDatePreview() {
+    HanbitCalendarTheme {
+        val lineColor = MaterialTheme.colors.onSurface
+        CalendarDate(
+            date = LocalDate.of(2022, 11, 14),
+            onClick = {},
+            getContentDescription = { "" },
+            getClickLabel = { null },
+            drawBehindElement = {
+                drawUnderline(lineColor = lineColor)
+            },
+        )
     }
 }
