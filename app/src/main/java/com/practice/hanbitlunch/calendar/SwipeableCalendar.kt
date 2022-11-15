@@ -45,7 +45,7 @@ fun SwipeableCalendar(
     isLight: Boolean = MaterialTheme.colors.isLight,
     getContentDescription: (LocalDate) -> String = { "" },
     getClickLabel: (LocalDate) -> String? = { null },
-    drawBehindElement: DrawScope.() -> Unit = {},
+    drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
 ) {
     // shows from a year ago to a year after
     val itemCount = 13
@@ -98,7 +98,7 @@ private fun Calendar(
     getClickLabel: (LocalDate) -> String?,
     onDateClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
-    drawBehindElement: DrawScope.() -> Unit = {},
+    drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
 ) {
     Column(modifier = modifier) {
         CalendarDays(
@@ -185,7 +185,7 @@ private fun CalendarDates(
     modifier: Modifier = Modifier,
     onDateClick: (LocalDate) -> Unit = {},
     isLight: Boolean = true,
-    drawBehindElement: DrawScope.() -> Unit = {},
+    drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
 ) {
     Column(
         modifier = modifier,
@@ -217,7 +217,7 @@ private fun CalendarWeek(
     modifier: Modifier = Modifier,
     onDateClick: (LocalDate) -> Unit = {},
     isLight: Boolean = true,
-    drawBehindElement: DrawScope.() -> Unit = {},
+    drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
 ) {
     Row(
         modifier = modifier,
@@ -255,7 +255,7 @@ private fun CalendarDate(
     currentMonth: Int = date.monthValue,
     isSelected: Boolean = false,
     isLight: Boolean = true,
-    drawBehindElement: DrawScope.() -> Unit = {},
+    drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
 ) {
     val background by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colors.secondary else Transparent,
@@ -285,7 +285,9 @@ private fun CalendarDate(
             currentMonth = currentMonth
         ),
         textStyle = MaterialTheme.typography.body2,
-        drawBehindElement = drawBehindElement,
+        drawBehindElement = {
+            drawBehindElement(date)
+        },
     )
 }
 
@@ -397,7 +399,10 @@ private fun UnderlinedCalendarDatePreview() {
             getContentDescription = { "" },
             getClickLabel = { null },
             drawBehindElement = {
-                drawUnderline(lineColor = lineColor)
+                drawUnderline(
+                    color = lineColor,
+                    strokeWidth = 2f,
+                )
             },
         )
     }
