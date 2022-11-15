@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -39,6 +40,10 @@ class MainScreenViewModel @Inject constructor(
             _uiState.value = value
         }
 
+    private val _scheduleDates: MutableStateFlow<Set<LocalDate>>
+    val scheduleDates: StateFlow<Set<LocalDate>>
+        get() = _scheduleDates
+
     private val selectedDateFlow: MutableStateFlow<LocalDate>
 
     private var cache: MutableMap<YearMonth, MealScheduleEntity>
@@ -56,6 +61,7 @@ class MainScreenViewModel @Inject constructor(
             )
         )
         selectedDateFlow = MutableStateFlow(current)
+        _scheduleDates = MutableStateFlow(emptySet())
         cache = mutableMapOf()
         job = null
     }
@@ -90,6 +96,13 @@ class MainScreenViewModel @Inject constructor(
                 scheduleUiState = newScheduleUiState,
                 isLoading = isLoading,
             )
+        }
+        entity?.let { updateScheduleDates(it) }
+    }
+
+    private fun updateScheduleDates(entity: MealScheduleEntity) {
+        _scheduleDates.value = scheduleDates.value.toMutableSet().apply {
+            addAll(entity.schedules.map { LocalDate.of(it.year, it.month, it.day) })
         }
     }
 
