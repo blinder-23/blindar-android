@@ -13,16 +13,19 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.hanbitlunch.calendar.CalendarState
 import com.practice.hanbitlunch.calendar.SwipeableCalendar
 import com.practice.hanbitlunch.calendar.YearMonth
+import com.practice.hanbitlunch.calendar.drawUnderline
 import com.practice.hanbitlunch.calendar.rememberCalendarState
 import com.practice.hanbitlunch.components.Body
 import com.practice.hanbitlunch.components.SubTitle
@@ -51,6 +54,17 @@ fun MainScreen(
     val uiState = viewModel.uiState.value
     val calendarState = rememberCalendarState()
 
+    val scheduleDates by viewModel.scheduleDates.collectAsState()
+    val underlineColor = MaterialTheme.colors.onSurface
+    val drawUnderlineToScheduleDate: DrawScope.(LocalDate) -> Unit = {
+        if (scheduleDates.contains(it)) {
+            drawUnderline(
+                color = underlineColor,
+                strokeWidth = 3f,
+            )
+        }
+    }
+
     val backgroundModifier = modifier.background(MaterialTheme.colors.surface)
     val mealColumns = if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) 2 else 3
     if (windowSize.widthSizeClass == WindowWidthSizeClass.Expanded) {
@@ -64,6 +78,7 @@ fun MainScreen(
             onSwiped = viewModel::onSwiped,
             getContentDescription = viewModel::getContentDescription,
             getClickLabel = viewModel::getClickLabel,
+            drawUnderlineToScheduleDate = drawUnderlineToScheduleDate,
         )
     } else {
         VerticalMainScreen(
@@ -76,6 +91,7 @@ fun MainScreen(
             onSwiped = viewModel::onSwiped,
             getContentDescription = viewModel::getContentDescription,
             getClickLabel = viewModel::getClickLabel,
+            drawUnderlineToScheduleDate = drawUnderlineToScheduleDate,
         )
     }
 }
@@ -91,6 +107,7 @@ private fun HorizontalMainScreen(
     onSwiped: (YearMonth) -> Unit,
     getContentDescription: (LocalDate) -> String,
     getClickLabel: (LocalDate) -> String,
+    drawUnderlineToScheduleDate: DrawScope.(LocalDate) -> Unit,
 ) {
     Column(modifier = modifier) {
         MainScreenHeader(
@@ -107,6 +124,7 @@ private fun HorizontalMainScreen(
                 onSwiped = onSwiped,
                 getContentDescription = getContentDescription,
                 getClickLabel = getClickLabel,
+                drawBehindElement = drawUnderlineToScheduleDate,
             )
             MainScreenContents(
                 mealUiState = uiState.mealUiState,
@@ -129,6 +147,7 @@ private fun VerticalMainScreen(
     onSwiped: (YearMonth) -> Unit,
     getContentDescription: (LocalDate) -> String,
     getClickLabel: (LocalDate) -> String,
+    drawUnderlineToScheduleDate: DrawScope.(LocalDate) -> Unit,
 ) {
     Column(modifier = modifier) {
         Column(modifier = Modifier.weight(1f)) {
@@ -144,6 +163,7 @@ private fun VerticalMainScreen(
                 onSwiped = onSwiped,
                 getContentDescription = getContentDescription,
                 getClickLabel = getClickLabel,
+                drawBehindElement = drawUnderlineToScheduleDate,
             )
         }
         MainScreenContents(
@@ -341,8 +361,12 @@ private fun MainScreenHeaderPreview() {
 
 val previewMenus = listOf("찰보리밥", "망고마들렌", "쇠고기미역국", "콩나물파채무침", "돼지양념구이", "포기김치", "오렌지주스", "기타등등")
     .map { Menu(it) }.toImmutableList()
-val previewSchedules = (0..6).map { Schedule("학사일정 $it", "$it") }
-    .toImmutableList()
+val previewSchedules = (0..6).map {
+    Schedule(
+        scheduleName = "학사일정 $it",
+        scheduleContent = "$it"
+    )
+}.toImmutableList()
 
 @Preview(showBackground = true)
 @Composable
@@ -398,6 +422,7 @@ private fun HorizontalMainScreenPreview() {
             onSwiped = { },
             getContentDescription = { "" },
             getClickLabel = { "" },
+            drawUnderlineToScheduleDate = {},
         )
     }
 }
@@ -433,6 +458,7 @@ private fun VerticalMainScreenPreview() {
                 onSwiped = {},
                 getContentDescription = { "" },
                 getClickLabel = { "" },
+                drawUnderlineToScheduleDate = {},
             )
         }
     }
