@@ -8,8 +8,14 @@ junit5 = '5.9.1'
 lifecycle = '2.5.1'
 violet-dreams = '0.1.2'
 work = '2.7.1'
+kotlin = '1.7.20'
 
 [libraries]
+android-gradle = 'com.android.tools.build:gradle:7.3.1'
+kotlin-gradle-plugin = { module = 'org.jetbrains.kotlin:kotlin-gradle-plugin', version.ref = 'kotlin' }
+hilt-android-gradle-plugin = { module = 'com.google.dagger:hilt-android-gradle-plugin', version.ref = 'hilt' }
+jacoco-classpath = 'org.jacoco:org.jacoco.core:0.8.7'
+
 hsk-ktx = { module = 'com.github.mwy3055:hsk-ktx', version.ref = 'hsk-ktx' }
 violet-dreams-core = { module = 'com.github.mwy3055.violet-dreams:violet-dreams-core', version.ref = 'violet-dreams' }
 violet-dreams-ui = { module = 'com.github.mwy3055.violet-dreams:violet-dreams-ui', version.ref = 'violet-dreams' }
