@@ -9,6 +9,8 @@ lifecycle = '2.5.1'
 violet-dreams = '0.1.2'
 work = '2.7.1'
 kotlin = '1.7.20'
+room = '2.4.3'
+retrofit = '2.9.0'
 
 [libraries]
 android-gradle = 'com.android.tools.build:gradle:7.3.1'
@@ -41,6 +43,12 @@ hilt-work = 'androidx.hilt:hilt-work:1.0.0'
 hilt-android = { module = 'com.google.dagger:hilt-android', version.ref = 'hilt' }
 hilt-compiler = { module = 'com.google.dagger:hilt-compiler', version.ref = 'hilt' }
 hilt-compiler-androidx = 'androidx.hilt:hilt-compiler:1.0.0'
+hilt-android-testing = { module = 'com.google.dagger:hilt-android-testing', version.ref = 'hilt' }
+
+room-runtime = { module = 'androidx.room:room-runtime', version.ref = 'room' }
+room-ktx = { module = 'androidx.room:room-ktx', version.ref = 'room' }
+room-compiler = { module = 'androidx.room:room-compiler', version.ref = 'room' }
+room-testing = { module = 'androidx.room:room-testing', version.ref = 'room' }
 
 androidx-core-splashscreen = 'androidx.core:core-splashscreen:1.0.0'
 androidx-datastore-preferences = 'androidx.datastore:datastore-preferences:1.0.0'
@@ -70,14 +78,20 @@ kotlinx-coroutines-android = { module = 'org.jetbrains.kotlinx:kotlinx-coroutine
 kotlinx-coroutines-core = { module = 'org.jetbrains.kotlinx:kotlinx-coroutines-core', version.ref = 'coroutines' }
 kotlinx-coroutines-test = { module = 'org.jetbrains.kotlinx:kotlinx-coroutines-test', version.ref = 'coroutines' }
 
-junit-jupiter-api = { module = 'org.junit.jupiter:junit-jupiter-api', version.ref = 'junit5' }
-junit-jupiter-engine = { module = 'org.junit.jupiter:junit-jupiter-engine', version.ref = 'junit5' }
-junit-vintage-engine = { module = 'org.junit.jupiter:junit-vintage-engine', version.ref = 'junit5' }
+retrofit = { module = 'com.squareup.retrofit2:retrofit', version.ref = 'retrofit' }
+retrofit-converter-gson = { module = 'com.squareup.retrofit2:converter-gson', version.ref = 'retrofit' }
+retrofit-coroutines-adapter = 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
+
+junit-jupiter = { module = 'org.junit.jupiter:junit-jupiter', version.ref = 'junit5' }
+junit-vintage-engine = { module = 'org.junit.vintage:junit-vintage-engine', version.ref = 'junit5' }
+
+androidx-test-uiautomaker = 'androidx.test.uiautomator:uiautomator:2.2.0'
+androidx-benchmark-macro-junit4 = 'androidx.benchmark:benchmark-macro-junit4:1.2.0-alpha04'
 
 androidx-test-orchestrator = 'androidx.test:orchestrator:1.4.2'
 assertj-core = 'org.assertj:assertj-core:3.23.1'
 
-android-junit = 'android.test.ext:junit:1.1.4'
+androidx-junit = 'androidx.test.ext:junit:1.1.4'
 androidx-test-espresso-core = 'androidx.test.espresso:espresso-core:3.5.0'
 
 [bundles]
@@ -106,5 +120,7 @@ lifecycle = [
     'androidx-lifecycle-runtime-ktx',
     'androidx-lifecycle-viewmodel-ktx',
 ]
+android-test = ['androidx-junit', 'androidx-test-espresso-core']
+retrofit = ['retrofit', 'retrofit-converter-gson', 'retrofit-coroutines-adapter']
 
 [plugins]

@@ -51,14 +51,14 @@ android {
         }
     }
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
-        getByName("debug") {
+        debug {
             isMinifyEnabled = false
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
@@ -137,21 +137,20 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     kapt(libs.hilt.compiler.androidx)
+    androidTestImplementation(libs.hilt.android.testing)
     implementation(libs.hilt.work)
 
     // Other Jetpack Libraries
     implementation(libs.bundles.jetpack)
 
     // Unit Test
-    testImplementation(libs.junit.jupiter.api)
-    testRuntimeOnly(libs.junit.jupiter.engine)
+    testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.vintage.engine)
     testImplementation(libs.assertj.core)
     androidTestUtil(libs.androidx.test.orchestrator)
 
     // Instrumented Test
-    androidTestImplementation(libs.android.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
+    androidTestImplementation(libs.bundles.android.test)
 
     // Accompanist
     implementation(libs.bundles.accompanist)

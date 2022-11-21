@@ -28,6 +28,6 @@ subprojects {
     }
 }
 
-task("clean", type = Delete::class) {
+task(name = "clean", type = Delete::class) {
     delete(rootProject.buildDir)
 }
