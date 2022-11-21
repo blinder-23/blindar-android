@@ -1,23 +1,12 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("jacoco")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-configurations.all {
-    resolutionStrategy {
-        eachDependency {
-            if (requested.group == "org.jacoco") {
-                useVersion("0.8.7")
-            }
-        }
-    }
 }
 
 android {
@@ -41,7 +30,6 @@ android {
         animationsDisabled = true
         unitTests.all {
             testCoverage {
-                jacocoVersion = "0.8.7"
                 it.excludes.add("jdk.internal.*")
             }
         }
