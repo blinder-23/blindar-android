@@ -11,11 +11,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -26,7 +22,7 @@ private const val TEST_DATASTORE_NAME = "test-datastore"
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-class PreferencesRepositoryTest {
+class PreferencesRepositoryImplTest {
 
     private val testDispatcher = StandardTestDispatcher()
     private val testScope = TestScope(testDispatcher + Job())
@@ -35,7 +31,7 @@ class PreferencesRepositoryTest {
         scope = testScope,
         produceFile = { testContext.preferencesDataStoreFile(TEST_DATASTORE_NAME) }
     )
-    private val preferences = PreferencesRepository(testDataStore)
+    private val preferences = PreferencesRepositoryImpl(testDataStore)
 
     @Before
     fun setup() {
@@ -118,7 +114,7 @@ class PreferencesRepositoryTest {
         assertThat(isFirstExecution).isTrue
     }
 
-    private suspend fun PreferencesRepository.dropFirstAndTake(take: Int) =
+    private suspend fun PreferencesRepositoryImpl.dropFirstAndTake(take: Int) =
         userPreferencesFlow.drop(1).take(take).toList()
 
     private fun CoroutineScope.update(block: suspend PreferencesRepository.() -> Unit) =

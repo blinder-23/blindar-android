@@ -12,6 +12,8 @@ import com.example.server.schedule.FakeRemoteScheduleDataSource
 import com.example.server.schedule.RemoteScheduleRepository
 import com.practice.database.schedule.FakeScheduleDataSource
 import com.practice.database.schedule.ScheduleRepository
+import com.practice.preferences.FakePreferencesRepository
+import com.practice.preferences.PreferencesRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -24,6 +26,7 @@ class FetchRemoteScheduleWorkerTest {
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private val localRepository = ScheduleRepository(FakeScheduleDataSource())
     private val remoteRepository = RemoteScheduleRepository(FakeRemoteScheduleDataSource())
+    private val preferencesRepository: PreferencesRepository = FakePreferencesRepository()
 
     @Test
     fun doWork(): Unit = runBlocking {
@@ -55,7 +58,8 @@ class FetchRemoteScheduleWorkerTest {
                         context,
                         workerParameters,
                         localRepository,
-                        remoteRepository
+                        remoteRepository,
+                        preferencesRepository,
                     )
                 }
             }).build()
