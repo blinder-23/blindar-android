@@ -43,6 +43,7 @@ fun SwipeableCalendar(
     onDateClick: (LocalDate) -> Unit = {},
     onSwiped: (YearMonth) -> Unit = {},
     isLight: Boolean = MaterialTheme.colors.isLight,
+    dateAlign: Alignment = Alignment.Center,
     getContentDescription: (LocalDate) -> String = { "" },
     getClickLabel: (LocalDate) -> String? = { null },
     drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
@@ -84,6 +85,7 @@ fun SwipeableCalendar(
             getContentDescription = getContentDescription,
             getClickLabel = getClickLabel,
             onDateClick = onDateClick,
+            dateAlign = dateAlign,
             drawBehindElement = drawBehindElement,
         )
     }
@@ -98,6 +100,7 @@ private fun Calendar(
     getClickLabel: (LocalDate) -> String?,
     onDateClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
+    dateAlign: Alignment = Alignment.Center,
     drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
 ) {
     Column(modifier = modifier) {
@@ -117,6 +120,7 @@ private fun Calendar(
                 onDateClick(it)
             },
             isLight = isLight,
+            dateAlign = dateAlign,
             drawBehindElement = drawBehindElement,
         )
     }
@@ -185,6 +189,7 @@ private fun CalendarDates(
     modifier: Modifier = Modifier,
     onDateClick: (LocalDate) -> Unit = {},
     isLight: Boolean = true,
+    dateAlign: Alignment = Alignment.Center,
     drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
 ) {
     Column(
@@ -201,6 +206,7 @@ private fun CalendarDates(
                 currentMonth = page.month,
                 onDateClick = onDateClick,
                 isLight = isLight,
+                dateAlign = dateAlign,
                 drawBehindElement = drawBehindElement,
             )
         }
@@ -217,6 +223,7 @@ private fun CalendarWeek(
     modifier: Modifier = Modifier,
     onDateClick: (LocalDate) -> Unit = {},
     isLight: Boolean = true,
+    dateAlign: Alignment = Alignment.Center,
     drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
 ) {
     Row(
@@ -236,6 +243,7 @@ private fun CalendarWeek(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
+                dateAlign = dateAlign,
                 drawBehindElement = drawBehindElement,
             )
         }
@@ -255,6 +263,7 @@ private fun CalendarDate(
     currentMonth: Int = date.monthValue,
     isSelected: Boolean = false,
     isLight: Boolean = true,
+    dateAlign: Alignment = Alignment.Center,
     drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
 ) {
     val background by animateColorAsState(
@@ -271,10 +280,6 @@ private fun CalendarDate(
         modifier = modifier
             .clip(shape = CircleShape)
             .background(color = background)
-            .aspectRatio(
-                ratio = 1f,
-                matchHeightConstraintsFirst = true
-            )
             .clickable(onClickLabel = getClickLabel(date)) { onClick(date) }
             .clearAndSetSemantics {
                 contentDescription = "${date.clickLabel}\n${getContentDescription(date)}"
@@ -285,6 +290,7 @@ private fun CalendarDate(
             currentMonth = currentMonth
         ),
         textStyle = MaterialTheme.typography.body2,
+        align = dateAlign,
         drawBehindElement = {
             drawBehindElement(date)
         },
@@ -297,13 +303,14 @@ private fun CalendarElement(
     modifier: Modifier = Modifier,
     textColor: Color = Color.Unspecified,
     textStyle: TextStyle = MaterialTheme.typography.body1,
+    align: Alignment = Alignment.Center,
     drawBehindElement: DrawScope.() -> Unit = {},
 ) {
     Box(modifier = modifier) {
         Text(
             text = text,
             modifier = Modifier
-                .align(Alignment.Center)
+                .align(align)
                 .drawBehind { drawBehindElement() },
             color = textColor,
             style = textStyle,
@@ -371,7 +378,6 @@ private fun CalendarDatePreview_Selected() {
 }
 
 @Preview(name = "Small", showBackground = true, widthDp = 400, heightDp = 300)
-@Preview(name = "Large", showBackground = true, widthDp = 800, heightDp = 1200)
 @Composable
 private fun CalendarPreview() {
     val calendarState = rememberCalendarState(
