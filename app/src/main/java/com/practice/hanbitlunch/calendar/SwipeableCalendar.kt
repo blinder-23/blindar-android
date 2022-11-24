@@ -370,7 +370,8 @@ private fun CalendarDatePreview_Selected() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Small", showBackground = true, widthDp = 400, heightDp = 300)
+@Preview(name = "Large", showBackground = true, widthDp = 800, heightDp = 1200)
 @Composable
 private fun CalendarPreview() {
     val calendarState = rememberCalendarState(
@@ -382,7 +383,24 @@ private fun CalendarPreview() {
         Column {
             SwipeableCalendar(
                 calendarState = calendarState,
-                modifier = Modifier.size(width = 400.dp, height = 300.dp)
+            )
+        }
+    }
+}
+
+@Preview(name = "Large", showBackground = true, widthDp = 800, heightDp = 1200)
+@Composable
+private fun LargeCalendarPreview() {
+    val calendarState = rememberCalendarState(
+        year = 2022,
+        month = 8,
+        selectedDate = LocalDate.of(2022, 8, 12)
+    )
+    HanbitCalendarTheme(darkTheme = true) {
+        Column {
+            SwipeableCalendar(
+                calendarState = calendarState,
+                dateAlign = Alignment.TopCenter,
             )
         }
     }
