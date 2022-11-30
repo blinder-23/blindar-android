@@ -10,7 +10,7 @@ android {
     compileSdk = 33
 
     defaultConfig {
-        minSdk = 26
+        minSdk = 23
         targetSdk = 33
 
         testInstrumentationRunner = "com.example.di.HiltTestRunner"
