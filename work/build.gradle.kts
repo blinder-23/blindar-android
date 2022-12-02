@@ -43,6 +43,8 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":preferences"))
 
+    implementation(libs.hsk.ktx)
+
     implementation(libs.kotlinx.collections.immutable)
 
     // KTX libraries
