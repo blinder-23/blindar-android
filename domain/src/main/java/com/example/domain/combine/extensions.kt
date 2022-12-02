@@ -41,11 +41,11 @@ fun NutrientModel.toNutrientEntity() = NutrientEntity(
 )
 
 fun ScheduleModel.toScheduleEntity(): ScheduleEntity {
-    val date = date.toEpochDate(timeDiff = 9)
+    val date = date.toEpochDate(hourDiff = 9)
     return ScheduleEntity(
         id = id,
         year = date.year,
-        month = date.monthValue,
+        month = date.month,
         day = date.dayOfMonth,
         eventName = title,
         eventContent = contents
