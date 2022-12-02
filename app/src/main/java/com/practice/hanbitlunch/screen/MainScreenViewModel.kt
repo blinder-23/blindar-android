@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.combine.LoadMealScheduleDataUseCase
 import com.example.domain.combine.MealScheduleEntity
+import com.hsk.ktx.date.Date
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.YearMonth
@@ -20,7 +21,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,21 +40,21 @@ class MainScreenViewModel @Inject constructor(
             _uiState.value = value
         }
 
-    private val _scheduleDates: MutableStateFlow<Set<LocalDate>>
-    val scheduleDates: StateFlow<Set<LocalDate>>
+    private val _scheduleDates: MutableStateFlow<Set<Date>>
+    val scheduleDates: StateFlow<Set<Date>>
         get() = _scheduleDates
 
-    private val selectedDateFlow: MutableStateFlow<LocalDate>
+    private val selectedDateFlow: MutableStateFlow<Date>
 
     private var cache: MutableMap<YearMonth, MealScheduleEntity>
     private var job: Job?
 
     init {
-        val current = LocalDate.now()
+        val current = Date.now()
         _uiState = mutableStateOf(
             MainUiState(
                 year = current.year,
-                month = current.monthValue,
+                month = current.month,
                 selectedDate = current,
                 mealUiState = MealUiState.EmptyMealState,
                 scheduleUiState = ScheduleUiState.EmptyScheduleState,
@@ -83,7 +83,7 @@ class MainScreenViewModel @Inject constructor(
      * Kotlin Flow의 combine 함수를 본따 작성했다.
      */
     private fun updateUiState(
-        selectedDate: LocalDate = state.selectedDate,
+        selectedDate: Date = state.selectedDate,
         entity: MealScheduleEntity? = cache[selectedDate.yearMonth],
         isLoading: Boolean = false,
     ) {
@@ -102,16 +102,16 @@ class MainScreenViewModel @Inject constructor(
 
     private fun updateScheduleDates(entity: MealScheduleEntity) {
         _scheduleDates.value = scheduleDates.value.toMutableSet().apply {
-            addAll(entity.schedules.map { LocalDate.of(it.year, it.month, it.day) })
+            addAll(entity.schedules.map { Date(it.year, it.month, it.day) })
         }
     }
 
-    fun onDateClick(clickedDate: LocalDate) = viewModelScope.launch(Dispatchers.IO) {
+    fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
         loadMonthlyData(clickedDate)
         updateUiState(selectedDate = clickedDate)
     }
 
-    private suspend fun loadMonthlyData(date: LocalDate) {
+    private suspend fun loadMonthlyData(date: Date) {
         if (cache.containsKey(date.yearMonth)) {
             return
         }
@@ -139,7 +139,7 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    fun getContentDescription(date: LocalDate): String {
+    fun getContentDescription(date: Date): String {
         return if (date == state.selectedDate) {
             val mealState = state.mealUiState
             val scheduleUiState = state.scheduleUiState
@@ -149,15 +149,15 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    fun getClickLabel(date: LocalDate): String =
+    fun getClickLabel(date: Date): String =
         if (date == state.selectedDate) "" else "식단 및 학사일정 보기"
 
 }
 
-private val LocalDate.yearMonth: YearMonth
-    get() = YearMonth(year, monthValue)
+private val Date.yearMonth: YearMonth
+    get() = YearMonth(year, month)
 
-private fun MealScheduleEntity.getMeal(date: LocalDate): MealUiState {
+private fun MealScheduleEntity.getMeal(date: Date): MealUiState {
     return try {
         meals.first { it.dateEquals(date) }
             .toMealUiState()
@@ -166,7 +166,7 @@ private fun MealScheduleEntity.getMeal(date: LocalDate): MealUiState {
     }
 }
 
-private fun MealScheduleEntity.getSchedule(date: LocalDate): ScheduleUiState {
+private fun MealScheduleEntity.getSchedule(date: Date): ScheduleUiState {
     return try {
         val schedules = schedules.filter { it.dateEquals(date) }.map { it.toSchedule() }
         ScheduleUiState(schedules.toPersistentList())
@@ -175,8 +175,8 @@ private fun MealScheduleEntity.getSchedule(date: LocalDate): ScheduleUiState {
     }
 }
 
-private fun MealEntity.dateEquals(date: LocalDate) =
-    this.year == date.year && this.month == date.monthValue && this.day == date.dayOfMonth
+private fun MealEntity.dateEquals(date: Date) =
+    this.year == date.year && this.month == date.month && this.day == date.dayOfMonth
 
-private fun ScheduleEntity.dateEquals(date: LocalDate) =
-    this.year == date.year && this.month == date.monthValue && this.day == date.dayOfMonth
+private fun ScheduleEntity.dateEquals(date: Date) =
+    this.year == date.year && this.month == date.month && this.day == date.dayOfMonth
