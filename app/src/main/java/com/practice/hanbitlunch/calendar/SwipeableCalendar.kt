@@ -9,16 +9,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.TextStyle
@@ -266,6 +264,7 @@ private fun CalendarDate(
     )
     val text = if (date == Date.MAX) "" else date.dayOfMonth.toString()
 
+    LocalDensity.current.density
     CalendarElement(
         text = text,
         modifier = modifier
@@ -299,6 +298,7 @@ private fun CalendarElement(
     textStyle: TextStyle = MaterialTheme.typography.body1,
     drawBehindElement: DrawScope.() -> Unit = {},
 ) {
+    var textSize by remember { mutableStateOf(textStyle.fontSize) }
     Box(modifier = modifier) {
         Text(
             text = text,
@@ -307,6 +307,12 @@ private fun CalendarElement(
                 .drawBehind { drawBehindElement() },
             color = textColor,
             style = textStyle,
+            fontSize = textSize,
+            onTextLayout = { result ->
+                if (result.hasVisualOverflow) {
+                    textSize = textSize.times(0.9f)
+                }
+            }
         )
     }
 }
