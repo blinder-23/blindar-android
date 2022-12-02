@@ -30,9 +30,9 @@ import com.example.domain.date.toKor
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.hsk.ktx.date.Date
+import com.hsk.ktx.date.DayOfWeek
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
-import java.time.DayOfWeek
-import java.time.LocalDate
 import java.util.*
 
 @OptIn(ExperimentalPagerApi::class)
@@ -40,20 +40,20 @@ import java.util.*
 fun SwipeableCalendar(
     modifier: Modifier = Modifier,
     calendarState: CalendarState = rememberCalendarState(),
-    onDateClick: (LocalDate) -> Unit = {},
+    onDateClick: (Date) -> Unit = {},
     onSwiped: (YearMonth) -> Unit = {},
     isLight: Boolean = MaterialTheme.colors.isLight,
-    getContentDescription: (LocalDate) -> String = { "" },
-    getClickLabel: (LocalDate) -> String? = { null },
-    drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
+    getContentDescription: (Date) -> String = { "" },
+    getClickLabel: (Date) -> String? = { null },
+    drawBehindElement: DrawScope.(Date) -> Unit = {},
 ) {
     // shows from a year ago to a year after
     val itemCount = 13
     val firstItemIndex = itemCount / 2
     val pagerState = rememberPagerState(initialPage = firstItemIndex)
 
-    val currentYearMonth = LocalDate.now().let {
-        YearMonth(it.year, it.monthValue)
+    val currentYearMonth = Date.now().let {
+        YearMonth(it.year, it.month)
     }
 
     LaunchedEffect(pagerState) {
@@ -94,11 +94,11 @@ private fun Calendar(
     isLight: Boolean,
     calendarPage: CalendarPage,
     calendarState: CalendarState,
-    getContentDescription: (LocalDate) -> String,
-    getClickLabel: (LocalDate) -> String?,
-    onDateClick: (LocalDate) -> Unit,
+    getContentDescription: (Date) -> String,
+    getClickLabel: (Date) -> String?,
+    onDateClick: (Date) -> Unit,
     modifier: Modifier = Modifier,
-    drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
+    drawBehindElement: DrawScope.(Date) -> Unit = {},
 ) {
     Column(modifier = modifier) {
         CalendarDays(
@@ -179,13 +179,13 @@ private fun DayOfWeek.color(isLight: Boolean = true) = when (this) {
 @Composable
 private fun CalendarDates(
     page: CalendarPage,
-    selectedDate: LocalDate,
-    getContentDescription: (LocalDate) -> String,
-    getClickLabel: (LocalDate) -> String?,
+    selectedDate: Date,
+    getContentDescription: (Date) -> String,
+    getClickLabel: (Date) -> String?,
     modifier: Modifier = Modifier,
-    onDateClick: (LocalDate) -> Unit = {},
+    onDateClick: (Date) -> Unit = {},
     isLight: Boolean = true,
-    drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
+    drawBehindElement: DrawScope.(Date) -> Unit = {},
 ) {
     Column(
         modifier = modifier,
@@ -210,14 +210,14 @@ private fun CalendarDates(
 @Composable
 private fun CalendarWeek(
     week: Week,
-    selectedDate: LocalDate,
-    getContentDescription: (LocalDate) -> String,
-    getClickLabel: (LocalDate) -> String?,
+    selectedDate: Date,
+    getContentDescription: (Date) -> String,
+    getClickLabel: (Date) -> String?,
     currentMonth: Int,
     modifier: Modifier = Modifier,
-    onDateClick: (LocalDate) -> Unit = {},
+    onDateClick: (Date) -> Unit = {},
     isLight: Boolean = true,
-    drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
+    drawBehindElement: DrawScope.(Date) -> Unit = {},
 ) {
     Row(
         modifier = modifier,
@@ -247,15 +247,15 @@ private fun CalendarWeek(
  */
 @Composable
 private fun CalendarDate(
-    date: LocalDate,
-    onClick: (LocalDate) -> Unit,
-    getContentDescription: (LocalDate) -> String,
-    getClickLabel: (LocalDate) -> String?,
+    date: Date,
+    onClick: (Date) -> Unit,
+    getContentDescription: (Date) -> String,
+    getClickLabel: (Date) -> String?,
     modifier: Modifier = Modifier,
-    currentMonth: Int = date.monthValue,
+    currentMonth: Int = date.month,
     isSelected: Boolean = false,
     isLight: Boolean = true,
-    drawBehindElement: DrawScope.(LocalDate) -> Unit = {},
+    drawBehindElement: DrawScope.(Date) -> Unit = {},
 ) {
     val background by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colors.secondary else Transparent,
@@ -264,7 +264,7 @@ private fun CalendarDate(
             easing = FastOutSlowInEasing,
         )
     )
-    val text = if (date == LocalDate.MAX) "" else date.dayOfMonth.toString()
+    val text = if (date == Date.MAX) "" else date.dayOfMonth.toString()
 
     CalendarElement(
         text = text,
@@ -314,10 +314,10 @@ private fun CalendarElement(
 private val WeekDayOverMonthColor = Color(0xFF999999)
 
 @Composable
-private fun LocalDate.color(
+private fun Date.color(
     isSelected: Boolean = false,
     isLight: Boolean = false,
-    currentMonth: Int = this.monthValue
+    currentMonth: Int = this.month
 ) = when (calculateDayType(currentMonth)) {
     DayType.Weekday -> if (isLight || isSelected) WeekdayColorOnLight else WeekDayColorOnDark
     DayType.WeekdayOverMonth -> WeekDayOverMonthColor
@@ -346,7 +346,7 @@ private fun CalendarDayPreview() {
 private fun CalendarDatePreview() {
     HanbitCalendarTheme {
         CalendarDate(
-            date = LocalDate.of(2022, 8, 12),
+            date = Date(2022, 8, 12),
             onClick = {},
             modifier = Modifier.size(50.dp),
             getContentDescription = { "" },
@@ -360,7 +360,7 @@ private fun CalendarDatePreview() {
 private fun CalendarDatePreview_Selected() {
     HanbitCalendarTheme {
         CalendarDate(
-            date = LocalDate.of(2022, 8, 17),
+            date = Date(2022, 8, 17),
             onClick = {},
             isSelected = true,
             modifier = Modifier.size(50.dp),
@@ -376,7 +376,7 @@ private fun CalendarPreview() {
     val calendarState = rememberCalendarState(
         year = 2022,
         month = 8,
-        selectedDate = LocalDate.of(2022, 8, 12)
+        selectedDate = Date(2022, 8, 12)
     )
     HanbitCalendarTheme(darkTheme = true) {
         Column {
@@ -394,7 +394,7 @@ private fun UnderlinedCalendarDatePreview() {
     HanbitCalendarTheme {
         val lineColor = MaterialTheme.colors.onSurface
         CalendarDate(
-            date = LocalDate.of(2022, 11, 14),
+            date = Date(2022, 11, 14),
             onClick = {},
             getContentDescription = { "" },
             getClickLabel = { null },

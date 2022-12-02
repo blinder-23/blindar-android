@@ -22,18 +22,14 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.practice.hanbitlunch.calendar.CalendarState
-import com.practice.hanbitlunch.calendar.SwipeableCalendar
-import com.practice.hanbitlunch.calendar.YearMonth
-import com.practice.hanbitlunch.calendar.drawUnderline
-import com.practice.hanbitlunch.calendar.rememberCalendarState
+import com.hsk.ktx.date.Date
+import com.practice.hanbitlunch.calendar.*
 import com.practice.hanbitlunch.components.Body
 import com.practice.hanbitlunch.components.SubTitle
 import com.practice.hanbitlunch.components.Title
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import java.time.LocalDate
 
 @Composable
 fun MainScreen(
@@ -56,7 +52,7 @@ fun MainScreen(
 
     val scheduleDates by viewModel.scheduleDates.collectAsState()
     val underlineColor = MaterialTheme.colors.onSurface
-    val drawUnderlineToScheduleDate: DrawScope.(LocalDate) -> Unit = {
+    val drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit = {
         if (scheduleDates.contains(it)) {
             drawUnderline(
                 color = underlineColor,
@@ -103,11 +99,11 @@ private fun HorizontalMainScreen(
     onRefresh: () -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
-    onDateClick: (LocalDate) -> Unit,
+    onDateClick: (Date) -> Unit,
     onSwiped: (YearMonth) -> Unit,
-    getContentDescription: (LocalDate) -> String,
-    getClickLabel: (LocalDate) -> String,
-    drawUnderlineToScheduleDate: DrawScope.(LocalDate) -> Unit,
+    getContentDescription: (Date) -> String,
+    getClickLabel: (Date) -> String,
+    drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
 ) {
     Column(modifier = modifier) {
         MainScreenHeader(
@@ -143,11 +139,11 @@ private fun VerticalMainScreen(
     onRefresh: () -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
-    onDateClick: (LocalDate) -> Unit,
+    onDateClick: (Date) -> Unit,
     onSwiped: (YearMonth) -> Unit,
-    getContentDescription: (LocalDate) -> String,
-    getClickLabel: (LocalDate) -> String,
-    drawUnderlineToScheduleDate: DrawScope.(LocalDate) -> Unit,
+    getContentDescription: (Date) -> String,
+    getClickLabel: (Date) -> String,
+    drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
 ) {
     Column(modifier = modifier) {
         Column(modifier = Modifier.weight(1f)) {
@@ -397,7 +393,7 @@ private fun MealContentPreview() {
 private fun HorizontalMainScreenPreview() {
     val year = 2022
     val month = 10
-    val selectedDate = LocalDate.of(2022, 10, 11)
+    val selectedDate = Date(2022, 10, 11)
 
     val uiState = MainUiState(
         year = year,
@@ -433,7 +429,7 @@ private fun VerticalMainScreenPreview() {
     HanbitCalendarTheme {
         val year = 2022
         val month = 10
-        val selectedDate = LocalDate.of(2022, 10, 11)
+        val selectedDate = Date(2022, 10, 11)
 
         val uiState = MainUiState(
             year = year,

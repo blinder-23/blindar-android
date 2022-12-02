@@ -1,12 +1,12 @@
 package com.example.domain.date
 
-import java.time.DayOfWeek
-import java.time.LocalDate
+import com.hsk.ktx.date.Date
+import com.hsk.ktx.date.DayOfWeek
 
-fun LocalDate.calculateDayType(currentMonth: Int): DayType {
-    return if (this == LocalDate.MAX || this == LocalDate.MIN) {
+fun Date.calculateDayType(currentMonth: Int): DayType {
+    return if (this == Date.MAX || this == Date.MIN) {
         DayType.Weekday
-    } else if (currentMonth == monthValue) {
+    } else if (currentMonth == month) {
         if (isHoliday()) {
             DayType.Holiday
         } else {

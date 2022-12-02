@@ -1,7 +1,7 @@
 package com.practice.hanbitlunch.calendar
 
-import java.time.DayOfWeek
-import java.time.LocalDate
+import com.hsk.ktx.date.Date
+import com.hsk.ktx.date.DayOfWeek
 
 class CalendarPage private constructor(
     val year: Int,
@@ -15,7 +15,7 @@ class CalendarPage private constructor(
      * All parameters are **1-indexed**.
      * For example, 1 represents the first week or Sunday respectively.
      */
-    fun getDate(week: Int, day: Int): LocalDate {
+    fun getDate(week: Int, day: Int): Date {
         try {
             return weeks[(week - 1)][day - 1]
         } catch (e: IndexOutOfBoundsException) {
@@ -37,9 +37,9 @@ class CalendarPage private constructor(
             return CalendarPage(year, month, weeks)
         }
 
-        private fun makeWeeks(range: ClosedRange<LocalDate>): List<Week> {
+        private fun makeWeeks(range: ClosedRange<Date>): List<Week> {
             val weeks = mutableListOf<Week>()
-            val dates = mutableListOf<LocalDate>()
+            val dates = mutableListOf<Date>()
 
             var currentDate = range.start
             while (range.contains(currentDate)) {
@@ -61,17 +61,17 @@ class CalendarPage private constructor(
     }
 }
 
-class Week private constructor(val dates: List<LocalDate>) {
+class Week private constructor(val dates: List<Date>) {
 
     companion object {
-        fun create(dates: List<LocalDate>): Week {
+        fun create(dates: List<Date>): Week {
             return Week(dates.toList())
         }
     }
 
     operator fun get(index: Int) = dates[index]
 
-    inline fun forEach(action: (LocalDate) -> Unit) {
+    inline fun forEach(action: (Date) -> Unit) {
         dates.forEach { action(it) }
     }
 }
@@ -81,16 +81,16 @@ class CalendarException(override val message: String?) : Exception(message)
 private fun getCalendarRange(year: Int, month: Int) =
     getFirstDateOfCalendar(year, month).rangeTo(getLastDateOfCalendar(year, month))
 
-private fun getFirstDateOfCalendar(year: Int, month: Int): LocalDate {
-    var date = LocalDate.of(year, month, 1)
+private fun getFirstDateOfCalendar(year: Int, month: Int): Date {
+    var date = Date(year, month, 1)
     while (date.dayOfWeek != DayOfWeek.SUNDAY) {
         date = date.minusDays(1)
     }
     return date
 }
 
-private fun getLastDateOfCalendar(year: Int, month: Int): LocalDate {
-    var date = LocalDate.of(year, month, 1).plusMonths(1).minusDays(1)
+private fun getLastDateOfCalendar(year: Int, month: Int): Date {
+    var date = Date(year, month, 1).plusMonths(1).minusDays(1)
     while (date.dayOfWeek != DayOfWeek.SATURDAY) {
         date = date.plusDays(1)
     }

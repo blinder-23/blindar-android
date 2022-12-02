@@ -3,10 +3,10 @@ package com.practice.hanbitlunch.calendar
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import java.time.LocalDate
+import com.hsk.ktx.date.Date
 
-val LocalDate.clickLabel: String
-    get() = "${monthValue}월 ${dayOfMonth}일"
+val Date.clickLabel: String
+    get() = "${month}월 ${dayOfMonth}일"
 
 fun DrawScope.drawUnderline(
     color: Color,
