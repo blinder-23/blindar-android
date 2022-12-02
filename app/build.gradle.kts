@@ -17,7 +17,7 @@ android {
         minSdk = 23
         targetSdk = 33
         versionCode = 1
-        versionName = "1.2.3-beta02"
+        versionName = "1.2.3-beta03"
         signingConfig = signingConfigs.getByName("debug")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
