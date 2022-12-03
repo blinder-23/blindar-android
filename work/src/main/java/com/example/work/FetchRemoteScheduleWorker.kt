@@ -6,12 +6,12 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import com.example.domain.combine.toScheduleEntity
 import com.example.server.schedule.RemoteScheduleRepository
+import com.hsk.ktx.date.Date
 import com.practice.database.schedule.ScheduleRepository
 import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.preferences.PreferencesRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
 @HiltWorker
@@ -32,9 +32,9 @@ class FetchRemoteScheduleWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchRemoteSchedules(): Result {
-        val now = LocalDate.now()
+        val now = Date.now()
         val currentYear = now.year
-        val currentMonth = now.monthValue
+        val currentMonth = now.month
         (currentYear downTo currentYear - 2).forEach { year ->
             (0 until 12).forEach { months ->
                 tryFetchAndStoreSchedules(year, (currentMonth + months - 1) % 12 + 1)

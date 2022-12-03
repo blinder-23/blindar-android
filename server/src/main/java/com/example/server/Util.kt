@@ -1,11 +1,10 @@
 package com.example.server
 
-import java.time.LocalDate
+import com.hsk.ktx.date.Date
 
 /**
- * Convert epoch second to epoch day.
- * Can be used with [LocalDate.ofEpochDay].
+ * Add [hours] to this epoch value.
  */
-private fun Long.toEpochDay(timeDiff: Int) = (this + 3600 * timeDiff) / 86400
+private fun Long.plusHours(hours: Int) = this + 3600 * hours
 
-fun Long.toEpochDate(timeDiff: Int): LocalDate = LocalDate.ofEpochDay(this.toEpochDay(timeDiff))
+fun Long.toEpochDate(hourDiff: Int): Date = Date.ofEpochDay(this.plusHours(hourDiff))

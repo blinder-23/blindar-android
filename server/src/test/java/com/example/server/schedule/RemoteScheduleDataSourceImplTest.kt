@@ -20,7 +20,7 @@ class RemoteScheduleRepositoryImplTest {
         assertThat(result.schedules).isNotEmpty
             .allSatisfy {
                 val scheduleMonth = it.date.toEpochDate(9).month
-                assertThat(scheduleMonth).isEqualTo(Month.SEPTEMBER)
+                assertThat(scheduleMonth).isEqualTo(9)
             }
     }
 

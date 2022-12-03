@@ -33,4 +33,9 @@ object DataStoreModule {
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
             produceFile = { context.preferencesDataStoreFile(USER_PREFERENCES_NAME) }
         )
+
+    @Singleton
+    @Provides
+    fun providePreferencesRepository(dataStore: DataStore<Preferences>): PreferencesRepository =
+        PreferencesRepositoryImpl(dataStore)
 }

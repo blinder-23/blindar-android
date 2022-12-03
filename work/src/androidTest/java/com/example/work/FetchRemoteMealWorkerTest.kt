@@ -12,6 +12,8 @@ import com.example.server.meal.FakeRemoteMealDataSource
 import com.example.server.meal.RemoteMealRepository
 import com.practice.database.meal.FakeMealDataSource
 import com.practice.database.meal.MealRepository
+import com.practice.preferences.FakePreferencesRepository
+import com.practice.preferences.PreferencesRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -24,6 +26,7 @@ class FetchRemoteMealWorkerTest {
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private val localRepository = MealRepository(FakeMealDataSource())
     private val remoteRepository = RemoteMealRepository(FakeRemoteMealDataSource())
+    private val preferencesRepository: PreferencesRepository = FakePreferencesRepository()
 
     @Test
     fun doWork(): Unit = runBlocking {
@@ -55,7 +58,8 @@ class FetchRemoteMealWorkerTest {
                         context,
                         workerParameters,
                         localRepository,
-                        remoteRepository
+                        remoteRepository,
+                        preferencesRepository
                     )
                 }
             })).build()
