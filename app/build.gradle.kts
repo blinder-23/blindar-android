@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 tasks.withType<Test> {
@@ -139,6 +141,11 @@ dependencies {
 
     // Instrumented Test
     androidTestImplementation(libs.bundles.android.test)
+
+    // Firebase Crashlytics
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics.ktx)
+    implementation(libs.firebase.crashlytics.ktx)
 
     // Accompanist
     implementation(libs.bundles.accompanist)
