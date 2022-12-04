@@ -13,7 +13,7 @@ room = '2.4.3'
 retrofit = '2.9.0'
 
 [libraries]
-android-gradle = 'com.android.tools.build:gradle:7.3.1'
+android-gradle = 'com.android.tools.build:gradle:7.4.0-rc01'
 kotlin-gradle-plugin = { module = 'org.jetbrains.kotlin:kotlin-gradle-plugin', version.ref = 'kotlin' }
 hilt-android-gradle-plugin = { module = 'com.google.dagger:hilt-android-gradle-plugin', version.ref = 'hilt' }
 
