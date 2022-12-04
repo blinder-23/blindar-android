@@ -1,8 +1,21 @@
 package com.practice.hanbitlunch.screen
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.InfiniteRepeatableSpec
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -23,7 +36,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hsk.ktx.date.Date
-import com.practice.hanbitlunch.calendar.*
+import com.practice.hanbitlunch.calendar.CalendarState
+import com.practice.hanbitlunch.calendar.SwipeableCalendar
+import com.practice.hanbitlunch.calendar.YearMonth
+import com.practice.hanbitlunch.calendar.drawUnderline
+import com.practice.hanbitlunch.calendar.rememberCalendarState
 import com.practice.hanbitlunch.components.Body
 import com.practice.hanbitlunch.components.SubTitle
 import com.practice.hanbitlunch.components.Title
@@ -388,7 +405,7 @@ private fun MealContentPreview() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 960, heightDp = 540)
+@Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=480")
 @Composable
 private fun HorizontalMainScreenPreview() {
     val year = 2022
