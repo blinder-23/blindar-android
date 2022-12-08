@@ -1,8 +1,21 @@
 package com.practice.hanbitlunch.screen
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.InfiniteRepeatableSpec
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -22,6 +35,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.hsk.ktx.date.Date
 import com.practice.hanbitlunch.calendar.CalendarState
 import com.practice.hanbitlunch.calendar.SwipeableCalendar
 import com.practice.hanbitlunch.calendar.YearMonth
@@ -33,7 +47,6 @@ import com.practice.hanbitlunch.components.Title
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import java.time.LocalDate
 
 @Composable
 fun MainScreen(
@@ -56,7 +69,7 @@ fun MainScreen(
 
     val scheduleDates by viewModel.scheduleDates.collectAsState()
     val underlineColor = MaterialTheme.colors.onSurface
-    val drawUnderlineToScheduleDate: DrawScope.(LocalDate) -> Unit = {
+    val drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit = {
         if (scheduleDates.contains(it)) {
             drawUnderline(
                 color = underlineColor,
@@ -103,11 +116,11 @@ private fun HorizontalMainScreen(
     onRefresh: () -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
-    onDateClick: (LocalDate) -> Unit,
+    onDateClick: (Date) -> Unit,
     onSwiped: (YearMonth) -> Unit,
-    getContentDescription: (LocalDate) -> String,
-    getClickLabel: (LocalDate) -> String,
-    drawUnderlineToScheduleDate: DrawScope.(LocalDate) -> Unit,
+    getContentDescription: (Date) -> String,
+    getClickLabel: (Date) -> String,
+    drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
 ) {
     Column(modifier = modifier) {
         MainScreenHeader(
@@ -143,11 +156,11 @@ private fun VerticalMainScreen(
     onRefresh: () -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
-    onDateClick: (LocalDate) -> Unit,
+    onDateClick: (Date) -> Unit,
     onSwiped: (YearMonth) -> Unit,
-    getContentDescription: (LocalDate) -> String,
-    getClickLabel: (LocalDate) -> String,
-    drawUnderlineToScheduleDate: DrawScope.(LocalDate) -> Unit,
+    getContentDescription: (Date) -> String,
+    getClickLabel: (Date) -> String,
+    drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
 ) {
     Column(modifier = modifier) {
         Column(modifier = Modifier.weight(1f)) {
@@ -392,12 +405,12 @@ private fun MealContentPreview() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 960, heightDp = 540)
+@Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=480")
 @Composable
 private fun HorizontalMainScreenPreview() {
     val year = 2022
     val month = 10
-    val selectedDate = LocalDate.of(2022, 10, 11)
+    val selectedDate = Date(2022, 10, 11)
 
     val uiState = MainUiState(
         year = year,
@@ -433,7 +446,7 @@ private fun VerticalMainScreenPreview() {
     HanbitCalendarTheme {
         val year = 2022
         val month = 10
-        val selectedDate = LocalDate.of(2022, 10, 11)
+        val selectedDate = Date(2022, 10, 11)
 
         val uiState = MainUiState(
             year = year,

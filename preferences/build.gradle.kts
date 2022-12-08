@@ -10,11 +10,43 @@ android {
     compileSdk = 33
 
     defaultConfig {
-        minSdk = 26
+        minSdk = 23
         targetSdk = 33
 
         testInstrumentationRunner = "com.practice.preferences.HiltTestRunner"
         consumerProguardFiles.add(File("consumer-rules.pro"))
+    }
+    testOptions {
+        managedDevices {
+            devices {
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api30atd").apply {
+                    device = "Pixel 2"
+                    apiLevel = 30
+                    systemImageSource = "aosp-atd"
+                }
+            }
+            devices {
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api30").apply {
+                    device = "Pixel 2"
+                    apiLevel = 30
+                    systemImageSource = "aosp"
+                }
+            }
+            devices {
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api27").apply {
+                    device = "Pixel 2"
+                    apiLevel = 27
+                    systemImageSource = "aosp"
+                }
+            }
+            groups {
+                maybeCreate("api27and30").apply {
+                    targetDevices.add(devices["pixel2api30"])
+                    targetDevices.add(devices["pixel2api30atd"])
+                    targetDevices.add(devices["pixel2api27"])
+                }
+            }
+        }
     }
 
     buildTypes {

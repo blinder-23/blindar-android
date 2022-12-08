@@ -10,7 +10,7 @@ android {
     compileSdk = 33
 
     defaultConfig {
-        minSdk = 26
+        minSdk = 23
         targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -26,6 +26,38 @@ android {
             )
         }
     }
+    testOptions {
+        managedDevices {
+            devices {
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api30atd").apply {
+                    device = "Pixel 2"
+                    apiLevel = 30
+                    systemImageSource = "aosp-atd"
+                }
+            }
+            devices {
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api30").apply {
+                    device = "Pixel 2"
+                    apiLevel = 30
+                    systemImageSource = "aosp"
+                }
+            }
+            devices {
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api27").apply {
+                    device = "Pixel 2"
+                    apiLevel = 27
+                    systemImageSource = "aosp"
+                }
+            }
+            groups {
+                maybeCreate("api27and30").apply {
+                    targetDevices.add(devices["pixel2api30"])
+                    targetDevices.add(devices["pixel2api30atd"])
+                    targetDevices.add(devices["pixel2api27"])
+                }
+            }
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -37,11 +69,11 @@ android {
 
 dependencies {
     implementation(project(":database"))
-    implementation(project(":database:di"))
     implementation(project(":server"))
-    implementation(project(":server:di"))
     implementation(project(":domain"))
     implementation(project(":preferences"))
+
+    implementation(libs.hsk.ktx)
 
     implementation(libs.kotlinx.collections.immutable)
 

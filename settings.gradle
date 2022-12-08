@@ -15,11 +15,8 @@ dependencyResolutionManagement {
 rootProject.name = "Hanbit lunch"
 include ':app'
 include ':database'
-include ':database:di'
 include ':preferences'
 include ':domain'
-include ':domain:di'
 include ':benchmark'
 include ':server'
-include ':server:di'
 include ':work'
