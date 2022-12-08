@@ -19,7 +19,7 @@ android {
         minSdk = 23
         targetSdk = 33
         versionCode = 1
-        versionName = "1.2.3"
+        versionName = "1.2.4-beta01"
         signingConfig = signingConfigs.getByName("debug")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -38,6 +38,36 @@ android {
         unitTests {
             isReturnDefaultValues = true
             isIncludeAndroidResources = true
+        }
+        managedDevices {
+            devices {
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api30atd").apply {
+                    device = "Pixel 2"
+                    apiLevel = 30
+                    systemImageSource = "aosp-atd"
+                }
+            }
+            devices {
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api30").apply {
+                    device = "Pixel 2"
+                    apiLevel = 30
+                    systemImageSource = "aosp"
+                }
+            }
+            devices {
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api27").apply {
+                    device = "Pixel 2"
+                    apiLevel = 27
+                    systemImageSource = "aosp"
+                }
+            }
+            groups {
+                maybeCreate("api27and30").apply {
+                    targetDevices.add(devices["pixel2api30"])
+                    targetDevices.add(devices["pixel2api30atd"])
+                    targetDevices.add(devices["pixel2api27"])
+                }
+            }
         }
     }
     buildTypes {
@@ -98,12 +128,9 @@ dependencies {
     // Module dependency
     implementation(project(path = ":preferences"))
     implementation(project(path = ":database"))
-    implementation(project(path = ":database:di"))
     implementation(project(path = ":domain"))
-    implementation(project(path = ":domain:di"))
     implementation(project(path = ":work"))
     implementation(project(path = ":server"))
-    implementation(project(path = ":server:di"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)
