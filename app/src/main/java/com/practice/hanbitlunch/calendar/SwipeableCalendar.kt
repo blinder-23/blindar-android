@@ -12,6 +12,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +48,7 @@ fun SwipeableCalendar(
     isLight: Boolean = MaterialTheme.colors.isLight,
     getContentDescription: (Date) -> String = { "" },
     getClickLabel: (Date) -> String? = { null },
+    dateAlign: Alignment = Alignment.Center,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
 ) {
     // shows from a year ago to a year after
@@ -99,6 +103,7 @@ private fun Calendar(
     getClickLabel: (Date) -> String?,
     onDateClick: (Date) -> Unit,
     modifier: Modifier = Modifier,
+    dateAlign: Alignment = Alignment.Center,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
 ) {
     Column(modifier = modifier) {
@@ -405,7 +410,7 @@ private fun LargeCalendarPreview() {
     val calendarState = rememberCalendarState(
         year = 2022,
         month = 8,
-        selectedDate = LocalDate.of(2022, 8, 12)
+        selectedDate = Date(2022, 8, 12)
     )
     HanbitCalendarTheme(darkTheme = true) {
         Column {

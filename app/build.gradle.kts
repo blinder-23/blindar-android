@@ -111,7 +111,7 @@ android {
                 arrayOf(
                     "/META-INF/{AL2.0,LGPL2.1}",
                     "META-INF/AL2.0",
-                    "META-INF/LGPL2.1"
+                    "META-INF/LGPL2.1",
                 )
             )
         }
