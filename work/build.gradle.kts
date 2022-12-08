@@ -69,9 +69,7 @@ android {
 
 dependencies {
     implementation(project(":database"))
-    implementation(project(":database:di"))
     implementation(project(":server"))
-    implementation(project(":server:di"))
     implementation(project(":domain"))
     implementation(project(":preferences"))
 

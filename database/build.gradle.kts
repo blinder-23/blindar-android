@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -12,7 +13,7 @@ android {
         minSdk = 23
         targetSdk = 33
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.practice.database.HiltTestRunner"
         consumerProguardFiles.add(File("consumer-rules.pro"))
         javaCompileOptions {
             annotationProcessorOptions {
@@ -81,6 +82,12 @@ dependencies {
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
     testImplementation(libs.room.testing)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    kaptAndroidTest(libs.hilt.compiler)
+    androidTestImplementation(libs.hilt.android.testing)
 
     // Unit test
     testImplementation(libs.junit.jupiter)

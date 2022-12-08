@@ -128,12 +128,9 @@ dependencies {
     // Module dependency
     implementation(project(path = ":preferences"))
     implementation(project(path = ":database"))
-    implementation(project(path = ":database:di"))
     implementation(project(path = ":domain"))
-    implementation(project(path = ":domain:di"))
     implementation(project(path = ":work"))
     implementation(project(path = ":server"))
-    implementation(project(path = ":server:di"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)
