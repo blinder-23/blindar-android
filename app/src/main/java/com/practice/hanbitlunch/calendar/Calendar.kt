@@ -229,6 +229,7 @@ private fun CalendarDate(
         modifier = modifier
             .clip(shape = dateShape)
             .border(width = 2.dp, color = borderColor, shape = dateShape)
+            .padding(10.dp)
             .clickable(onClickLabel = getClickLabel(date)) { onClick(date) }
             .clearAndSetSemantics {
                 contentDescription = "${date.clickLabel}\n${getContentDescription(date)}"
@@ -255,7 +256,7 @@ private fun CalendarElement(
 ) {
     var textSize by remember { mutableStateOf(textStyle.fontSize) }
     Column(
-        modifier = modifier.padding(10.dp),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = arrangement,
     ) {
