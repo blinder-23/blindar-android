@@ -273,16 +273,18 @@ private fun CalendarElement(
     }
 }
 
-private val WeekDayOverMonthColor = Color(0xFF999999)
+private val LightWeekdayColor = Color(0xFF999999)
+private val LightSaturdayColor = Color(0xFF9999FF)
+private val LightSundayColor = Color(0xFFFF9999)
 
 @Composable
 private fun Date.color(currentMonth: Int = this.month) = when (calculateDayType(currentMonth)) {
     DayType.Weekday -> MaterialTheme.colors.onSurface
-    DayType.WeekdayOverMonth -> WeekDayOverMonthColor
+    DayType.WeekdayOverMonth -> LightWeekdayColor
     DayType.Saturday -> SaturdayColor
-    DayType.SaturdayOverMonth -> Color(0xFF9999FF)
+    DayType.SaturdayOverMonth -> LightSaturdayColor
     DayType.Holiday -> HolidayColor
-    DayType.HolidayOverMonth -> Color(0xFFFF9999)
+    DayType.HolidayOverMonth -> LightSundayColor
 }
 
 @Preview(showBackground = true)
