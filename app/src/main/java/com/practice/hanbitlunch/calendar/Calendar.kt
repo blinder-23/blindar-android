@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -56,7 +55,7 @@ fun Calendar(
     getContentDescription: (Date) -> String = { "" },
     getClickLabel: (Date) -> String? = { null },
     onDateClick: (Date) -> Unit = {},
-    dateAlign: Alignment = Alignment.Center,
+    dateArrangement: Arrangement.Vertical = Arrangement.Center,
     dateShape: Shape = CircleShape,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
 ) {
@@ -79,7 +78,7 @@ fun Calendar(
                 onDateClick(it)
             },
             dateShape = dateShape,
-            dateAlign = dateAlign,
+            dateArrangement = dateArrangement,
             drawBehindElement = drawBehindElement,
         )
     }
@@ -140,7 +139,7 @@ private fun CalendarDates(
     onDateClick: (Date) -> Unit = {},
     dateShape: Shape = CircleShape,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
-    dateAlign: Alignment = Alignment.Center,
+    dateArrangement: Arrangement.Vertical = Arrangement.Center,
 ) {
     Column(
         modifier = modifier,
@@ -156,7 +155,7 @@ private fun CalendarDates(
                 currentMonth = page.month,
                 onDateClick = onDateClick,
                 dateShape = dateShape,
-                dateAlign = dateAlign,
+                dateArrangement = dateArrangement,
                 drawBehindElement = drawBehindElement,
             )
         }
@@ -173,7 +172,7 @@ private fun CalendarWeek(
     modifier: Modifier = Modifier,
     onDateClick: (Date) -> Unit = {},
     dateShape: Shape = CircleShape,
-    dateAlign: Alignment = Alignment.Center,
+    dateArrangement: Arrangement.Vertical = Arrangement.Center,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
 ) {
     Row(
@@ -194,7 +193,7 @@ private fun CalendarWeek(
                 isSelected = dayOfWeek == selectedDate,
                 dateShape = dateShape,
                 drawBehindElement = drawBehindElement,
-                dateAlign = dateAlign,
+                dateArrangement = dateArrangement,
             )
         }
     }
@@ -214,7 +213,7 @@ private fun CalendarDate(
     isSelected: Boolean = false,
     dateShape: Shape = CircleShape,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
-    dateAlign: Alignment = Alignment.Center,
+    dateArrangement: Arrangement.Vertical = Arrangement.Center,
 ) {
     val borderColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colors.secondary else Transparent,
@@ -238,7 +237,7 @@ private fun CalendarDate(
             currentMonth = currentMonth
         ),
         textStyle = MaterialTheme.typography.body2,
-        align = dateAlign,
+        arrangement = dateArrangement,
         drawBehindElement = {
             drawBehindElement(date)
         },
@@ -251,15 +250,19 @@ private fun CalendarElement(
     modifier: Modifier = Modifier,
     textColor: Color = Color.Unspecified,
     textStyle: TextStyle = MaterialTheme.typography.body1,
-    align: Alignment = Alignment.Center,
+    arrangement: Arrangement.Vertical = Arrangement.Center,
     drawBehindElement: DrawScope.() -> Unit = {},
 ) {
     var textSize by remember { mutableStateOf(textStyle.fontSize) }
-    Box(modifier = modifier.padding(10.dp)) {
+    Column(
+        modifier = modifier.padding(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = arrangement,
+    ) {
         Text(
             text = text,
             modifier = Modifier
-                .align(align)
+                .align(Alignment.CenterHorizontally)
                 .drawBehind { drawBehindElement() },
             color = textColor,
             style = textStyle,
@@ -359,9 +362,10 @@ private fun LargeCalendarPreview() {
         Column {
             Calendar(
                 calendarState = calendarState,
-                dateAlign = Alignment.TopCenter,
+                dateArrangement = Arrangement.Top,
                 dateShape = CircleShape.copy(all = CornerSize(15.dp)),
-            )
+            ) {
+            }
         }
     }
 }

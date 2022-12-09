@@ -7,7 +7,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -32,7 +31,7 @@ fun SwipeableCalendar(
     dateShape: Shape = CircleShape,
     getContentDescription: (Date) -> String = { "" },
     getClickLabel: (Date) -> String? = { null },
-    dateAlign: Alignment = Alignment.Center,
+    dateArrangement: Arrangement.Vertical = Arrangement.Center,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
 ) {
     // shows from a year ago to a year after
@@ -71,7 +70,7 @@ fun SwipeableCalendar(
             getContentDescription = getContentDescription,
             getClickLabel = getClickLabel,
             onDateClick = onDateClick,
-            dateAlign = dateAlign,
+            dateArrangement = dateArrangement,
             dateShape = dateShape,
             drawBehindElement = drawBehindElement,
         )
