@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.calendar
+package com.practice.hanbitlunch.calendar.core
 
 data class YearMonth(
     val year: Int,

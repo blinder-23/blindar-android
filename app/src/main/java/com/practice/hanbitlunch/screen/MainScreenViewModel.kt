@@ -10,7 +10,7 @@ import com.example.domain.combine.MealScheduleEntity
 import com.hsk.ktx.date.Date
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.entity.ScheduleEntity
-import com.practice.hanbitlunch.calendar.YearMonth
+import com.practice.hanbitlunch.calendar.core.YearMonth
 import com.practice.preferences.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
