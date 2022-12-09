@@ -129,11 +129,7 @@ private fun Calendar(
     }
 }
 
-private fun calendarDays(): List<DayOfWeek> {
-    val values = DayOfWeek.values().toList()
-    Collections.rotate(values, 1)
-    return values
-}
+private fun calendarDays(): List<DayOfWeek> = DayOfWeek.values().toList()
 
 @Composable
 private fun CalendarDays(
