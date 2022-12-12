@@ -15,6 +15,7 @@ interface PreferencesRepository : CoroutineScope {
     suspend fun updateUiMode(uiMode: UiMode)
     suspend fun updateThemeMode(themeMode: ThemeMode)
     suspend fun updateIsFirstExecution(isFirstExecution: Boolean)
+    suspend fun updateScreenMode(screenMode: ScreenMode)
     suspend fun increaseRunningWorkCount()
     suspend fun decreaseRunningWorkCount()
     suspend fun clear()

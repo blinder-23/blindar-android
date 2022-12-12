@@ -7,6 +7,7 @@ class FakePreferencesRepository : PreferencesRepository {
     private val initialPreferences = UserPreferences(
         uiMode = UiMode.Graphic,
         themeMode = ThemeMode.SystemDefault,
+        screenMode = ScreenMode.Default,
         isFirstExecution = true,
         runningWorksCount = 0,
     )
@@ -26,6 +27,11 @@ class FakePreferencesRepository : PreferencesRepository {
 
     override suspend fun updateIsFirstExecution(isFirstExecution: Boolean) {
         preferences = preferences.copy(isFirstExecution = isFirstExecution)
+        emitNewValue()
+    }
+
+    override suspend fun updateScreenMode(screenMode: ScreenMode) {
+        preferences = preferences.copy(screenMode = screenMode)
         emitNewValue()
     }
 

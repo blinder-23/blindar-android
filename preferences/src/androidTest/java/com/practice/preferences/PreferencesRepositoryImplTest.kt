@@ -45,6 +45,12 @@ class PreferencesRepositoryImplTest {
         testDispatcher.cancel()
     }
 
+    private fun preferences(
+        uiMode: UiMode = UiMode.Graphic,
+        themeMode: ThemeMode = ThemeMode.SystemDefault,
+        screenMode: ScreenMode = ScreenMode.Default,
+    ): UserPreferences = UserPreferences(uiMode, themeMode, screenMode)
+
     @Test
     fun repository_fetchInitialPreferences() = runTest {
         val initialPreferences = preferences.fetchInitialPreferences()
@@ -61,15 +67,9 @@ class PreferencesRepositoryImplTest {
         }
         val result = preferences.dropFirstAndTake(3)
 
-        assertThat(result[0]).isEqualTo(
-            UserPreferences(UiMode.ScreenReader, ThemeMode.SystemDefault)
-        )
-        assertThat(result[1]).isEqualTo(
-            UserPreferences(UiMode.Graphic, ThemeMode.SystemDefault)
-        )
-        assertThat(result[2]).isEqualTo(
-            UserPreferences(UiMode.ScreenReader, ThemeMode.SystemDefault)
-        )
+        assertThat(result[0]).isEqualTo(preferences(UiMode.ScreenReader))
+        assertThat(result[1]).isEqualTo(preferences(UiMode.Graphic))
+        assertThat(result[2]).isEqualTo(preferences(UiMode.ScreenReader))
     }
 
     @Test
@@ -80,12 +80,8 @@ class PreferencesRepositoryImplTest {
         }
         val result = preferences.dropFirstAndTake(2)
 
-        assertThat(result[0]).isEqualTo(
-            UserPreferences(UiMode.Graphic, ThemeMode.Dark)
-        )
-        assertThat(result[1]).isEqualTo(
-            UserPreferences(UiMode.Graphic, ThemeMode.Light)
-        )
+        assertThat(result[0]).isEqualTo(preferences(themeMode = ThemeMode.Dark))
+        assertThat(result[1]).isEqualTo(preferences(themeMode = ThemeMode.Light))
     }
 
     @Test
@@ -96,12 +92,8 @@ class PreferencesRepositoryImplTest {
         }
         val result = preferences.dropFirstAndTake(2)
 
-        assertThat(result[0]).isEqualTo(
-            UserPreferences(UiMode.Graphic, ThemeMode.Light)
-        )
-        assertThat(result[1]).isEqualTo(
-            UserPreferences(UiMode.ScreenReader, ThemeMode.Light)
-        )
+        assertThat(result[0]).isEqualTo(preferences(UiMode.Graphic, ThemeMode.Light))
+        assertThat(result[1]).isEqualTo(preferences(UiMode.ScreenReader, ThemeMode.Light))
     }
 
     @Test
