@@ -1,11 +1,14 @@
 package com.practice.hanbitlunch.screen
 
+import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.InfiniteRepeatableSpec
+import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,15 +27,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.practice.hanbitlunch.components.Body
 import com.practice.hanbitlunch.components.SubTitle
 import com.practice.hanbitlunch.components.Title
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
+import com.practice.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
@@ -84,6 +94,57 @@ internal fun MainScreenHeader(
                 tint = MaterialTheme.colors.onPrimary.copy(alpha = refreshIconAlpha),
             )
         }
+    }
+}
+
+@Composable
+private fun ScreenModeIconButtons(
+    screenModeIcons: List<ScreenModeIcon>,
+    onIconClick: (ScreenMode) -> Unit,
+    selectedMode: ScreenMode,
+    modifier: Modifier = Modifier,
+) {
+    Row(modifier = modifier) {
+        screenModeIcons.forEach { (screenMode, icon) ->
+            ScreenModeIconButton(
+                icon = icon,
+                onClick = { onIconClick(screenMode) },
+                isSelected = (screenMode == selectedMode),
+            )
+        }
+    }
+}
+
+@Composable
+private fun ScreenModeIconButton(
+    icon: ImageVector,
+    onClick: () -> Unit,
+    isSelected: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val transition = updateTransition(targetState = isSelected, label = "isSelected")
+    val elevation by transition.animateDp(label = "transition") {
+        if (it) 10.dp else 0.dp
+    }
+    val alpha by transition.animateFloat(label = "alpha") {
+        if (it) 1f else 0.7f
+    }
+    val backgroundColor by transition.animateColor(label = "background") {
+        if (it) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary
+    }
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+            .clip(CircleShape.copy(all = CornerSize(4.dp)))
+            .shadow(elevation = elevation)
+            .background(backgroundColor)
+            .alpha(alpha),
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colors.onPrimary,
+        )
     }
 }
 
@@ -208,13 +269,41 @@ internal fun MainScreenContent(
 
 @Preview(showBackground = true)
 @Composable
-internal fun MainScreenHeaderPreview() {
+private fun MainScreenHeaderPreview() {
     HanbitCalendarTheme {
         MainScreenHeader(
             year = 2022,
             month = 8,
             isLoading = false,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            selectedScreenMode = ScreenMode.Default,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ScreenModeIconButtonPreview() {
+    val (_, icon) = screenModeIcons.first()
+    var isSelected by remember { mutableStateOf(false) }
+    HanbitCalendarTheme {
+        ScreenModeIconButton(
+            icon = icon,
+            onClick = { isSelected = !isSelected },
+            isSelected = isSelected,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ScreenModeIconButtonsPreview() {
+    var selectedMode by remember { mutableStateOf(ScreenMode.Default) }
+    HanbitCalendarTheme {
+        ScreenModeIconButtons(
+            screenModeIcons = screenModeIcons,
+            onIconClick = { selectedMode = it },
+            selectedMode = selectedMode
         )
     }
 }
