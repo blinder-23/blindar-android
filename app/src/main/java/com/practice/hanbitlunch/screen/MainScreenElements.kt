@@ -86,24 +86,39 @@ internal fun MainScreenHeader(
                 .padding(bottom = 11.dp)
         )
 
-        IconButton(
-            enabled = !isLoading,
-            onClick = onRefresh,
+        RefreshIcon(
+            isLoading = isLoading,
+            onRefresh = onRefresh,
+            iconAlpha = { refreshIconAlpha },
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .rotate(angle)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Cached,
-                contentDescription = "새로고침하기",
-                tint = MaterialTheme.colors.onPrimary.copy(alpha = refreshIconAlpha),
-            )
-        }
+                .rotate(angle),
+        )
         ScreenModeIconButtons(
             modifier = Modifier.align(Alignment.BottomEnd),
             screenModeIcons = screenModeIcons,
             selectedMode = selectedScreenMode,
             onIconClick = onScreenModeIconClick,
+        )
+    }
+}
+
+@Composable
+fun RefreshIcon(
+    isLoading: Boolean,
+    onRefresh: () -> Unit,
+    iconAlpha: () -> Float,
+    modifier: Modifier = Modifier,
+) {
+    IconButton(
+        enabled = !isLoading,
+        onClick = onRefresh,
+        modifier = modifier,
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Cached,
+            contentDescription = "새로고침하기",
+            tint = MaterialTheme.colors.onPrimary.copy(alpha = iconAlpha()),
         )
     }
 }
