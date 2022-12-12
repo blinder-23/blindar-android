@@ -10,12 +10,15 @@ import com.practice.hanbitlunch.R
 
 private val HanbitBlue: Color
     @Composable get() = colorResource(R.color.hanbit_blue)
+private val HanbitBlueVariant: Color
+    @Composable get() = colorResource(R.color.hanbit_blue_variant)
 private val HanbitYellow: Color
     @Composable get() = colorResource(R.color.hanbit_yellow)
 
 val LightColorPalette: Colors
     @Composable get() = lightColors(
         primary = HanbitBlue,
+        primaryVariant = HanbitBlueVariant,
         secondary = HanbitYellow,
         onPrimary = Color.White,
         onSecondary = Color.Black,
@@ -24,6 +27,7 @@ val LightColorPalette: Colors
 val DarkColorPalette: Colors
     @Composable get() = darkColors(
         primary = HanbitBlue,
+        primaryVariant = HanbitBlueVariant,
         secondary = HanbitYellow,
         onPrimary = Color.White,
         onSecondary = Color.Black
