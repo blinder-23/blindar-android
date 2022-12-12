@@ -11,9 +11,16 @@ enum class ThemeMode {
     SystemDefault,
 }
 
+enum class ScreenMode {
+    Default,
+    Calendar,
+    List,
+}
+
 data class UserPreferences(
     val uiMode: UiMode,
     val themeMode: ThemeMode,
+    val screenMode: ScreenMode,
     val isFirstExecution: Boolean = true,
     val runningWorksCount: Int = 0,
 )
