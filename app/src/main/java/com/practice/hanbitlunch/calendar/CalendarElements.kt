@@ -193,9 +193,9 @@ internal fun CalendarDate(
         text = text,
         modifier = modifier
             .clip(shape = dateShape)
+            .clickable(onClickLabel = getClickLabel(date)) { onClick(date) }
             .border(width = 2.dp, color = borderColor, shape = dateShape)
             .padding(10.dp)
-            .clickable(onClickLabel = getClickLabel(date)) { onClick(date) }
             .clearAndSetSemantics {
                 contentDescription = "${date.clickLabel}\n${getContentDescription(date)}"
             },
