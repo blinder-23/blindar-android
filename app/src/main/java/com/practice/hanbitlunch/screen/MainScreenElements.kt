@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -33,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -51,8 +54,10 @@ internal fun MainScreenHeader(
     year: Int,
     month: Int,
     isLoading: Boolean,
+    selectedScreenMode: ScreenMode,
     modifier: Modifier = Modifier,
     onRefresh: () -> Unit = {},
+    onScreenModeIconClick: (ScreenMode) -> Unit = {},
 ) {
     val refreshIconAlpha by animateFloatAsState(targetValue = if (isLoading) 0.5f else 1f)
     val infiniteTransition = rememberInfiniteTransition()
@@ -85,7 +90,7 @@ internal fun MainScreenHeader(
             enabled = !isLoading,
             onClick = onRefresh,
             modifier = Modifier
-                .align(Alignment.BottomEnd)
+                .align(Alignment.TopEnd)
                 .rotate(angle)
         ) {
             Icon(
@@ -94,6 +99,12 @@ internal fun MainScreenHeader(
                 tint = MaterialTheme.colors.onPrimary.copy(alpha = refreshIconAlpha),
             )
         }
+        ScreenModeIconButtons(
+            modifier = Modifier.align(Alignment.BottomEnd),
+            screenModeIcons = screenModeIcons,
+            selectedMode = selectedScreenMode,
+            onIconClick = onScreenModeIconClick,
+        )
     }
 }
 

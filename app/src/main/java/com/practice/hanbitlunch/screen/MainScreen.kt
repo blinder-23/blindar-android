@@ -24,6 +24,7 @@ import com.practice.hanbitlunch.calendar.core.drawUnderline
 import com.practice.hanbitlunch.calendar.core.rememberCalendarState
 import com.practice.hanbitlunch.calendar.largeCalendarDateShape
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
+import com.practice.preferences.ScreenMode
 
 @Composable
 fun MainScreen(
@@ -62,6 +63,7 @@ fun MainScreen(
             modifier = backgroundModifier,
             uiState = uiState,
             onRefresh = onRefresh,
+            onScreenModeChange = viewModel::onScreenModeChange,
             calendarState = calendarState,
             mealColumns = mealColumns,
             onDateClick = viewModel::onDateClick,
@@ -75,6 +77,7 @@ fun MainScreen(
             modifier = backgroundModifier,
             uiState = uiState,
             onRefresh = onRefresh,
+            onScreenModeChange = viewModel::onScreenModeChange,
             calendarState = calendarState,
             mealColumns = mealColumns,
             onDateClick = viewModel::onDateClick,
@@ -91,6 +94,7 @@ private fun HorizontalMainScreen(
     modifier: Modifier = Modifier,
     uiState: MainUiState,
     onRefresh: () -> Unit,
+    onScreenModeChange: (ScreenMode) -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
     onDateClick: (Date) -> Unit,
@@ -104,7 +108,9 @@ private fun HorizontalMainScreen(
             year = uiState.year,
             month = uiState.month,
             isLoading = uiState.isLoading,
-            onRefresh = onRefresh
+            onRefresh = onRefresh,
+            selectedScreenMode = uiState.screenMode,
+            onScreenModeIconClick = onScreenModeChange,
         )
         Row {
             SwipeableCalendar(
@@ -133,6 +139,7 @@ private fun VerticalMainScreen(
     modifier: Modifier = Modifier,
     uiState: MainUiState,
     onRefresh: () -> Unit,
+    onScreenModeChange: (ScreenMode) -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
     onDateClick: (Date) -> Unit,
@@ -147,7 +154,9 @@ private fun VerticalMainScreen(
                 year = uiState.year,
                 month = uiState.month,
                 isLoading = uiState.isLoading,
-                onRefresh = onRefresh
+                onRefresh = onRefresh,
+                selectedScreenMode = uiState.screenMode,
+                onScreenModeIconClick = onScreenModeChange,
             )
             SwipeableCalendar(
                 calendarState = calendarState,
@@ -181,7 +190,8 @@ private fun HorizontalMainScreenPreview() {
         selectedDate = selectedDate,
         mealUiState = MealUiState(previewMenus),
         scheduleUiState = ScheduleUiState(previewSchedules),
-        isLoading = false
+        isLoading = false,
+        screenMode = ScreenMode.Default,
     )
     val calendarState = rememberCalendarState(
         year = year,
@@ -193,6 +203,7 @@ private fun HorizontalMainScreenPreview() {
             modifier = Modifier.background(MaterialTheme.colors.surface),
             uiState = uiState,
             onRefresh = {},
+            onScreenModeChange = {},
             calendarState = calendarState,
             mealColumns = 3,
             onDateClick = {},
@@ -218,7 +229,8 @@ private fun VerticalMainScreenPreview() {
             selectedDate = selectedDate,
             mealUiState = MealUiState(previewMenus),
             scheduleUiState = ScheduleUiState(previewSchedules),
-            isLoading = false
+            isLoading = false,
+            screenMode = ScreenMode.Default,
         )
         val calendarState = rememberCalendarState(
             year = year,
@@ -230,6 +242,7 @@ private fun VerticalMainScreenPreview() {
                 modifier = Modifier.background(MaterialTheme.colors.surface),
                 uiState = uiState,
                 onRefresh = {},
+                onScreenModeChange = {},
                 calendarState = calendarState,
                 mealColumns = 2,
                 onDateClick = {},

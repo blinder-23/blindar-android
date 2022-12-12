@@ -12,6 +12,7 @@ import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.core.YearMonth
 import com.practice.preferences.PreferencesRepository
+import com.practice.preferences.ScreenMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
@@ -58,7 +59,8 @@ class MainScreenViewModel @Inject constructor(
                 selectedDate = current,
                 mealUiState = MealUiState.EmptyMealState,
                 scheduleUiState = ScheduleUiState.EmptyScheduleState,
-                isLoading = false
+                isLoading = false,
+                screenMode = ScreenMode.Default,
             )
         )
         selectedDateFlow = MutableStateFlow(current)
@@ -86,7 +88,8 @@ class MainScreenViewModel @Inject constructor(
     private fun updateUiState(
         selectedDate: Date = state.selectedDate,
         entity: MealScheduleEntity? = cache[selectedDate.yearMonth],
-        isLoading: Boolean = false,
+        isLoading: Boolean = state.isLoading,
+        screenMode: ScreenMode = state.screenMode,
     ) {
         val newMealUiState = entity?.getMeal(selectedDate) ?: state.mealUiState
         val newScheduleUiState = entity?.getSchedule(selectedDate) ?: state.scheduleUiState
@@ -96,9 +99,14 @@ class MainScreenViewModel @Inject constructor(
                 mealUiState = newMealUiState,
                 scheduleUiState = newScheduleUiState,
                 isLoading = isLoading,
+                screenMode = screenMode,
             )
         }
         entity?.let { updateScheduleDates(it) }
+    }
+
+    fun onScreenModeChange(screenMode: ScreenMode) = viewModelScope.launch {
+        preferencesRepository.updateScreenMode(screenMode)
     }
 
     private fun updateScheduleDates(entity: MealScheduleEntity) {
@@ -136,7 +144,10 @@ class MainScreenViewModel @Inject constructor(
 
     private suspend fun collectPreferences() {
         preferencesRepository.userPreferencesFlow.collectLatest {
-            updateUiState(isLoading = (it.runningWorksCount != 0))
+            updateUiState(
+                isLoading = (it.runningWorksCount != 0),
+                screenMode = it.screenMode,
+            )
         }
     }
 
