@@ -58,6 +58,7 @@ class MainScreenViewModel @Inject constructor(
                 selectedDate = current,
                 mealUiState = MealUiState.EmptyMealState,
                 scheduleUiState = ScheduleUiState.EmptyScheduleState,
+                isLoading = false
             )
         )
         selectedDateFlow = MutableStateFlow(current)
