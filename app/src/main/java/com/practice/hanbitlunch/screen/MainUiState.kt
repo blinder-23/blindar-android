@@ -3,6 +3,7 @@ package com.practice.hanbitlunch.screen
 import com.hsk.ktx.date.Date
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.entity.ScheduleEntity
+import com.practice.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -14,6 +15,7 @@ data class MainUiState(
     val mealUiState: MealUiState,
     val scheduleUiState: ScheduleUiState,
     val isLoading: Boolean,
+    val screenMode: ScreenMode,
 )
 
 /**
