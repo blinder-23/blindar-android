@@ -86,24 +86,25 @@ internal fun MainScreenHeader(
             year = year,
             month = month,
             modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(bottom = 11.dp)
+                .align(Alignment.CenterStart),
         )
-
-        RefreshIcon(
-            isLoading = isLoading,
-            onRefresh = onRefresh,
-            iconAlpha = { refreshIconAlpha },
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .rotate(angle),
-        )
-        ScreenModeIconButtons(
+        Column(
             modifier = Modifier.align(Alignment.BottomEnd),
-            screenModeIcons = screenModeIcons,
-            selectedMode = selectedScreenMode,
-            onIconClick = onScreenModeIconClick,
-        )
+            horizontalAlignment = Alignment.End,
+        ) {
+            RefreshIcon(
+                isLoading = isLoading,
+                onRefresh = onRefresh,
+                iconAlpha = { refreshIconAlpha },
+                modifier = Modifier
+                    .rotate(angle),
+            )
+            ScreenModeIconButtons(
+                screenModeIcons = screenModeIcons,
+                selectedMode = selectedScreenMode,
+                onIconClick = onScreenModeIconClick,
+            )
+        }
     }
 }
 
