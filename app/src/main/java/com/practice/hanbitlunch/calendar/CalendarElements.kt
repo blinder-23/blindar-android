@@ -56,7 +56,7 @@ internal fun CalendarDays(
             CalendarDay(
                 day = day,
                 modifier = Modifier
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 4.dp)
                     .weight(1f)
             )
         }
