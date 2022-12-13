@@ -32,30 +32,30 @@ fun VerticalMainScreen(
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
 ) {
     Column(modifier = modifier) {
-        Column(modifier = Modifier.weight(1f)) {
-            MainScreenHeader(
-                year = uiState.year,
-                month = uiState.month,
-                isLoading = uiState.isLoading,
-                onRefresh = onRefresh,
-                selectedScreenMode = uiState.screenMode,
-                onScreenModeIconClick = onScreenModeChange,
-            )
-            SwipeableCalendar(
-                calendarState = calendarState,
-                onDateClick = onDateClick,
-                onSwiped = onSwiped,
-                getContentDescription = getContentDescription,
-                dateShape = calendarDateShape,
-                getClickLabel = getClickLabel,
-                drawBehindElement = drawUnderlineToScheduleDate,
-            )
-        }
+        MainScreenHeader(
+            year = uiState.year,
+            month = uiState.month,
+            isLoading = uiState.isLoading,
+            onRefresh = onRefresh,
+            selectedScreenMode = uiState.screenMode,
+            onScreenModeIconClick = onScreenModeChange,
+            modifier = Modifier.weight(11f),
+        )
+        SwipeableCalendar(
+            calendarState = calendarState,
+            onDateClick = onDateClick,
+            onSwiped = onSwiped,
+            getContentDescription = getContentDescription,
+            dateShape = calendarDateShape,
+            getClickLabel = getClickLabel,
+            drawBehindElement = drawUnderlineToScheduleDate,
+            modifier = Modifier.weight(29f),
+        )
         MainScreenContents(
             mealUiState = uiState.mealUiState,
             scheduleUiState = uiState.scheduleUiState,
             modifier = Modifier
-                .weight(1f)
+                .weight(40f)
                 .fillMaxSize(),
             mealColumns = mealColumns,
         )
