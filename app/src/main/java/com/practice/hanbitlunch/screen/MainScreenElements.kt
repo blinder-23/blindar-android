@@ -204,8 +204,7 @@ internal fun MainScreenContents(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(32.dp),
         contentPadding = PaddingValues(16.dp),
     ) {

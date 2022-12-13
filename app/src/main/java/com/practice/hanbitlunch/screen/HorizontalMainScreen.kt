@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -56,7 +57,9 @@ fun HorizontalMainScreen(
             MainScreenContents(
                 mealUiState = uiState.mealUiState,
                 scheduleUiState = uiState.scheduleUiState,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize(),
                 mealColumns = mealColumns,
             )
         }
