@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,6 +24,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.contentColorFor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
 import androidx.compose.runtime.Composable
@@ -40,7 +40,11 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.domain.date.toKor
+import com.hsk.ktx.date.Date
+import com.practice.hanbitlunch.calendar.calendarDays
 import com.practice.hanbitlunch.components.Body
 import com.practice.hanbitlunch.components.SubTitle
 import com.practice.hanbitlunch.components.Title
@@ -225,11 +229,16 @@ internal fun MainScreenContents(
 internal fun MealContent(
     mealUiState: MealUiState,
     columns: Int,
+    modifier: Modifier = Modifier,
+    itemPadding: Dp = 16.dp,
 ) {
-    MainScreenContent(title = "식단") {
+    MainScreenContent(
+        title = "식단",
+        modifier = modifier
+    ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(itemPadding)
         ) {
             mealUiState.menus.chunked(columns).forEach { menus ->
                 val filledMenus = fillMenus(menus, columns)
@@ -267,13 +276,59 @@ internal fun MenuRow(
 }
 
 @Composable
-internal fun ScheduleContent(scheduleUiState: ScheduleUiState) {
-    MainScreenContent(title = "학사일정") {
+internal fun ScheduleContent(
+    scheduleUiState: ScheduleUiState,
+    modifier: Modifier = Modifier,
+) {
+    MainScreenContent(
+        title = "학사일정",
+        modifier = modifier
+    ) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             scheduleUiState.schedules.forEach { schedule ->
                 Body(text = schedule.displayText)
             }
         }
+    }
+}
+
+@Composable
+internal fun ListScreenItem(
+    date: Date,
+    mealUiState: MealUiState,
+    scheduleUiState: ScheduleUiState,
+    modifier: Modifier = Modifier,
+    mealColumns: Int = 2,
+) {
+    val backgroundColor = MaterialTheme.colors.primaryVariant
+    val calendarDays = calendarDays()
+    Row(
+        modifier = modifier
+            .background(backgroundColor)
+            .fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            val textColor = contentColorFor(backgroundColor = backgroundColor)
+            Title(
+                text = date.dayOfMonth.toString().padStart(2, padChar = '0'),
+                textColor = textColor
+            )
+            Body(
+                text = calendarDays[date.dayOfWeek.ordinal].toKor(),
+                textColor = textColor
+            )
+
+        }
+        MainScreenContents(
+            mealUiState = mealUiState,
+            scheduleUiState = scheduleUiState,
+            mealColumns = mealColumns,
+            modifier = Modifier.background(MaterialTheme.colors.background)
+        )
     }
 }
 
@@ -362,6 +417,18 @@ private fun MealContentPreview() {
         MealContent(
             mealUiState = MealUiState(previewMenus),
             columns = 2,
+        )
+    }
+}
+
+@Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
+@Composable
+private fun ListScreenItemPreview() {
+    HanbitCalendarTheme {
+        ListScreenItem(
+            date = Date(2022, 12, 13),
+            mealUiState = MealUiState(previewMenus),
+            scheduleUiState = ScheduleUiState(previewSchedules),
         )
     }
 }
