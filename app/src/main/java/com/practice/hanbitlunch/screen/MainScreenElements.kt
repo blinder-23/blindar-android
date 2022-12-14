@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.domain.date.toKor
 import com.hsk.ktx.date.Date
-import com.practice.hanbitlunch.calendar.calendarDays
 import com.practice.hanbitlunch.components.Body
 import com.practice.hanbitlunch.components.SubTitle
 import com.practice.hanbitlunch.components.Title
@@ -302,33 +301,31 @@ internal fun ListScreenItem(
     mealColumns: Int = 2,
 ) {
     val backgroundColor = MaterialTheme.colors.primaryVariant
-    val calendarDays = calendarDays()
-    Row(
-        modifier = modifier
-            .background(backgroundColor)
-            .fillMaxWidth()
-    ) {
-        Column(
+    Column(modifier = modifier.fillMaxWidth()) {
+        Row(
             modifier = Modifier
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .background(backgroundColor)
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             val textColor = contentColorFor(backgroundColor = backgroundColor)
             Title(
                 text = date.dayOfMonth.toString().padStart(2, padChar = '0'),
-                textColor = textColor
+                textColor = textColor,
+                modifier = Modifier.alignByBaseline(),
             )
             Body(
-                text = calendarDays[date.dayOfWeek.ordinal].toKor(),
-                textColor = textColor
+                text = date.dayOfWeek.toKor(),
+                textColor = textColor,
+                modifier = Modifier.alignByBaseline(),
             )
-
         }
         MainScreenContents(
             mealUiState = mealUiState,
             scheduleUiState = scheduleUiState,
             mealColumns = mealColumns,
-            modifier = Modifier.background(MaterialTheme.colors.background)
         )
     }
 }
