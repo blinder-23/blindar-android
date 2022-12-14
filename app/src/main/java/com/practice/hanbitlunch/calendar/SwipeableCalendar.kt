@@ -19,6 +19,7 @@ import com.practice.hanbitlunch.calendar.core.CalendarState
 import com.practice.hanbitlunch.calendar.core.YearMonth
 import com.practice.hanbitlunch.calendar.core.offset
 import com.practice.hanbitlunch.calendar.core.rememberCalendarState
+import com.practice.hanbitlunch.calendar.core.yearMonth
 import java.util.*
 
 @OptIn(ExperimentalPagerApi::class)
@@ -52,6 +53,16 @@ fun SwipeableCalendar(
                 month = newMonth
             }
             onSwiped(YearMonth(newYear, newMonth))
+        }
+    }
+    LaunchedEffect(calendarState) {
+        snapshotFlow { calendarState.selectedDate }.collect { selectedDate ->
+            val offset = pagerState.currentPage - firstItemIndex
+            val shownYearMonth = currentYearMonth.offset(offset)
+            if (selectedDate.yearMonth != shownYearMonth) {
+                val pageOffset = if (selectedDate.yearMonth > shownYearMonth) 1 else -1
+                pagerState.animateScrollToPage(pagerState.currentPage + pageOffset)
+            }
         }
     }
 
