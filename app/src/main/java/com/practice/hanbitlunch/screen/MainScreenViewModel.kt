@@ -11,6 +11,12 @@ import com.hsk.ktx.date.Date
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.core.YearMonth
+import com.practice.hanbitlunch.screen.core.DailyMealScheduleState
+import com.practice.hanbitlunch.screen.core.MainUiState
+import com.practice.hanbitlunch.screen.core.MealUiState
+import com.practice.hanbitlunch.screen.core.ScheduleUiState
+import com.practice.hanbitlunch.screen.core.toMealUiState
+import com.practice.hanbitlunch.screen.core.toSchedule
 import com.practice.preferences.PreferencesRepository
 import com.practice.preferences.ScreenMode
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,6 +55,10 @@ class MainScreenViewModel @Inject constructor(
 
     private val cache: MutableMap<YearMonth, MealScheduleEntity>
     private var job: Job?
+
+    private val _dailyMealSchedules = MutableStateFlow<List<DailyMealScheduleState>>(emptyList())
+    val dailyMealSchedule: StateFlow<List<DailyMealScheduleState>>
+        get() = _dailyMealSchedules
 
     init {
         val current = Date.now()
@@ -102,7 +112,10 @@ class MainScreenViewModel @Inject constructor(
                 screenMode = screenMode,
             )
         }
-        entity?.let { updateScheduleDates(it) }
+        entity?.let {
+            updateScheduleDates(it)
+            updateDailyData(it)
+        }
     }
 
     fun onScreenModeChange(screenMode: ScreenMode) = viewModelScope.launch {
@@ -132,6 +145,23 @@ class MainScreenViewModel @Inject constructor(
                 updateUiState(entity = it)
             }
         }
+    }
+
+    private fun updateDailyData(mealScheduleEntity: MealScheduleEntity) {
+        val allDates = mutableSetOf<Date>().apply {
+            addAll(mealScheduleEntity.meals.map { Date(it.year, it.month, it.day) })
+            addAll(mealScheduleEntity.schedules.map { Date(it.year, it.month, it.day) })
+        }
+        val newDailyData = allDates.map { date ->
+            val meal = mealScheduleEntity.getMeal(date)
+            val schedule = mealScheduleEntity.getSchedule(date)
+            DailyMealScheduleState(
+                date = date,
+                mealUiState = meal,
+                scheduleUiState = schedule,
+            )
+        }.sorted()
+        _dailyMealSchedules.value = newDailyData
     }
 
     fun onSwiped(yearMonth: YearMonth) {
