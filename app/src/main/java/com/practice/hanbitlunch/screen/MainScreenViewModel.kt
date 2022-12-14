@@ -47,7 +47,7 @@ class MainScreenViewModel @Inject constructor(
 
     private val selectedDateFlow: MutableStateFlow<Date>
 
-    private var cache: MutableMap<YearMonth, MealScheduleEntity>
+    private val cache: MutableMap<YearMonth, MealScheduleEntity>
     private var job: Job?
 
     init {
