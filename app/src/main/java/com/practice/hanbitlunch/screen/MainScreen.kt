@@ -45,6 +45,8 @@ fun MainScreen(
         }
     }
 
+    val dailyMealScheduleState by viewModel.dailyMealSchedule.collectAsState()
+
     val backgroundModifier = modifier.background(MaterialTheme.colors.surface)
     val mealColumns = if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) 2 else 3
     if (windowSize.widthSizeClass == WindowWidthSizeClass.Expanded) {
@@ -65,6 +67,7 @@ fun MainScreen(
         VerticalMainScreen(
             modifier = backgroundModifier,
             uiState = uiState,
+            dailyMealScheduleState = dailyMealScheduleState,
             onRefresh = onRefresh,
             onScreenModeChange = viewModel::onScreenModeChange,
             calendarState = calendarState,
