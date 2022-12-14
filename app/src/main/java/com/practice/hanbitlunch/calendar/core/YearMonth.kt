@@ -3,7 +3,11 @@ package com.practice.hanbitlunch.calendar.core
 data class YearMonth(
     val year: Int,
     val month: Int
-)
+) : Comparable<YearMonth> {
+    override fun compareTo(other: YearMonth): Int {
+        return if (year != other.year) year.compareTo(other.year) else month.compareTo(other.month)
+    }
+}
 
 fun YearMonth.offset(offset: Int): YearMonth {
     var year = this.year
