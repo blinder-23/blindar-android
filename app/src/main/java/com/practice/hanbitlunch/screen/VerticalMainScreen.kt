@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
@@ -71,15 +75,19 @@ private fun VerticalMainScreenPreview() {
         val month = 10
         val selectedDate = Date(2022, 10, 11)
 
-        val uiState = MainUiState(
-            year = year,
-            month = month,
-            selectedDate = selectedDate,
-            mealUiState = MealUiState(previewMenus),
-            scheduleUiState = ScheduleUiState(previewSchedules),
-            isLoading = false,
-            screenMode = ScreenMode.Default,
-        )
+        var uiState by remember {
+            mutableStateOf(
+                MainUiState(
+                    year = year,
+                    month = month,
+                    selectedDate = selectedDate,
+                    mealUiState = MealUiState(previewMenus),
+                    scheduleUiState = ScheduleUiState(previewSchedules),
+                    isLoading = false,
+                    screenMode = ScreenMode.Default,
+                )
+            )
+        }
         val calendarState = rememberCalendarState(
             year = year,
             month = month,
@@ -90,7 +98,7 @@ private fun VerticalMainScreenPreview() {
                 modifier = Modifier.background(MaterialTheme.colors.surface),
                 uiState = uiState,
                 onRefresh = {},
-                onScreenModeChange = {},
+                onScreenModeChange = { uiState = uiState.copy(screenMode = it) },
                 calendarState = calendarState,
                 mealColumns = 2,
                 onDateClick = {},
