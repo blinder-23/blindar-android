@@ -19,6 +19,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Icon
@@ -28,6 +31,7 @@ import androidx.compose.material.contentColorFor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +51,11 @@ import com.hsk.ktx.date.Date
 import com.practice.hanbitlunch.components.Body
 import com.practice.hanbitlunch.components.SubTitle
 import com.practice.hanbitlunch.components.Title
+import com.practice.hanbitlunch.screen.core.DailyMealScheduleState
+import com.practice.hanbitlunch.screen.core.MealUiState
+import com.practice.hanbitlunch.screen.core.Menu
+import com.practice.hanbitlunch.screen.core.Schedule
+import com.practice.hanbitlunch.screen.core.ScheduleUiState
 import com.practice.hanbitlunch.screen.core.ScreenModeIcon
 import com.practice.hanbitlunch.screen.core.screenModeIcons
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
@@ -295,13 +304,43 @@ internal fun ScheduleContent(
 }
 
 @Composable
+internal fun ListScreenItems(
+    items: List<DailyMealScheduleState>,
+    selectedDate: Date,
+    modifier: Modifier = Modifier,
+    lazyListState: LazyListState = rememberLazyListState(),
+    mealColumns: Int = 2,
+) {
+    LaunchedEffect(items, selectedDate) {
+        val index = items.indexOfFirst { it.date == selectedDate }
+        if (index != -1) {
+            lazyListState.animateScrollToItem(index)
+        }
+    }
+
+    LazyColumn(
+        modifier = modifier,
+        state = lazyListState,
+    ) {
+        items(
+            items = items,
+            key = { item -> item.date.toEpochSecond() },
+        ) { item ->
+            ListScreenItem(
+                dailyMealScheduleState = item,
+                mealColumns = mealColumns,
+            )
+        }
+    }
+}
+
+@Composable
 internal fun ListScreenItem(
-    date: Date,
-    mealUiState: MealUiState,
-    scheduleUiState: ScheduleUiState,
+    dailyMealScheduleState: DailyMealScheduleState,
     modifier: Modifier = Modifier,
     mealColumns: Int = 2,
 ) {
+    val date = dailyMealScheduleState.date
     val backgroundColor = MaterialTheme.colors.primaryVariant
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
@@ -325,9 +364,10 @@ internal fun ListScreenItem(
             )
         }
         MainScreenContents(
-            mealUiState = mealUiState,
-            scheduleUiState = scheduleUiState,
+            mealUiState = dailyMealScheduleState.mealUiState,
+            scheduleUiState = dailyMealScheduleState.scheduleUiState,
             mealColumns = mealColumns,
+            modifier = Modifier.padding(16.dp),
         )
     }
 }
@@ -426,9 +466,11 @@ private fun MealContentPreview() {
 private fun ListScreenItemPreview() {
     HanbitCalendarTheme {
         ListScreenItem(
-            date = Date(2022, 12, 13),
-            mealUiState = MealUiState(previewMenus),
-            scheduleUiState = ScheduleUiState(previewSchedules),
+            DailyMealScheduleState(
+                date = Date(2022, 12, 13),
+                mealUiState = MealUiState(previewMenus),
+                scheduleUiState = ScheduleUiState(previewSchedules),
+            ),
         )
     }
 }
