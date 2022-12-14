@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen
+package com.practice.hanbitlunch.screen.core
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Event

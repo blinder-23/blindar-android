@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen
+package com.practice.hanbitlunch.screen.core
 
 import com.hsk.ktx.date.Date
 import com.practice.database.meal.entity.MealEntity

@@ -47,6 +47,8 @@ import com.hsk.ktx.date.Date
 import com.practice.hanbitlunch.components.Body
 import com.practice.hanbitlunch.components.SubTitle
 import com.practice.hanbitlunch.components.Title
+import com.practice.hanbitlunch.screen.core.ScreenModeIcon
+import com.practice.hanbitlunch.screen.core.screenModeIcons
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
 import com.practice.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList

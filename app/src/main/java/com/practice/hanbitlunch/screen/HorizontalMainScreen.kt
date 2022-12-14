@@ -16,6 +16,9 @@ import com.practice.hanbitlunch.calendar.core.CalendarState
 import com.practice.hanbitlunch.calendar.core.YearMonth
 import com.practice.hanbitlunch.calendar.core.rememberCalendarState
 import com.practice.hanbitlunch.calendar.largeCalendarDateShape
+import com.practice.hanbitlunch.screen.core.MainUiState
+import com.practice.hanbitlunch.screen.core.MealUiState
+import com.practice.hanbitlunch.screen.core.ScheduleUiState
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
 import com.practice.preferences.ScreenMode
 
