@@ -42,6 +42,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -299,7 +300,7 @@ internal fun ScheduleContent(
 }
 
 @Composable
-internal fun ListScreenItems(
+internal fun DailyMealSchedules(
     items: List<DailyMealScheduleState>,
     selectedDate: Date,
     modifier: Modifier = Modifier,
@@ -322,7 +323,7 @@ internal fun ListScreenItems(
             items = items,
             key = { item -> item.date.toEpochSecond() },
         ) { item ->
-            ListScreenItem(
+            DailyMealSchedule(
                 dailyMealScheduleState = item,
                 mealColumns = mealColumns,
                 onDateClick = onDateClick,
@@ -332,41 +333,54 @@ internal fun ListScreenItems(
 }
 
 @Composable
-internal fun ListScreenItem(
+internal fun DailyMealSchedule(
     dailyMealScheduleState: DailyMealScheduleState,
     modifier: Modifier = Modifier,
     mealColumns: Int = 2,
     onDateClick: (Date) -> Unit = {},
 ) {
     val date = dailyMealScheduleState.date
-    val backgroundColor = MaterialTheme.colors.primaryVariant
     Column(modifier = modifier.fillMaxWidth()) {
-        Row(
+        DailyDay(
+            date = date,
             modifier = Modifier
-                .background(backgroundColor)
                 .clickable(onClick = { onDateClick(date) })
                 .padding(16.dp)
                 .fillMaxWidth(),
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            val textColor = contentColorFor(backgroundColor = backgroundColor)
-            Title(
-                text = date.dayOfMonth.toString().padStart(2, padChar = '0'),
-                textColor = textColor,
-                modifier = Modifier.alignByBaseline(),
-            )
-            Body(
-                text = date.dayOfWeek.toKor(),
-                textColor = textColor,
-                modifier = Modifier.alignByBaseline(),
-            )
-        }
+            backgroundColor = MaterialTheme.colors.primaryVariant,
+        )
         MainScreenContents(
             mealUiState = dailyMealScheduleState.mealUiState,
             scheduleUiState = dailyMealScheduleState.scheduleUiState,
             mealColumns = mealColumns,
             modifier = Modifier.padding(16.dp),
+        )
+    }
+}
+
+@Composable
+private fun DailyDay(
+    date: Date,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = MaterialTheme.colors.background,
+) {
+    Row(
+        modifier = Modifier
+            .background(backgroundColor)
+            .then(modifier),
+        verticalAlignment = Alignment.Bottom,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        val textColor = contentColorFor(backgroundColor)
+        Title(
+            text = date.dayOfMonth.toString().padStart(2, padChar = '0'),
+            textColor = textColor,
+            modifier = Modifier.alignByBaseline(),
+        )
+        Body(
+            text = date.dayOfWeek.toKor(),
+            textColor = textColor,
+            modifier = Modifier.alignByBaseline(),
         )
     }
 }
@@ -464,7 +478,7 @@ private fun MealContentPreview() {
 @Composable
 private fun ListScreenItemPreview() {
     HanbitCalendarTheme {
-        ListScreenItem(
+        DailyMealSchedule(
             DailyMealScheduleState(
                 date = Date(2022, 12, 13),
                 mealUiState = MealUiState(previewMenus),

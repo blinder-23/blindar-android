@@ -76,7 +76,7 @@ fun VerticalMainScreen(
                     modifier = Modifier
                 )
             }
-            ListScreenItems(
+            DailyMealSchedules(
                 items = dailyMealScheduleState,
                 selectedDate = uiState.selectedDate,
                 mealColumns = mealColumns,
