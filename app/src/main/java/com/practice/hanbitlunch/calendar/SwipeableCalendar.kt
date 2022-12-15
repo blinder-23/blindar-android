@@ -55,14 +55,12 @@ fun SwipeableCalendar(
             onSwiped(YearMonth(newYear, newMonth))
         }
     }
-    LaunchedEffect(calendarState) {
-        snapshotFlow { calendarState.selectedDate }.collect { selectedDate ->
-            val offset = pagerState.currentPage - firstItemIndex
-            val shownYearMonth = currentYearMonth.offset(offset)
-            if (selectedDate.yearMonth != shownYearMonth) {
-                val pageOffset = if (selectedDate.yearMonth > shownYearMonth) 1 else -1
-                pagerState.animateScrollToPage(pagerState.currentPage + pageOffset)
-            }
+    LaunchedEffect(calendarState.selectedDate) {
+        val offset = pagerState.currentPage - firstItemIndex
+        val shownYearMonth = currentYearMonth.offset(offset)
+        if (calendarState.selectedDate.yearMonth != shownYearMonth) {
+            val pageOffset = if (calendarState.selectedDate.yearMonth > shownYearMonth) 1 else -1
+            pagerState.animateScrollToPage(pagerState.currentPage + pageOffset)
         }
     }
 
