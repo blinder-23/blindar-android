@@ -31,8 +31,8 @@ fun MainScreen(
         viewModel.onLaunch()
     }
 
-    val uiState = viewModel.uiState.value
-    val calendarState = rememberCalendarState()
+    val uiState by viewModel.uiState
+    val calendarState = rememberCalendarState(uiState.year, uiState.month, uiState.selectedDate)
 
     val scheduleDates by viewModel.scheduleDates.collectAsState()
     val underlineColor = MaterialTheme.colors.onSurface
