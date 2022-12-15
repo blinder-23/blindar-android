@@ -10,6 +10,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -304,6 +305,7 @@ internal fun ListScreenItems(
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
     mealColumns: Int = 2,
+    onDateClick: (Date) -> Unit = {},
 ) {
     LaunchedEffect(items, selectedDate) {
         val index = items.indexOfFirst { it.date == selectedDate }
@@ -323,6 +325,7 @@ internal fun ListScreenItems(
             ListScreenItem(
                 dailyMealScheduleState = item,
                 mealColumns = mealColumns,
+                onDateClick = onDateClick,
             )
         }
     }
@@ -333,6 +336,7 @@ internal fun ListScreenItem(
     dailyMealScheduleState: DailyMealScheduleState,
     modifier: Modifier = Modifier,
     mealColumns: Int = 2,
+    onDateClick: (Date) -> Unit = {},
 ) {
     val date = dailyMealScheduleState.date
     val backgroundColor = MaterialTheme.colors.primaryVariant
@@ -340,6 +344,7 @@ internal fun ListScreenItem(
         Row(
             modifier = Modifier
                 .background(backgroundColor)
+                .clickable(onClick = { onDateClick(date) })
                 .padding(16.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.Bottom,
