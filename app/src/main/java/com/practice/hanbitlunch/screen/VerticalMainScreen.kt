@@ -33,7 +33,6 @@ import com.practice.preferences.ScreenMode
 fun VerticalMainScreen(
     modifier: Modifier = Modifier,
     uiState: MainUiState,
-    dailyMealScheduleState: List<DailyMealScheduleState>,
     onRefresh: () -> Unit,
     onScreenModeChange: (ScreenMode) -> Unit,
     calendarState: CalendarState,
@@ -77,7 +76,7 @@ fun VerticalMainScreen(
                 )
             }
             DailyMealSchedules(
-                items = dailyMealScheduleState,
+                items = uiState.monthlyMealScheduleState,
                 selectedDate = uiState.selectedDate,
                 mealColumns = mealColumns,
                 modifier = Modifier
@@ -104,8 +103,13 @@ private fun VerticalMainScreenPreview() {
                     year = year,
                     month = month,
                     selectedDate = selectedDate,
-                    mealUiState = MealUiState(previewMenus),
-                    scheduleUiState = ScheduleUiState(previewSchedules),
+                    monthlyMealScheduleState = (1..3).map {
+                        DailyMealScheduleState(
+                            date = Date(2022, 10, 11).plusDays(it),
+                            mealUiState = MealUiState(previewMenus),
+                            scheduleUiState = ScheduleUiState(previewSchedules),
+                        )
+                    },
                     isLoading = false,
                     screenMode = ScreenMode.Default,
                 )
@@ -120,9 +124,6 @@ private fun VerticalMainScreenPreview() {
             VerticalMainScreen(
                 modifier = Modifier.background(MaterialTheme.colors.surface),
                 uiState = uiState,
-                dailyMealScheduleState = (1..3).map {
-                    DailyMealScheduleState.sample.copy(date = Date(2022, 10, 11).plusDays(it))
-                },
                 onRefresh = {},
                 onScreenModeChange = { uiState = uiState.copy(screenMode = it) },
                 calendarState = calendarState,

@@ -16,6 +16,7 @@ import com.practice.hanbitlunch.calendar.core.CalendarState
 import com.practice.hanbitlunch.calendar.core.YearMonth
 import com.practice.hanbitlunch.calendar.core.rememberCalendarState
 import com.practice.hanbitlunch.calendar.largeCalendarDateShape
+import com.practice.hanbitlunch.screen.core.DailyMealScheduleState
 import com.practice.hanbitlunch.screen.core.MainUiState
 import com.practice.hanbitlunch.screen.core.MealUiState
 import com.practice.hanbitlunch.screen.core.ScheduleUiState
@@ -57,9 +58,10 @@ fun HorizontalMainScreen(
                 dateShape = largeCalendarDateShape,
                 dateArrangement = Arrangement.Top,
             )
-            MainScreenContents(
-                mealUiState = uiState.mealUiState,
-                scheduleUiState = uiState.scheduleUiState,
+            DailyMealSchedules(
+                items = uiState.monthlyMealScheduleState,
+                selectedDate = uiState.selectedDate,
+                onDateClick = onDateClick,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxSize(),
@@ -80,8 +82,13 @@ private fun HorizontalMainScreenPreview() {
         year = year,
         month = month,
         selectedDate = selectedDate,
-        mealUiState = MealUiState(previewMenus),
-        scheduleUiState = ScheduleUiState(previewSchedules),
+        monthlyMealScheduleState = (1..3).map {
+            DailyMealScheduleState(
+                date = Date(2022, 10, 11).plusDays(it),
+                mealUiState = MealUiState(previewMenus),
+                scheduleUiState = ScheduleUiState(previewSchedules),
+            )
+        },
         isLoading = false,
         screenMode = ScreenMode.Default,
     )

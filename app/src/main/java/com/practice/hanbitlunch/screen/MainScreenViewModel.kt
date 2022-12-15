@@ -11,6 +11,7 @@ import com.hsk.ktx.date.Date
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.core.YearMonth
+import com.practice.hanbitlunch.calendar.core.yearMonth
 import com.practice.hanbitlunch.screen.core.DailyMealScheduleState
 import com.practice.hanbitlunch.screen.core.MainUiState
 import com.practice.hanbitlunch.screen.core.MealUiState
@@ -56,10 +57,6 @@ class MainScreenViewModel @Inject constructor(
     private val cache: MutableMap<YearMonth, MealScheduleEntity>
     private var job: Job?
 
-    private val _dailyMealSchedules = MutableStateFlow<List<DailyMealScheduleState>>(emptyList())
-    val dailyMealSchedule: StateFlow<List<DailyMealScheduleState>>
-        get() = _dailyMealSchedules
-
     init {
         val current = Date.now()
         _uiState = mutableStateOf(
@@ -67,8 +64,7 @@ class MainScreenViewModel @Inject constructor(
                 year = current.year,
                 month = current.month,
                 selectedDate = current,
-                mealUiState = MealUiState.EmptyMealState,
-                scheduleUiState = ScheduleUiState.EmptyScheduleState,
+                monthlyMealScheduleState = emptyList(),
                 isLoading = false,
                 screenMode = ScreenMode.Default,
             )
@@ -85,7 +81,7 @@ class MainScreenViewModel @Inject constructor(
      */
     fun onLaunch() {
         viewModelScope.launch(Dispatchers.IO) {
-            loadMonthlyData(state.selectedDate)
+            loadMonthlyData(state.yearMonth)
         }
         viewModelScope.launch(Dispatchers.IO) {
             collectPreferences()
@@ -96,25 +92,29 @@ class MainScreenViewModel @Inject constructor(
      * Kotlin Flow의 combine 함수를 본따 작성했다.
      */
     private fun updateUiState(
+        yearMonth: YearMonth = state.yearMonth,
         selectedDate: Date = state.selectedDate,
         entity: MealScheduleEntity? = cache[selectedDate.yearMonth],
         isLoading: Boolean = state.isLoading,
         screenMode: ScreenMode = state.screenMode,
     ) {
-        val newMealUiState = entity?.getMeal(selectedDate) ?: state.mealUiState
-        val newScheduleUiState = entity?.getSchedule(selectedDate) ?: state.scheduleUiState
+        val monthlyMealScheduleState = if (entity != null) {
+            parseDailyState(entity)
+        } else {
+            emptyList()
+        }
         synchronized(state) {
             state = state.copy(
+                year = yearMonth.year,
+                month = yearMonth.month,
+                monthlyMealScheduleState = monthlyMealScheduleState,
                 selectedDate = selectedDate,
-                mealUiState = newMealUiState,
-                scheduleUiState = newScheduleUiState,
                 isLoading = isLoading,
                 screenMode = screenMode,
             )
         }
         entity?.let {
             updateScheduleDates(it)
-            updateDailyData(it)
         }
     }
 
@@ -129,25 +129,28 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
-        loadMonthlyData(clickedDate)
+        loadMonthlyData(clickedDate.yearMonth)
         updateUiState(selectedDate = clickedDate)
     }
 
-    private suspend fun loadMonthlyData(date: Date) {
-        if (cache.containsKey(date.yearMonth)) {
+    private suspend fun loadMonthlyData(yearMonth: YearMonth) {
+        if (cache.containsKey(yearMonth)) {
             return
         }
-        val (queryYear, queryMonth) = date.yearMonth
+        val (queryYear, queryMonth) = yearMonth
         job?.cancelAndJoin()
         job = viewModelScope.launch(Dispatchers.IO) {
             loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).collectLatest {
-                cache[date.yearMonth] = it
-                updateUiState(entity = it)
+                cache[yearMonth] = it
+                updateUiState(
+                    entity = it,
+                    yearMonth = yearMonth,
+                )
             }
         }
     }
 
-    private fun updateDailyData(mealScheduleEntity: MealScheduleEntity) {
+    private fun parseDailyState(mealScheduleEntity: MealScheduleEntity): List<DailyMealScheduleState> {
         val allDates = mutableSetOf<Date>().apply {
             addAll(mealScheduleEntity.meals.map { Date(it.year, it.month, it.day) })
             addAll(mealScheduleEntity.schedules.map { Date(it.year, it.month, it.day) })
@@ -161,15 +164,11 @@ class MainScreenViewModel @Inject constructor(
                 scheduleUiState = schedule,
             )
         }.sorted()
-        _dailyMealSchedules.value = newDailyData
+        return newDailyData
     }
 
-    fun onSwiped(yearMonth: YearMonth) {
-        val (year, month) = yearMonth
-        state = state.copy(
-            year = year,
-            month = month,
-        )
+    fun onSwiped(yearMonth: YearMonth) = viewModelScope.launch {
+        loadMonthlyData(yearMonth)
     }
 
     private suspend fun collectPreferences() {
@@ -183,9 +182,12 @@ class MainScreenViewModel @Inject constructor(
 
     fun getContentDescription(date: Date): String {
         return if (date == state.selectedDate) {
-            val mealState = state.mealUiState
-            val scheduleUiState = state.scheduleUiState
-            "식단: ${mealState.description}\n학사일정:${scheduleUiState.description}"
+            val dailyState = state.monthlyMealScheduleState.find { it.date == date }
+            if (dailyState != null) {
+                "식단: ${dailyState.mealUiState.description}\n학사일정:${dailyState.scheduleUiState.description}"
+            } else {
+                ""
+            }
         } else {
             ""
         }
@@ -195,9 +197,6 @@ class MainScreenViewModel @Inject constructor(
         if (date == state.selectedDate) "" else "식단 및 학사일정 보기"
 
 }
-
-private val Date.yearMonth: YearMonth
-    get() = YearMonth(year, month)
 
 private fun MealScheduleEntity.getMeal(date: Date): MealUiState {
     return try {
