@@ -22,9 +22,8 @@ import com.practice.preferences.PreferencesRepository
 import com.practice.preferences.ScreenMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -56,7 +55,7 @@ class MainScreenViewModel @Inject constructor(
     private val selectedDateFlow: MutableStateFlow<Date>
 
     private val cache: MutableMap<YearMonth, MealScheduleEntity>
-    private var job: Job?
+    private var job: Deferred<MealScheduleEntity>?
 
     init {
         val current = Date.now()
@@ -82,7 +81,8 @@ class MainScreenViewModel @Inject constructor(
      */
     fun onLaunch() {
         viewModelScope.launch(Dispatchers.IO) {
-            loadMonthlyData(state.yearMonth)
+            val entity = loadMonthlyData(state.yearMonth)
+            updateUiState(entity = entity)
         }
         viewModelScope.launch(Dispatchers.IO) {
             collectPreferences()
@@ -130,22 +130,18 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
-        loadMonthlyData(clickedDate.yearMonth)
-        updateUiState(selectedDate = clickedDate)
+        val entity = loadMonthlyData(clickedDate.yearMonth)
+        updateUiState(selectedDate = clickedDate, entity = entity)
     }
 
-    private suspend fun loadMonthlyData(yearMonth: YearMonth) {
+    private suspend fun loadMonthlyData(yearMonth: YearMonth): MealScheduleEntity {
         val (queryYear, queryMonth) = yearMonth
-        job?.cancelAndJoin()
-        job = viewModelScope.launch(Dispatchers.IO) {
-            val entity = if (cache.containsKey(yearMonth)) {
-                cache[yearMonth]!!
-            } else {
-                loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).first().apply {
-                    cache[yearMonth] = this
-                }
+        return if (cache.containsKey(yearMonth)) {
+            cache[yearMonth]!!
+        } else {
+            loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).first().apply {
+                cache[yearMonth] = this
             }
-            updateUiState(yearMonth = yearMonth, entity = entity)
         }
     }
 
@@ -167,7 +163,12 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onSwiped(yearMonth: YearMonth) = viewModelScope.launch {
-        loadMonthlyData(yearMonth)
+        val entity = loadMonthlyData(yearMonth)
+        if (yearMonth != state.yearMonth) {
+            updateUiState(yearMonth = yearMonth, entity = entity)
+        } else {
+            updateUiState(entity = entity)
+        }
     }
 
     private suspend fun collectPreferences() {
