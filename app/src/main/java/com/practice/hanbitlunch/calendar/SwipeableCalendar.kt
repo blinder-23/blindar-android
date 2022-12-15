@@ -70,6 +70,7 @@ fun SwipeableCalendar(
         modifier = modifier
             .background(MaterialTheme.colors.surface)
             .fillMaxWidth(),
+        key = { currentYearMonth.offset(it).toString() },
     ) { index ->
         val shownYearMonth = currentYearMonth.offset(index - firstItemIndex)
         val calendarPage = CalendarPage.getInstance(shownYearMonth)
