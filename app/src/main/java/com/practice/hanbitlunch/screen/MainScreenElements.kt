@@ -309,10 +309,8 @@ internal fun DailyMealSchedules(
     onDateClick: (Date) -> Unit = {},
 ) {
     LaunchedEffect(items, selectedDate) {
-        val index = items.indexOfFirst { it.date == selectedDate }
-        if (index != -1) {
-            lazyListState.animateScrollToItem(index)
-        }
+        val index = items.indexOfFirst { it.date == selectedDate }.coerceAtLeast(0)
+        lazyListState.animateScrollToItem(index)
     }
 
     LazyColumn(
