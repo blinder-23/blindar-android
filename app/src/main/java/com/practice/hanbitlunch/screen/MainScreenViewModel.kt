@@ -28,6 +28,7 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -134,19 +135,17 @@ class MainScreenViewModel @Inject constructor(
     }
 
     private suspend fun loadMonthlyData(yearMonth: YearMonth) {
-        if (cache.containsKey(yearMonth)) {
-            return
-        }
         val (queryYear, queryMonth) = yearMonth
         job?.cancelAndJoin()
         job = viewModelScope.launch(Dispatchers.IO) {
-            loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).collectLatest {
-                cache[yearMonth] = it
-                updateUiState(
-                    entity = it,
-                    yearMonth = yearMonth,
-                )
+            val entity = if (cache.containsKey(yearMonth)) {
+                cache[yearMonth]!!
+            } else {
+                loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).first().apply {
+                    cache[yearMonth] = this
+                }
             }
+            updateUiState(yearMonth = yearMonth, entity = entity)
         }
     }
 
