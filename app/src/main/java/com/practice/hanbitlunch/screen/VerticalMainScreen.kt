@@ -5,7 +5,6 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -66,8 +65,6 @@ fun VerticalMainScreen(
                 enter = slideInVertically { fullHeight -> -fullHeight },
                 exit = slideOutVertically { fullHeight -> -fullHeight },
             ) {
-                val dateArrangement =
-                    if (uiState.screenMode == ScreenMode.Calendar) Arrangement.Top else Arrangement.Center
                 SwipeableCalendar(
                     calendarState = calendarState,
                     onDateClick = onDateClick,
@@ -76,24 +73,17 @@ fun VerticalMainScreen(
                     dateShape = calendarDateShape,
                     getClickLabel = getClickLabel,
                     drawBehindElement = drawUnderlineToScheduleDate,
-                    dateArrangement = dateArrangement,
                     modifier = Modifier
                 )
             }
-            AnimatedVisibility(
-                visible = uiState.screenMode != ScreenMode.Calendar,
+            ListScreenItems(
+                items = dailyMealScheduleState,
+                selectedDate = uiState.selectedDate,
+                mealColumns = mealColumns,
                 modifier = Modifier
                     .animateContentSize()
-                    .weight(40f),
-                enter = slideInVertically { fullHeight -> fullHeight },
-                exit = slideOutVertically { fullHeight -> fullHeight }
-            ) {
-                ListScreenItems(
-                    items = dailyMealScheduleState,
-                    selectedDate = uiState.selectedDate,
-                    mealColumns = mealColumns,
-                )
-            }
+                    .weight(40f)
+            )
         }
     }
 }

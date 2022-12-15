@@ -13,7 +13,6 @@ enum class ThemeMode {
 
 enum class ScreenMode {
     Default,
-    Calendar,
     List,
 }
 
