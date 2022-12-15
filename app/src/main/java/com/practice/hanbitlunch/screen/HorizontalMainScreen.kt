@@ -42,6 +42,7 @@ fun HorizontalMainScreen(
             year = uiState.year,
             month = uiState.month,
             isLoading = uiState.isLoading,
+            screenModeIconsEnabled = false,
             onRefresh = onRefresh,
             selectedScreenMode = uiState.screenMode,
             onScreenModeIconClick = onScreenModeChange,

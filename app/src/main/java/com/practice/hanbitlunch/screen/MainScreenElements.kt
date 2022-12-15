@@ -71,6 +71,7 @@ internal fun MainScreenHeader(
     isLoading: Boolean,
     selectedScreenMode: ScreenMode,
     modifier: Modifier = Modifier,
+    screenModeIconsEnabled: Boolean = true,
     onRefresh: () -> Unit = {},
     onScreenModeIconClick: (ScreenMode) -> Unit = {},
 ) {
@@ -114,6 +115,7 @@ internal fun MainScreenHeader(
                 screenModeIcons = screenModeIcons,
                 selectedMode = selectedScreenMode,
                 onIconClick = onScreenModeIconClick,
+                enabled = screenModeIconsEnabled,
             )
         }
     }
@@ -145,6 +147,7 @@ private fun ScreenModeIconButtons(
     onIconClick: (ScreenMode) -> Unit,
     selectedMode: ScreenMode,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     Row(modifier = modifier) {
         screenModeIcons.forEach { (screenMode, icon) ->
@@ -152,6 +155,7 @@ private fun ScreenModeIconButtons(
                 icon = icon,
                 onClick = { onIconClick(screenMode) },
                 isSelected = (screenMode == selectedMode),
+                enabled = enabled,
             )
         }
     }
@@ -163,16 +167,17 @@ private fun ScreenModeIconButton(
     onClick: () -> Unit,
     isSelected: Boolean,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     val transition = updateTransition(targetState = isSelected, label = "isSelected")
     val elevation by transition.animateDp(label = "transition") {
-        if (it) 10.dp else 0.dp
+        if (it && enabled) 10.dp else 0.dp
     }
     val alpha by transition.animateFloat(label = "alpha") {
-        if (it) 1f else 0.7f
+        if (it && enabled) 1f else if (enabled) 0.7f else 0f
     }
     val backgroundColor by transition.animateColor(label = "background") {
-        if (it) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary
+        if (it && enabled) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary
     }
     IconButton(
         onClick = onClick,
@@ -181,6 +186,7 @@ private fun ScreenModeIconButton(
             .shadow(elevation = elevation)
             .background(backgroundColor)
             .alpha(alpha),
+        enabled = enabled,
     ) {
         Icon(
             imageVector = icon,
@@ -406,6 +412,21 @@ private fun MainScreenHeaderPreview() {
             year = 2022,
             month = 8,
             isLoading = false,
+            modifier = Modifier.fillMaxWidth(),
+            selectedScreenMode = ScreenMode.Default,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MainScreenHeaderPreview_screenIconsDisabled() {
+    HanbitCalendarTheme {
+        MainScreenHeader(
+            year = 2022,
+            month = 8,
+            isLoading = false,
+            screenModeIconsEnabled = false,
             modifier = Modifier.fillMaxWidth(),
             selectedScreenMode = ScreenMode.Default,
         )
