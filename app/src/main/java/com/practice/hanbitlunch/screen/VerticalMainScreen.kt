@@ -82,7 +82,8 @@ fun VerticalMainScreen(
                 mealColumns = mealColumns,
                 modifier = Modifier
                     .animateContentSize()
-                    .weight(40f)
+                    .weight(40f),
+                onDateClick = onDateClick,
             )
         }
     }
