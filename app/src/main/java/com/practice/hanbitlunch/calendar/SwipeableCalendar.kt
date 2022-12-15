@@ -44,7 +44,7 @@ fun SwipeableCalendar(
         YearMonth(it.year, it.month)
     }
 
-    LaunchedEffect(pagerState) {
+    LaunchedEffect(true) {
         snapshotFlow { pagerState.currentPage }.collect { pageIndex ->
             val offset = pageIndex - firstItemIndex
             val (newYear, newMonth) = currentYearMonth.offset(offset)
