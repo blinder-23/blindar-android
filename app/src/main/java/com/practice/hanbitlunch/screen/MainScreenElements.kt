@@ -1,23 +1,10 @@
 package com.practice.hanbitlunch.screen
 
 import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.CubicBezierEasing
-import androidx.compose.animation.core.InfiniteRepeatableSpec
-import androidx.compose.animation.core.animateDp
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -44,6 +31,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -52,13 +40,7 @@ import com.hsk.ktx.date.Date
 import com.practice.hanbitlunch.components.Body
 import com.practice.hanbitlunch.components.SubTitle
 import com.practice.hanbitlunch.components.Title
-import com.practice.hanbitlunch.screen.core.DailyMealScheduleState
-import com.practice.hanbitlunch.screen.core.MealUiState
-import com.practice.hanbitlunch.screen.core.Menu
-import com.practice.hanbitlunch.screen.core.Schedule
-import com.practice.hanbitlunch.screen.core.ScheduleUiState
-import com.practice.hanbitlunch.screen.core.ScreenModeIcon
-import com.practice.hanbitlunch.screen.core.screenModeIcons
+import com.practice.hanbitlunch.screen.core.*
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
 import com.practice.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
@@ -116,6 +98,7 @@ internal fun MainScreenHeader(
                 selectedMode = selectedScreenMode,
                 onIconClick = onScreenModeIconClick,
                 enabled = screenModeIconsEnabled,
+                modifier = Modifier.clearAndSetSemantics { },
             )
         }
     }
