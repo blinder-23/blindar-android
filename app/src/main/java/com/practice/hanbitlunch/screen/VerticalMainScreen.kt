@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
 import com.hsk.ktx.date.Date
@@ -33,7 +34,6 @@ import com.practice.preferences.ScreenMode
 fun VerticalMainScreen(
     modifier: Modifier = Modifier,
     uiState: MainUiState,
-    onRefresh: () -> Unit,
     onScreenModeChange: (ScreenMode) -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
@@ -47,8 +47,6 @@ fun VerticalMainScreen(
         MainScreenHeader(
             year = uiState.year,
             month = uiState.month,
-            isLoading = uiState.isLoading,
-            onRefresh = onRefresh,
             selectedScreenMode = uiState.screenMode,
             onScreenModeIconClick = onScreenModeChange,
             modifier = Modifier
@@ -124,7 +122,6 @@ private fun VerticalMainScreenPreview() {
             VerticalMainScreen(
                 modifier = Modifier.background(MaterialTheme.colors.surface),
                 uiState = uiState,
-                onRefresh = {},
                 onScreenModeChange = { uiState = uiState.copy(screenMode = it) },
                 calendarState = calendarState,
                 mealColumns = 2,
@@ -132,8 +129,7 @@ private fun VerticalMainScreenPreview() {
                 onSwiped = {},
                 getContentDescription = { "" },
                 getClickLabel = { "" },
-                drawUnderlineToScheduleDate = {},
-            )
+            ) {}
         }
     }
 }

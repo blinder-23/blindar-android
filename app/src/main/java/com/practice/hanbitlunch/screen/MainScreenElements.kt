@@ -1,7 +1,9 @@
 package com.practice.hanbitlunch.screen
 
 import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -27,11 +29,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -50,26 +53,11 @@ import kotlinx.collections.immutable.toImmutableList
 internal fun MainScreenHeader(
     year: Int,
     month: Int,
-    isLoading: Boolean,
     selectedScreenMode: ScreenMode,
     modifier: Modifier = Modifier,
     screenModeIconsEnabled: Boolean = true,
-    onRefresh: () -> Unit = {},
     onScreenModeIconClick: (ScreenMode) -> Unit = {},
 ) {
-    val refreshIconAlpha by animateFloatAsState(targetValue = if (isLoading) 0.5f else 1f)
-    val infiniteTransition = rememberInfiniteTransition()
-    val angle by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = if (isLoading) 180f else 0f,
-        animationSpec = InfiniteRepeatableSpec(
-            animation = tween(
-                durationMillis = 750,
-                easing = CubicBezierEasing(0.3f, 0f, 0.7f, 1f),
-            ),
-        )
-    )
-
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -394,9 +382,8 @@ private fun MainScreenHeaderPreview() {
         MainScreenHeader(
             year = 2022,
             month = 8,
-            isLoading = false,
-            modifier = Modifier.fillMaxWidth(),
             selectedScreenMode = ScreenMode.Default,
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }
@@ -408,10 +395,9 @@ private fun MainScreenHeaderPreview_screenIconsDisabled() {
         MainScreenHeader(
             year = 2022,
             month = 8,
-            isLoading = false,
-            screenModeIconsEnabled = false,
-            modifier = Modifier.fillMaxWidth(),
             selectedScreenMode = ScreenMode.Default,
+            modifier = Modifier.fillMaxWidth(),
+            screenModeIconsEnabled = false,
         )
     }
 }

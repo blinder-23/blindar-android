@@ -27,7 +27,6 @@ import com.practice.preferences.ScreenMode
 fun HorizontalMainScreen(
     modifier: Modifier = Modifier,
     uiState: MainUiState,
-    onRefresh: () -> Unit,
     onScreenModeChange: (ScreenMode) -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
@@ -41,9 +40,7 @@ fun HorizontalMainScreen(
         MainScreenHeader(
             year = uiState.year,
             month = uiState.month,
-            isLoading = uiState.isLoading,
             screenModeIconsEnabled = false,
-            onRefresh = onRefresh,
             selectedScreenMode = uiState.screenMode,
             onScreenModeIconClick = onScreenModeChange,
         )
@@ -102,7 +99,6 @@ private fun HorizontalMainScreenPreview() {
         HorizontalMainScreen(
             modifier = Modifier.background(MaterialTheme.colors.surface),
             uiState = uiState,
-            onRefresh = {},
             onScreenModeChange = {},
             calendarState = calendarState,
             mealColumns = 3,
@@ -110,7 +106,6 @@ private fun HorizontalMainScreenPreview() {
             onSwiped = { },
             getContentDescription = { "" },
             getClickLabel = { "" },
-            drawUnderlineToScheduleDate = {},
-        )
+        ) {}
     }
 }
