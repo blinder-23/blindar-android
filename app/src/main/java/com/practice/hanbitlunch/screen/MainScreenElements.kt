@@ -68,27 +68,20 @@ internal fun MainScreenHeader(
             year = year,
             month = month,
             modifier = Modifier
-                .align(Alignment.CenterStart),
+                .align(Alignment.CenterStart)
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "${year}년 ${month}월"
+                },
         )
-        Column(
-            modifier = Modifier.align(Alignment.BottomEnd),
-            horizontalAlignment = Alignment.End,
-        ) {
-            RefreshIcon(
-                isLoading = isLoading,
-                onRefresh = onRefresh,
-                iconAlpha = { refreshIconAlpha },
-                modifier = Modifier
-                    .rotate(angle),
-            )
-            ScreenModeIconButtons(
-                screenModeIcons = screenModeIcons,
-                selectedMode = selectedScreenMode,
-                onIconClick = onScreenModeIconClick,
-                enabled = screenModeIconsEnabled,
-                modifier = Modifier.clearAndSetSemantics { },
-            )
-        }
+        ScreenModeIconButtons(
+            screenModeIcons = screenModeIcons,
+            selectedMode = selectedScreenMode,
+            onIconClick = onScreenModeIconClick,
+            enabled = screenModeIconsEnabled,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .clearAndSetSemantics { },
+        )
     }
 }
 
