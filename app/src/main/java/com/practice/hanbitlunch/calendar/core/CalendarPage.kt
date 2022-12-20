@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.calendar
+package com.practice.hanbitlunch.calendar.core
 
 import com.hsk.ktx.date.Date
 import com.hsk.ktx.date.DayOfWeek

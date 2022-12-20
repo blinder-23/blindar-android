@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.calendar
+package com.practice.hanbitlunch.calendar.core
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,6 +19,9 @@ fun CalendarState(
     month: Int,
     selectedDate: Date
 ): CalendarState = CalendarStateImpl(year, month, selectedDate)
+
+val CalendarState.yearMonth: YearMonth
+    get() = YearMonth(year, month)
 
 @Composable
 fun rememberCalendarState(): CalendarState {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="hanbit_blue">#FF0B4F82</color>
+    <color name="hanbit_blue_variant">#FF073252</color>
     <color name="hanbit_yellow">#FFFCDD4F</color>
 </resources>

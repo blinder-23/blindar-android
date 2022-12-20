@@ -63,7 +63,7 @@ fun Body(
 }
 
 @Composable
-fun CalendarDateText(
+fun BodySmall(
     text: String,
     modifier: Modifier = Modifier,
     textColor: Color = MaterialTheme.colors.onSurface
@@ -77,7 +77,7 @@ fun CalendarDateText(
 }
 
 @Composable
-fun CalendarDayText(
+fun Caption(
     text: String,
     modifier: Modifier = Modifier,
     textColor: Color = MaterialTheme.colors.onSurface

@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.calendar
+package com.practice.hanbitlunch.calendar.core
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -7,6 +7,9 @@ import com.hsk.ktx.date.Date
 
 val Date.clickLabel: String
     get() = "${month}월 ${dayOfMonth}일"
+
+val Date.yearMonth: YearMonth
+    get() = YearMonth(year, month)
 
 fun DrawScope.drawUnderline(
     color: Color,

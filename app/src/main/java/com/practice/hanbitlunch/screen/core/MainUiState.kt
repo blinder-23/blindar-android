@@ -1,8 +1,10 @@
-package com.practice.hanbitlunch.screen
+package com.practice.hanbitlunch.screen.core
 
 import com.hsk.ktx.date.Date
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.entity.ScheduleEntity
+import com.practice.hanbitlunch.calendar.core.YearMonth
+import com.practice.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -11,10 +13,13 @@ data class MainUiState(
     val year: Int,
     val month: Int,
     val selectedDate: Date,
-    val mealUiState: MealUiState,
-    val scheduleUiState: ScheduleUiState,
-    val isLoading: Boolean = false,
-)
+    val monthlyMealScheduleState: List<DailyMealScheduleState>,
+    val isLoading: Boolean,
+    val screenMode: ScreenMode,
+) {
+    val yearMonth: YearMonth
+        get() = YearMonth(year, month)
+}
 
 /**
  * Ui state of meal

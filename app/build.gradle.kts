@@ -19,7 +19,7 @@ android {
         minSdk = 23
         targetSdk = 33
         versionCode = 1
-        versionName = "1.2.4-beta01"
+        versionName = "1.3.0-beta03"
         signingConfig = signingConfigs.getByName("debug")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -111,7 +111,7 @@ android {
                 arrayOf(
                     "/META-INF/{AL2.0,LGPL2.1}",
                     "META-INF/AL2.0",
-                    "META-INF/LGPL2.1"
+                    "META-INF/LGPL2.1",
                 )
             )
         }
