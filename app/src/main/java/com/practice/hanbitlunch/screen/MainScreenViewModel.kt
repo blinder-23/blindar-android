@@ -10,16 +10,24 @@ import com.example.domain.combine.MealScheduleEntity
 import com.hsk.ktx.date.Date
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.entity.ScheduleEntity
-import com.practice.hanbitlunch.calendar.YearMonth
+import com.practice.hanbitlunch.calendar.core.YearMonth
+import com.practice.hanbitlunch.calendar.core.yearMonth
+import com.practice.hanbitlunch.screen.core.DailyMealScheduleState
+import com.practice.hanbitlunch.screen.core.MainUiState
+import com.practice.hanbitlunch.screen.core.MealUiState
+import com.practice.hanbitlunch.screen.core.ScheduleUiState
+import com.practice.hanbitlunch.screen.core.toMealUiState
+import com.practice.hanbitlunch.screen.core.toSchedule
 import com.practice.preferences.PreferencesRepository
+import com.practice.preferences.ScreenMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,8 +54,8 @@ class MainScreenViewModel @Inject constructor(
 
     private val selectedDateFlow: MutableStateFlow<Date>
 
-    private var cache: MutableMap<YearMonth, MealScheduleEntity>
-    private var job: Job?
+    private val cache: MutableMap<YearMonth, MealScheduleEntity>
+    private var job: Deferred<MealScheduleEntity>?
 
     init {
         val current = Date.now()
@@ -56,8 +64,9 @@ class MainScreenViewModel @Inject constructor(
                 year = current.year,
                 month = current.month,
                 selectedDate = current,
-                mealUiState = MealUiState.EmptyMealState,
-                scheduleUiState = ScheduleUiState.EmptyScheduleState,
+                monthlyMealScheduleState = emptyList(),
+                isLoading = false,
+                screenMode = ScreenMode.Default,
             )
         )
         selectedDateFlow = MutableStateFlow(current)
@@ -72,7 +81,8 @@ class MainScreenViewModel @Inject constructor(
      */
     fun onLaunch() {
         viewModelScope.launch(Dispatchers.IO) {
-            loadMonthlyData(state.selectedDate)
+            val entity = loadMonthlyData(state.yearMonth)
+            updateUiState(entity = entity)
         }
         viewModelScope.launch(Dispatchers.IO) {
             collectPreferences()
@@ -83,21 +93,34 @@ class MainScreenViewModel @Inject constructor(
      * Kotlin Flow의 combine 함수를 본따 작성했다.
      */
     private fun updateUiState(
+        yearMonth: YearMonth = state.yearMonth,
         selectedDate: Date = state.selectedDate,
         entity: MealScheduleEntity? = cache[selectedDate.yearMonth],
-        isLoading: Boolean = false,
+        isLoading: Boolean = state.isLoading,
+        screenMode: ScreenMode = state.screenMode,
     ) {
-        val newMealUiState = entity?.getMeal(selectedDate) ?: state.mealUiState
-        val newScheduleUiState = entity?.getSchedule(selectedDate) ?: state.scheduleUiState
+        val monthlyMealScheduleState = if (entity != null) {
+            parseDailyState(entity)
+        } else {
+            emptyList()
+        }
         synchronized(state) {
             state = state.copy(
+                year = yearMonth.year,
+                month = yearMonth.month,
+                monthlyMealScheduleState = monthlyMealScheduleState,
                 selectedDate = selectedDate,
-                mealUiState = newMealUiState,
-                scheduleUiState = newScheduleUiState,
                 isLoading = isLoading,
+                screenMode = screenMode,
             )
         }
-        entity?.let { updateScheduleDates(it) }
+        entity?.let {
+            updateScheduleDates(it)
+        }
+    }
+
+    fun onScreenModeChange(screenMode: ScreenMode) = viewModelScope.launch {
+        preferencesRepository.updateScreenMode(screenMode)
     }
 
     private fun updateScheduleDates(entity: MealScheduleEntity) {
@@ -107,43 +130,64 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
-        loadMonthlyData(clickedDate)
-        updateUiState(selectedDate = clickedDate)
+        val entity = loadMonthlyData(clickedDate.yearMonth)
+        updateUiState(selectedDate = clickedDate, entity = entity)
     }
 
-    private suspend fun loadMonthlyData(date: Date) {
-        if (cache.containsKey(date.yearMonth)) {
-            return
-        }
-        val (queryYear, queryMonth) = date.yearMonth
-        job?.cancelAndJoin()
-        job = viewModelScope.launch(Dispatchers.IO) {
-            loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).collectLatest {
-                cache[date.yearMonth] = it
-                updateUiState(entity = it)
+    private suspend fun loadMonthlyData(yearMonth: YearMonth): MealScheduleEntity {
+        val (queryYear, queryMonth) = yearMonth
+        return if (cache.containsKey(yearMonth)) {
+            cache[yearMonth]!!
+        } else {
+            loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).first().apply {
+                cache[yearMonth] = this
             }
         }
     }
 
-    fun onSwiped(yearMonth: YearMonth) {
-        val (year, month) = yearMonth
-        state = state.copy(
-            year = year,
-            month = month,
-        )
+    private fun parseDailyState(mealScheduleEntity: MealScheduleEntity): List<DailyMealScheduleState> {
+        val allDates = mutableSetOf<Date>().apply {
+            addAll(mealScheduleEntity.meals.map { Date(it.year, it.month, it.day) })
+            addAll(mealScheduleEntity.schedules.map { Date(it.year, it.month, it.day) })
+        }
+        val newDailyData = allDates.map { date ->
+            val meal = mealScheduleEntity.getMeal(date)
+            val schedule = mealScheduleEntity.getSchedule(date)
+            DailyMealScheduleState(
+                date = date,
+                mealUiState = meal,
+                scheduleUiState = schedule,
+            )
+        }.sorted()
+        return newDailyData
+    }
+
+    fun onSwiped(yearMonth: YearMonth) = viewModelScope.launch {
+        val entity = loadMonthlyData(yearMonth)
+        if (yearMonth != state.yearMonth) {
+            updateUiState(yearMonth = yearMonth, entity = entity)
+        } else {
+            updateUiState(entity = entity)
+        }
     }
 
     private suspend fun collectPreferences() {
         preferencesRepository.userPreferencesFlow.collectLatest {
-            updateUiState(isLoading = (it.runningWorksCount != 0))
+            updateUiState(
+                isLoading = (it.runningWorksCount != 0),
+                screenMode = it.screenMode,
+            )
         }
     }
 
     fun getContentDescription(date: Date): String {
         return if (date == state.selectedDate) {
-            val mealState = state.mealUiState
-            val scheduleUiState = state.scheduleUiState
-            "식단: ${mealState.description}\n학사일정:${scheduleUiState.description}"
+            val dailyState = state.monthlyMealScheduleState.find { it.date == date }
+            if (dailyState != null) {
+                "식단: ${dailyState.mealUiState.description}\n학사일정:${dailyState.scheduleUiState.description}"
+            } else {
+                ""
+            }
         } else {
             ""
         }
@@ -153,9 +197,6 @@ class MainScreenViewModel @Inject constructor(
         if (date == state.selectedDate) "" else "식단 및 학사일정 보기"
 
 }
-
-private val Date.yearMonth: YearMonth
-    get() = YearMonth(year, month)
 
 private fun MealScheduleEntity.getMeal(date: Date): MealUiState {
     return try {

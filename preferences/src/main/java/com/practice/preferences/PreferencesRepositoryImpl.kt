@@ -2,7 +2,13 @@ package com.practice.preferences
 
 import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
+import androidx.datastore.preferences.core.MutablePreferences
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -26,6 +32,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
     private object PreferenceKeys {
         val UI_MODE = stringPreferencesKey("ui-mode")
         val THEME_MODE = stringPreferencesKey("theme-mode")
+        val SCREEN_MODE = stringPreferencesKey("screen-mode")
         val FIRST_EXECUTION = booleanPreferencesKey("first-execution")
         val RUNNING_WORKS_COUNT = intPreferencesKey("running-works-count")
     }
@@ -36,6 +43,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
                 Log.e(TAG, "Error while reading preferences.", exception)
                 emit(emptyPreferences())
             }
+
             else -> throw exception
         }
     }.map { preferences ->
@@ -57,6 +65,12 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
     override suspend fun updateIsFirstExecution(isFirstExecution: Boolean) {
         edit {
             it[PreferenceKeys.FIRST_EXECUTION] = isFirstExecution
+        }
+    }
+
+    override suspend fun updateScreenMode(screenMode: ScreenMode) {
+        edit {
+            it[PreferenceKeys.SCREEN_MODE] = screenMode.name
         }
     }
 
@@ -108,9 +122,12 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         val themeMode = ThemeMode.valueOf(
             value = preferences[PreferenceKeys.THEME_MODE] ?: ThemeMode.SystemDefault.name
         )
+        val screenMode = ScreenMode.valueOf(
+            value = preferences[PreferenceKeys.SCREEN_MODE] ?: ScreenMode.Default.name
+        )
         val isFirstExecution = preferences[PreferenceKeys.FIRST_EXECUTION] ?: true
         val runningWorksCount = preferences[PreferenceKeys.RUNNING_WORKS_COUNT] ?: 0
-        return UserPreferences(uiMode, themeMode, isFirstExecution, runningWorksCount)
+        return UserPreferences(uiMode, themeMode, screenMode, isFirstExecution, runningWorksCount)
     }
 
 }

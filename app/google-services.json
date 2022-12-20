@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "1051681123412",
+    "project_id": "hanbit-calendar",
+    "storage_bucket": "hanbit-calendar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1051681123412:android:7136338cb16414f4a591c1",
+        "android_client_info": {
+          "package_name": "com.practice.hanbitlunch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1051681123412-71bmrvn7homom9le634bm2mq4pfa9lje.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7qA5acpNH44ftiCINSK2OItYNavgIyfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1051681123412-71bmrvn7homom9le634bm2mq4pfa9lje.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1051681123412:android:c93085bc91e91fbda591c1",
+        "android_client_info": {
+          "package_name": "com.practice.hanbitlunch.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1051681123412-71bmrvn7homom9le634bm2mq4pfa9lje.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7qA5acpNH44ftiCINSK2OItYNavgIyfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1051681123412-71bmrvn7homom9le634bm2mq4pfa9lje.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
