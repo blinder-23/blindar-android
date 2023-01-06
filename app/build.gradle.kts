@@ -144,7 +144,6 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
     implementation("androidx.compose.material:material")
-    androidTestImplementation(libs.bundles.compose.ui.test)
 
     // AndroidX WorkManager
     implementation(libs.androidx.work.runtime.ktx)
