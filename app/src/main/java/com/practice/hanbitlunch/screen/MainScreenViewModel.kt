@@ -55,7 +55,6 @@ class MainScreenViewModel @Inject constructor(
     private val selectedDateFlow: MutableStateFlow<Date>
 
     private val cache: MutableMap<YearMonth, MealScheduleEntity>
-    private var job: Deferred<MealScheduleEntity>?
 
     init {
         val current = Date.now()
@@ -72,7 +71,6 @@ class MainScreenViewModel @Inject constructor(
         selectedDateFlow = MutableStateFlow(current)
         _scheduleDates = MutableStateFlow(emptySet())
         cache = mutableMapOf()
-        job = null
     }
 
     /**
