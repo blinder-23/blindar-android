@@ -3,17 +3,15 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
-        maven { url = java.net.URI.create("https://jitpack.io") }
     }
 }
 dependencyResolutionManagement {
     repositories {
-        google()
-        mavenCentral()
+        mavenLocal()
     }
     versionCatalogs {
         create("libs") {
-            from(files("../gradle-build-scripts/libs.versions.toml"))
+            from("kr.hsk:gradle-version-catalog:1.0.1")
         }
     }
 }
