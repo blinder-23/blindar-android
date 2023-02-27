@@ -163,7 +163,8 @@ class MainScreenViewModel @Inject constructor(
     fun onSwiped(yearMonth: YearMonth) = viewModelScope.launch {
         val entity = loadMonthlyData(yearMonth)
         if (yearMonth != state.yearMonth) {
-            updateUiState(yearMonth = yearMonth, entity = entity)
+            val firstWeekday = yearMonth.getFirstWeekday()
+            updateUiState(yearMonth = yearMonth, selectedDate = firstWeekday, entity = entity)
         } else {
             updateUiState(entity = entity)
         }

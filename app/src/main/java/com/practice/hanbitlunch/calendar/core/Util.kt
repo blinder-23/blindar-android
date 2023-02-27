@@ -3,6 +3,7 @@ package com.practice.hanbitlunch.calendar.core
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import com.example.domain.date.isHoliday
 import com.hsk.ktx.date.Date
 
 val Date.clickLabel: String
@@ -10,6 +11,17 @@ val Date.clickLabel: String
 
 val Date.yearMonth: YearMonth
     get() = YearMonth(year, month)
+
+fun YearMonth.getFirstWeekday(): Date {
+    var date = Date(year, month, 1)
+    while (month == date.month) {
+        if (!date.isHoliday()) {
+            return date
+        }
+        date = date.plusDays(1)
+    }
+    throw IllegalStateException("$year-$month doesn't have any weekday.")
+}
 
 fun DrawScope.drawUnderline(
     color: Color,
