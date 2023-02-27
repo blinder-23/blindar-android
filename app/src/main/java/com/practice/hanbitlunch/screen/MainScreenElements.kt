@@ -6,7 +6,13 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -43,7 +49,13 @@ import com.hsk.ktx.date.Date
 import com.practice.hanbitlunch.components.Body
 import com.practice.hanbitlunch.components.SubTitle
 import com.practice.hanbitlunch.components.Title
-import com.practice.hanbitlunch.screen.core.*
+import com.practice.hanbitlunch.screen.core.DailyMealScheduleState
+import com.practice.hanbitlunch.screen.core.MealUiState
+import com.practice.hanbitlunch.screen.core.Menu
+import com.practice.hanbitlunch.screen.core.Schedule
+import com.practice.hanbitlunch.screen.core.ScheduleUiState
+import com.practice.hanbitlunch.screen.core.ScreenModeIcon
+import com.practice.hanbitlunch.screen.core.screenModeIcons
 import com.practice.hanbitlunch.theme.HanbitCalendarTheme
 import com.practice.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
@@ -279,8 +291,10 @@ internal fun DailyMealSchedules(
     onDateClick: (Date) -> Unit = {},
 ) {
     LaunchedEffect(items, selectedDate) {
-        val index = items.indexOfFirst { it.date == selectedDate }.coerceAtLeast(0)
-        lazyListState.animateScrollToItem(index)
+        val index = items.indexOfFirst { it.date == selectedDate }
+        if (index != -1) {
+            lazyListState.animateScrollToItem(index)
+        }
     }
 
     LazyColumn(
