@@ -7,12 +7,8 @@ pluginManagement {
 }
 dependencyResolutionManagement {
     repositories {
-        mavenLocal()
-    }
-    versionCatalogs {
-        create("libs") {
-            from("kr.hsk:catalog:1.0.1")
-        }
+        google()
+        mavenCentral()
     }
 }
 rootProject.name = "Hanbit lunch"
