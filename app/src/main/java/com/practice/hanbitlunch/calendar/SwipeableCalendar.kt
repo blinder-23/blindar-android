@@ -1,5 +1,6 @@
 package com.practice.hanbitlunch.calendar
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -14,12 +15,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.hsk.ktx.date.Date
-import com.practice.hanbitlunch.calendar.core.CalendarPage
-import com.practice.hanbitlunch.calendar.core.CalendarState
-import com.practice.hanbitlunch.calendar.core.YearMonth
-import com.practice.hanbitlunch.calendar.core.offset
-import com.practice.hanbitlunch.calendar.core.rememberCalendarState
-import com.practice.hanbitlunch.calendar.core.yearMonth
+import com.practice.hanbitlunch.calendar.core.*
 import java.util.*
 
 @OptIn(ExperimentalPagerApi::class)
@@ -35,29 +31,28 @@ fun SwipeableCalendar(
     dateArrangement: Arrangement.Vertical = Arrangement.Center,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
 ) {
+    val currentYearMonth = YearMonth.now()
     // shows from a year ago to a year after
     val itemCount = 13
-    val firstItemIndex = itemCount / 2
-    val pagerState = rememberPagerState(initialPage = firstItemIndex)
+    val middlePage = itemCount / 2
 
-    val currentYearMonth = Date.now().let {
-        YearMonth(it.year, it.month)
-    }
+    val monthDiff = calendarState.yearMonth.monthDiff(currentYearMonth)
+    val initialPage = (middlePage + monthDiff).coerceIn(0, itemCount - 1)
+    val pagerState = rememberPagerState(initialPage = initialPage)
 
+    // Tracks swipe gesture
     LaunchedEffect(true) {
         snapshotFlow { pagerState.currentPage }.collect { pageIndex ->
-            val offset = pageIndex - firstItemIndex
+            val offset = pageIndex - middlePage
             val (newYear, newMonth) = currentYearMonth.offset(offset)
             onSwiped(YearMonth(newYear, newMonth))
         }
     }
+    // Why snapshotFlow doesn't work with selectedDate?
     LaunchedEffect(calendarState.selectedDate) {
-        val offset = pagerState.currentPage - firstItemIndex
-        val shownYearMonth = currentYearMonth.offset(offset)
-        if (calendarState.selectedDate.yearMonth != shownYearMonth) {
-            val pageOffset = if (calendarState.selectedDate.yearMonth > shownYearMonth) 1 else -1
-            pagerState.animateScrollToPage(pagerState.currentPage + pageOffset)
-        }
+        val newPage = middlePage + calendarState.selectedDate.yearMonth.monthDiff(currentYearMonth)
+        Log.d("SwipeableCalendar", "Scroll from ${pagerState.currentPage} to $newPage")
+        pagerState.animateScrollToPage(newPage)
     }
 
     HorizontalPager(
@@ -68,7 +63,7 @@ fun SwipeableCalendar(
             .fillMaxWidth(),
         key = { currentYearMonth.offset(it).toString() },
     ) { index ->
-        val shownYearMonth = currentYearMonth.offset(index - firstItemIndex)
+        val shownYearMonth = currentYearMonth.offset(index - middlePage)
         val calendarPage = CalendarPage.getInstance(shownYearMonth)
         Calendar(
             calendarPage = calendarPage,
