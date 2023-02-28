@@ -11,7 +11,7 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from("kr.hsk:gradle-version-catalog:1.0.1")
+            from("kr.hsk:catalog:1.0.1")
         }
     }
 }
