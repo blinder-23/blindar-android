@@ -3,7 +3,6 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
     }
 }
 dependencyResolutionManagement {
@@ -13,10 +12,10 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Hanbit lunch"
-include ':app'
-include ':database'
-include ':preferences'
-include ':domain'
-include ':benchmark'
-include ':server'
-include ':work'
+include(":app")
+include(":database")
+include(":preferences")
+include(":domain")
+include(":benchmark")
+include(":server")
+include(":work")

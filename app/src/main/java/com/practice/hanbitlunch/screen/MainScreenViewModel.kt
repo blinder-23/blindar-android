@@ -11,18 +11,13 @@ import com.hsk.ktx.date.Date
 import com.practice.database.meal.entity.MealEntity
 import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.core.YearMonth
+import com.practice.hanbitlunch.calendar.core.getFirstWeekday
 import com.practice.hanbitlunch.calendar.core.yearMonth
-import com.practice.hanbitlunch.screen.core.DailyMealScheduleState
-import com.practice.hanbitlunch.screen.core.MainUiState
-import com.practice.hanbitlunch.screen.core.MealUiState
-import com.practice.hanbitlunch.screen.core.ScheduleUiState
-import com.practice.hanbitlunch.screen.core.toMealUiState
-import com.practice.hanbitlunch.screen.core.toSchedule
+import com.practice.hanbitlunch.screen.core.*
 import com.practice.preferences.PreferencesRepository
 import com.practice.preferences.ScreenMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -54,8 +49,8 @@ class MainScreenViewModel @Inject constructor(
 
     private val selectedDateFlow: MutableStateFlow<Date>
 
+    // TODO: domain 또는 data로 옮기기?
     private val cache: MutableMap<YearMonth, MealScheduleEntity>
-    private var job: Deferred<MealScheduleEntity>?
 
     init {
         val current = Date.now()
@@ -72,7 +67,6 @@ class MainScreenViewModel @Inject constructor(
         selectedDateFlow = MutableStateFlow(current)
         _scheduleDates = MutableStateFlow(emptySet())
         cache = mutableMapOf()
-        job = null
     }
 
     /**
@@ -131,7 +125,11 @@ class MainScreenViewModel @Inject constructor(
 
     fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
         val entity = loadMonthlyData(clickedDate.yearMonth)
-        updateUiState(selectedDate = clickedDate, entity = entity)
+        updateUiState(
+            yearMonth = clickedDate.yearMonth,
+            selectedDate = clickedDate,
+            entity = entity
+        )
     }
 
     private suspend fun loadMonthlyData(yearMonth: YearMonth): MealScheduleEntity {
@@ -165,7 +163,8 @@ class MainScreenViewModel @Inject constructor(
     fun onSwiped(yearMonth: YearMonth) = viewModelScope.launch {
         val entity = loadMonthlyData(yearMonth)
         if (yearMonth != state.yearMonth) {
-            updateUiState(yearMonth = yearMonth, entity = entity)
+            val firstWeekday = yearMonth.getFirstWeekday()
+            updateUiState(yearMonth = yearMonth, selectedDate = firstWeekday, entity = entity)
         } else {
             updateUiState(entity = entity)
         }

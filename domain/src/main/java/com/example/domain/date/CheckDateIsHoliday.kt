@@ -3,7 +3,7 @@ package com.example.domain.date
 import com.hsk.ktx.date.Date
 import com.hsk.ktx.date.MonthDay
 
-internal fun Date.isHoliday(): Boolean {
+fun Date.isHoliday(): Boolean {
     if (this == Date.MAX || this == Date.MIN) return false
     val monthDay = MonthDay(month, dayOfMonth)
     // 2월 30일이 에러를 일으킨다.
