@@ -46,8 +46,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private suspend fun enqueuePeriodicWork() {
-        setPeriodicWork()
-        preferencesRepository.updateIsFirstExecution(false)
+        if (preferencesRepository.fetchInitialPreferences().isFirstExecution) {
+            setPeriodicWork()
+            preferencesRepository.updateIsFirstExecution(false)
+        }
     }
 
     private fun setPeriodicWork() {
