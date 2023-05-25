@@ -11,7 +11,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Hanbit lunch"
+rootProject.name = "blindar"
 include(":app")
 include(":database")
 include(":preferences")

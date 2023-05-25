@@ -41,7 +41,7 @@ import com.practice.hanbitlunch.calendar.core.CalendarPage
 import com.practice.hanbitlunch.calendar.core.Week
 import com.practice.hanbitlunch.calendar.core.clickLabel
 import com.practice.hanbitlunch.calendar.core.drawUnderline
-import com.practice.hanbitlunch.theme.HanbitCalendarTheme
+import com.practice.hanbitlunch.theme.BlindarTheme
 
 
 internal fun calendarDays(): List<DayOfWeek> = DayOfWeek.values().toList()
@@ -262,7 +262,7 @@ private fun Date.color(currentMonth: Int = this.month) = when (calculateDayType(
 @Preview(showBackground = true)
 @Composable
 private fun CalendarDayPreview() {
-    HanbitCalendarTheme(darkTheme = true) {
+    BlindarTheme(darkTheme = true) {
         CalendarDay(
             day = DayOfWeek.MONDAY,
             modifier = Modifier
@@ -275,7 +275,7 @@ private fun CalendarDayPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun CalendarDatePreview() {
-    HanbitCalendarTheme {
+    BlindarTheme {
         CalendarDate(
             date = Date(2022, 8, 12),
             onClick = {},
@@ -289,7 +289,7 @@ private fun CalendarDatePreview() {
 @Preview(showBackground = true)
 @Composable
 private fun CalendarDatePreview_Selected() {
-    HanbitCalendarTheme {
+    BlindarTheme {
         CalendarDate(
             date = Date(2022, 8, 17),
             onClick = {},
@@ -304,7 +304,7 @@ private fun CalendarDatePreview_Selected() {
 @Preview(showBackground = true, widthDp = 48, heightDp = 48)
 @Composable
 private fun UnderlinedCalendarDatePreview() {
-    HanbitCalendarTheme {
+    BlindarTheme {
         val lineColor = MaterialTheme.colors.onSurface
         CalendarDate(
             date = Date(2022, 11, 14),

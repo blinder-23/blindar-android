@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">한빛 캘린더</string>
+    <string name="app_name">블린더</string>
+    <string name="debug_app_name">블린더 debug</string>
 </resources>

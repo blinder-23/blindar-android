@@ -20,7 +20,7 @@ import com.practice.hanbitlunch.screen.core.DailyMealScheduleState
 import com.practice.hanbitlunch.screen.core.MainUiState
 import com.practice.hanbitlunch.screen.core.MealUiState
 import com.practice.hanbitlunch.screen.core.ScheduleUiState
-import com.practice.hanbitlunch.theme.HanbitCalendarTheme
+import com.practice.hanbitlunch.theme.BlindarTheme
 import com.practice.preferences.ScreenMode
 
 @Composable
@@ -95,7 +95,7 @@ private fun HorizontalMainScreenPreview() {
         month = month,
         selectedDate = selectedDate,
     )
-    HanbitCalendarTheme {
+    BlindarTheme {
         HorizontalMainScreen(
             modifier = Modifier.background(MaterialTheme.colors.surface),
             uiState = uiState,
