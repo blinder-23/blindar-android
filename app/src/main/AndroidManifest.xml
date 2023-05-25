@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.HanbitCalendar.SplashScreen">
+        android:theme="@style/Theme.Blindar.SplashScreen">
         <profileable
             android:shell="true"
             tools:targetApi="29" />
@@ -20,7 +20,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.HanbitCalendar">
+            android:theme="@style/Theme.Blindar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -9,11 +9,11 @@ import androidx.compose.ui.res.colorResource
 import com.practice.hanbitlunch.R
 
 private val HanbitBlue: Color
-    @Composable get() = colorResource(R.color.hanbit_blue)
+    @Composable get() = colorResource(R.color.blindar_blue)
 private val HanbitBlueVariant: Color
-    @Composable get() = colorResource(R.color.hanbit_blue_variant)
+    @Composable get() = colorResource(R.color.blindar_blue_variant)
 private val HanbitYellow: Color
-    @Composable get() = colorResource(R.color.hanbit_yellow)
+    @Composable get() = colorResource(R.color.blindar_yellow)
 
 val LightColorPalette: Colors
     @Composable get() = lightColors(
