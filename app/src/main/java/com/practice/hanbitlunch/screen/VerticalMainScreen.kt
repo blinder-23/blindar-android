@@ -27,7 +27,7 @@ import com.practice.hanbitlunch.screen.core.DailyMealScheduleState
 import com.practice.hanbitlunch.screen.core.MainUiState
 import com.practice.hanbitlunch.screen.core.MealUiState
 import com.practice.hanbitlunch.screen.core.ScheduleUiState
-import com.practice.hanbitlunch.theme.HanbitCalendarTheme
+import com.practice.hanbitlunch.theme.BlindarTheme
 import com.practice.preferences.ScreenMode
 
 @Composable
@@ -91,7 +91,7 @@ fun VerticalMainScreen(
 @Preview(name = "Foldable", device = "spec:width=673.5dp,height=841dp,dpi=480")
 @Composable
 private fun VerticalMainScreenPreview() {
-    HanbitCalendarTheme {
+    BlindarTheme {
         val year = 2022
         val month = 10
         var selectedDate by remember { mutableStateOf(Date(2022, 10, 11)) }
@@ -119,7 +119,7 @@ private fun VerticalMainScreenPreview() {
             month = month,
             selectedDate = selectedDate,
         )
-        HanbitCalendarTheme {
+        BlindarTheme {
             VerticalMainScreen(
                 modifier = Modifier.background(MaterialTheme.colors.surface),
                 uiState = uiState,

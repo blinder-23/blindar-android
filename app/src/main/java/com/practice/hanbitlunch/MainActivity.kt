@@ -15,7 +15,7 @@ import com.example.work.setOneTimeFetchScheduleWork
 import com.example.work.setPeriodicFetchMealWork
 import com.example.work.setPeriodicFetchScheduleWork
 import com.practice.hanbitlunch.screen.MainScreen
-import com.practice.hanbitlunch.theme.HanbitCalendarTheme
+import com.practice.hanbitlunch.theme.BlindarTheme
 import com.practice.preferences.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         setContent {
             val windowSizeClass = calculateWindowSizeClass(activity = this)
-            HanbitCalendarTheme {
+            BlindarTheme {
                 MainScreen(
                     windowSize = windowSizeClass,
                     viewModel = hiltViewModel(),

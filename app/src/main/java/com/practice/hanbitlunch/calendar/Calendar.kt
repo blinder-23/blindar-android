@@ -20,7 +20,7 @@ import com.practice.hanbitlunch.calendar.core.CalendarState
 import com.practice.hanbitlunch.calendar.core.TextsInsideDate
 import com.practice.hanbitlunch.calendar.core.rememberCalendarState
 import com.practice.hanbitlunch.calendar.core.yearMonth
-import com.practice.hanbitlunch.theme.HanbitCalendarTheme
+import com.practice.hanbitlunch.theme.BlindarTheme
 
 internal val calendarDateShape = CircleShape.copy(all = CornerSize(5.dp))
 internal val largeCalendarDateShape = CircleShape.copy(all = CornerSize(15.dp))
@@ -99,7 +99,7 @@ private fun CalendarPreview() {
         month = 8,
         selectedDate = Date(2022, 8, 12)
     )
-    HanbitCalendarTheme(darkTheme = true) {
+    BlindarTheme(darkTheme = true) {
         Column {
             Calendar(
                 calendarState = calendarState,
@@ -118,7 +118,7 @@ private fun LargeCalendarPreview() {
         month = 8,
         selectedDate = date
     )
-    HanbitCalendarTheme(darkTheme = true) {
+    BlindarTheme(darkTheme = true) {
         LargeCalendar(calendarState = calendarState) {
             if (it == date) {
                 TextsInsideDate(

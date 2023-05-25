@@ -56,7 +56,7 @@ import com.practice.hanbitlunch.screen.core.Schedule
 import com.practice.hanbitlunch.screen.core.ScheduleUiState
 import com.practice.hanbitlunch.screen.core.ScreenModeIcon
 import com.practice.hanbitlunch.screen.core.screenModeIcons
-import com.practice.hanbitlunch.theme.HanbitCalendarTheme
+import com.practice.hanbitlunch.theme.BlindarTheme
 import com.practice.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -385,7 +385,7 @@ internal fun MainScreenContent(
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenHeaderPreview() {
-    HanbitCalendarTheme {
+    BlindarTheme {
         MainScreenHeader(
             year = 2022,
             month = 8,
@@ -398,7 +398,7 @@ private fun MainScreenHeaderPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenHeaderPreview_screenIconsDisabled() {
-    HanbitCalendarTheme {
+    BlindarTheme {
         MainScreenHeader(
             year = 2022,
             month = 8,
@@ -414,7 +414,7 @@ private fun MainScreenHeaderPreview_screenIconsDisabled() {
 private fun ScreenModeIconButtonPreview() {
     val (_, icon) = screenModeIcons.first()
     var isSelected by remember { mutableStateOf(false) }
-    HanbitCalendarTheme {
+    BlindarTheme {
         ScreenModeIconButton(
             icon = icon,
             onClick = { isSelected = !isSelected },
@@ -427,7 +427,7 @@ private fun ScreenModeIconButtonPreview() {
 @Composable
 private fun ScreenModeIconButtonsPreview() {
     var selectedMode by remember { mutableStateOf(ScreenMode.Default) }
-    HanbitCalendarTheme {
+    BlindarTheme {
         ScreenModeIconButtons(
             screenModeIcons = screenModeIcons,
             onIconClick = { selectedMode = it },
@@ -448,7 +448,7 @@ val previewSchedules = (0..6).map {
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenContentsPreview() {
-    HanbitCalendarTheme {
+    BlindarTheme {
         MainScreenContents(
             modifier = Modifier.height(320.dp),
             mealUiState = MealUiState(previewMenus),
@@ -461,7 +461,7 @@ private fun MainScreenContentsPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun MealContentPreview() {
-    HanbitCalendarTheme {
+    BlindarTheme {
         MealContent(
             mealUiState = MealUiState(previewMenus),
             columns = 2,
@@ -472,7 +472,7 @@ private fun MealContentPreview() {
 @Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
 @Composable
 private fun ListScreenItemPreview() {
-    HanbitCalendarTheme {
+    BlindarTheme {
         DailyMealSchedule(
             DailyMealScheduleState(
                 date = Date(2022, 12, 13),

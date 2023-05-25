@@ -19,7 +19,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hsk.ktx.date.Date
 import com.practice.hanbitlunch.calendar.core.drawUnderline
 import com.practice.hanbitlunch.calendar.core.rememberCalendarState
-import com.practice.hanbitlunch.theme.HanbitCalendarTheme
+import com.practice.hanbitlunch.theme.BlindarTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -133,7 +133,7 @@ fun FloatingRefreshButton(
 private fun FloatingRefreshButtonPreview() {
     var isLoading by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-    HanbitCalendarTheme {
+    BlindarTheme {
         FloatingRefreshButton(
             isLoading = isLoading,
             onRefresh = {
