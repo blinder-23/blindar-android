@@ -7,7 +7,7 @@ import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
-class HanbitCalendarApplication : Application(), Configuration.Provider {
+class BlindarApplication : Application(), Configuration.Provider {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
@@ -16,9 +16,4 @@ class HanbitCalendarApplication : Application(), Configuration.Provider {
         return Configuration.Builder().setWorkerFactory(workerFactory).build()
     }
 
-    override fun onCreate() {
-        super.onCreate()
-
-
-    }
 }
