@@ -8,13 +8,12 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.work.WorkManager
 import com.example.work.setOneTimeFetchMealWork
 import com.example.work.setOneTimeFetchScheduleWork
 import com.example.work.setPeriodicFetchMealWork
 import com.example.work.setPeriodicFetchScheduleWork
-import com.practice.hanbitlunch.screen.MainScreen
+import com.practice.hanbitlunch.screen.navigation.BlindarNavHost
 import com.practice.hanbitlunch.theme.BlindarTheme
 import com.practice.preferences.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,12 +33,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             val windowSizeClass = calculateWindowSizeClass(activity = this)
             BlindarTheme {
-                MainScreen(
-                    windowSize = windowSizeClass,
-                    viewModel = hiltViewModel(),
+                BlindarNavHost(
+                    windowSizeClass = windowSizeClass,
+                    onMainScreenLaunch = ::enqueuePeriodicWork,
+                    onMainScreenRefresh = ::setOneTimeWork,
                     modifier = Modifier.fillMaxSize(),
-                    onLaunch = ::enqueuePeriodicWork,
-                    onRefresh = ::setOneTimeWork,
                 )
             }
         }
