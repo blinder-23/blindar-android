@@ -66,6 +66,7 @@ androidx-hilt-navigation-compose = 'androidx.hilt:hilt-navigation-compose:1.0.0'
 androidx-lifecycle-viewmodel-compose = 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1'
 androidx-paging-compose = 'androidx.paging:paging-compose:1.0.0-alpha20'
 androidx-navigation-compose = { module = 'androidx.navigation:navigation-compose', version.ref = 'navigation' }
+androidx-constraintlayout-compose = 'androidx.constraintlayout:constraintlayout-compose:1.0.1'
 
 androidx-compose-bom = { module = 'androidx.compose:compose-bom', version.ref = 'compose-bom' }
 androidx-compose-foundation = { module = 'androidx.compose.foundation:foundation' }
@@ -135,6 +136,7 @@ compose = [
     'androidx-lifecycle-viewmodel-compose',
     'androidx-paging-compose',
     'androidx-navigation-compose',
+    'androidx-constraintlayout-compose'
 ]
 coroutines = ['kotlinx-coroutines-core', 'kotlinx-coroutines-android']
 jetpack = ['androidx-core-splashscreen', 'androidx-datastore-preferences', 'androidx-profileinstaller', 'androidx-startup-runtime']
