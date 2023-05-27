@@ -16,8 +16,8 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.practice.hanbitlunch.screen.MainScreen
-import com.practice.hanbitlunch.screen.MainScreenViewModel
+import com.practice.hanbitlunch.screen.main.MainScreen
+import com.practice.hanbitlunch.screen.main.MainScreenViewModel
 import com.practice.hanbitlunch.screen.login.LoginScreen
 import com.practice.hanbitlunch.screen.onboarding.OnboardingScreen
 import com.practice.hanbitlunch.screen.registerform.RegisterFormScreen
