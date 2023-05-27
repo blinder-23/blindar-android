@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen
+package com.practice.hanbitlunch.screen.main
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -13,7 +13,12 @@ import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.core.YearMonth
 import com.practice.hanbitlunch.calendar.core.getFirstWeekday
 import com.practice.hanbitlunch.calendar.core.yearMonth
-import com.practice.hanbitlunch.screen.core.*
+import com.practice.hanbitlunch.screen.main.state.DailyMealScheduleState
+import com.practice.hanbitlunch.screen.main.state.MainUiState
+import com.practice.hanbitlunch.screen.main.state.MealUiState
+import com.practice.hanbitlunch.screen.main.state.ScheduleUiState
+import com.practice.hanbitlunch.screen.main.state.toMealUiState
+import com.practice.hanbitlunch.screen.main.state.toSchedule
 import com.practice.preferences.PreferencesRepository
 import com.practice.preferences.ScreenMode
 import dagger.hilt.android.lifecycle.HiltViewModel

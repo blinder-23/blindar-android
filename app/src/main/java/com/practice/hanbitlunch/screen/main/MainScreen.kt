@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen
+package com.practice.hanbitlunch.screen.main
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
