@@ -3,11 +3,15 @@ package com.practice.hanbitlunch.screen.navigation
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -21,13 +25,6 @@ import com.practice.hanbitlunch.screen.selectschool.SelectSchoolScreen
 import com.practice.hanbitlunch.screen.splash.SplashScreen
 import kotlinx.coroutines.delay
 
-private const val SPLASH = "splash"
-private const val ONBOARDING = "onboarding"
-private const val REGISTER_FORM = "register_form"
-private const val SELECT_SCHOOL = "select_school"
-private const val LOGIN = "login"
-private const val MAIN = "main_screen"
-
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun BlindarNavHost(
@@ -38,26 +35,36 @@ fun BlindarNavHost(
     navController: NavHostController = rememberAnimatedNavController(),
 ) {
     val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
+    val tweenSpec = tween<IntOffset>(
+        durationMillis = 200,
+    )
     AnimatedNavHost(
         navController = navController,
         startDestination = SPLASH,
         modifier = modifier,
         enterTransition = {
-            // TODO: destination에 따라 fadeIn과 slideIn 구별해서 적용
-            slideIntoContainer(
-                towards = AnimatedContentScope.SlideDirection.Left,
-                animationSpec = tween(
-                    durationMillis = 200,
-                ),
-            )
+            if ((initialState.route == SPLASH && targetState.route == ONBOARDING) ||
+                targetState.route == MAIN
+            ) {
+                fadeIn()
+            } else {
+                val direction = animationDirection(initialState, targetState)
+                slideIntoContainer(
+                    towards = direction,
+                    animationSpec = tweenSpec,
+                )
+            }
         },
         exitTransition = {
-            slideOutOfContainer(
-                towards = AnimatedContentScope.SlideDirection.Right,
-                animationSpec = tween(
-                    durationMillis = 200,
-                ),
-            )
+            if (initialState.route == SPLASH || targetState.route == MAIN) {
+                fadeOut()
+            } else {
+                val direction = animationDirection(initialState, targetState)
+                slideOutOfContainer(
+                    towards = direction,
+                    animationSpec = tweenSpec,
+                )
+            }
         },
     ) {
         composable(SPLASH) {
@@ -128,3 +135,31 @@ fun BlindarNavHost(
         }
     }
 }
+
+private const val SPLASH = "splash"
+private const val ONBOARDING = "onboarding"
+private const val REGISTER_FORM = "register_form"
+private const val SELECT_SCHOOL = "select_school"
+private const val LOGIN = "login"
+private const val MAIN = "main_screen"
+
+private val NavBackStackEntry.route: String?
+    get() = this.destination.route
+
+private fun priority(state: NavBackStackEntry) = when (state.route) {
+    SPLASH -> 0
+    ONBOARDING -> 1
+    REGISTER_FORM -> 2
+    SELECT_SCHOOL -> 3
+    LOGIN -> 4
+    MAIN -> 5
+    else -> 6
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+private fun animationDirection(initialState: NavBackStackEntry, targetState: NavBackStackEntry) =
+    if (priority(initialState) > priority(targetState)) {
+        AnimatedContentScope.SlideDirection.Right
+    } else {
+        AnimatedContentScope.SlideDirection.Left
+    }
