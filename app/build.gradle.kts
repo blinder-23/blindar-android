@@ -152,7 +152,6 @@ dependencies {
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
-    implementation("androidx.compose.material:material")
 
     // AndroidX WorkManager
     implementation(libs.androidx.work.runtime.ktx)
