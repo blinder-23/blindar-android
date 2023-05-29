@@ -6,7 +6,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -121,7 +121,7 @@ private fun VerticalMainScreenPreview() {
         )
         BlindarTheme {
             VerticalMainScreen(
-                modifier = Modifier.background(MaterialTheme.colors.surface),
+                modifier = Modifier.background(MaterialTheme.colorScheme.surface),
                 uiState = uiState,
                 onScreenModeChange = { uiState = uiState.copy(screenMode = it) },
                 calendarState = calendarState,

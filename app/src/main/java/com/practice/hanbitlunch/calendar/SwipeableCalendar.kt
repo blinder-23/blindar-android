@@ -2,23 +2,26 @@ package com.practice.hanbitlunch.calendar
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.hsk.ktx.date.Date
-import com.practice.hanbitlunch.calendar.core.*
-import java.util.*
+import com.practice.hanbitlunch.calendar.core.CalendarPage
+import com.practice.hanbitlunch.calendar.core.CalendarState
+import com.practice.hanbitlunch.calendar.core.YearMonth
+import com.practice.hanbitlunch.calendar.core.offset
+import com.practice.hanbitlunch.calendar.core.rememberCalendarState
+import com.practice.hanbitlunch.calendar.core.yearMonth
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SwipeableCalendar(
     modifier: Modifier = Modifier,
@@ -59,7 +62,7 @@ fun SwipeableCalendar(
         count = itemCount,
         state = pagerState,
         modifier = modifier
-            .background(MaterialTheme.colors.surface)
+            .background(MaterialTheme.colorScheme.surface)
             .fillMaxWidth(),
         key = { currentYearMonth.offset(it).toString() },
     ) { index ->

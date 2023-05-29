@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
@@ -40,7 +40,7 @@ fun Calendar(
 ) {
     Column(
         modifier = modifier
-            .background(MaterialTheme.colors.surface)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         CalendarDays(
             days = calendarDays(),

@@ -1,14 +1,15 @@
 package com.practice.hanbitlunch.screen.registerform
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.practice.hanbitlunch.screen.LightAndDarkPreview
 import com.practice.hanbitlunch.theme.BlindarTheme
+import com.practice.hanbitlunch.theme.NanumSquareRound
 
 @Composable
 fun RegisterFormScreen(
@@ -25,6 +26,7 @@ fun RegisterFormScreen(
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             },
+            fontFamily = NanumSquareRound,
         )
         Button(
             onClick = onNextButtonClick,
@@ -34,7 +36,10 @@ fun RegisterFormScreen(
                 end.linkTo(parent.end)
             }
         ) {
-            Text(text = "다음")
+            Text(
+                text = "다음",
+                fontFamily = NanumSquareRound,
+            )
         }
     }
 }
@@ -44,7 +49,7 @@ fun RegisterFormScreen(
 private fun RegisterFormScreenPreview() {
     BlindarTheme {
         RegisterFormScreen(
-            onNextButtonClick = {  },
+            onNextButtonClick = { },
             modifier = Modifier.fillMaxSize(),
         )
     }

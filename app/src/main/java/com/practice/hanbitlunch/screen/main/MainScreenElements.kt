@@ -19,12 +19,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.contentColorFor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,9 +46,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.domain.date.toKor
 import com.hsk.ktx.date.Date
-import com.practice.hanbitlunch.components.Body
-import com.practice.hanbitlunch.components.SubTitle
-import com.practice.hanbitlunch.components.Title
+import com.practice.hanbitlunch.components.BodyLarge
+import com.practice.hanbitlunch.components.TitleMedium
+import com.practice.hanbitlunch.components.TitleSmall
 import com.practice.hanbitlunch.screen.main.state.DailyMealScheduleState
 import com.practice.hanbitlunch.screen.main.state.MealUiState
 import com.practice.hanbitlunch.screen.main.state.Menu
@@ -73,7 +73,7 @@ internal fun MainScreenHeader(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colorScheme.primary)
             .padding(start = 16.dp, top = 13.dp, end = 16.dp, bottom = 13.dp)
     ) {
         VerticalYearMonth(
@@ -112,7 +112,7 @@ fun RefreshIcon(
         Icon(
             imageVector = Icons.Filled.Cached,
             contentDescription = "새로고침하기",
-            tint = MaterialTheme.colors.onPrimary.copy(alpha = iconAlpha()),
+            tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = iconAlpha()),
         )
     }
 }
@@ -153,21 +153,21 @@ private fun ScreenModeIconButton(
         if (it && enabled) 1f else if (enabled) 0.7f else 0f
     }
     val backgroundColor by transition.animateColor(label = "background") {
-        if (it && enabled) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.primary
+        if (it && enabled) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
     }
     IconButton(
         onClick = onClick,
         modifier = modifier
             .clip(CircleShape.copy(all = CornerSize(4.dp)))
-            .shadow(elevation = elevation)
             .background(backgroundColor)
+            .shadow(elevation = elevation)
             .alpha(alpha),
         enabled = enabled,
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = MaterialTheme.colors.onPrimary,
+            tint = MaterialTheme.colorScheme.onPrimary,
         )
     }
 }
@@ -178,16 +178,16 @@ internal fun VerticalYearMonth(
     month: Int,
     modifier: Modifier = Modifier
 ) {
-    val textColor = MaterialTheme.colors.onPrimary
+    val textColor = MaterialTheme.colorScheme.onPrimary
     Column(
         verticalArrangement = Arrangement.spacedBy(13.dp),
         modifier = modifier,
     ) {
-        SubTitle(
+        TitleSmall(
             text = "${year}년",
             textColor = textColor,
         )
-        Title(
+        TitleMedium(
             text = "${month}월",
             textColor = textColor,
         )
@@ -256,7 +256,7 @@ internal fun MenuRow(
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.Start) {
         menus.forEach {
-            Body(
+            BodyLarge(
                 text = it.name,
                 modifier = Modifier.weight(1f)
             )
@@ -275,7 +275,7 @@ internal fun ScheduleContent(
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             scheduleUiState.schedules.forEach { schedule ->
-                Body(text = schedule.displayText)
+                BodyLarge(text = schedule.displayText)
             }
         }
     }
@@ -329,7 +329,7 @@ internal fun DailyMealSchedule(
                 .clickable(onClick = { onDateClick(date) })
                 .padding(16.dp)
                 .fillMaxWidth(),
-            backgroundColor = MaterialTheme.colors.primaryVariant,
+            backgroundColor = MaterialTheme.colorScheme.secondary,
         )
         MainScreenContents(
             mealUiState = dailyMealScheduleState.mealUiState,
@@ -344,7 +344,7 @@ internal fun DailyMealSchedule(
 private fun DailyDay(
     date: Date,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colors.background,
+    backgroundColor: Color = MaterialTheme.colorScheme.background,
 ) {
     Row(
         modifier = Modifier
@@ -354,12 +354,12 @@ private fun DailyDay(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         val textColor = contentColorFor(backgroundColor)
-        Title(
+        TitleMedium(
             text = date.dayOfMonth.toString().padStart(2, padChar = '0'),
             textColor = textColor,
             modifier = Modifier.alignByBaseline(),
         )
-        Body(
+        BodyLarge(
             text = date.dayOfWeek.toKor(),
             textColor = textColor,
             modifier = Modifier.alignByBaseline(),
@@ -377,7 +377,7 @@ internal fun MainScreenContent(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        SubTitle(text = title)
+        TitleSmall(text = title)
         contents()
     }
 }
