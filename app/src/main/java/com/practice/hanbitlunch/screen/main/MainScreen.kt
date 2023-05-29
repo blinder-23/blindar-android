@@ -126,14 +126,14 @@ fun FloatingRefreshButton(
     val interactionSource = remember { MutableInteractionSource() }
     FloatingActionButton(
         interactionSource = interactionSource,
-        onClick = onRefresh,
+        onClick = {
+            if (!isLoading) onRefresh()
+        },
         modifier = modifier
             .rotate(angle),
         containerColor = MaterialTheme.colorScheme.primary,
     ) {
         RefreshIcon(
-            isLoading = isLoading,
-            onRefresh = onRefresh,
             iconAlpha = { refreshIconAlpha },
         )
     }

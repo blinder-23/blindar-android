@@ -99,22 +99,15 @@ internal fun MainScreenHeader(
 
 @Composable
 fun RefreshIcon(
-    isLoading: Boolean,
-    onRefresh: () -> Unit,
     iconAlpha: () -> Float,
     modifier: Modifier = Modifier,
 ) {
-    IconButton(
-        enabled = !isLoading,
-        onClick = onRefresh,
+    Icon(
+        imageVector = Icons.Filled.Cached,
+        contentDescription = "새로고침하기",
+        tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = iconAlpha()),
         modifier = modifier,
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Cached,
-            contentDescription = "새로고침하기",
-            tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = iconAlpha()),
-        )
-    }
+    )
 }
 
 @Composable
