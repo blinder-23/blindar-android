@@ -1,20 +1,31 @@
 package com.practice.hanbitlunch.screen.main
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.InfiniteRepeatableSpec
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hsk.ktx.date.Date
 import com.practice.hanbitlunch.calendar.core.drawUnderline
@@ -32,7 +43,7 @@ fun MainScreen(
     onRefresh: () -> Unit = {},
 ) {
     val systemUiController = rememberSystemUiController()
-    val systemBarColor = MaterialTheme.colors.primary
+    val systemBarColor = MaterialTheme.colorScheme.primary
     LaunchedEffect(true) {
         systemUiController.setStatusBarColor(systemBarColor)
         onLaunch()
@@ -43,7 +54,7 @@ fun MainScreen(
     val calendarState = rememberCalendarState(uiState.year, uiState.month, uiState.selectedDate)
 
     val scheduleDates by viewModel.scheduleDates.collectAsState()
-    val underlineColor = MaterialTheme.colors.onSurface
+    val underlineColor = MaterialTheme.colorScheme.onSurface
     val drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit = {
         if (scheduleDates.contains(it)) {
             drawUnderline(
@@ -53,7 +64,7 @@ fun MainScreen(
         }
     }
 
-    val backgroundModifier = modifier.background(MaterialTheme.colors.surface)
+    val backgroundModifier = modifier.background(MaterialTheme.colorScheme.surface)
     val mealColumns = if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) 2 else 3
 
     Scaffold(floatingActionButton = {
@@ -112,17 +123,17 @@ fun FloatingRefreshButton(
         )
     )
 
+    val interactionSource = remember { MutableInteractionSource() }
     FloatingActionButton(
-        interactionSource = MutableInteractionSource(),
-        onClick = onRefresh,
+        interactionSource = interactionSource,
+        onClick = {
+            if (!isLoading) onRefresh()
+        },
         modifier = modifier
-            .padding(0.dp)
             .rotate(angle),
-        backgroundColor = MaterialTheme.colors.primary,
+        containerColor = MaterialTheme.colorScheme.primary,
     ) {
         RefreshIcon(
-            isLoading = isLoading,
-            onRefresh = onRefresh,
             iconAlpha = { refreshIconAlpha },
         )
     }

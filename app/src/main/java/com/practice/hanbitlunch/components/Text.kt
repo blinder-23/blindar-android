@@ -1,64 +1,84 @@
 package com.practice.hanbitlunch.components
 
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.practice.hanbitlunch.theme.NanumSquareRound
 
 @Composable
-fun BigTitle(
+fun TitleLarge(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colors.onSurface
+    textColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.h1,
+        style = MaterialTheme.typography.displayLarge,
         color = textColor,
+        fontFamily = NanumSquareRound,
     )
 }
 
 @Composable
-fun Title(
+fun TitleMedium(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colors.onSurface
+    textColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.h2,
+        style = MaterialTheme.typography.displayMedium,
         color = textColor,
+        fontFamily = NanumSquareRound,
     )
 }
 
 @Composable
-fun SubTitle(
+fun TitleSmall(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colors.onSurface,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
 ) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.h3,
+        style = MaterialTheme.typography.displaySmall,
         color = textColor,
+        fontFamily = NanumSquareRound,
     )
 }
 
 @Composable
-fun Body(
+fun BodyLarge(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colors.onSurface
+    textColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.body1,
+        style = MaterialTheme.typography.bodyLarge,
         color = textColor,
+        fontFamily = NanumSquareRound,
+    )
+}
+
+@Composable
+fun BodyMedium(
+    text: String,
+    modifier: Modifier = Modifier,
+    textColor: Color = MaterialTheme.colorScheme.onSurface
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.bodyMedium,
+        color = textColor,
+        fontFamily = NanumSquareRound,
     )
 }
 
@@ -66,40 +86,28 @@ fun Body(
 fun BodySmall(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colors.onSurface
+    textColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.body2,
+        style = MaterialTheme.typography.bodySmall,
         color = textColor,
+        fontFamily = NanumSquareRound,
     )
 }
 
 @Composable
-fun Caption(
+fun LabelLarge(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colors.onSurface
+    textColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.caption,
+        style = MaterialTheme.typography.labelLarge,
         color = textColor,
-    )
-}
-
-@Composable
-fun ButtonText(
-    text: String,
-    modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colors.onSurface
-) {
-    Text(
-        text = text,
-        modifier = modifier,
-        style = MaterialTheme.typography.button,
-        color = textColor,
+        fontFamily = NanumSquareRound,
     )
 }

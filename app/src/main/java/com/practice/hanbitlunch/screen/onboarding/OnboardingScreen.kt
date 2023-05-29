@@ -1,14 +1,15 @@
 package com.practice.hanbitlunch.screen.onboarding
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.practice.hanbitlunch.screen.LightAndDarkPreview
 import com.practice.hanbitlunch.theme.BlindarTheme
+import com.practice.hanbitlunch.theme.NanumSquareRound
 
 @Composable
 fun OnboardingScreen(
@@ -26,7 +27,8 @@ fun OnboardingScreen(
                 bottom.linkTo(parent.bottom)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
-            }
+            },
+            fontFamily = NanumSquareRound,
         )
         Button(
             onClick = onRegister,
@@ -37,7 +39,8 @@ fun OnboardingScreen(
             }
         ) {
             Text(
-                text = "가입하기"
+                text = "가입하기",
+                fontFamily = NanumSquareRound,
             )
         }
         Button(
@@ -48,7 +51,10 @@ fun OnboardingScreen(
                 end.linkTo(parent.end)
             }
         ) {
-            Text(text = "로그인하기")
+            Text(
+                text = "로그인하기",
+                fontFamily = NanumSquareRound,
+            )
         }
     }
 }

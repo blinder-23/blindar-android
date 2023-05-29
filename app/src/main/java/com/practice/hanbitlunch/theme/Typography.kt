@@ -1,6 +1,6 @@
 package com.practice.hanbitlunch.theme
 
-import androidx.compose.material.Typography
+import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -15,40 +15,42 @@ val NanumSquareRound = FontFamily(
     Font(R.font.nanum_square_round_extrabold, FontWeight.ExtraBold),
 )
 
+/** M3 Typography doesn't have `defaultFontFamily` argument.
+ * We need to use the `fontFamily` parameter in each of the individual case.
+ */
 val Typography = Typography(
-    defaultFontFamily = NanumSquareRound,
     // Common/big-title
-    h1 = TextStyle(
+    displayLarge = TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 40.sp,
     ),
     // Common/title
-    h2 = TextStyle(
+    displayMedium = TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 36.sp,
     ),
     // Common/subtitle
-    h3 = TextStyle(
+    displaySmall = TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
     ),
     // Common/body
-    body1 = TextStyle(
+    bodyLarge = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
     ),
     // Calendar/date
-    body2 = TextStyle(
+    bodyMedium = TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
     ),
     // Calendar/day
-    caption = TextStyle(
+    bodySmall = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     ),
     // Button (positive, negative)
-    button = TextStyle(
+    labelLarge = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
     )

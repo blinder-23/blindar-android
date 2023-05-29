@@ -1,8 +1,8 @@
 package com.practice.hanbitlunch.theme
 
-import androidx.compose.material.Colors
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -15,20 +15,22 @@ private val BlindarBlueVariant: Color
 private val BlindarYellow: Color
     @Composable get() = colorResource(R.color.blindar_yellow)
 
-val LightColorPalette: Colors
-    @Composable get() = lightColors(
+val LightColorPalette: ColorScheme
+    @Composable get() = lightColorScheme(
         primary = BlindarBlue,
-        primaryVariant = BlindarBlueVariant,
-        secondary = BlindarYellow,
+        secondary = BlindarBlueVariant,
+        tertiary = BlindarYellow,
         onPrimary = Color.White,
-        onSecondary = Color.Black,
+        onSecondary = Color.White,
+        onTertiary = Color.Black,
     )
 
-val DarkColorPalette: Colors
-    @Composable get() = darkColors(
+val DarkColorPalette: ColorScheme
+    @Composable get() = darkColorScheme(
         primary = BlindarBlue,
-        primaryVariant = BlindarBlueVariant,
-        secondary = BlindarYellow,
+        secondary = BlindarBlueVariant,
+        tertiary = BlindarYellow,
         onPrimary = Color.White,
-        onSecondary = Color.Black
+        onSecondary = Color.White,
+        onTertiary = Color.Black,
     )

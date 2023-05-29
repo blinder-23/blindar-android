@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +42,7 @@ import com.practice.hanbitlunch.calendar.core.Week
 import com.practice.hanbitlunch.calendar.core.clickLabel
 import com.practice.hanbitlunch.calendar.core.drawUnderline
 import com.practice.hanbitlunch.theme.BlindarTheme
+import com.practice.hanbitlunch.theme.NanumSquareRound
 
 
 internal fun calendarDays(): List<DayOfWeek> = DayOfWeek.values().toList()
@@ -86,7 +87,7 @@ private val HolidayColor = Color(0xFFFF5F5F)
 internal fun DayOfWeek.color() = when (this) {
     DayOfWeek.SUNDAY -> HolidayColor
     DayOfWeek.SATURDAY -> SaturdayColor
-    else -> MaterialTheme.colors.onSurface
+    else -> MaterialTheme.colorScheme.onSurface
 }
 
 @Composable
@@ -181,7 +182,7 @@ internal fun CalendarDate(
     dateBelowContent: @Composable (Date) -> Unit = {},
 ) {
     val borderColor by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colors.secondary else Transparent,
+        targetValue = if (isSelected) MaterialTheme.colorScheme.tertiary else Transparent,
         animationSpec = tween(
             durationMillis = 500,
             easing = FastOutSlowInEasing,
@@ -202,7 +203,7 @@ internal fun CalendarDate(
         textColor = date.color(
             currentMonth = currentMonth
         ),
-        textStyle = MaterialTheme.typography.body2,
+        textStyle = MaterialTheme.typography.bodyMedium,
         arrangement = dateArrangement,
         drawBehindElement = {
             drawBehindElement(date)
@@ -216,7 +217,7 @@ internal fun CalendarElement(
     text: String,
     modifier: Modifier = Modifier,
     textColor: Color = Color.Unspecified,
-    textStyle: TextStyle = MaterialTheme.typography.body1,
+    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     arrangement: Arrangement.Vertical = Arrangement.Center,
     drawBehindElement: DrawScope.() -> Unit = {},
     belowContent: @Composable () -> Unit = {}
@@ -233,6 +234,7 @@ internal fun CalendarElement(
                 .align(Alignment.CenterHorizontally)
                 .drawBehind { drawBehindElement() },
             color = textColor,
+            fontFamily = NanumSquareRound,
             style = textStyle,
             fontSize = textSize,
             onTextLayout = { result ->
@@ -251,7 +253,7 @@ private val LightSundayColor = Color(0xFFFF9999)
 
 @Composable
 private fun Date.color(currentMonth: Int = this.month) = when (calculateDayType(currentMonth)) {
-    DayType.Weekday -> MaterialTheme.colors.onSurface
+    DayType.Weekday -> MaterialTheme.colorScheme.onSurface
     DayType.WeekdayOverMonth -> LightWeekdayColor
     DayType.Saturday -> SaturdayColor
     DayType.SaturdayOverMonth -> LightSaturdayColor
@@ -267,7 +269,7 @@ private fun CalendarDayPreview() {
             day = DayOfWeek.MONDAY,
             modifier = Modifier
                 .size(50.dp)
-                .background(MaterialTheme.colors.surface)
+                .background(MaterialTheme.colorScheme.surface)
         )
     }
 }
@@ -305,7 +307,7 @@ private fun CalendarDatePreview_Selected() {
 @Composable
 private fun UnderlinedCalendarDatePreview() {
     BlindarTheme {
-        val lineColor = MaterialTheme.colors.onSurface
+        val lineColor = MaterialTheme.colorScheme.onSurface
         CalendarDate(
             date = Date(2022, 11, 14),
             onClick = {},
