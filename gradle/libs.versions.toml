@@ -82,6 +82,7 @@ androidx-compose-ui-test-manifest = { module = 'androidx.compose.ui:ui-test-mani
 androidx-compose-ui-tooling = { module = 'androidx.compose.ui:ui-tooling' }
 androidx-compose-ui-tooling-preview = { module = 'androidx.compose.ui:ui-tooling-preview' }
 
+firebase-auth-ktx = { module = 'com.google.firebase:firebase-auth-ktx' }
 firebase-analytics-ktx = { module = 'com.google.firebase:firebase-analytics-ktx' }
 firebase-bom = { module = 'com.google.firebase:firebase-bom', version.ref = 'firebase-bom' }
 firebase-crashlytics-ktx = { module = 'com.google.firebase:firebase-crashlytics-ktx' }
@@ -139,6 +140,7 @@ compose = [
     'androidx-constraintlayout-compose'
 ]
 coroutines = ['kotlinx-coroutines-core', 'kotlinx-coroutines-android']
+firebase = ['firebase-auth-ktx', 'firebase-analytics-ktx', 'firebase-crashlytics-ktx']
 jetpack = ['androidx-core-splashscreen', 'androidx-datastore-preferences', 'androidx-profileinstaller', 'androidx-startup-runtime']
 lifecycle = [
     'androidx-lifecycle-extensions',

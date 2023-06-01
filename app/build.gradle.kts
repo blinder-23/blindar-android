@@ -176,10 +176,9 @@ dependencies {
     // Instrumented Test
     androidTestImplementation(libs.bundles.android.test)
 
-    // Firebase Crashlytics
+    // Firebase
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics.ktx)
-    implementation(libs.firebase.crashlytics.ktx)
+    implementation(libs.bundles.firebase)
 
     // Accompanist
     implementation(libs.bundles.accompanist)
