@@ -16,7 +16,7 @@ navigation = '2.5.3'
 work = "2.8.1"
 
 [libraries]
-android-gradle = 'com.android.tools.build:gradle:7.4.2'
+android-gradle = "com.android.tools.build:gradle:8.0.2"
 hilt-android-gradle-plugin = { module = 'com.google.dagger:hilt-android-gradle-plugin', version.ref = 'hilt' }
 kotlin-gradle-plugin = { module = 'org.jetbrains.kotlin:kotlin-gradle-plugin', version.ref = 'kotlin' }
 
