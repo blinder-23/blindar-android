@@ -15,7 +15,36 @@
       },
       "oauth_client": [
         {
-          "client_id": "593370815892-2rk72atp26bmukt1tkt5005jctfja8eo.apps.googleusercontent.com",
+          "client_id": "593370815892-t03doihs88p3dil077qlbd1r7pdmf4rs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqBQJ6Ua6TYWhz534siHBGuhDPeTCX7y8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "593370815892-2rk72atp26bmukt1tkt5005jctfja8eo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:593370815892:android:f65919fce52ba0685a0381",
+        "android_client_info": {
+          "package_name": "com.practice.hanbitlunch.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "593370815892-t03doihs88p3dil077qlbd1r7pdmf4rs.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
