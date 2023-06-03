@@ -28,13 +28,12 @@ import com.practice.hanbitlunch.screen.main.state.MainUiState
 import com.practice.hanbitlunch.screen.main.state.MealUiState
 import com.practice.hanbitlunch.screen.main.state.ScheduleUiState
 import com.practice.hanbitlunch.theme.BlindarTheme
-import com.practice.preferences.ScreenMode
 
 @Composable
 fun VerticalMainScreen(
     modifier: Modifier = Modifier,
     uiState: MainUiState,
-    onScreenModeChange: (ScreenMode) -> Unit,
+    onScreenModeChange: (com.practice.preferences.ScreenMode) -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
     onDateClick: (Date) -> Unit,
@@ -55,7 +54,7 @@ fun VerticalMainScreen(
         )
         Column(modifier = Modifier.weight(69f)) {
             AnimatedVisibility(
-                visible = uiState.screenMode != ScreenMode.List,
+                visible = uiState.screenMode != com.practice.preferences.ScreenMode.List,
                 modifier = Modifier
                     .animateContentSize()
                     .weight(29f),
@@ -110,7 +109,7 @@ private fun VerticalMainScreenPreview() {
                         )
                     },
                     isLoading = false,
-                    screenMode = ScreenMode.Default,
+                    screenMode = com.practice.preferences.ScreenMode.Default,
                 )
             )
         }

@@ -21,13 +21,12 @@ import com.practice.hanbitlunch.screen.main.state.MainUiState
 import com.practice.hanbitlunch.screen.main.state.MealUiState
 import com.practice.hanbitlunch.screen.main.state.ScheduleUiState
 import com.practice.hanbitlunch.theme.BlindarTheme
-import com.practice.preferences.ScreenMode
 
 @Composable
 fun HorizontalMainScreen(
     modifier: Modifier = Modifier,
     uiState: MainUiState,
-    onScreenModeChange: (ScreenMode) -> Unit,
+    onScreenModeChange: (com.practice.preferences.ScreenMode) -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
     onDateClick: (Date) -> Unit,
@@ -88,7 +87,7 @@ private fun HorizontalMainScreenPreview() {
             )
         },
         isLoading = false,
-        screenMode = ScreenMode.Default,
+        screenMode = com.practice.preferences.ScreenMode.Default,
     )
     val calendarState = rememberCalendarState(
         year = year,

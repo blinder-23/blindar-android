@@ -13,9 +13,11 @@ dependencyResolutionManagement {
 }
 rootProject.name = "blindar"
 include(":app")
-include(":database")
-include(":preferences")
-include(":domain")
 include(":benchmark")
-include(":server")
-include(":work")
+include(":core:preferences")
+include(":core:work")
+include(":core:api")
+include(":data:meal")
+include(":data:schedule")
+include(":core:date")
+include(":core:combine")

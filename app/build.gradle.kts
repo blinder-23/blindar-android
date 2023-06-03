@@ -15,7 +15,7 @@ tasks.withType<Test> {
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 
@@ -102,11 +102,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -134,12 +134,11 @@ dependencies {
     implementation(libs.violet.dreams.core)
     implementation(libs.violet.dreams.ui)
 
-    // Module dependency
-    implementation(project(path = ":preferences"))
-    implementation(project(path = ":database"))
-    implementation(project(path = ":domain"))
-    implementation(project(path = ":work"))
-    implementation(project(path = ":server"))
+    implementation(project(":core:api"))
+    implementation(project(":core:combine"))
+    implementation(project(":core:date"))
+    implementation(project(":core:preferences"))
+    implementation(project(":core:work"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)

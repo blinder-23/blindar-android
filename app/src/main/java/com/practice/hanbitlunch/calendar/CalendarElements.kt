@@ -32,11 +32,10 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.domain.date.DayType
-import com.example.domain.date.calculateDayType
-import com.example.domain.date.toKor
 import com.hsk.ktx.date.Date
 import com.hsk.ktx.date.DayOfWeek
+import com.practice.date.calculateDayType
+import com.practice.date.toKor
 import com.practice.hanbitlunch.calendar.core.CalendarPage
 import com.practice.hanbitlunch.calendar.core.Week
 import com.practice.hanbitlunch.calendar.core.clickLabel
@@ -253,12 +252,12 @@ private val LightSundayColor = Color(0xFFFF9999)
 
 @Composable
 private fun Date.color(currentMonth: Int = this.month) = when (calculateDayType(currentMonth)) {
-    DayType.Weekday -> MaterialTheme.colorScheme.onSurface
-    DayType.WeekdayOverMonth -> LightWeekdayColor
-    DayType.Saturday -> SaturdayColor
-    DayType.SaturdayOverMonth -> LightSaturdayColor
-    DayType.Holiday -> HolidayColor
-    DayType.HolidayOverMonth -> LightSundayColor
+    com.practice.date.DayType.Weekday -> MaterialTheme.colorScheme.onSurface
+    com.practice.date.DayType.WeekdayOverMonth -> LightWeekdayColor
+    com.practice.date.DayType.Saturday -> SaturdayColor
+    com.practice.date.DayType.SaturdayOverMonth -> LightSaturdayColor
+    com.practice.date.DayType.Holiday -> HolidayColor
+    com.practice.date.DayType.HolidayOverMonth -> LightSundayColor
 }
 
 @Preview(showBackground = true)

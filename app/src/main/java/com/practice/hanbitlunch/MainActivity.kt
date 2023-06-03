@@ -9,13 +9,13 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.work.WorkManager
-import com.example.work.setOneTimeFetchMealWork
-import com.example.work.setOneTimeFetchScheduleWork
-import com.example.work.setPeriodicFetchMealWork
-import com.example.work.setPeriodicFetchScheduleWork
 import com.practice.hanbitlunch.screen.navigation.BlindarNavHost
 import com.practice.hanbitlunch.theme.BlindarTheme
 import com.practice.preferences.PreferencesRepository
+import com.practice.work.setOneTimeFetchMealWork
+import com.practice.work.setOneTimeFetchScheduleWork
+import com.practice.work.setPeriodicFetchMealWork
+import com.practice.work.setPeriodicFetchScheduleWork
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

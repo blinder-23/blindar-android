@@ -1,9 +1,8 @@
 package com.practice.hanbitlunch.screen.main.state
 
 import com.hsk.ktx.date.Date
-import com.practice.database.meal.entity.MealEntity
-import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.core.YearMonth
+import com.practice.meal.entity.MealEntity
 import com.practice.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -75,7 +74,7 @@ data class Schedule(
         if (scheduleName == scheduleContent) scheduleName else "$scheduleName - $scheduleContent"
 }
 
-fun ScheduleEntity.toSchedule() = Schedule(
+fun com.practice.schedule.entity.ScheduleEntity.toSchedule() = Schedule(
     scheduleName = eventName,
     scheduleContent = eventContent,
 )

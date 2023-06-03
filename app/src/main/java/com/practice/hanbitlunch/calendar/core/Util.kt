@@ -3,8 +3,8 @@ package com.practice.hanbitlunch.calendar.core
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import com.example.domain.date.isHoliday
 import com.hsk.ktx.date.Date
+import com.practice.date.isHoliday
 
 val Date.clickLabel: String
     get() = "${month}월 ${dayOfMonth}일"

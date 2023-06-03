@@ -44,8 +44,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.domain.date.toKor
 import com.hsk.ktx.date.Date
+import com.practice.date.toKor
 import com.practice.hanbitlunch.components.BodyLarge
 import com.practice.hanbitlunch.components.TitleMedium
 import com.practice.hanbitlunch.components.TitleSmall
@@ -57,7 +57,6 @@ import com.practice.hanbitlunch.screen.main.state.ScheduleUiState
 import com.practice.hanbitlunch.screen.main.state.ScreenModeIcon
 import com.practice.hanbitlunch.screen.main.state.screenModeIcons
 import com.practice.hanbitlunch.theme.BlindarTheme
-import com.practice.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
@@ -65,10 +64,10 @@ import kotlinx.collections.immutable.toImmutableList
 internal fun MainScreenHeader(
     year: Int,
     month: Int,
-    selectedScreenMode: ScreenMode,
+    selectedScreenMode: com.practice.preferences.ScreenMode,
     modifier: Modifier = Modifier,
     screenModeIconsEnabled: Boolean = true,
-    onScreenModeIconClick: (ScreenMode) -> Unit = {},
+    onScreenModeIconClick: (com.practice.preferences.ScreenMode) -> Unit = {},
 ) {
     Box(
         modifier = modifier
@@ -113,8 +112,8 @@ fun RefreshIcon(
 @Composable
 private fun ScreenModeIconButtons(
     screenModeIcons: List<ScreenModeIcon>,
-    onIconClick: (ScreenMode) -> Unit,
-    selectedMode: ScreenMode,
+    onIconClick: (com.practice.preferences.ScreenMode) -> Unit,
+    selectedMode: com.practice.preferences.ScreenMode,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
@@ -382,7 +381,7 @@ private fun MainScreenHeaderPreview() {
         MainScreenHeader(
             year = 2022,
             month = 8,
-            selectedScreenMode = ScreenMode.Default,
+            selectedScreenMode = com.practice.preferences.ScreenMode.Default,
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -395,7 +394,7 @@ private fun MainScreenHeaderPreview_screenIconsDisabled() {
         MainScreenHeader(
             year = 2022,
             month = 8,
-            selectedScreenMode = ScreenMode.Default,
+            selectedScreenMode = com.practice.preferences.ScreenMode.Default,
             modifier = Modifier.fillMaxWidth(),
             screenModeIconsEnabled = false,
         )
@@ -419,7 +418,7 @@ private fun ScreenModeIconButtonPreview() {
 @Preview
 @Composable
 private fun ScreenModeIconButtonsPreview() {
-    var selectedMode by remember { mutableStateOf(ScreenMode.Default) }
+    var selectedMode by remember { mutableStateOf(com.practice.preferences.ScreenMode.Default) }
     BlindarTheme {
         ScreenModeIconButtons(
             screenModeIcons = screenModeIcons,

@@ -4,14 +4,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.List
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.practice.preferences.ScreenMode
 
 data class ScreenModeIcon(
-    val screenMode: ScreenMode,
+    val screenMode: com.practice.preferences.ScreenMode,
     val icon: ImageVector
 )
 
 internal val screenModeIcons = listOf(
-    ScreenModeIcon(ScreenMode.Default, Icons.Filled.Event),
-    ScreenModeIcon(ScreenMode.List, Icons.Filled.List),
+    ScreenModeIcon(com.practice.preferences.ScreenMode.Default, Icons.Filled.Event),
+    ScreenModeIcon(com.practice.preferences.ScreenMode.List, Icons.Filled.List),
 )

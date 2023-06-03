@@ -5,11 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.combine.LoadMealScheduleDataUseCase
-import com.example.domain.combine.MealScheduleEntity
 import com.hsk.ktx.date.Date
-import com.practice.database.meal.entity.MealEntity
-import com.practice.database.schedule.entity.ScheduleEntity
 import com.practice.hanbitlunch.calendar.core.YearMonth
 import com.practice.hanbitlunch.calendar.core.getFirstWeekday
 import com.practice.hanbitlunch.calendar.core.yearMonth
@@ -19,8 +15,6 @@ import com.practice.hanbitlunch.screen.main.state.MealUiState
 import com.practice.hanbitlunch.screen.main.state.ScheduleUiState
 import com.practice.hanbitlunch.screen.main.state.toMealUiState
 import com.practice.hanbitlunch.screen.main.state.toSchedule
-import com.practice.preferences.PreferencesRepository
-import com.practice.preferences.ScreenMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
@@ -33,8 +27,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-    private val loadMealScheduleDataUseCase: LoadMealScheduleDataUseCase,
-    private val preferencesRepository: PreferencesRepository,
+    private val loadMealScheduleDataUseCase: com.practice.combine.LoadMealScheduleDataUseCase,
+    private val preferencesRepository: com.practice.preferences.PreferencesRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableState<MainUiState>
@@ -55,7 +49,7 @@ class MainScreenViewModel @Inject constructor(
     private val selectedDateFlow: MutableStateFlow<Date>
 
     // TODO: domain 또는 data로 옮기기?
-    private val cache: MutableMap<YearMonth, MealScheduleEntity>
+    private val cache: MutableMap<YearMonth, com.practice.combine.MealScheduleEntity>
 
     init {
         val current = Date.now()
@@ -66,7 +60,7 @@ class MainScreenViewModel @Inject constructor(
                 selectedDate = current,
                 monthlyMealScheduleState = emptyList(),
                 isLoading = false,
-                screenMode = ScreenMode.Default,
+                screenMode = com.practice.preferences.ScreenMode.Default,
             )
         )
         selectedDateFlow = MutableStateFlow(current)
@@ -94,9 +88,9 @@ class MainScreenViewModel @Inject constructor(
     private fun updateUiState(
         yearMonth: YearMonth = state.yearMonth,
         selectedDate: Date = state.selectedDate,
-        entity: MealScheduleEntity? = cache[selectedDate.yearMonth],
+        entity: com.practice.combine.MealScheduleEntity? = cache[selectedDate.yearMonth],
         isLoading: Boolean = state.isLoading,
-        screenMode: ScreenMode = state.screenMode,
+        screenMode: com.practice.preferences.ScreenMode = state.screenMode,
     ) {
         val monthlyMealScheduleState = if (entity != null) {
             parseDailyState(entity)
@@ -118,11 +112,11 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    fun onScreenModeChange(screenMode: ScreenMode) = viewModelScope.launch {
+    fun onScreenModeChange(screenMode: com.practice.preferences.ScreenMode) = viewModelScope.launch {
         preferencesRepository.updateScreenMode(screenMode)
     }
 
-    private fun updateScheduleDates(entity: MealScheduleEntity) {
+    private fun updateScheduleDates(entity: com.practice.combine.MealScheduleEntity) {
         _scheduleDates.value = scheduleDates.value.toMutableSet().apply {
             addAll(entity.schedules.map { Date(it.year, it.month, it.day) })
         }
@@ -137,7 +131,7 @@ class MainScreenViewModel @Inject constructor(
         )
     }
 
-    private suspend fun loadMonthlyData(yearMonth: YearMonth): MealScheduleEntity {
+    private suspend fun loadMonthlyData(yearMonth: YearMonth): com.practice.combine.MealScheduleEntity {
         val (queryYear, queryMonth) = yearMonth
         return if (cache.containsKey(yearMonth)) {
             cache[yearMonth]!!
@@ -148,7 +142,7 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    private fun parseDailyState(mealScheduleEntity: MealScheduleEntity): List<DailyMealScheduleState> {
+    private fun parseDailyState(mealScheduleEntity: com.practice.combine.MealScheduleEntity): List<DailyMealScheduleState> {
         val allDates = mutableSetOf<Date>().apply {
             addAll(mealScheduleEntity.meals.map { Date(it.year, it.month, it.day) })
             addAll(mealScheduleEntity.schedules.map { Date(it.year, it.month, it.day) })
@@ -202,7 +196,7 @@ class MainScreenViewModel @Inject constructor(
 
 }
 
-private fun MealScheduleEntity.getMeal(date: Date): MealUiState {
+private fun com.practice.combine.MealScheduleEntity.getMeal(date: Date): MealUiState {
     return try {
         meals.first { it.dateEquals(date) }
             .toMealUiState()
@@ -211,7 +205,7 @@ private fun MealScheduleEntity.getMeal(date: Date): MealUiState {
     }
 }
 
-private fun MealScheduleEntity.getSchedule(date: Date): ScheduleUiState {
+private fun com.practice.combine.MealScheduleEntity.getSchedule(date: Date): ScheduleUiState {
     return try {
         val schedules = schedules.filter { it.dateEquals(date) }.map { it.toSchedule() }
         ScheduleUiState(schedules.toPersistentList())
@@ -220,8 +214,8 @@ private fun MealScheduleEntity.getSchedule(date: Date): ScheduleUiState {
     }
 }
 
-private fun MealEntity.dateEquals(date: Date) =
+private fun com.practice.meal.entity.MealEntity.dateEquals(date: Date) =
     this.year == date.year && this.month == date.month && this.day == date.dayOfMonth
 
-private fun ScheduleEntity.dateEquals(date: Date) =
+private fun com.practice.schedule.entity.ScheduleEntity.dateEquals(date: Date) =
     this.year == date.year && this.month == date.month && this.day == date.dayOfMonth
