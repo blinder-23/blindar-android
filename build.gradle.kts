@@ -45,8 +45,7 @@ plugins.apply(DependencyGraphGeneratorPlugin::class.java)
 
 configure<DependencyGraphGeneratorExtension> {
     generators.create("blindar") {
-        include =
-            { dependency -> dependency.moduleGroup.startsWith("blindar") }
+        include = { dependency -> dependency.moduleGroup.startsWith("blindar") }
         children = { true }
         dependencyNode = { node, dependency ->
 //            println("${node.name()}, ${dependency.moduleGroup}, ${dependency.moduleName}")
@@ -59,12 +58,13 @@ configure<DependencyGraphGeneratorExtension> {
             node.add(Style.FILLED, color)
         }
         this.projectNode = { node, project ->
-            val color = when {
-                project.name.contains("core") -> Color.rgb(0xABCDEF)
-                project.name.contains("feature") -> Color.rgb(0xCDEFAB)
-                project.name.contains("data") -> Color.rgb(0xEFABCD)
-                project.name.contains("benchmark") -> Color.rgb(0xABEFCD)
-                project.name.contains("app") -> Color.rgb(0xEFCDAB)
+//            println(project.displayName)
+            val color = when (project.displayName.split(':')[1].removeSuffix("'")) {
+                "core" -> Color.rgb(0xABCDEF)
+                "feature" -> Color.rgb(0xCDEFAB)
+                "data" -> Color.rgb(0xEFABCD)
+                "benchmark" -> Color.rgb(0xABEFCD)
+                "app" -> Color.rgb(0xEFCDAB)
                 else -> Color.WHITE
             }
             node.add(Style.FILLED, color)
