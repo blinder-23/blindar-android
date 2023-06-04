@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen.navigation
+package com.practice.hanbitlunch.screen
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
