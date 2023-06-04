@@ -1,5 +1,6 @@
 package com.practice.main
 
+import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -18,6 +19,7 @@ import com.practice.main.state.ScheduleUiState
 import com.practice.main.state.toMealUiState
 import com.practice.main.state.toSchedule
 import com.practice.preferences.PreferencesRepository
+import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
@@ -75,7 +77,7 @@ class MainScreenViewModel @Inject constructor(
      * init 블럭에서 실행하지 않은 이유는 [IllegalStateException]이 발생하기 때문이다.
      * 아직 UI에 반영되지 않은 값을 참조하기 때문에 예외가 발생한다.
      */
-    fun onLaunch() {
+    fun onLaunch(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             val entity = loadMonthlyData(state.yearMonth)
             updateUiState(entity = entity)
@@ -83,6 +85,22 @@ class MainScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             collectPreferences()
         }
+        viewModelScope.launch {
+            enqueuePeriodicWork(context)
+        }
+    }
+
+    private suspend fun enqueuePeriodicWork(context: Context) {
+        BlindarWorkManager.setPeriodicWork(context = context)
+        preferencesRepository.updateIsFirstExecution(false)
+    }
+
+    fun onRefresh(context: Context) {
+        enqueueOneTimeWork(context)
+    }
+
+    private fun enqueueOneTimeWork(context: Context) {
+        BlindarWorkManager.setOneTimeWork(context = context)
     }
 
     /**
@@ -115,9 +133,10 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    fun onScreenModeChange(screenMode: com.practice.preferences.ScreenMode) = viewModelScope.launch {
-        preferencesRepository.updateScreenMode(screenMode)
-    }
+    fun onScreenModeChange(screenMode: com.practice.preferences.ScreenMode) =
+        viewModelScope.launch {
+            preferencesRepository.updateScreenMode(screenMode)
+        }
 
     private fun updateScheduleDates(entity: MealScheduleEntity) {
         _scheduleDates.value = scheduleDates.value.toMutableSet().apply {

@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hsk.ktx.date.Date
@@ -44,10 +45,11 @@ fun MainScreen(
 ) {
     val systemUiController = rememberSystemUiController()
     val systemBarColor = MaterialTheme.colorScheme.primary
+    val context = LocalContext.current
     LaunchedEffect(true) {
         systemUiController.setStatusBarColor(systemBarColor)
         onLaunch()
-        viewModel.onLaunch()
+        viewModel.onLaunch(context)
     }
 
     val uiState by viewModel.uiState
@@ -70,7 +72,10 @@ fun MainScreen(
     Scaffold(floatingActionButton = {
         FloatingRefreshButton(
             isLoading = uiState.isLoading,
-            onRefresh = onRefresh,
+            onRefresh = {
+                onRefresh()
+                viewModel.onRefresh(context)
+            },
         )
     }) {
         val paddingModifier = backgroundModifier.padding(it)

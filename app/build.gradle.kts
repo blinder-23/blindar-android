@@ -138,7 +138,6 @@ dependencies {
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:login"))
     implementation(project(":feature:register"))
-    implementation(project(":core:work"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)

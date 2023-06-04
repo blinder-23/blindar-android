@@ -16,14 +16,18 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.practice.login.LoginScreen
+import com.practice.main.MainScreen
+import com.practice.onboarding.onboarding.OnboardingScreen
+import com.practice.onboarding.splash.SplashScreen
+import com.practice.register.registerform.RegisterFormScreen
+import com.practice.register.selectschool.SelectSchoolScreen
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun BlindarNavHost(
     windowSizeClass: WindowSizeClass,
-    onMainScreenLaunch: suspend () -> Unit,
-    onMainScreenRefresh: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberAnimatedNavController(),
 ) {
@@ -61,7 +65,7 @@ fun BlindarNavHost(
         },
     ) {
         composable(SPLASH) {
-            com.practice.onboarding.splash.SplashScreen(
+            SplashScreen(
                 login = {
                     // auto login code
                     delay(1000L)
@@ -81,7 +85,7 @@ fun BlindarNavHost(
             )
         }
         composable(ONBOARDING) {
-            com.practice.onboarding.onboarding.OnboardingScreen(
+            OnboardingScreen(
                 onRegister = { navController.navigate(REGISTER_FORM) },
                 onGoogleLogin = { /*TODO*/ },
                 onLogin = { navController.navigate(LOGIN) },
@@ -90,7 +94,7 @@ fun BlindarNavHost(
         }
         composable(REGISTER_FORM) {
             // RegisterForm과 SelectSchool은 같은 ViewModel을 공유
-            com.practice.register.registerform.RegisterFormScreen(
+            RegisterFormScreen(
                 onNextButtonClick = {
                     navController.navigate(SELECT_SCHOOL)
                 },
@@ -98,7 +102,7 @@ fun BlindarNavHost(
             )
         }
         composable(SELECT_SCHOOL) {
-            com.practice.register.selectschool.SelectSchoolScreen(
+            SelectSchoolScreen(
                 onNavigateToMain = {
                     navController.navigate(MAIN) {
                         popUpTo(ONBOARDING) { inclusive = true }
@@ -108,7 +112,7 @@ fun BlindarNavHost(
             )
         }
         composable(LOGIN) {
-            com.practice.login.LoginScreen(
+            LoginScreen(
                 onLoginSuccess = {
                     navController.navigate(MAIN) {
                         popUpTo(ONBOARDING) { inclusive = true }
@@ -118,12 +122,10 @@ fun BlindarNavHost(
             )
         }
         composable(MAIN) {
-            com.practice.main.MainScreen(
+            MainScreen(
                 windowSize = windowSizeClass,
                 viewModel = mainScreenViewModel,
                 modifier = Modifier.fillMaxSize(),
-                onLaunch = onMainScreenLaunch,
-                onRefresh = onMainScreenRefresh,
             )
         }
     }

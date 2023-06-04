@@ -48,6 +48,7 @@ dependencies {
     api(project(":core:preferences"))
     api(project(":core:combine"))
     api(project(":core:date"))
+    api(project(":core:work"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)
