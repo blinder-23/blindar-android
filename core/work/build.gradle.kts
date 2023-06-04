@@ -69,11 +69,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":data:meal"))
-    implementation(project(":data:schedule"))
-    implementation(project(":core:combine"))
-    implementation(project(":core:api"))
-    implementation(project(":core:preferences"))
+    api(project(":core:combine"))
+    api(project(":core:preferences"))
 
     implementation(libs.hsk.ktx)
 

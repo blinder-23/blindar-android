@@ -1,3 +1,8 @@
+import com.vanniktech.dependency.graph.generator.DependencyGraphGeneratorExtension
+import com.vanniktech.dependency.graph.generator.DependencyGraphGeneratorPlugin
+import guru.nidi.graphviz.attribute.Color
+import guru.nidi.graphviz.attribute.Style
+
 buildscript {
     repositories {
         google()
@@ -9,11 +14,14 @@ buildscript {
         classpath(libs.hilt.android.gradle.plugin)
         classpath(libs.google.services)
         classpath(libs.firebase.crashlytics.gradle)
+        classpath(libs.vanniktech.dependency.graph.generator)
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
+
+apply(plugin = "com.vanniktech.dependency.graph.generator")
 
 allprojects {
     repositories {
@@ -31,4 +39,35 @@ subprojects {
 
 task(name = "clean", type = Delete::class) {
     delete(rootProject.buildDir)
+}
+
+plugins.apply(DependencyGraphGeneratorPlugin::class.java)
+
+configure<DependencyGraphGeneratorExtension> {
+    generators.create("blindar") {
+        include =
+            { dependency -> dependency.moduleGroup.startsWith("blindar") }
+        children = { true }
+        dependencyNode = { node, dependency ->
+//            println("${node.name()}, ${dependency.moduleGroup}, ${dependency.moduleName}")
+            val color = when (dependency.name.split(":")[0].split(".")[1]) {
+                "core" -> Color.rgb(0xABCDEF)
+                "feature" -> Color.rgb(0xCDEFAB)
+                "data" -> Color.rgb(0xEFABCD)
+                else -> Color.WHITE
+            }
+            node.add(Style.FILLED, color)
+        }
+        this.projectNode = { node, project ->
+            val color = when {
+                project.name.contains("core") -> Color.rgb(0xABCDEF)
+                project.name.contains("feature") -> Color.rgb(0xCDEFAB)
+                project.name.contains("data") -> Color.rgb(0xEFABCD)
+                project.name.contains("benchmark") -> Color.rgb(0xABEFCD)
+                project.name.contains("app") -> Color.rgb(0xEFCDAB)
+                else -> Color.WHITE
+            }
+            node.add(Style.FILLED, color)
+        }
+    }
 }

@@ -41,7 +41,7 @@ android {
 
 dependencies {
     implementation(libs.hsk.ktx)
-    implementation(project(":core:date"))
+    api(project(":core:date"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)

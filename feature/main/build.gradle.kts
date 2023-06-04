@@ -45,9 +45,6 @@ dependencies {
     implementation(libs.hsk.ktx)
 
     api(project(":core:designsystem"))
-    api(project(":core:preferences"))
-    api(project(":core:combine"))
-    api(project(":core:date"))
     api(project(":core:work"))
 
     // KTX libraries
