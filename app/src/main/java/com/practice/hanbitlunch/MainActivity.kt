@@ -8,13 +8,8 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.work.WorkManager
-import com.example.work.setOneTimeFetchMealWork
-import com.example.work.setOneTimeFetchScheduleWork
-import com.example.work.setPeriodicFetchMealWork
-import com.example.work.setPeriodicFetchScheduleWork
-import com.practice.hanbitlunch.screen.navigation.BlindarNavHost
-import com.practice.hanbitlunch.theme.BlindarTheme
+import com.practice.designsystem.theme.BlindarTheme
+import com.practice.hanbitlunch.screen.BlindarNavHost
 import com.practice.preferences.PreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -35,28 +30,9 @@ class MainActivity : ComponentActivity() {
             BlindarTheme {
                 BlindarNavHost(
                     windowSizeClass = windowSizeClass,
-                    onMainScreenLaunch = ::enqueuePeriodicWork,
-                    onMainScreenRefresh = ::setOneTimeWork,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
         }
-    }
-
-    private suspend fun enqueuePeriodicWork() {
-        setPeriodicWork()
-        preferencesRepository.updateIsFirstExecution(false)
-    }
-
-    private fun setPeriodicWork() {
-        val workManager = WorkManager.getInstance(this)
-        setPeriodicFetchScheduleWork(workManager)
-        setPeriodicFetchMealWork(workManager)
-    }
-
-    private fun setOneTimeWork() {
-        val workManager = WorkManager.getInstance(this)
-        setOneTimeFetchScheduleWork(workManager)
-        setOneTimeFetchMealWork(workManager)
     }
 }
