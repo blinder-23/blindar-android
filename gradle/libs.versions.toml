@@ -86,6 +86,7 @@ firebase-auth-ktx = { module = 'com.google.firebase:firebase-auth-ktx' }
 firebase-analytics-ktx = { module = 'com.google.firebase:firebase-analytics-ktx' }
 firebase-bom = { module = 'com.google.firebase:firebase-bom', version.ref = 'firebase-bom' }
 firebase-crashlytics-ktx = { module = 'com.google.firebase:firebase-crashlytics-ktx' }
+firebase-ui-auth = 'com.firebaseui:firebase-ui-auth:7.2.0'
 
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 
@@ -112,6 +113,8 @@ androidx-junit = "androidx.test.ext:junit:1.1.5"
 androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.1"
 
 vanniktech-dependency-graph-generator = 'com.vanniktech:gradle-dependency-graph-generator-plugin:0.7.0'
+
+google-play-auth = 'com.google.android.gms:play-services-auth:20.5.0'
 
 [bundles]
 accompanist = [

@@ -2,12 +2,11 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "com.practice.register"
+    namespace = "com.practice.firebase"
     compileSdk = 33
 
     defaultConfig {
@@ -33,41 +32,27 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
+//    buildFeatures {
+//        compose = true
+//    }
+//    composeOptions {
+//        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+//    }
 }
 
 dependencies {
-    api(project(":core:designsystem"))
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.bundles.firebase)
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)
-
-    // Compose
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.bundles.compose)
-
-    // Firebase
-    implementation(libs.firebase.ui.auth)
-
     // AndroidX lifecycles
     implementation(libs.bundles.lifecycle)
 
-    // Hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    kapt(libs.hilt.compiler.androidx)
-    androidTestImplementation(libs.hilt.android.testing)
-    implementation(libs.hilt.work)
+    // Compose Activity
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.bundles.compose)
 
-    // Other Jetpack Libraries
-    implementation(libs.bundles.jetpack)
-
-    // Kotlin Coroutines
-    implementation(libs.bundles.coroutines)
-    testImplementation(libs.kotlinx.coroutines.test)
+    implementation(libs.google.play.auth)
 }
