@@ -11,16 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
 import com.hsk.ktx.date.Date
-import com.practice.hanbitlunch.calendar.SwipeableCalendar
-import com.practice.hanbitlunch.calendar.core.CalendarState
-import com.practice.hanbitlunch.calendar.core.YearMonth
-import com.practice.hanbitlunch.calendar.core.rememberCalendarState
-import com.practice.hanbitlunch.calendar.largeCalendarDateShape
+import com.practice.designsystem.calendar.SwipeableCalendar
+import com.practice.designsystem.calendar.core.CalendarState
+import com.practice.designsystem.calendar.core.YearMonth
+import com.practice.designsystem.calendar.core.rememberCalendarState
+import com.practice.designsystem.calendar.largeCalendarDateShape
+import com.practice.designsystem.theme.BlindarTheme
 import com.practice.hanbitlunch.screen.main.state.DailyMealScheduleState
 import com.practice.hanbitlunch.screen.main.state.MainUiState
 import com.practice.hanbitlunch.screen.main.state.MealUiState
 import com.practice.hanbitlunch.screen.main.state.ScheduleUiState
-import com.practice.hanbitlunch.theme.BlindarTheme
 
 @Composable
 fun HorizontalMainScreen(

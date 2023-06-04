@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.theme
+package com.practice.designsystem.theme
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
@@ -6,7 +6,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import com.practice.hanbitlunch.R
+import com.practice.designsystem.R
 
 private val BlindarBlue: Color
     @Composable get() = colorResource(R.color.blindar_blue)

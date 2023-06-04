@@ -1,11 +1,11 @@
-package com.practice.hanbitlunch.components
+package com.practice.designsystem.components
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.practice.hanbitlunch.theme.NanumSquareRound
+import com.practice.designsystem.theme.NanumSquareRound
 
 @Composable
 fun TitleLarge(

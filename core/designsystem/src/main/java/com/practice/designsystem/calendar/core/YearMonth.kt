@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.calendar.core
+package com.practice.designsystem.calendar.core
 
 import com.hsk.ktx.date.Date
 

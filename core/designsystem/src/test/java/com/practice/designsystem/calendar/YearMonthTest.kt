@@ -1,6 +1,6 @@
-package com.practice.hanbitlunch.calendar
+package com.practice.designsystem.calendar
 
-import com.practice.hanbitlunch.calendar.core.YearMonth
+import com.practice.designsystem.calendar.core.YearMonth
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

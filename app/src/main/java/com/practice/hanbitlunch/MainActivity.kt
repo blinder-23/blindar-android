@@ -9,8 +9,8 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.work.WorkManager
+import com.practice.designsystem.theme.BlindarTheme
 import com.practice.hanbitlunch.screen.navigation.BlindarNavHost
-import com.practice.hanbitlunch.theme.BlindarTheme
 import com.practice.preferences.PreferencesRepository
 import com.practice.work.setOneTimeFetchMealWork
 import com.practice.work.setOneTimeFetchScheduleWork

@@ -6,9 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.practice.hanbitlunch.screen.LightAndDarkPreview
-import com.practice.hanbitlunch.theme.BlindarTheme
-import com.practice.hanbitlunch.theme.NanumSquareRound
+import com.practice.designsystem.LightAndDarkPreview
+import com.practice.designsystem.theme.BlindarTheme
+import com.practice.designsystem.theme.NanumSquareRound
 
 @Composable
 fun SplashScreen(

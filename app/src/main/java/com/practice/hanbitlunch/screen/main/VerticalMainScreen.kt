@@ -18,22 +18,22 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
 import com.hsk.ktx.date.Date
-import com.practice.hanbitlunch.calendar.SwipeableCalendar
-import com.practice.hanbitlunch.calendar.calendarDateShape
-import com.practice.hanbitlunch.calendar.core.CalendarState
-import com.practice.hanbitlunch.calendar.core.YearMonth
-import com.practice.hanbitlunch.calendar.core.rememberCalendarState
+import com.practice.designsystem.calendar.SwipeableCalendar
+import com.practice.designsystem.calendar.calendarDateShape
+import com.practice.designsystem.calendar.core.CalendarState
+import com.practice.designsystem.calendar.core.YearMonth
+import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.hanbitlunch.screen.main.state.DailyMealScheduleState
 import com.practice.hanbitlunch.screen.main.state.MainUiState
 import com.practice.hanbitlunch.screen.main.state.MealUiState
 import com.practice.hanbitlunch.screen.main.state.ScheduleUiState
-import com.practice.hanbitlunch.theme.BlindarTheme
+import com.practice.preferences.ScreenMode
 
 @Composable
 fun VerticalMainScreen(
     modifier: Modifier = Modifier,
     uiState: MainUiState,
-    onScreenModeChange: (com.practice.preferences.ScreenMode) -> Unit,
+    onScreenModeChange: (ScreenMode) -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
     onDateClick: (Date) -> Unit,
@@ -54,7 +54,7 @@ fun VerticalMainScreen(
         )
         Column(modifier = Modifier.weight(69f)) {
             AnimatedVisibility(
-                visible = uiState.screenMode != com.practice.preferences.ScreenMode.List,
+                visible = uiState.screenMode != ScreenMode.List,
                 modifier = Modifier
                     .animateContentSize()
                     .weight(29f),
@@ -90,7 +90,7 @@ fun VerticalMainScreen(
 @Preview(name = "Foldable", device = "spec:width=673.5dp,height=841dp,dpi=480")
 @Composable
 private fun VerticalMainScreenPreview() {
-    BlindarTheme {
+    com.practice.designsystem.theme.BlindarTheme {
         val year = 2022
         val month = 10
         var selectedDate by remember { mutableStateOf(Date(2022, 10, 11)) }
@@ -109,7 +109,7 @@ private fun VerticalMainScreenPreview() {
                         )
                     },
                     isLoading = false,
-                    screenMode = com.practice.preferences.ScreenMode.Default,
+                    screenMode = ScreenMode.Default,
                 )
             )
         }
@@ -118,7 +118,7 @@ private fun VerticalMainScreenPreview() {
             month = month,
             selectedDate = selectedDate,
         )
-        BlindarTheme {
+        com.practice.designsystem.theme.BlindarTheme {
             VerticalMainScreen(
                 modifier = Modifier.background(MaterialTheme.colorScheme.surface),
                 uiState = uiState,

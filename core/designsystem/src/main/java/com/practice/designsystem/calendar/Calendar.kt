@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.calendar
+package com.practice.designsystem.calendar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,15 +15,15 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
-import com.practice.hanbitlunch.calendar.core.CalendarPage
-import com.practice.hanbitlunch.calendar.core.CalendarState
-import com.practice.hanbitlunch.calendar.core.TextsInsideDate
-import com.practice.hanbitlunch.calendar.core.rememberCalendarState
-import com.practice.hanbitlunch.calendar.core.yearMonth
-import com.practice.hanbitlunch.theme.BlindarTheme
+import com.practice.designsystem.calendar.core.CalendarPage
+import com.practice.designsystem.calendar.core.CalendarState
+import com.practice.designsystem.calendar.core.TextsInsideDate
+import com.practice.designsystem.calendar.core.rememberCalendarState
+import com.practice.designsystem.calendar.core.yearMonth
+import com.practice.designsystem.theme.BlindarTheme
 
-internal val calendarDateShape = CircleShape.copy(all = CornerSize(5.dp))
-internal val largeCalendarDateShape = CircleShape.copy(all = CornerSize(15.dp))
+val calendarDateShape = CircleShape.copy(all = CornerSize(5.dp))
+val largeCalendarDateShape = CircleShape.copy(all = CornerSize(15.dp))
 
 @Composable
 fun Calendar(

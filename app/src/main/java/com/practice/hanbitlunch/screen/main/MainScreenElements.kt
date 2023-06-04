@@ -46,9 +46,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.date.toKor
-import com.practice.hanbitlunch.components.BodyLarge
-import com.practice.hanbitlunch.components.TitleMedium
-import com.practice.hanbitlunch.components.TitleSmall
 import com.practice.hanbitlunch.screen.main.state.DailyMealScheduleState
 import com.practice.hanbitlunch.screen.main.state.MealUiState
 import com.practice.hanbitlunch.screen.main.state.Menu
@@ -56,7 +53,7 @@ import com.practice.hanbitlunch.screen.main.state.Schedule
 import com.practice.hanbitlunch.screen.main.state.ScheduleUiState
 import com.practice.hanbitlunch.screen.main.state.ScreenModeIcon
 import com.practice.hanbitlunch.screen.main.state.screenModeIcons
-import com.practice.hanbitlunch.theme.BlindarTheme
+import com.practice.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
@@ -64,10 +61,10 @@ import kotlinx.collections.immutable.toImmutableList
 internal fun MainScreenHeader(
     year: Int,
     month: Int,
-    selectedScreenMode: com.practice.preferences.ScreenMode,
+    selectedScreenMode: ScreenMode,
     modifier: Modifier = Modifier,
     screenModeIconsEnabled: Boolean = true,
-    onScreenModeIconClick: (com.practice.preferences.ScreenMode) -> Unit = {},
+    onScreenModeIconClick: (ScreenMode) -> Unit = {},
 ) {
     Box(
         modifier = modifier
@@ -112,8 +109,8 @@ fun RefreshIcon(
 @Composable
 private fun ScreenModeIconButtons(
     screenModeIcons: List<ScreenModeIcon>,
-    onIconClick: (com.practice.preferences.ScreenMode) -> Unit,
-    selectedMode: com.practice.preferences.ScreenMode,
+    onIconClick: (ScreenMode) -> Unit,
+    selectedMode: ScreenMode,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
@@ -175,11 +172,11 @@ internal fun VerticalYearMonth(
         verticalArrangement = Arrangement.spacedBy(13.dp),
         modifier = modifier,
     ) {
-        TitleSmall(
+        com.practice.designsystem.components.TitleSmall(
             text = "${year}년",
             textColor = textColor,
         )
-        TitleMedium(
+        com.practice.designsystem.components.TitleMedium(
             text = "${month}월",
             textColor = textColor,
         )
@@ -248,7 +245,7 @@ internal fun MenuRow(
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.Start) {
         menus.forEach {
-            BodyLarge(
+            com.practice.designsystem.components.BodyLarge(
                 text = it.name,
                 modifier = Modifier.weight(1f)
             )
@@ -267,7 +264,7 @@ internal fun ScheduleContent(
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             scheduleUiState.schedules.forEach { schedule ->
-                BodyLarge(text = schedule.displayText)
+                com.practice.designsystem.components.BodyLarge(text = schedule.displayText)
             }
         }
     }
@@ -346,12 +343,12 @@ private fun DailyDay(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         val textColor = contentColorFor(backgroundColor)
-        TitleMedium(
+        com.practice.designsystem.components.TitleMedium(
             text = date.dayOfMonth.toString().padStart(2, padChar = '0'),
             textColor = textColor,
             modifier = Modifier.alignByBaseline(),
         )
-        BodyLarge(
+        com.practice.designsystem.components.BodyLarge(
             text = date.dayOfWeek.toKor(),
             textColor = textColor,
             modifier = Modifier.alignByBaseline(),
@@ -369,7 +366,7 @@ internal fun MainScreenContent(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        TitleSmall(text = title)
+        com.practice.designsystem.components.TitleSmall(text = title)
         contents()
     }
 }
@@ -377,11 +374,11 @@ internal fun MainScreenContent(
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenHeaderPreview() {
-    BlindarTheme {
+    com.practice.designsystem.theme.BlindarTheme {
         MainScreenHeader(
             year = 2022,
             month = 8,
-            selectedScreenMode = com.practice.preferences.ScreenMode.Default,
+            selectedScreenMode = ScreenMode.Default,
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -390,11 +387,11 @@ private fun MainScreenHeaderPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenHeaderPreview_screenIconsDisabled() {
-    BlindarTheme {
+    com.practice.designsystem.theme.BlindarTheme {
         MainScreenHeader(
             year = 2022,
             month = 8,
-            selectedScreenMode = com.practice.preferences.ScreenMode.Default,
+            selectedScreenMode = ScreenMode.Default,
             modifier = Modifier.fillMaxWidth(),
             screenModeIconsEnabled = false,
         )
@@ -406,7 +403,7 @@ private fun MainScreenHeaderPreview_screenIconsDisabled() {
 private fun ScreenModeIconButtonPreview() {
     val (_, icon) = screenModeIcons.first()
     var isSelected by remember { mutableStateOf(false) }
-    BlindarTheme {
+    com.practice.designsystem.theme.BlindarTheme {
         ScreenModeIconButton(
             icon = icon,
             onClick = { isSelected = !isSelected },
@@ -418,8 +415,8 @@ private fun ScreenModeIconButtonPreview() {
 @Preview
 @Composable
 private fun ScreenModeIconButtonsPreview() {
-    var selectedMode by remember { mutableStateOf(com.practice.preferences.ScreenMode.Default) }
-    BlindarTheme {
+    var selectedMode by remember { mutableStateOf(ScreenMode.Default) }
+    com.practice.designsystem.theme.BlindarTheme {
         ScreenModeIconButtons(
             screenModeIcons = screenModeIcons,
             onIconClick = { selectedMode = it },
@@ -440,7 +437,7 @@ val previewSchedules = (0..6).map {
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenContentsPreview() {
-    BlindarTheme {
+    com.practice.designsystem.theme.BlindarTheme {
         MainScreenContents(
             modifier = Modifier.height(320.dp),
             mealUiState = MealUiState(previewMenus),
@@ -453,7 +450,7 @@ private fun MainScreenContentsPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun MealContentPreview() {
-    BlindarTheme {
+    com.practice.designsystem.theme.BlindarTheme {
         MealContent(
             mealUiState = MealUiState(previewMenus),
             columns = 2,
@@ -464,7 +461,7 @@ private fun MealContentPreview() {
 @Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
 @Composable
 private fun ListScreenItemPreview() {
-    BlindarTheme {
+    com.practice.designsystem.theme.BlindarTheme {
         DailyMealSchedule(
             DailyMealScheduleState(
                 date = Date(2022, 12, 13),

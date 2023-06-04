@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.calendar
+package com.practice.designsystem.calendar
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -15,12 +15,12 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.hsk.ktx.date.Date
-import com.practice.hanbitlunch.calendar.core.CalendarPage
-import com.practice.hanbitlunch.calendar.core.CalendarState
-import com.practice.hanbitlunch.calendar.core.YearMonth
-import com.practice.hanbitlunch.calendar.core.offset
-import com.practice.hanbitlunch.calendar.core.rememberCalendarState
-import com.practice.hanbitlunch.calendar.core.yearMonth
+import com.practice.designsystem.calendar.core.CalendarPage
+import com.practice.designsystem.calendar.core.CalendarState
+import com.practice.designsystem.calendar.core.YearMonth
+import com.practice.designsystem.calendar.core.offset
+import com.practice.designsystem.calendar.core.rememberCalendarState
+import com.practice.designsystem.calendar.core.yearMonth
 
 @Composable
 fun SwipeableCalendar(

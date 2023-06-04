@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.calendar.core
+package com.practice.designsystem.calendar.core
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.practice.hanbitlunch.theme.NanumSquareRound
+import com.practice.designsystem.theme.NanumSquareRound
 
 @Composable
 fun TextsInsideDate(

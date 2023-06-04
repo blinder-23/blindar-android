@@ -28,9 +28,9 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hsk.ktx.date.Date
-import com.practice.hanbitlunch.calendar.core.drawUnderline
-import com.practice.hanbitlunch.calendar.core.rememberCalendarState
-import com.practice.hanbitlunch.theme.BlindarTheme
+import com.practice.designsystem.calendar.core.drawUnderline
+import com.practice.designsystem.calendar.core.rememberCalendarState
+import com.practice.designsystem.theme.BlindarTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

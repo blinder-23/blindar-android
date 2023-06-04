@@ -139,6 +139,7 @@ dependencies {
     implementation(project(":core:date"))
     implementation(project(":core:preferences"))
     implementation(project(":core:work"))
+    implementation(project(":core:designsystem"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)

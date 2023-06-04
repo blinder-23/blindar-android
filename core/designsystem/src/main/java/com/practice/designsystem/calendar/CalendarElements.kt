@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.calendar
+package com.practice.designsystem.calendar
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -34,14 +34,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.hsk.ktx.date.DayOfWeek
+import com.practice.date.DayType
 import com.practice.date.calculateDayType
 import com.practice.date.toKor
-import com.practice.hanbitlunch.calendar.core.CalendarPage
-import com.practice.hanbitlunch.calendar.core.Week
-import com.practice.hanbitlunch.calendar.core.clickLabel
-import com.practice.hanbitlunch.calendar.core.drawUnderline
-import com.practice.hanbitlunch.theme.BlindarTheme
-import com.practice.hanbitlunch.theme.NanumSquareRound
+import com.practice.designsystem.calendar.core.CalendarPage
+import com.practice.designsystem.calendar.core.Week
+import com.practice.designsystem.calendar.core.clickLabel
+import com.practice.designsystem.calendar.core.drawUnderline
+import com.practice.designsystem.theme.BlindarTheme
 
 
 internal fun calendarDays(): List<DayOfWeek> = DayOfWeek.values().toList()
@@ -233,7 +233,7 @@ internal fun CalendarElement(
                 .align(Alignment.CenterHorizontally)
                 .drawBehind { drawBehindElement() },
             color = textColor,
-            fontFamily = NanumSquareRound,
+            fontFamily = com.practice.designsystem.theme.NanumSquareRound,
             style = textStyle,
             fontSize = textSize,
             onTextLayout = { result ->
@@ -252,12 +252,12 @@ private val LightSundayColor = Color(0xFFFF9999)
 
 @Composable
 private fun Date.color(currentMonth: Int = this.month) = when (calculateDayType(currentMonth)) {
-    com.practice.date.DayType.Weekday -> MaterialTheme.colorScheme.onSurface
-    com.practice.date.DayType.WeekdayOverMonth -> LightWeekdayColor
-    com.practice.date.DayType.Saturday -> SaturdayColor
-    com.practice.date.DayType.SaturdayOverMonth -> LightSaturdayColor
-    com.practice.date.DayType.Holiday -> HolidayColor
-    com.practice.date.DayType.HolidayOverMonth -> LightSundayColor
+    DayType.Weekday -> MaterialTheme.colorScheme.onSurface
+    DayType.WeekdayOverMonth -> LightWeekdayColor
+    DayType.Saturday -> SaturdayColor
+    DayType.SaturdayOverMonth -> LightSaturdayColor
+    DayType.Holiday -> HolidayColor
+    DayType.HolidayOverMonth -> LightSundayColor
 }
 
 @Preview(showBackground = true)

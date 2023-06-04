@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.theme
+package com.practice.designsystem.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

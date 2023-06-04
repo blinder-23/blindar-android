@@ -6,15 +6,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hsk.ktx.date.Date
-import com.practice.hanbitlunch.calendar.core.YearMonth
-import com.practice.hanbitlunch.calendar.core.getFirstWeekday
-import com.practice.hanbitlunch.calendar.core.yearMonth
+import com.practice.combine.LoadMealScheduleDataUseCase
+import com.practice.combine.MealScheduleEntity
+import com.practice.designsystem.calendar.core.YearMonth
+import com.practice.designsystem.calendar.core.getFirstWeekday
+import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.hanbitlunch.screen.main.state.DailyMealScheduleState
 import com.practice.hanbitlunch.screen.main.state.MainUiState
 import com.practice.hanbitlunch.screen.main.state.MealUiState
 import com.practice.hanbitlunch.screen.main.state.ScheduleUiState
 import com.practice.hanbitlunch.screen.main.state.toMealUiState
 import com.practice.hanbitlunch.screen.main.state.toSchedule
+import com.practice.preferences.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
@@ -27,8 +30,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-    private val loadMealScheduleDataUseCase: com.practice.combine.LoadMealScheduleDataUseCase,
-    private val preferencesRepository: com.practice.preferences.PreferencesRepository,
+    private val loadMealScheduleDataUseCase: LoadMealScheduleDataUseCase,
+    private val preferencesRepository: PreferencesRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableState<MainUiState>
@@ -49,7 +52,7 @@ class MainScreenViewModel @Inject constructor(
     private val selectedDateFlow: MutableStateFlow<Date>
 
     // TODO: domain 또는 data로 옮기기?
-    private val cache: MutableMap<YearMonth, com.practice.combine.MealScheduleEntity>
+    private val cache: MutableMap<YearMonth, MealScheduleEntity>
 
     init {
         val current = Date.now()
@@ -88,7 +91,7 @@ class MainScreenViewModel @Inject constructor(
     private fun updateUiState(
         yearMonth: YearMonth = state.yearMonth,
         selectedDate: Date = state.selectedDate,
-        entity: com.practice.combine.MealScheduleEntity? = cache[selectedDate.yearMonth],
+        entity: MealScheduleEntity? = cache[selectedDate.yearMonth],
         isLoading: Boolean = state.isLoading,
         screenMode: com.practice.preferences.ScreenMode = state.screenMode,
     ) {
@@ -116,7 +119,7 @@ class MainScreenViewModel @Inject constructor(
         preferencesRepository.updateScreenMode(screenMode)
     }
 
-    private fun updateScheduleDates(entity: com.practice.combine.MealScheduleEntity) {
+    private fun updateScheduleDates(entity: MealScheduleEntity) {
         _scheduleDates.value = scheduleDates.value.toMutableSet().apply {
             addAll(entity.schedules.map { Date(it.year, it.month, it.day) })
         }
@@ -131,7 +134,7 @@ class MainScreenViewModel @Inject constructor(
         )
     }
 
-    private suspend fun loadMonthlyData(yearMonth: YearMonth): com.practice.combine.MealScheduleEntity {
+    private suspend fun loadMonthlyData(yearMonth: YearMonth): MealScheduleEntity {
         val (queryYear, queryMonth) = yearMonth
         return if (cache.containsKey(yearMonth)) {
             cache[yearMonth]!!
@@ -142,7 +145,7 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    private fun parseDailyState(mealScheduleEntity: com.practice.combine.MealScheduleEntity): List<DailyMealScheduleState> {
+    private fun parseDailyState(mealScheduleEntity: MealScheduleEntity): List<DailyMealScheduleState> {
         val allDates = mutableSetOf<Date>().apply {
             addAll(mealScheduleEntity.meals.map { Date(it.year, it.month, it.day) })
             addAll(mealScheduleEntity.schedules.map { Date(it.year, it.month, it.day) })
@@ -196,7 +199,7 @@ class MainScreenViewModel @Inject constructor(
 
 }
 
-private fun com.practice.combine.MealScheduleEntity.getMeal(date: Date): MealUiState {
+private fun MealScheduleEntity.getMeal(date: Date): MealUiState {
     return try {
         meals.first { it.dateEquals(date) }
             .toMealUiState()
@@ -205,7 +208,7 @@ private fun com.practice.combine.MealScheduleEntity.getMeal(date: Date): MealUiS
     }
 }
 
-private fun com.practice.combine.MealScheduleEntity.getSchedule(date: Date): ScheduleUiState {
+private fun MealScheduleEntity.getSchedule(date: Date): ScheduleUiState {
     return try {
         val schedules = schedules.filter { it.dateEquals(date) }.map { it.toSchedule() }
         ScheduleUiState(schedules.toPersistentList())
