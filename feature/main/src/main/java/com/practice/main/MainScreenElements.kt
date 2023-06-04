@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen.main
+package com.practice.main
 
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.animateDp
@@ -46,13 +46,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.date.toKor
-import com.practice.hanbitlunch.screen.main.state.DailyMealScheduleState
-import com.practice.hanbitlunch.screen.main.state.MealUiState
-import com.practice.hanbitlunch.screen.main.state.Menu
-import com.practice.hanbitlunch.screen.main.state.Schedule
-import com.practice.hanbitlunch.screen.main.state.ScheduleUiState
-import com.practice.hanbitlunch.screen.main.state.ScreenModeIcon
-import com.practice.hanbitlunch.screen.main.state.screenModeIcons
+import com.practice.main.state.DailyMealScheduleState
+import com.practice.main.state.MealUiState
+import com.practice.main.state.Menu
+import com.practice.main.state.Schedule
+import com.practice.main.state.ScheduleUiState
+import com.practice.main.state.ScreenModeIcon
+import com.practice.main.state.screenModeIcons
 import com.practice.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList

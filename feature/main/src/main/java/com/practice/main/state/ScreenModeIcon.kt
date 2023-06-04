@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen.main.state
+package com.practice.main.state
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Event

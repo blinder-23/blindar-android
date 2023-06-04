@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen.main
+package com.practice.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,10 +17,10 @@ import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.largeCalendarDateShape
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.hanbitlunch.screen.main.state.DailyMealScheduleState
-import com.practice.hanbitlunch.screen.main.state.MainUiState
-import com.practice.hanbitlunch.screen.main.state.MealUiState
-import com.practice.hanbitlunch.screen.main.state.ScheduleUiState
+import com.practice.main.state.DailyMealScheduleState
+import com.practice.main.state.MainUiState
+import com.practice.main.state.MealUiState
+import com.practice.main.state.ScheduleUiState
 
 @Composable
 fun HorizontalMainScreen(

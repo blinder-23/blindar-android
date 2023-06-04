@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen.main
+package com.practice.main
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -11,12 +11,12 @@ import com.practice.combine.MealScheduleEntity
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.getFirstWeekday
 import com.practice.designsystem.calendar.core.yearMonth
-import com.practice.hanbitlunch.screen.main.state.DailyMealScheduleState
-import com.practice.hanbitlunch.screen.main.state.MainUiState
-import com.practice.hanbitlunch.screen.main.state.MealUiState
-import com.practice.hanbitlunch.screen.main.state.ScheduleUiState
-import com.practice.hanbitlunch.screen.main.state.toMealUiState
-import com.practice.hanbitlunch.screen.main.state.toSchedule
+import com.practice.main.state.DailyMealScheduleState
+import com.practice.main.state.MainUiState
+import com.practice.main.state.MealUiState
+import com.practice.main.state.ScheduleUiState
+import com.practice.main.state.toMealUiState
+import com.practice.main.state.toSchedule
 import com.practice.preferences.PreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList

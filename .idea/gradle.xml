@@ -23,6 +23,8 @@
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/data/meal" />
             <option value="$PROJECT_DIR$/data/schedule" />
+            <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/main" />
           </set>
         </option>
       </GradleProjectSettings>

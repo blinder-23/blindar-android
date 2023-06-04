@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen.main.state
+package com.practice.main.state
 
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.YearMonth

@@ -16,8 +16,6 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.practice.hanbitlunch.screen.main.MainScreen
-import com.practice.hanbitlunch.screen.main.MainScreenViewModel
 import com.practice.hanbitlunch.screen.login.LoginScreen
 import com.practice.hanbitlunch.screen.onboarding.OnboardingScreen
 import com.practice.hanbitlunch.screen.registerform.RegisterFormScreen
@@ -34,7 +32,7 @@ fun BlindarNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberAnimatedNavController(),
 ) {
-    val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
+    val mainScreenViewModel: com.practice.main.MainScreenViewModel = hiltViewModel()
     val tweenSpec = tween<IntOffset>(
         durationMillis = 200,
     )
@@ -125,7 +123,7 @@ fun BlindarNavHost(
             )
         }
         composable(MAIN) {
-            MainScreen(
+            com.practice.main.MainScreen(
                 windowSize = windowSizeClass,
                 viewModel = mainScreenViewModel,
                 modifier = Modifier.fillMaxSize(),

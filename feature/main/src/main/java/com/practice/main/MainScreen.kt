@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen.main
+package com.practice.main
 
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.InfiniteRepeatableSpec
