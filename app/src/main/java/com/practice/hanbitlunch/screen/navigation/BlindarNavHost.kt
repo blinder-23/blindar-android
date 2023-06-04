@@ -17,10 +17,8 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.practice.hanbitlunch.screen.login.LoginScreen
-import com.practice.hanbitlunch.screen.onboarding.OnboardingScreen
 import com.practice.hanbitlunch.screen.registerform.RegisterFormScreen
 import com.practice.hanbitlunch.screen.selectschool.SelectSchoolScreen
-import com.practice.hanbitlunch.screen.splash.SplashScreen
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -66,7 +64,7 @@ fun BlindarNavHost(
         },
     ) {
         composable(SPLASH) {
-            SplashScreen(
+            com.practice.onboarding.splash.SplashScreen(
                 login = {
                     // auto login code
                     delay(1000L)
@@ -86,7 +84,7 @@ fun BlindarNavHost(
             )
         }
         composable(ONBOARDING) {
-            OnboardingScreen(
+            com.practice.onboarding.onboarding.OnboardingScreen(
                 onRegister = { navController.navigate(REGISTER_FORM) },
                 onGoogleLogin = { /*TODO*/ },
                 onLogin = { navController.navigate(LOGIN) },

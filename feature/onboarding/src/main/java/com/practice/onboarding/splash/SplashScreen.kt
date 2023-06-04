@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen.splash
+package com.practice.onboarding.splash
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text

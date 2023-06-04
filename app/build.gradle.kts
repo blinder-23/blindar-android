@@ -135,6 +135,7 @@ dependencies {
     implementation(libs.violet.dreams.ui)
 
     implementation(project(":feature:main"))
+    implementation(project(":feature:onboarding"))
     implementation(project(":core:api"))
     implementation(project(":core:work"))
 
