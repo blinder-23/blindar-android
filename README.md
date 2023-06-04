@@ -19,5 +19,5 @@
 * Jetpack Compose를 사용하여 UI를 작성했습니다.
 * Clean Architecture와 멀티 모듈 구조를 적용했습니다.
 
-## 아키텍쳐
-![image](https://user-images.githubusercontent.com/45386920/199899256-55498b26-2064-4227-9817-9771ed0493af.png)
+## 모듈 구조
+![image](previews/dependency-graph-blindar.png)
