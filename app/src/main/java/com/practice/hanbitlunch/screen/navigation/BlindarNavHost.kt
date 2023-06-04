@@ -16,8 +16,6 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.practice.hanbitlunch.screen.registerform.RegisterFormScreen
-import com.practice.hanbitlunch.screen.selectschool.SelectSchoolScreen
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -92,7 +90,7 @@ fun BlindarNavHost(
         }
         composable(REGISTER_FORM) {
             // RegisterForm과 SelectSchool은 같은 ViewModel을 공유
-            RegisterFormScreen(
+            com.practice.register.registerform.RegisterFormScreen(
                 onNextButtonClick = {
                     navController.navigate(SELECT_SCHOOL)
                 },
@@ -100,7 +98,7 @@ fun BlindarNavHost(
             )
         }
         composable(SELECT_SCHOOL) {
-            SelectSchoolScreen(
+            com.practice.register.selectschool.SelectSchoolScreen(
                 onNavigateToMain = {
                     navController.navigate(MAIN) {
                         popUpTo(ONBOARDING) { inclusive = true }

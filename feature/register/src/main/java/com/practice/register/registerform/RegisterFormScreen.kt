@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen.registerform
+package com.practice.register.registerform
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button

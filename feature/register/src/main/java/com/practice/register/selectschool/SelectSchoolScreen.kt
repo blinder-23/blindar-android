@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen.selectschool
+package com.practice.register.selectschool
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
