@@ -136,6 +136,7 @@ dependencies {
 
     implementation(project(":feature:main"))
     implementation(project(":feature:onboarding"))
+    implementation(project(":feature:login"))
     implementation(project(":core:api"))
     implementation(project(":core:work"))
 

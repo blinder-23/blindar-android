@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen.login
+package com.practice.login
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
