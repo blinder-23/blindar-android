@@ -20,6 +20,7 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.practice.login.LoginScreen
 import com.practice.main.MainScreen
+import com.practice.main.MainScreenViewModel
 import com.practice.onboarding.onboarding.OnboardingScreen
 import com.practice.onboarding.splash.SplashScreen
 import com.practice.register.phonenumber.VerifyPhoneNumber
@@ -34,7 +35,7 @@ fun BlindarNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberAnimatedNavController(),
 ) {
-    val mainScreenViewModel: com.practice.main.MainScreenViewModel = hiltViewModel()
+    val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
     val tweenSpec = tween<IntOffset>(
         durationMillis = 200,
     )
@@ -107,6 +108,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
     registerGraph(navController)
     composable(LOGIN) {
         LoginScreen(
+            onBackButtonClick = { navController.popBackStack() },
             onLoginSuccess = {
                 navController.navigate(MAIN) {
                     popUpTo(ONBOARDING) { inclusive = true }
@@ -126,14 +128,12 @@ fun NavGraphBuilder.blindarMainNavGraph(
 
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.registerGraph(navController: NavHostController) {
+    val onBackButtonClick: () -> Unit = { navController.popBackStack() }
     navigation(startDestination = VERIFY_PHONE, route = REGISTER) {
         composable(VERIFY_PHONE) {
             VerifyPhoneNumber(
-                onNextButtonClick = {
-                    navController.navigate(REGISTER_FORM) {
-
-                    }
-                },
+                onBackButtonClick = onBackButtonClick,
+                onNextButtonClick = { navController.navigate(REGISTER_FORM) },
                 modifier = Modifier.fillMaxSize(),
             )
         }
@@ -141,6 +141,7 @@ fun NavGraphBuilder.registerGraph(navController: NavHostController) {
             // RegisterForm과 SelectSchool은 같은 ViewModel을 공유
             RegisterFormScreen(
                 onLaunchRegisterUI = {},
+                onBackButtonClick = onBackButtonClick,
                 onNextButtonClick = {
                     navController.navigate(SELECT_SCHOOL)
                 },
@@ -149,6 +150,7 @@ fun NavGraphBuilder.registerGraph(navController: NavHostController) {
         }
         composable(SELECT_SCHOOL) {
             SelectSchoolScreen(
+                onBackButtonClick = onBackButtonClick,
                 onNavigateToMain = {
                     navController.navigate(MAIN) {
                         popUpTo(ONBOARDING) { inclusive = true }

@@ -46,6 +46,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.date.toKor
+import com.practice.designsystem.components.BodyLarge
+import com.practice.designsystem.components.TitleMedium
 import com.practice.main.state.DailyMealScheduleState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.Menu
@@ -343,12 +345,12 @@ private fun DailyDay(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         val textColor = contentColorFor(backgroundColor)
-        com.practice.designsystem.components.TitleMedium(
+        TitleMedium(
             text = date.dayOfMonth.toString().padStart(2, padChar = '0'),
             textColor = textColor,
             modifier = Modifier.alignByBaseline(),
         )
-        com.practice.designsystem.components.BodyLarge(
+        BodyLarge(
             text = date.dayOfWeek.toKor(),
             textColor = textColor,
             modifier = Modifier.alignByBaseline(),
