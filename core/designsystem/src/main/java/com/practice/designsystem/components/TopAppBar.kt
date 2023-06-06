@@ -28,7 +28,7 @@ fun BlindarTopAppBar(
     CenterAlignedTopAppBar(
         modifier = modifier
             .clip(RoundedCornerShape(bottomStart = round, bottomEnd = round)),
-        title = { TitleSmall(text = title) },
+        title = { DisplaySmall(text = title) },
         navigationIcon = {
             IconButton(onClick = onBackButtonClick) {
                 Icon(

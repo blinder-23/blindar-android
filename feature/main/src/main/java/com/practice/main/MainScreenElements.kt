@@ -47,7 +47,8 @@ import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.date.toKor
 import com.practice.designsystem.components.BodyLarge
-import com.practice.designsystem.components.TitleMedium
+import com.practice.designsystem.components.DisplayMedium
+import com.practice.designsystem.components.DisplaySmall
 import com.practice.main.state.DailyMealScheduleState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.Menu
@@ -174,11 +175,11 @@ internal fun VerticalYearMonth(
         verticalArrangement = Arrangement.spacedBy(13.dp),
         modifier = modifier,
     ) {
-        com.practice.designsystem.components.TitleSmall(
+        DisplaySmall(
             text = "${year}년",
             textColor = textColor,
         )
-        com.practice.designsystem.components.TitleMedium(
+        DisplayMedium(
             text = "${month}월",
             textColor = textColor,
         )
@@ -247,7 +248,7 @@ internal fun MenuRow(
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.Start) {
         menus.forEach {
-            com.practice.designsystem.components.BodyLarge(
+            BodyLarge(
                 text = it.name,
                 modifier = Modifier.weight(1f)
             )
@@ -266,7 +267,7 @@ internal fun ScheduleContent(
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             scheduleUiState.schedules.forEach { schedule ->
-                com.practice.designsystem.components.BodyLarge(text = schedule.displayText)
+                BodyLarge(text = schedule.displayText)
             }
         }
     }
@@ -345,7 +346,7 @@ private fun DailyDay(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         val textColor = contentColorFor(backgroundColor)
-        TitleMedium(
+        DisplayMedium(
             text = date.dayOfMonth.toString().padStart(2, padChar = '0'),
             textColor = textColor,
             modifier = Modifier.alignByBaseline(),
@@ -368,7 +369,7 @@ internal fun MainScreenContent(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        com.practice.designsystem.components.TitleSmall(text = title)
+        DisplaySmall(text = title)
         contents()
     }
 }
