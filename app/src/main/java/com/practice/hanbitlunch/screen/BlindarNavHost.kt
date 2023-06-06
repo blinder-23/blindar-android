@@ -99,7 +99,9 @@ fun NavGraphBuilder.blindarMainNavGraph(
                     popUpTo(SPLASH) { inclusive = true }
                 }
             },
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface),
         )
     }
     composable(ONBOARDING) {
@@ -107,7 +109,9 @@ fun NavGraphBuilder.blindarMainNavGraph(
             onRegister = { navController.navigate(REGISTER) },
             onGoogleLogin = { /*TODO*/ },
             onLogin = { navController.navigate(LOGIN) },
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface),
         )
     }
     registerGraph(navController)
@@ -147,12 +151,13 @@ fun NavGraphBuilder.registerGraph(navController: NavHostController) {
         composable(REGISTER_FORM) {
             // RegisterForm과 SelectSchool은 같은 ViewModel을 공유
             RegisterFormScreen(
-                onLaunchRegisterUI = {},
                 onBackButtonClick = onBackButtonClick,
-                onNextButtonClick = {
+                onNameUpdated = {
                     navController.navigate(SELECT_SCHOOL)
                 },
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.primary),
             )
         }
         composable(SELECT_SCHOOL) {
