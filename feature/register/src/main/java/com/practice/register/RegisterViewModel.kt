@@ -32,7 +32,9 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
 
     fun onAuthChipClick(
         activity: Activity,
+        onCodeSent: ()->Unit,
         onSuccess: () -> Unit,
+        onFail: () -> Unit,
         onCodeInvalid: () -> Unit,
     ) {
         if (!registerUiState.value.isPhoneNumberValid) {
@@ -54,7 +56,7 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
 
                 override fun onVerificationFailed(e: FirebaseException) {
                     Log.e(TAG, "onVerificationFailed", e)
-                    onVerificationFail(e)
+                    onVerificationFail(e, onFail)
                 }
 
                 override fun onCodeSent(
@@ -62,6 +64,7 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
                     token: PhoneAuthProvider.ForceResendingToken
                 ) {
                     Log.d(TAG, "id: $verificationId, token: $token")
+                    onCodeSent()
                     storedVerificationId = verificationId
                     resendToken = token
                     enableAuthCodeField()
@@ -77,7 +80,10 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
         )
     }
 
-    private fun onVerificationFail(e: FirebaseException) {
+    private fun onVerificationFail(
+        e: FirebaseException,
+        onFail: () -> Unit,
+    ) {
         when (e) {
             is FirebaseAuthInvalidCredentialsException -> {
                 Log.e(TAG, "Invalid request")
@@ -95,6 +101,7 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
                 Log.e(TAG, "Unknown error", e)
             }
         }
+        onFail()
     }
 
     private fun enableAuthCodeField() {
@@ -129,6 +136,27 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
             credential,
             onSuccess,
             onCodeInvalid
+        )
+    }
+
+    /**
+     * RegisterFormScreen
+     */
+    fun onNameChange(name: String) {
+        registerUiState.update {
+            this.copy(name = name)
+        }
+    }
+
+    fun submitName(
+        onSuccess: () -> Unit,
+        onFail: () -> Unit,
+    ) {
+        val name = registerUiState.value.name
+        BlindarFirebase.tryUpdateCurrentUsername(
+            username = name,
+            onSuccess = onSuccess,
+            onFail = onFail,
         )
     }
 }
