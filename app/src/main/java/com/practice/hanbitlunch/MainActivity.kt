@@ -6,11 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.hanbitlunch.screen.BlindarNavHost
 import com.practice.preferences.PreferencesRepository
+import com.practice.util.LocalActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -26,12 +28,14 @@ class MainActivity : ComponentActivity() {
         // Splash screen will dismiss as soon as the app draws its first frame
         installSplashScreen()
         setContent {
-            val windowSizeClass = calculateWindowSizeClass(activity = this)
-            BlindarTheme {
-                BlindarNavHost(
-                    windowSizeClass = windowSizeClass,
-                    modifier = Modifier.fillMaxSize(),
-                )
+            CompositionLocalProvider(LocalActivity provides this) {
+                val windowSizeClass = calculateWindowSizeClass(activity = this)
+                BlindarTheme {
+                    BlindarNavHost(
+                        windowSizeClass = windowSizeClass,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
             }
         }
     }

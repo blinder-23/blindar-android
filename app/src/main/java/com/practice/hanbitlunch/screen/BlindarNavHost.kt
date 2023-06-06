@@ -5,7 +5,9 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -134,7 +136,9 @@ fun NavGraphBuilder.registerGraph(navController: NavHostController) {
             VerifyPhoneNumber(
                 onBackButtonClick = onBackButtonClick,
                 onNextButtonClick = { navController.navigate(REGISTER_FORM) },
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.primary),
             )
         }
         composable(REGISTER_FORM) {

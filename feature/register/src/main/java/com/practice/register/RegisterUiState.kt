@@ -9,7 +9,7 @@ data class RegisterUiState(
     val isVerifyCodeButtonEnabled: Boolean,
 ) {
     val isPhoneNumberValid: Boolean
-        get() = if (phoneNumber.isEmpty()) true else PhoneNumberValidator.validate(phoneNumber)
+        get() = PhoneNumberValidator.validate(phoneNumber)
 
     companion object {
         val Empty = RegisterUiState(
