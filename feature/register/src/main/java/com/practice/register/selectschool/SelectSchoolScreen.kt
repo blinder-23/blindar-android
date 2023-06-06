@@ -1,15 +1,15 @@
 package com.practice.register.selectschool
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BlindarTopAppBar
+import com.practice.designsystem.components.BottomNextButton
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.designsystem.theme.NanumSquareRound
 import com.practice.register.R
@@ -21,7 +21,7 @@ fun SelectSchoolScreen(
     modifier: Modifier = Modifier,
 ) {
     ConstraintLayout(modifier = modifier) {
-        val (appBar, text, nextButton) = createRefs()
+        val (appBar, text, selectSchoolNextButton) = createRefs()
         BlindarTopAppBar(
             title = stringResource(id = R.string.select_school_screen),
             onBackButtonClick = onBackButtonClick,
@@ -38,17 +38,18 @@ fun SelectSchoolScreen(
             },
             fontFamily = NanumSquareRound,
         )
-        Button(
+        BottomNextButton(
+            text=stringResource(R.string.next_button),
+            enabled = true,
             onClick = onNavigateToMain,
-            modifier = Modifier.constrainAs(nextButton) {
-                linkTo(parent.start, text.top, parent.end, parent.bottom, topMargin = 100.dp)
-            }
-        ) {
-            Text(
-                text = "메인 화면으로 이동",
-                fontFamily = NanumSquareRound,
-            )
-        }
+            modifier = Modifier
+                .constrainAs(selectSchoolNextButton) {
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .fillMaxWidth()
+        )
     }
 }
 

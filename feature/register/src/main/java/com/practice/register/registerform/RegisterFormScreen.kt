@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BlindarTopAppBar
+import com.practice.designsystem.components.BottomNextButton
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.designsystem.theme.NanumSquareRound
 import com.practice.register.R
@@ -32,7 +34,7 @@ fun RegisterFormScreen(
             onSignInResult(result)
         }
     ConstraintLayout(modifier = modifier) {
-        val (appBar, text, registerButton, nextButton) = createRefs()
+        val (appBar, text, registerButton, formNextButton) = createRefs()
         BlindarTopAppBar(
             title = stringResource(id = R.string.register_form_screen),
             onBackButtonClick = onBackButtonClick,
@@ -62,19 +64,18 @@ fun RegisterFormScreen(
         ) {
             Text(text = "회원가입 UI")
         }
-        Button(
+        BottomNextButton(
+            text = stringResource(R.string.next_button),
+            enabled = true,
             onClick = onNextButtonClick,
-            modifier = Modifier.constrainAs(nextButton) {
-                top.linkTo(registerButton.bottom, margin = 100.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-        ) {
-            Text(
-                text = "다음",
-                fontFamily = NanumSquareRound,
-            )
-        }
+            modifier = Modifier
+                .constrainAs(formNextButton) {
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .fillMaxWidth()
+        )
     }
 }
 

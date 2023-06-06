@@ -1,6 +1,9 @@
 package com.practice.register.phonenumber
 
-import androidx.compose.material3.Button
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BlindarTopAppBar
+import com.practice.designsystem.components.BottomNextButton
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.designsystem.theme.NanumSquareRound
 import com.practice.register.R
@@ -20,7 +24,7 @@ fun VerifyPhoneNumber(
     modifier: Modifier = Modifier,
 ) {
     ConstraintLayout(modifier = modifier) {
-        val (appBar, text, button) = createRefs()
+        val (appBar, text, phoneNextButton) = createRefs()
         BlindarTopAppBar(
             title = stringResource(id = R.string.verify_phone_screen),
             onBackButtonClick = onBackButtonClick,
@@ -33,25 +37,24 @@ fun VerifyPhoneNumber(
         Text(
             text = "폰 번호",
             modifier = Modifier.constrainAs(text) {
-                linkTo(
-                    top = parent.top,
-                    bottom = parent.bottom,
-                    start = parent.start,
-                    end = parent.end,
-                )
+                top.linkTo(appBar.bottom, margin = 100.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
             },
             fontFamily = NanumSquareRound,
         )
-        Button(
+        BottomNextButton(
+            text = stringResource(R.string.next_button),
+            enabled = true,
             onClick = onNextButtonClick,
-            modifier = Modifier.constrainAs(button) {
-                top.linkTo(text.bottom, margin = 100.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-        ) {
-            Text(text = "다음")
-        }
+            modifier = Modifier
+                .constrainAs(phoneNextButton) {
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .fillMaxWidth()
+        )
     }
 }
 
@@ -62,6 +65,10 @@ private fun VerifyPhoneNumberPreview() {
         VerifyPhoneNumber(
             onBackButtonClick = {},
             onNextButtonClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+                .background(MaterialTheme.colorScheme.background),
         )
     }
 }

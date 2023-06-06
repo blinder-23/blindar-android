@@ -1,15 +1,15 @@
 package com.practice.login
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BlindarTopAppBar
+import com.practice.designsystem.components.BottomNextButton
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.designsystem.theme.NanumSquareRound
 
@@ -37,17 +37,18 @@ fun LoginScreen(
             },
             fontFamily = NanumSquareRound,
         )
-        Button(
+        BottomNextButton(
+            text = stringResource(R.string.login_button_text),
+            enabled = true,
             onClick = onLoginSuccess,
-            modifier = Modifier.constrainAs(loginButton) {
-                linkTo(parent.start, text.top, parent.end, parent.bottom, topMargin = 100.dp)
-            }
-        ) {
-            Text(
-                text = "로그인",
-                fontFamily = NanumSquareRound,
-            )
-        }
+            modifier = Modifier
+                .constrainAs(loginButton) {
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .fillMaxWidth()
+        )
     }
 }
 
