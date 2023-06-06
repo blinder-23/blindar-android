@@ -11,17 +11,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.util.concurrent.TimeUnit
 
 object BlindarFirebase {
-    private val TAG = "BlindarFirebase"
+    private const val TAG = "BlindarFirebase"
     private val auth: FirebaseAuth = Firebase.auth
+    private val database: DatabaseReference = Firebase.database.reference
 
     fun addAuthStateListener(listener: FirebaseAuth.AuthStateListener) {
         auth.addAuthStateListener(listener)
@@ -85,23 +89,40 @@ object BlindarFirebase {
             }
     }
 
-    fun updateCurrentUsername(
+    fun tryUpdateCurrentUsername(
         username: String,
         onSuccess: () -> Unit,
         onFail: () -> Unit,
     ) {
         auth.currentUser?.let { user ->
-            val profileUpdates = userProfileChangeRequest {
-                displayName = username
-            }
-            user.updateProfile(profileUpdates)
+            database.child("users").child(username).child("owner").setValue(user.uid)
                 .addOnSuccessListener {
-                    onSuccess()
-                }.addOnFailureListener {
-                    Log.e(TAG, "Update profile failed", it)
+                    tryUpdateCurrentUsername(user, username, onSuccess, onFail)
+                }
+                .addOnFailureListener {
+                    Log.e(TAG, "Username owner set failed", it)
                     onFail()
                 }
         }
+    }
+
+    private fun tryUpdateCurrentUsername(
+        user: FirebaseUser,
+        username: String,
+        onSuccess: () -> Unit,
+        onFail: () -> Unit,
+    ) {
+        val profileUpdates = userProfileChangeRequest {
+            displayName = username
+        }
+        user.updateProfile(profileUpdates)
+            .addOnSuccessListener {
+                Log.d(TAG, "update profile success")
+                onSuccess()
+            }.addOnFailureListener {
+                Log.e(TAG, "Update profile failed", it)
+                onFail()
+            }
     }
 
 }
