@@ -53,6 +53,9 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
 
+    // Accompanist
+    implementation(libs.bundles.accompanist)
+
     // Firebase
     implementation(libs.firebase.ui.auth)
 

@@ -86,6 +86,7 @@ firebase-auth-ktx = { module = 'com.google.firebase:firebase-auth-ktx' }
 firebase-analytics-ktx = { module = 'com.google.firebase:firebase-analytics-ktx' }
 firebase-bom = { module = 'com.google.firebase:firebase-bom', version.ref = 'firebase-bom' }
 firebase-crashlytics-ktx = { module = 'com.google.firebase:firebase-crashlytics-ktx' }
+firebase-database = { module = 'com.google.firebase:firebase-database-ktx' }
 firebase-ui-auth = 'com.firebaseui:firebase-ui-auth:7.2.0'
 
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
@@ -145,7 +146,7 @@ compose = [
     'androidx-constraintlayout-compose'
 ]
 coroutines = ['kotlinx-coroutines-core', 'kotlinx-coroutines-android']
-firebase = ['firebase-auth-ktx', 'firebase-analytics-ktx', 'firebase-crashlytics-ktx']
+firebase = ['firebase-auth-ktx', 'firebase-analytics-ktx', 'firebase-crashlytics-ktx', 'firebase-database']
 jetpack = ['androidx-core-splashscreen', 'androidx-datastore-preferences', 'androidx-profileinstaller', 'androidx-startup-runtime']
 lifecycle = [
     'androidx-lifecycle-extensions',
