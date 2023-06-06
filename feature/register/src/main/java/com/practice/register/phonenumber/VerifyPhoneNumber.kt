@@ -3,7 +3,6 @@ package com.practice.register.phonenumber
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AssistChip
@@ -20,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -110,7 +108,6 @@ fun VerifyPhoneNumber(
                     bottom.linkTo(phoneNextButton.top)
                 }
                 .fillMaxWidth(fraction = .8f)
-                .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.surface),
         )
         BottomNextButton(
