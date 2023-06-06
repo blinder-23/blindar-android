@@ -20,6 +20,7 @@
             <option value="$PROJECT_DIR$/core/designsystem" />
             <option value="$PROJECT_DIR$/core/firebase" />
             <option value="$PROJECT_DIR$/core/preferences" />
+            <option value="$PROJECT_DIR$/core/util" />
             <option value="$PROJECT_DIR$/core/work" />
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/data/meal" />

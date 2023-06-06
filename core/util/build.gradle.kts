@@ -2,12 +2,10 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
 }
 
 android {
-    namespace = "com.practice.register"
+    namespace = "com.practice.util"
     compileSdk = 33
 
     defaultConfig {
@@ -42,38 +40,11 @@ android {
 }
 
 dependencies {
-    api(project(":core:designsystem"))
-    api(project(":core:util"))
-
     // KTX libraries
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.collection.ktx)
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
-
-    // Firebase
-    implementation(libs.firebase.ui.auth)
-
-    // AndroidX lifecycles
-    implementation(libs.bundles.lifecycle)
-
-    // Hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    kapt(libs.hilt.compiler.androidx)
-    androidTestImplementation(libs.hilt.android.testing)
-    implementation(libs.hilt.work)
-
-    // Other Jetpack Libraries
-    implementation(libs.bundles.jetpack)
-
-    // Kotlin Coroutines
-    implementation(libs.bundles.coroutines)
-    testImplementation(libs.kotlinx.coroutines.test)
-
-    // Unit test
-    testImplementation(libs.junit.jupiter)
-    testRuntimeOnly(libs.junit.vintage.engine)
-    testImplementation(libs.assertj.core)
 }
