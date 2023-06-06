@@ -1,5 +1,6 @@
 package com.practice.hanbitlunch.screen
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -20,6 +21,7 @@ import androidx.navigation.navigation
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.practice.login.LoginScreen
 import com.practice.main.MainScreen
 import com.practice.main.MainScreenViewModel
@@ -28,7 +30,8 @@ import com.practice.onboarding.splash.SplashScreen
 import com.practice.register.phonenumber.VerifyPhoneNumber
 import com.practice.register.registerform.RegisterFormScreen
 import com.practice.register.selectschool.SelectSchoolScreen
-import kotlinx.coroutines.delay
+
+private val TAG = "BlindarNavHost"
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -82,16 +85,16 @@ fun NavGraphBuilder.blindarMainNavGraph(
     composable(SPLASH) {
         SplashScreen(
             login = {
-                // auto login code
-                delay(1000L)
-                false
+                val user = FirebaseAuth.getInstance().currentUser
+                Log.d(TAG, "current user is ${user?.uid}")
+                user != null
             },
-            onLoginSuccess = {
+            onAutoLoginSuccess = {
                 navController.navigate(MAIN) {
                     popUpTo(SPLASH) { inclusive = true }
                 }
             },
-            onLoginFail = {
+            onAutoLoginFail = {
                 navController.navigate(ONBOARDING) {
                     popUpTo(SPLASH) { inclusive = true }
                 }

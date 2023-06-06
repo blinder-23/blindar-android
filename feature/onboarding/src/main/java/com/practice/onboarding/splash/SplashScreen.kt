@@ -15,8 +15,8 @@ import com.practice.designsystem.theme.NanumSquareRound
 @Composable
 fun SplashScreen(
     login: suspend () -> Boolean,
-    onLoginSuccess: () -> Unit,
-    onLoginFail: () -> Unit,
+    onAutoLoginSuccess: () -> Unit,
+    onAutoLoginFail: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val systemUiController = rememberSystemUiController()
@@ -24,9 +24,9 @@ fun SplashScreen(
     LaunchedEffect(true) {
         systemUiController.setSystemBarsColor(systemBarColor)
         if (login()) {
-            onLoginSuccess()
+            onAutoLoginSuccess()
         } else {
-            onLoginFail()
+            onAutoLoginFail()
         }
     }
 
@@ -51,8 +51,8 @@ private fun SplashScreenPreview() {
     BlindarTheme {
         SplashScreen(
             login = { true },
-            onLoginSuccess = {},
-            onLoginFail = {},
+            onAutoLoginSuccess = {},
+            onAutoLoginFail = {},
             modifier = Modifier.fillMaxSize(),
         )
     }
