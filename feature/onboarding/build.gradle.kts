@@ -64,6 +64,9 @@ dependencies {
     // Other Jetpack Libraries
     implementation(libs.bundles.jetpack)
 
+    // Accompanist
+    implementation(libs.bundles.accompanist)
+
     // Kotlin Coroutines
     implementation(libs.bundles.coroutines)
     testImplementation(libs.kotlinx.coroutines.test)
