@@ -80,4 +80,7 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.vintage.engine)
     testImplementation(libs.assertj.core)
+
+    // Kotlin immutable collections
+    implementation(libs.kotlinx.collections.immutable)
 }
