@@ -13,10 +13,10 @@ class RemoteScheduleModuleTest {
     val hiltRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var dataSource: com.practice.api.schedule.RemoteScheduleDataSource
+    lateinit var dataSource: RemoteScheduleDataSource
 
     @Inject
-    lateinit var repository: com.practice.api.schedule.RemoteScheduleRepository
+    lateinit var repository: RemoteScheduleRepository
 
     @Test
     fun testDataSourceIsInjected() {

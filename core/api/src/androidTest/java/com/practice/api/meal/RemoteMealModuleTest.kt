@@ -13,10 +13,10 @@ class RemoteMealModuleTest {
     val hiltRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var dataSource: com.practice.api.meal.RemoteMealDataSource
+    lateinit var dataSource: RemoteMealDataSource
 
     @Inject
-    lateinit var repository: com.practice.api.meal.RemoteMealRepository
+    lateinit var repository: RemoteMealRepository
 
     @Test
     fun testDataSourceIsInjected() {
