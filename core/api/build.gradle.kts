@@ -96,4 +96,9 @@ dependencies {
     kapt(libs.hilt.compiler.androidx)
     kaptAndroidTest(libs.hilt.compiler)
     androidTestImplementation(libs.hilt.android.testing)
+
+    // Unit test
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.vintage.engine)
+    testImplementation(libs.assertj.core)
 }
