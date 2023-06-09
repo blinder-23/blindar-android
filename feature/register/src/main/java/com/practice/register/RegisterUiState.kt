@@ -2,6 +2,9 @@ package com.practice.register
 
 import com.practice.register.phonenumber.PhoneNumberValidator
 import com.practice.register.registerform.NameValidator
+import com.practice.register.selectschool.School
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 data class RegisterUiState(
     val phoneNumber: String,
@@ -9,6 +12,8 @@ data class RegisterUiState(
     val isAuthCodeFieldEnabled: Boolean,
     val isVerifyCodeButtonEnabled: Boolean,
     val name: String,
+    val schoolQuery: String,
+    val schools: ImmutableList<School>,
 ) {
     val isPhoneNumberValid: Boolean
         get() = PhoneNumberValidator.validate(phoneNumber)
@@ -23,6 +28,8 @@ data class RegisterUiState(
             isAuthCodeFieldEnabled = false,
             isVerifyCodeButtonEnabled = false,
             name = "",
+            schoolQuery = "",
+            schools = persistentListOf(),
         )
     }
 }
