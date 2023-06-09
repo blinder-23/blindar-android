@@ -166,13 +166,13 @@ dependencies {
     implementation(libs.bundles.jetpack)
 
     // Unit Test
-    testImplementation(libs.junit.jupiter)
-    testRuntimeOnly(libs.junit.vintage.engine)
-    testImplementation(libs.assertj.core)
-    androidTestUtil(libs.androidx.test.orchestrator)
+//    testImplementation(libs.junit.jupiter)
+//    testRuntimeOnly(libs.junit.vintage.engine)
+//    testImplementation(libs.assertj.core)
+//    androidTestUtil(libs.androidx.test.orchestrator)
 
     // Instrumented Test
-    androidTestImplementation(libs.bundles.android.test)
+//    androidTestImplementation(libs.bundles.android.test)
 
     // Firebase
     implementation(platform(libs.firebase.bom))

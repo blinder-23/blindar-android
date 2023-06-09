@@ -7,9 +7,13 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
+import com.practice.api.meal.FakeRemoteMealDataSource
+import com.practice.api.meal.RemoteMealRepository
 import com.practice.combine.toMealEntity
 import com.practice.meal.FakeMealDataSource
 import com.practice.meal.MealRepository
+import com.practice.preferences.FakePreferencesRepository
+import com.practice.preferences.PreferencesRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -22,10 +26,8 @@ class FetchRemoteMealWorkerTest {
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private val localRepository =
         MealRepository(FakeMealDataSource())
-    private val remoteRepository =
-        com.practice.api.meal.RemoteMealRepository(com.practice.api.meal.FakeRemoteMealDataSource())
-    private val preferencesRepository: com.practice.preferences.PreferencesRepository =
-        com.practice.preferences.FakePreferencesRepository()
+    private val remoteRepository = RemoteMealRepository(FakeRemoteMealDataSource())
+    private val preferencesRepository: PreferencesRepository = FakePreferencesRepository()
 
     @Test
     fun doWork(): Unit = runBlocking {
