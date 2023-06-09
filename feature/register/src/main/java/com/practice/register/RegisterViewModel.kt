@@ -48,8 +48,9 @@ class RegisterViewModel @Inject constructor(
 
     fun onAuthChipClick(
         activity: Activity,
-        onCodeSent: ()->Unit,
-        onSuccess: () -> Unit,
+        onCodeSent: () -> Unit,
+        onExistingUserLogin: () -> Unit,
+        onNewUserSignUp: () -> Unit,
         onFail: () -> Unit,
         onCodeInvalid: () -> Unit,
     ) {
@@ -62,10 +63,12 @@ class RegisterViewModel @Inject constructor(
             phoneNumber = phoneNumber,
             callback = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+                    Log.d(TAG, "onVerification complete")
                     BlindarFirebase.signInWithPhoneAuthCredential(
                         activity = activity,
                         credential = credential,
-                        onSuccess = onSuccess,
+                        onExistingUserLogin = onExistingUserLogin,
+                        onNewUserSignUp = onNewUserSignUp,
                         onCodeInvalid = onCodeInvalid
                     )
                 }
@@ -142,16 +145,18 @@ class RegisterViewModel @Inject constructor(
 
     fun verifyAuthCode(
         activity: Activity,
-        onSuccess: () -> Unit,
+        onExistingUserLogin: () -> Unit,
+        onNewUserSignUp: () -> Unit,
         onCodeInvalid: () -> Unit,
     ) {
         val authCode = registerUiState.value.authCode
         val credential = PhoneAuthProvider.getCredential(storedVerificationId, authCode)
         BlindarFirebase.signInWithPhoneAuthCredential(
-            activity,
-            credential,
-            onSuccess,
-            onCodeInvalid
+            activity = activity,
+            credential = credential,
+            onExistingUserLogin = onExistingUserLogin,
+            onNewUserSignUp = onNewUserSignUp,
+            onCodeInvalid = onCodeInvalid
         )
     }
 

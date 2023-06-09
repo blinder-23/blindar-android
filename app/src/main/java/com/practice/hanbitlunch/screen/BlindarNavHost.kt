@@ -142,7 +142,12 @@ fun NavGraphBuilder.registerGraph(navController: NavHostController) {
         composable(VERIFY_PHONE) {
             VerifyPhoneNumber(
                 onBackButtonClick = onBackButtonClick,
-                onNextButtonClick = { navController.navigate(REGISTER_FORM) },
+                onExistingUserLogin = {
+                    navController.navigate(MAIN) {
+                        popUpTo(ONBOARDING) { inclusive = true }
+                    }
+                },
+                onNewUserSignUp = { navController.navigate(REGISTER_FORM) },
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.primary),

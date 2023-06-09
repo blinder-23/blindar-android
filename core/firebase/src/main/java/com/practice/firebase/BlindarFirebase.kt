@@ -69,7 +69,8 @@ object BlindarFirebase {
     fun signInWithPhoneAuthCredential(
         activity: Activity,
         credential: PhoneAuthCredential,
-        onSuccess: () -> Unit,
+        onExistingUserLogin: () -> Unit,
+        onNewUserSignUp: () -> Unit,
         onCodeInvalid: () -> Unit,
     ) {
         Log.d(TAG, "credential: $credential")
@@ -78,7 +79,11 @@ object BlindarFirebase {
                 if (task.isSuccessful) {
                     val user = task.result?.user
                     Log.d(TAG, "signInWithCredential success! ${user?.phoneNumber}")
-                    onSuccess()
+                    if (user?.displayName != null) {
+                        onExistingUserLogin()
+                    } else {
+                        onNewUserSignUp()
+                    }
                 } else {
                     Log.e(TAG, "signInWithCredential failure", task.exception)
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {

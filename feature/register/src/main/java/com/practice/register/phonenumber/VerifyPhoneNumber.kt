@@ -44,7 +44,8 @@ import com.practice.util.makeToast
 @Composable
 fun VerifyPhoneNumber(
     onBackButtonClick: () -> Unit,
-    onNextButtonClick: () -> Unit,
+    onExistingUserLogin: () -> Unit,
+    onNewUserSignUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
@@ -65,7 +66,8 @@ fun VerifyPhoneNumber(
     val verifyAuthCode = {
         viewModel.verifyAuthCode(
             activity = activity,
-            onSuccess = onNextButtonClick,
+            onNewUserSignUp = onNewUserSignUp,
+            onExistingUserLogin = onExistingUserLogin,
             onCodeInvalid = onCodeInvalid,
         )
     }
@@ -90,7 +92,8 @@ fun VerifyPhoneNumber(
                     viewModel.onAuthChipClick(
                         activity = activity,
                         onCodeSent = { context.makeToast(codeSentMessage) },
-                        onSuccess = onNextButtonClick,
+                        onNewUserSignUp = onNewUserSignUp,
+                        onExistingUserLogin = onExistingUserLogin,
                         onCodeInvalid = onCodeInvalid,
                         onFail = { context.makeToast(authFailMessage) },
                     )
