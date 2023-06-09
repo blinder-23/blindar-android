@@ -106,6 +106,25 @@ class PreferencesRepositoryImplTest {
         assertThat(isFirstExecution).isTrue
     }
 
+    @Test
+    fun repository_initialSchoolIdIsEmpty() = runTest {
+        val isSchoolIdEmpty = preferences.fetchInitialPreferences().isSchoolIdEmpty
+        assert(isSchoolIdEmpty)
+    }
+
+    @Test
+    fun repository_updateSchoolId() = runTest {
+        val schoolId = "1234567"
+        update {
+            updateSchoolId(schoolId)
+        }
+
+        preferences.dropFirstAndTake(1).first().apply {
+            assert(!isSchoolIdEmpty)
+            assertThat(this.schoolId).isEqualTo(schoolId)
+        }
+    }
+
     private suspend fun PreferencesRepositoryImpl.dropFirstAndTake(take: Int) =
         userPreferencesFlow.drop(1).take(take).toList()
 
