@@ -95,7 +95,7 @@ object BlindarFirebase {
         onFail: () -> Unit,
     ) {
         auth.currentUser?.let { user ->
-            database.child("users").child(username).child("owner").setValue(user.uid)
+            database.child(usersKey).child(username).child(ownerKey).setValue(user.uid)
                 .addOnSuccessListener {
                     tryUpdateCurrentUsername(user, username, onSuccess, onFail)
                 }
@@ -124,5 +124,31 @@ object BlindarFirebase {
                 onFail()
             }
     }
+
+    fun tryUpdateCurrentUserSchoolId(
+        schoolId: String,
+        onSuccess: () -> Unit,
+        onFail: () -> Unit
+    ) {
+        val username = auth.currentUser?.displayName
+        if (username != null) {
+            database.child(usersKey).child(username).child(schoolIdKey).setValue(schoolId)
+                .addOnSuccessListener {
+                    Log.d(TAG, "user $username school set to $schoolId")
+                    onSuccess()
+                }
+                .addOnFailureListener {
+                    Log.e(TAG, "user $username school set fail to $schoolId")
+                    onFail()
+                }
+        } else {
+            Log.e(TAG, "username is null: ${auth.currentUser}")
+            onFail()
+        }
+    }
+
+    private const val usersKey = "users"
+    private const val ownerKey = "owner"
+    private const val schoolIdKey = "schoolId"
 
 }
