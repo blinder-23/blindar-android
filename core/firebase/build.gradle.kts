@@ -25,6 +25,17 @@ android {
             )
         }
     }
+    testOptions {
+        managedDevices {
+            devices {
+                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api30atd").apply {
+                    device = "Pixel 2"
+                    apiLevel = 30
+                    systemImageSource = "aosp-atd"
+                }
+            }
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -32,18 +43,13 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-//    buildFeatures {
-//        compose = true
-//    }
-//    composeOptions {
-//        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-//    }
 }
 
 dependencies {
     // Firebase
     implementation(platform(libs.firebase.bom))
-    implementation(libs.bundles.firebase)
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.database)
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)
@@ -52,7 +58,12 @@ dependencies {
 
     // Compose Activity
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.bundles.compose)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.navigation.compose)
 
     implementation(libs.google.play.auth)
+
+    // Instrumented Test
+    androidTestImplementation(libs.bundles.android.test)
+    androidTestImplementation(libs.assertj.core)
 }
