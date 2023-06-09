@@ -4,25 +4,41 @@ import android.app.Activity
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
+import com.practice.api.school.RemoteSchoolRepository
 import com.practice.firebase.BlindarFirebase
+import com.practice.preferences.PreferencesRepository
+import com.practice.register.selectschool.School
 import com.practice.util.update
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor() : ViewModel() {
+class RegisterViewModel @Inject constructor(
+    private val schoolRepository: RemoteSchoolRepository,
+    private val preferencesRepository: PreferencesRepository,
+) : ViewModel() {
     private val TAG = "RegisterViewModel"
     var registerUiState = mutableStateOf(RegisterUiState.Empty)
         private set
 
+    private var schoolListJob: Job? = null
+
     private lateinit var storedVerificationId: String
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
+
+    init {
+        updateSchoolList("")
+    }
 
     fun onPhoneNumberChange(value: String) {
         registerUiState.update {
@@ -152,9 +168,49 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
         onSuccess: () -> Unit,
         onFail: () -> Unit,
     ) {
-        val name = registerUiState.value.name
-        BlindarFirebase.tryUpdateCurrentUsername(
-            username = name,
+        if (registerUiState.value.isNameValid) {
+            BlindarFirebase.tryUpdateCurrentUsername(
+                username = registerUiState.value.name,
+                onSuccess = onSuccess,
+                onFail = onFail,
+            )
+        } else {
+            onFail()
+        }
+    }
+
+    /**
+     * SelectSchoolScreen
+     */
+    fun onSchoolQueryChange(query: String) {
+        registerUiState.update {
+            this.copy(schoolQuery = query)
+        }
+        updateSchoolList(query)
+    }
+
+    private fun updateSchoolList(query: String) {
+        schoolListJob?.cancel()
+        schoolListJob = viewModelScope.launch {
+            val schools = schoolRepository.searchSupportedSchools(query)
+                .map { it.toSchool() }
+                .toImmutableList()
+            registerUiState.update {
+                this.copy(schools = schools)
+            }
+        }
+    }
+
+    fun onSchoolClick(
+        school: School,
+        onSuccess: () -> Unit,
+        onFail: () -> Unit
+    ) {
+        viewModelScope.launch {
+            preferencesRepository.updateSchoolId(school.schoolId)
+        }
+        BlindarFirebase.tryUpdateCurrentUserSchoolId(
+            schoolId = school.schoolId,
             onSuccess = onSuccess,
             onFail = onFail,
         )
