@@ -17,4 +17,7 @@
     <string name="name_title">이름</string>
     <string name="name_placeholder">한글 15자, 영문, 숫자는 30자까지 가능합니다.</string>
     <string name="submit_name_fail">조건에 맞지 않거나 중복된 이름입니다.</string>
+
+    <string name="school_selected_base">선택되었습니다.</string>
+    <string name="school_select_fail_base">선택에 실패했습니다. 잠시 후 다시 시도해 주세요.</string>
 </resources>

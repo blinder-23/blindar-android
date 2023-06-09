@@ -168,7 +168,9 @@ fun NavGraphBuilder.registerGraph(navController: NavHostController) {
                         popUpTo(ONBOARDING) { inclusive = true }
                     }
                 },
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface),
             )
         }
     }

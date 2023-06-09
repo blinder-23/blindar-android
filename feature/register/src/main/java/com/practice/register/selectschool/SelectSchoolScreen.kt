@@ -18,20 +18,52 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BlindarTopAppBar
-import com.practice.designsystem.components.BottomNextButton
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.register.R
+import com.practice.register.RegisterViewModel
+import com.practice.util.makeToast
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-fun SelectSchoolScreen(modifier: Modifier = Modifier) {
-    // TODO: stateful (including viewmodel etc.)
-    // TODO: call stateless version here
+fun SelectSchoolScreen(
+    onBackButtonClick: () -> Unit,
+    onNavigateToMain: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: RegisterViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.registerUiState
+
+    val context = LocalContext.current
+    val baseSuccessMessage = stringResource(id = R.string.school_selected_base)
+    val baseFailMessage = stringResource(id = R.string.school_select_fail_base)
+    SelectSchoolScreen(
+        schools = uiState.schools,
+        onSchoolClick = { school ->
+            viewModel.onSchoolClick(
+                school = school,
+                onSuccess = {
+                    val successMessage = "${school.name} $baseSuccessMessage"
+                    onNavigateToMain()
+                    context.makeToast(successMessage)
+                },
+                onFail = {
+                    val failMessage = "${school.name} $baseFailMessage"
+                    context.makeToast(failMessage)
+                }
+            )
+        },
+        query = uiState.schoolQuery,
+        onQueryChange = viewModel::onSchoolQueryChange,
+        onBackButtonClick = onBackButtonClick,
+        modifier = modifier,
+    )
 }
 
 @Composable
@@ -41,7 +73,6 @@ private fun SelectSchoolScreen(
     query: String,
     onQueryChange: (String) -> Unit,
     onBackButtonClick: () -> Unit,
-    onNavigateToMain: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val horizontalMargin = 8.dp
@@ -63,14 +94,6 @@ private fun SelectSchoolScreen(
             modifier = Modifier
                 .weight(1f)
                 .background(MaterialTheme.colorScheme.surface),
-        )
-        BottomNextButton(
-            text = stringResource(R.string.next_button),
-            enabled = true,
-            onClick = onNavigateToMain,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 26.dp),
         )
     }
 }
@@ -127,7 +150,6 @@ private fun SelectSchoolScreenPreview() {
             onSchoolClick = {},
             query = query,
             onQueryChange = { query = it },
-            onNavigateToMain = { },
             onBackButtonClick = {},
             modifier = Modifier
                 .fillMaxSize()
