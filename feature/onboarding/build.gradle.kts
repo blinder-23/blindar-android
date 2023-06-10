@@ -54,6 +54,11 @@ dependencies {
     // AndroidX lifecycles
     implementation(libs.bundles.lifecycle)
 
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.bundles.firebase)
+    implementation(libs.google.play.auth)
+
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
