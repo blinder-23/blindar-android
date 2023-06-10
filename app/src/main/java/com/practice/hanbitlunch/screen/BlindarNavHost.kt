@@ -12,6 +12,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
@@ -21,15 +23,19 @@ import androidx.navigation.navigation
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
+import com.practice.firebase.BlindarFirebase
+import com.practice.hanbitlunch.R
 import com.practice.login.LoginScreen
 import com.practice.main.MainScreen
-import com.practice.main.MainScreenViewModel
 import com.practice.onboarding.onboarding.OnboardingScreen
 import com.practice.onboarding.splash.SplashScreen
 import com.practice.register.phonenumber.VerifyPhoneNumber
 import com.practice.register.registerform.RegisterFormScreen
 import com.practice.register.selectschool.SelectSchoolScreen
+import com.practice.util.makeToast
+import kotlinx.coroutines.tasks.await
 
 private val TAG = "BlindarNavHost"
 
@@ -37,10 +43,10 @@ private val TAG = "BlindarNavHost"
 @Composable
 fun BlindarNavHost(
     windowSizeClass: WindowSizeClass,
+    googleSignInClient: GoogleSignInClient,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberAnimatedNavController(),
 ) {
-    val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
     val tweenSpec = tween<IntOffset>(
         durationMillis = 200,
     )
@@ -73,14 +79,19 @@ fun BlindarNavHost(
             }
         },
     ) {
-        blindarMainNavGraph(navController, windowSizeClass)
+        blindarMainNavGraph(
+            navController = navController,
+            windowSizeClass = windowSizeClass,
+            googleSignInClient = googleSignInClient,
+        )
     }
 }
 
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.blindarMainNavGraph(
     navController: NavHostController,
-    windowSizeClass: WindowSizeClass
+    windowSizeClass: WindowSizeClass,
+    googleSignInClient: GoogleSignInClient,
 ) {
     composable(SPLASH) {
         SplashScreen(
@@ -90,11 +101,13 @@ fun NavGraphBuilder.blindarMainNavGraph(
                 user != null
             },
             onAutoLoginSuccess = {
+                Log.d(TAG, "auto login success")
                 navController.navigate(MAIN) {
                     popUpTo(SPLASH) { inclusive = true }
                 }
             },
             onAutoLoginFail = {
+                Log.d(TAG, "auto login fail")
                 navController.navigate(ONBOARDING) {
                     popUpTo(SPLASH) { inclusive = true }
                 }
@@ -105,10 +118,45 @@ fun NavGraphBuilder.blindarMainNavGraph(
         )
     }
     composable(ONBOARDING) {
+        val context = LocalContext.current
+        val failMessage = stringResource(id = R.string.google_login_fail_message)
         OnboardingScreen(
-            onRegister = { navController.navigate(REGISTER) },
-            onGoogleLogin = { /*TODO*/ },
-            onLogin = { navController.navigate(LOGIN) },
+            onPhoneLogin = { navController.navigate(REGISTER) },
+            onGoogleLogin = {
+                val result = it.await()
+                val task =
+                    result.idToken?.let { idToken -> BlindarFirebase.signInWithGoogle(idToken) }
+                val user = task?.user
+                if (user != null) {
+                    val username = user.displayName
+                    if (task.additionalUserInfo?.isNewUser == true && username != null) {
+                        // new user
+                        BlindarFirebase.tryStoreUsername(
+                            username = username,
+                            onSuccess = {
+                                Log.d(TAG, "sign up with google success: ${user.uid}")
+                                navController.navigate(SELECT_SCHOOL)
+                            },
+                            onFail = {},
+                            updateProfile = false,
+                        )
+                    } else if (task.additionalUserInfo?.isNewUser == false) {
+                        // existing user signs in
+                        Log.d(TAG, "sign in with google success: ${user.uid}")
+                        navController.navigate(MAIN) {
+                            popUpTo(ONBOARDING) { inclusive = true }
+                        }
+                    } else {
+                        // shouldn't happen
+                        Log.e(TAG, "sign in with google: this should not happen")
+                        context.makeToast(failMessage)
+                    }
+                } else {
+                    Log.e(TAG, "sign in with google fail")
+                    context.makeToast(failMessage)
+                }
+            },
+            googleSignInClient = googleSignInClient,
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface),
