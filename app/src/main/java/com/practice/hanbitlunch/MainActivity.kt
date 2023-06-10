@@ -9,7 +9,11 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.firebase.R
 import com.practice.hanbitlunch.screen.BlindarNavHost
 import com.practice.preferences.PreferencesRepository
 import com.practice.util.LocalActivity
@@ -34,9 +38,19 @@ class MainActivity : ComponentActivity() {
                     BlindarNavHost(
                         windowSizeClass = windowSizeClass,
                         modifier = Modifier.fillMaxSize(),
+                        googleSignInClient = getGoogleSignInClient(),
                     )
                 }
             }
         }
+    }
+
+    private fun getGoogleSignInClient(): GoogleSignInClient {
+        val webClientId = getString(R.string.web_client_id)
+        val options = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(webClientId)
+            .requestEmail()
+            .build()
+        return GoogleSignIn.getClient(this, options)
     }
 }

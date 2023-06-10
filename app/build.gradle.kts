@@ -177,6 +177,7 @@ dependencies {
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.firebase)
+    implementation(libs.google.play.auth)
 
     // Accompanist
     implementation(libs.bundles.accompanist)
