@@ -12,6 +12,7 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -137,6 +138,10 @@ object BlindarFirebase {
             Log.e(TAG, "username is null: ${auth.currentUser}")
             onFail()
         }
+    }
+
+    suspend fun getSchoolId(username: String): DataSnapshot {
+        return database.child(usersKey).child(username).child(schoolIdKey).get().await()
     }
 
     private const val usersKey = "users"

@@ -23,8 +23,10 @@ import androidx.navigation.navigation
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.practice.firebase.BlindarFirebase
 import com.practice.hanbitlunch.R
 import com.practice.login.LoginScreen
@@ -124,37 +126,22 @@ fun NavGraphBuilder.blindarMainNavGraph(
             onPhoneLogin = { navController.navigate(REGISTER) },
             onGoogleLogin = {
                 val result = it.await()
-                val task =
-                    result.idToken?.let { idToken -> BlindarFirebase.signInWithGoogle(idToken) }
-                val user = task?.user
-                if (user != null) {
-                    val username = user.displayName
-                    if (task.additionalUserInfo?.isNewUser == true && username != null) {
-                        // new user
-                        BlindarFirebase.tryStoreUsername(
-                            username = username,
-                            onSuccess = {
-                                Log.d(TAG, "sign up with google success: ${user.uid}")
-                                navController.navigate(SELECT_SCHOOL)
-                            },
-                            onFail = {},
-                            updateProfile = false,
-                        )
-                    } else if (task.additionalUserInfo?.isNewUser == false) {
-                        // existing user signs in
+                googleLogin(
+                    result = result,
+                    onSelectSchool = { user ->
+                        Log.d(TAG, "sign up with google success: ${user.uid}")
+                        navController.navigate(SELECT_SCHOOL)
+                    },
+                    onExistingUserLogin = { user ->
                         Log.d(TAG, "sign in with google success: ${user.uid}")
                         navController.navigate(MAIN) {
                             popUpTo(ONBOARDING) { inclusive = true }
                         }
-                    } else {
-                        // shouldn't happen
-                        Log.e(TAG, "sign in with google: this should not happen")
+                    },
+                    onFail = {
                         context.makeToast(failMessage)
                     }
-                } else {
-                    Log.e(TAG, "sign in with google fail")
-                    context.makeToast(failMessage)
-                }
+                )
             },
             googleSignInClient = googleSignInClient,
             modifier = Modifier
@@ -226,6 +213,36 @@ fun NavGraphBuilder.registerGraph(navController: NavHostController) {
                     .background(MaterialTheme.colorScheme.surface),
             )
         }
+    }
+}
+
+private suspend fun googleLogin(
+    result: GoogleSignInAccount,
+    onSelectSchool: (FirebaseUser) -> Unit,
+    onExistingUserLogin: (FirebaseUser) -> Unit,
+    onFail: () -> Unit,
+) {
+    val task = result.idToken?.let { idToken -> BlindarFirebase.signInWithGoogle(idToken) }
+    val user = task?.user
+    val username = user?.displayName
+    if (user != null && username != null) {
+        val schoolId = BlindarFirebase.getSchoolId(username).value as String?
+        if (schoolId == null) {
+            // new user register
+            BlindarFirebase.tryStoreUsername(
+                username = username,
+                onSuccess = { onSelectSchool(user) },
+                onFail = onFail,
+                updateProfile = false,
+            )
+        } else {
+            // existing user sign in
+            Log.d(TAG, "user ${user.uid} school id: $schoolId")
+            onExistingUserLogin(user)
+        }
+    } else {
+        Log.e(TAG, "sign in with google fail: $user, $username")
+        onFail()
     }
 }
 
