@@ -174,7 +174,7 @@ class RegisterViewModel @Inject constructor(
         onFail: () -> Unit,
     ) {
         if (registerUiState.value.isNameValid) {
-            BlindarFirebase.tryUpdateCurrentUsername(
+            BlindarFirebase.tryStoreUsername(
                 username = registerUiState.value.name,
                 onSuccess = onSuccess,
                 onFail = onFail,

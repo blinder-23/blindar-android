@@ -94,7 +94,7 @@ object BlindarFirebase {
             }
     }
 
-    fun tryUpdateCurrentUsername(
+    fun tryStoreUsername(
         username: String,
         onSuccess: () -> Unit,
         onFail: () -> Unit,
