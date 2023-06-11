@@ -111,7 +111,7 @@ androidx-test-orchestrator = 'androidx.test:orchestrator:1.4.2'
 assertj-core = 'org.assertj:assertj-core:3.24.2'
 
 androidx-junit = "androidx.test.ext:junit:1.1.5"
-androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.1"
+androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.0"
 
 vanniktech-dependency-graph-generator = 'com.vanniktech:gradle-dependency-graph-generator-plugin:0.7.0'
 
