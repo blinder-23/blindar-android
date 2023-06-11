@@ -169,10 +169,10 @@ dependencies {
 //    testImplementation(libs.junit.jupiter)
 //    testRuntimeOnly(libs.junit.vintage.engine)
 //    testImplementation(libs.assertj.core)
-//    androidTestUtil(libs.androidx.test.orchestrator)
 
     // Instrumented Test
-//    androidTestImplementation(libs.bundles.android.test)
+    androidTestImplementation(libs.bundles.android.test)
+    androidTestUtil(libs.androidx.test.orchestrator)
 
     // Firebase
     implementation(platform(libs.firebase.bom))
