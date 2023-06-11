@@ -1,8 +1,10 @@
 package com.practice.firebase
 
 import android.app.Activity
+import android.content.Intent
 import android.util.Log
-import com.google.firebase.auth.AuthResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseUser
@@ -25,12 +27,58 @@ object BlindarFirebase {
     private val auth: FirebaseAuth = Firebase.auth
     private val database: DatabaseReference = Firebase.database.reference
 
-    suspend fun signInWithGoogle(idToken: String): AuthResult? {
+    suspend fun parseIntentAndSignInWithGoogle(
+        intent: Intent,
+        onNewUserSignUp: (FirebaseUser) -> Unit,
+        onExistingUserLogin: (FirebaseUser) -> Unit,
+        onFail: () -> Unit,
+    ) {
+        try {
+            val account = GoogleSignIn.getSignedInAccountFromIntent(intent).await()
+            signInWithGoogle(
+                idToken = account.idToken,
+                onSelectSchool = onNewUserSignUp,
+                onExistingUserLogin = onExistingUserLogin,
+                onFail = onFail
+            )
+        } catch (e: ApiException) {
+            Log.d(TAG, "parse account fail", e)
+            onFail()
+        }
+    }
+
+    private suspend fun signInWithGoogle(
+        idToken: String?,
+        onSelectSchool: (FirebaseUser) -> Unit,
+        onExistingUserLogin: (FirebaseUser) -> Unit,
+        onFail: () -> Unit,
+    ) {
         val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
-        return try {
+        val task = try {
             auth.signInWithCredential(firebaseCredential).await()
         } catch (e: CancellationException) {
             null
+        }
+        val user = task?.user
+        val username = user?.displayName
+        if (user != null && username != null) {
+            val schoolId = getSchoolId(username).value as String?
+            if (schoolId == null) {
+                // new user register
+                tryStoreUsername(
+                    username = username,
+                    onSuccess = { onSelectSchool(user) },
+                    onFail = onFail,
+                    updateProfile = false,
+                )
+            } else {
+                // existing user sign in
+                Log.d(TAG, "user ${user.uid} school id: $schoolId")
+                onExistingUserLogin(user)
+            }
+        } else {
+            Log.e(TAG, "sign in with google fail: $user")
+            onFail()
         }
     }
 

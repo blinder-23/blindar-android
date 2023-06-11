@@ -23,11 +23,8 @@ import androidx.navigation.navigation
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.practice.firebase.BlindarFirebase
 import com.practice.hanbitlunch.R
 import com.practice.login.LoginScreen
 import com.practice.main.MainScreen
@@ -37,7 +34,6 @@ import com.practice.register.phonenumber.VerifyPhoneNumber
 import com.practice.register.registerform.RegisterFormScreen
 import com.practice.register.selectschool.SelectSchoolScreen
 import com.practice.util.makeToast
-import kotlinx.coroutines.tasks.await
 
 private val TAG = "BlindarNavHost"
 
@@ -124,24 +120,18 @@ fun NavGraphBuilder.blindarMainNavGraph(
         val failMessage = stringResource(id = R.string.google_login_fail_message)
         OnboardingScreen(
             onPhoneLogin = { navController.navigate(REGISTER) },
-            onGoogleLogin = {
-                val result = it.await()
-                googleLogin(
-                    result = result,
-                    onSelectSchool = { user ->
-                        Log.d(TAG, "sign up with google success: ${user.uid}")
-                        navController.navigate(SELECT_SCHOOL)
-                    },
-                    onExistingUserLogin = { user ->
-                        Log.d(TAG, "sign in with google success: ${user.uid}")
-                        navController.navigate(MAIN) {
-                            popUpTo(ONBOARDING) { inclusive = true }
-                        }
-                    },
-                    onFail = {
-                        context.makeToast(failMessage)
-                    }
-                )
+            onNewUserSignUp = { user ->
+                Log.d(TAG, "new user with google: ${user.uid}")
+                navController.navigate(SELECT_SCHOOL)
+            },
+            onExistingUserLogin = { user ->
+                Log.d(TAG, "existing user with google: ${user.uid}")
+                navController.navigate(MAIN) {
+                    popUpTo(ONBOARDING) { inclusive = true }
+                }
+            },
+            onFail = {
+                context.makeToast(failMessage)
             },
             googleSignInClient = googleSignInClient,
             modifier = Modifier
@@ -213,36 +203,6 @@ fun NavGraphBuilder.registerGraph(navController: NavHostController) {
                     .background(MaterialTheme.colorScheme.surface),
             )
         }
-    }
-}
-
-private suspend fun googleLogin(
-    result: GoogleSignInAccount,
-    onSelectSchool: (FirebaseUser) -> Unit,
-    onExistingUserLogin: (FirebaseUser) -> Unit,
-    onFail: () -> Unit,
-) {
-    val task = result.idToken?.let { idToken -> BlindarFirebase.signInWithGoogle(idToken) }
-    val user = task?.user
-    val username = user?.displayName
-    if (user != null && username != null) {
-        val schoolId = BlindarFirebase.getSchoolId(username).value as String?
-        if (schoolId == null) {
-            // new user register
-            BlindarFirebase.tryStoreUsername(
-                username = username,
-                onSuccess = { onSelectSchool(user) },
-                onFail = onFail,
-                updateProfile = false,
-            )
-        } else {
-            // existing user sign in
-            Log.d(TAG, "user ${user.uid} school id: $schoolId")
-            onExistingUserLogin(user)
-        }
-    } else {
-        Log.e(TAG, "sign in with google fail: $user, $username")
-        onFail()
     }
 }
 

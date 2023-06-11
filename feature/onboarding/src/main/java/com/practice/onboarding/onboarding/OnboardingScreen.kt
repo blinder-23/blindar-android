@@ -28,35 +28,35 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseUser
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.designsystem.theme.NanumSquareRound
+import com.practice.firebase.BlindarFirebase
 import com.practice.onboarding.R
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingScreen(
     onPhoneLogin: () -> Unit,
-    onGoogleLogin: suspend (Task<GoogleSignInAccount>) -> Unit,
+    onNewUserSignUp: (FirebaseUser) -> Unit,
+    onExistingUserLogin: (FirebaseUser) -> Unit,
+    onFail: () -> Unit,
     googleSignInClient: GoogleSignInClient,
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val startForResult =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                result.data?.let {
-                    val task: Task<GoogleSignInAccount> =
-                        GoogleSignIn.getSignedInAccountFromIntent(it)
-                    coroutineScope.launch { onGoogleLogin(task) }
-                }
-            }
-        }
+    val startForResult = rememberGoogleLoginRequestLauncher(
+        coroutineScope = coroutineScope,
+        onNewUserSignUp = onNewUserSignUp,
+        onExistingUserLogin = onExistingUserLogin,
+        onFail = onFail
+    )
+
     val buttonFraction = 0.8f
     ConstraintLayout(modifier = modifier) {
         val (text, phoneLoginButton, googleLoginButton) = createRefs()
@@ -94,6 +94,28 @@ fun OnboardingScreen(
         )
     }
 }
+
+@Composable
+private fun rememberGoogleLoginRequestLauncher(
+    coroutineScope: CoroutineScope,
+    onNewUserSignUp: (FirebaseUser) -> Unit,
+    onExistingUserLogin: (FirebaseUser) -> Unit,
+    onFail: () -> Unit,
+) =
+    rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.let { intent ->
+                coroutineScope.launch {
+                    BlindarFirebase.parseIntentAndSignInWithGoogle(
+                        intent = intent,
+                        onNewUserSignUp = onNewUserSignUp,
+                        onExistingUserLogin = onExistingUserLogin,
+                        onFail = onFail
+                    )
+                }
+            }
+        }
+    }
 
 @Composable
 private fun PhoneLoginButton(
@@ -157,13 +179,13 @@ private fun GoogleLoginButton(
 private fun OnboardingScreenPreview() {
     BlindarTheme {
         val context = LocalContext.current
+        val client = GoogleSignIn.getClient(context, GoogleSignInOptions.Builder().build())
         OnboardingScreen(
             onPhoneLogin = {},
-            onGoogleLogin = {},
-            googleSignInClient = GoogleSignIn.getClient(
-                context,
-                GoogleSignInOptions.Builder().build()
-            ),
+            onNewUserSignUp = {},
+            onExistingUserLogin = {},
+            onFail = {},
+            googleSignInClient = client,
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface),
