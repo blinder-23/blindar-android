@@ -5,6 +5,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.unit.TextUnit
 import com.practice.designsystem.theme.NanumSquareRound
 
 // TODO: 색깔 기본값 말고 대안 찾기 (CompositionLocal을 쓰던가..)
@@ -207,7 +209,9 @@ fun BodyLarge(
 fun BodyMedium(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
 ) {
     Text(
         text = text,
@@ -215,6 +219,8 @@ fun BodyMedium(
         style = MaterialTheme.typography.bodyMedium,
         color = textColor,
         fontFamily = NanumSquareRound,
+        fontSize = fontSize,
+        onTextLayout = onTextLayout,
     )
 }
 
