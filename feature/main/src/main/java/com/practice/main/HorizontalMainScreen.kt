@@ -87,7 +87,7 @@ private fun HorizontalMainScreenPreview() {
             )
         },
         isLoading = false,
-        screenMode = com.practice.preferences.ScreenMode.Default,
+        screenMode = ScreenMode.Default,
     )
     val calendarState = rememberCalendarState(
         year = year,

@@ -49,6 +49,7 @@ import com.practice.date.toKor
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.DisplayMedium
 import com.practice.designsystem.components.DisplaySmall
+import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.state.DailyMealScheduleState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.Menu
@@ -377,7 +378,7 @@ internal fun MainScreenContent(
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenHeaderPreview() {
-    com.practice.designsystem.theme.BlindarTheme {
+    BlindarTheme {
         MainScreenHeader(
             year = 2022,
             month = 8,
@@ -390,7 +391,7 @@ private fun MainScreenHeaderPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenHeaderPreview_screenIconsDisabled() {
-    com.practice.designsystem.theme.BlindarTheme {
+    BlindarTheme {
         MainScreenHeader(
             year = 2022,
             month = 8,
@@ -406,7 +407,7 @@ private fun MainScreenHeaderPreview_screenIconsDisabled() {
 private fun ScreenModeIconButtonPreview() {
     val (_, icon) = screenModeIcons.first()
     var isSelected by remember { mutableStateOf(false) }
-    com.practice.designsystem.theme.BlindarTheme {
+    BlindarTheme {
         ScreenModeIconButton(
             icon = icon,
             onClick = { isSelected = !isSelected },
@@ -419,7 +420,7 @@ private fun ScreenModeIconButtonPreview() {
 @Composable
 private fun ScreenModeIconButtonsPreview() {
     var selectedMode by remember { mutableStateOf(ScreenMode.Default) }
-    com.practice.designsystem.theme.BlindarTheme {
+    BlindarTheme {
         ScreenModeIconButtons(
             screenModeIcons = screenModeIcons,
             onIconClick = { selectedMode = it },
@@ -440,7 +441,7 @@ val previewSchedules = (0..6).map {
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenContentsPreview() {
-    com.practice.designsystem.theme.BlindarTheme {
+    BlindarTheme {
         MainScreenContents(
             modifier = Modifier.height(320.dp),
             mealUiState = MealUiState(previewMenus),
@@ -453,7 +454,7 @@ private fun MainScreenContentsPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun MealContentPreview() {
-    com.practice.designsystem.theme.BlindarTheme {
+    BlindarTheme {
         MealContent(
             mealUiState = MealUiState(previewMenus),
             columns = 2,
@@ -464,7 +465,7 @@ private fun MealContentPreview() {
 @Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
 @Composable
 private fun ListScreenItemPreview() {
-    com.practice.designsystem.theme.BlindarTheme {
+    BlindarTheme {
         DailyMealSchedule(
             DailyMealScheduleState(
                 date = Date(2022, 12, 13),
