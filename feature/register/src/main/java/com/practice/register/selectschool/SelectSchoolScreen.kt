@@ -115,11 +115,13 @@ private fun SearchSchoolTextField(
             )
         },
         trailingIcon = {
-            IconButton(onClick = { onQueryChange("") }) {
-                Icon(
-                    imageVector = Icons.Outlined.Cancel,
-                    contentDescription = null,
-                )
+            if (query.isNotEmpty()) {
+                IconButton(onClick = { onQueryChange("") }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Cancel,
+                        contentDescription = null,
+                    )
+                }
             }
         }
     )
