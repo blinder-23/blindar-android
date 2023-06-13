@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.hsk.ktx)
+
     // KTX libraries
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.collection.ktx)
