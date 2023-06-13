@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.practice.designsystem.theme.NanumSquareRound
 
+// TODO: 색깔 기본값 말고 대안 찾기 (CompositionLocal을 쓰던가..)
 @Composable
 fun DisplayLarge(
     text: String,
