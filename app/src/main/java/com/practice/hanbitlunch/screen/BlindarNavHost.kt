@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
@@ -175,7 +176,8 @@ fun NavGraphBuilder.registerGraph(navController: NavHostController) {
                 onNewUserSignUp = { navController.navigate(REGISTER_FORM) },
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.primary),
+                    .background(MaterialTheme.colorScheme.primary)
+                    .safeDrawingPadding(),
             )
         }
         composable(REGISTER_FORM) {
@@ -187,7 +189,8 @@ fun NavGraphBuilder.registerGraph(navController: NavHostController) {
                 },
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.primary),
+                    .background(MaterialTheme.colorScheme.primary)
+                    .safeDrawingPadding(),
             )
         }
         composable(SELECT_SCHOOL) {
@@ -200,7 +203,8 @@ fun NavGraphBuilder.registerGraph(navController: NavHostController) {
                 },
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface),
+                    .background(MaterialTheme.colorScheme.surface)
+                    .safeDrawingPadding(),
             )
         }
     }
