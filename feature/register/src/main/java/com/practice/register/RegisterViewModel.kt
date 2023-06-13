@@ -173,6 +173,7 @@ class RegisterViewModel @Inject constructor(
         onSuccess: () -> Unit,
         onFail: () -> Unit,
     ) {
+        Log.d(TAG, "name: ${registerUiState.value.name}, valid: ${registerUiState.value.isNameValid}")
         if (registerUiState.value.isNameValid) {
             BlindarFirebase.tryStoreUsername(
                 username = registerUiState.value.name,

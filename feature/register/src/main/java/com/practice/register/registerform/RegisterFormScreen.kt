@@ -45,6 +45,14 @@ fun RegisterFormScreen(
     val state by viewModel.registerUiState
     val context = LocalContext.current
     val submitNameFailMessage = stringResource(R.string.submit_name_fail)
+    val onSubmitName = {
+        viewModel.submitName(
+            onSuccess = onNameUpdated,
+            onFail = {
+                context.makeToast(submitNameFailMessage)
+            }
+        )
+    }
 
     ConstraintLayout(modifier = modifier) {
         val (appBar, nameCard, formNextButton) = createRefs()
@@ -61,14 +69,7 @@ fun RegisterFormScreen(
             name = state.name,
             onNameChange = viewModel::onNameChange,
             isValid = state.isNameValid,
-            submitName = {
-                viewModel.submitName(
-                    onSuccess = onNameUpdated,
-                    onFail = {
-                        context.makeToast(submitNameFailMessage)
-                    }
-                )
-            },
+            submitName = onSubmitName,
             modifier = Modifier
                 .constrainAs(nameCard) {
                     start.linkTo(parent.start)
@@ -84,7 +85,7 @@ fun RegisterFormScreen(
         BottomNextButton(
             text = stringResource(R.string.next_button),
             enabled = true,
-            onClick = onNameUpdated,
+            onClick = onSubmitName,
             modifier = Modifier
                 .constrainAs(formNextButton) {
                     bottom.linkTo(parent.bottom)
