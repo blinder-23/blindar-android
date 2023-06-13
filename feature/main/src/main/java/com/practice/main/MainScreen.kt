@@ -40,7 +40,7 @@ fun MainScreen(
     onRefresh: () -> Unit = {},
 ) {
     val systemUiController = rememberSystemUiController()
-    val systemBarColor = MaterialTheme.colorScheme.primary
+    val systemBarColor = MaterialTheme.colorScheme.surface
     val context = LocalContext.current
     LaunchedEffect(true) {
         systemUiController.setStatusBarColor(systemBarColor)
@@ -54,15 +54,17 @@ fun MainScreen(
     val backgroundModifier = modifier.background(MaterialTheme.colorScheme.surface)
     val mealColumns = if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) 2 else 3
 
-    Scaffold(floatingActionButton = {
-        FloatingRefreshButton(
-            isLoading = uiState.isLoading,
-            onRefresh = {
-                onRefresh()
-                viewModel.onRefresh(context)
-            },
-        )
-    }) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingRefreshButton(
+                isLoading = uiState.isLoading,
+                onRefresh = {
+                    onRefresh()
+                    viewModel.onRefresh(context)
+                },
+            )
+        },
+    ) {
         val paddingModifier = backgroundModifier.padding(it)
         if (windowSize.widthSizeClass == WindowWidthSizeClass.Expanded) {
             HorizontalMainScreen(
