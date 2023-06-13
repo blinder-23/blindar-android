@@ -3,6 +3,9 @@ package com.practice.onboarding.onboarding
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,12 +16,14 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -32,9 +37,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseUser
 import com.practice.designsystem.LightPreview
+import com.practice.designsystem.components.AppIcon
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.designsystem.theme.NanumSquareRound
 import com.practice.firebase.BlindarFirebase
 import com.practice.onboarding.R
 import kotlinx.coroutines.CoroutineScope
@@ -57,28 +62,48 @@ fun OnboardingScreen(
         onFail = onFail
     )
 
+    val appIconOffset = remember { Animatable(0f) }
+    val buttonAlpha = remember { Animatable(0f) }
+    LaunchedEffect(true) {
+        appIconOffset.animateTo(
+            targetValue = -200f,
+            animationSpec = tween(
+                durationMillis = 1000,
+                easing = CubicBezierEasing(0.5f, 0.0f, 0.5f, 1f),
+            )
+        )
+        buttonAlpha.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(
+                durationMillis = 500,
+            ),
+        )
+    }
+
     val buttonFraction = 0.8f
     ConstraintLayout(modifier = modifier) {
-        val (text, phoneLoginButton, googleLoginButton) = createRefs()
-        Text(
-            text = "Onboarding!",
-            modifier = Modifier.constrainAs(text) {
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            },
-            fontFamily = NanumSquareRound,
+        val (icon, phoneLoginButton, googleLoginButton) = createRefs()
+        AppIcon(
+            modifier = Modifier.constrainAs(icon) {
+                linkTo(
+                    start = parent.start,
+                    top = parent.top,
+                    end = parent.end,
+                    bottom = parent.bottom,
+                )
+                translationY = appIconOffset.value.dp
+            }
         )
         PhoneLoginButton(
             onPhoneLogin = onPhoneLogin,
             modifier = Modifier
                 .constrainAs(phoneLoginButton) {
-                    top.linkTo(text.bottom, margin = 100.dp)
+                    top.linkTo(icon.bottom, margin = 100.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
-                .fillMaxWidth(fraction = buttonFraction),
+                .fillMaxWidth(fraction = buttonFraction)
+                .alpha(buttonAlpha.value),
         )
         GoogleLoginButton(
             onGoogleLogin = {
@@ -87,10 +112,11 @@ fun OnboardingScreen(
             modifier = Modifier
                 .constrainAs(googleLoginButton) {
                     start.linkTo(parent.start)
-                    top.linkTo(phoneLoginButton.bottom, margin = 50.dp)
+                    top.linkTo(phoneLoginButton.bottom, margin = 30.dp)
                     end.linkTo(parent.end)
                 }
-                .fillMaxWidth(fraction = buttonFraction),
+                .fillMaxWidth(fraction = buttonFraction)
+                .alpha(buttonAlpha.value),
         )
     }
 }
