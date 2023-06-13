@@ -18,7 +18,10 @@ import com.practice.main.state.MealUiState
 import com.practice.main.state.ScheduleUiState
 import com.practice.main.state.toMealUiState
 import com.practice.main.state.toSchedule
+import com.practice.meal.entity.MealEntity
 import com.practice.preferences.PreferencesRepository
+import com.practice.preferences.ScreenMode
+import com.practice.schedule.entity.ScheduleEntity
 import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
@@ -65,7 +68,7 @@ class MainScreenViewModel @Inject constructor(
                 selectedDate = current,
                 monthlyMealScheduleState = emptyList(),
                 isLoading = false,
-                screenMode = com.practice.preferences.ScreenMode.Default,
+                screenMode = ScreenMode.Default,
             )
         )
         selectedDateFlow = MutableStateFlow(current)
@@ -111,7 +114,7 @@ class MainScreenViewModel @Inject constructor(
         selectedDate: Date = state.selectedDate,
         entity: MealScheduleEntity? = cache[selectedDate.yearMonth],
         isLoading: Boolean = state.isLoading,
-        screenMode: com.practice.preferences.ScreenMode = state.screenMode,
+        screenMode: ScreenMode = state.screenMode,
     ) {
         val monthlyMealScheduleState = if (entity != null) {
             parseDailyState(entity)
@@ -133,7 +136,7 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    fun onScreenModeChange(screenMode: com.practice.preferences.ScreenMode) =
+    fun onScreenModeChange(screenMode: ScreenMode) =
         viewModelScope.launch {
             preferencesRepository.updateScreenMode(screenMode)
         }
@@ -236,8 +239,8 @@ private fun MealScheduleEntity.getSchedule(date: Date): ScheduleUiState {
     }
 }
 
-private fun com.practice.meal.entity.MealEntity.dateEquals(date: Date) =
+private fun MealEntity.dateEquals(date: Date) =
     this.year == date.year && this.month == date.month && this.day == date.dayOfMonth
 
-private fun com.practice.schedule.entity.ScheduleEntity.dateEquals(date: Date) =
+private fun ScheduleEntity.dateEquals(date: Date) =
     this.year == date.year && this.month == date.month && this.day == date.dayOfMonth
