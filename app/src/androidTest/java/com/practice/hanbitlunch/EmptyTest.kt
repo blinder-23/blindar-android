@@ -1,11 +1,15 @@
 package com.practice.hanbitlunch
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
+@HiltAndroidTest
 class EmptyTest {
+    @get:Rule
+    val hiltRule = HiltAndroidRule(this)
+
     @Test
     fun emptyTest() {
         assert(true)

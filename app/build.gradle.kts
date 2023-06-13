@@ -30,7 +30,7 @@ android {
         versionName = "1.3.1"
         signingConfig = signingConfigs.getByName("debug")
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.practice.hanbitlunch.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -159,6 +159,7 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     kapt(libs.hilt.compiler.androidx)
+    kaptAndroidTest(libs.hilt.compiler)
     androidTestImplementation(libs.hilt.android.testing)
     implementation(libs.hilt.work)
 
