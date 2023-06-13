@@ -30,7 +30,7 @@ android {
         versionName = "1.3.1"
         signingConfig = signingConfigs.getByName("debug")
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.practice.hanbitlunch.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -159,6 +159,7 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     kapt(libs.hilt.compiler.androidx)
+    kaptAndroidTest(libs.hilt.compiler)
     androidTestImplementation(libs.hilt.android.testing)
     implementation(libs.hilt.work)
 
@@ -166,17 +167,18 @@ dependencies {
     implementation(libs.bundles.jetpack)
 
     // Unit Test
-    testImplementation(libs.junit.jupiter)
-    testRuntimeOnly(libs.junit.vintage.engine)
-    testImplementation(libs.assertj.core)
-    androidTestUtil(libs.androidx.test.orchestrator)
+//    testImplementation(libs.junit.jupiter)
+//    testRuntimeOnly(libs.junit.vintage.engine)
+//    testImplementation(libs.assertj.core)
 
     // Instrumented Test
     androidTestImplementation(libs.bundles.android.test)
+    androidTestUtil(libs.androidx.test.orchestrator)
 
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.firebase)
+    implementation(libs.google.play.auth)
 
     // Accompanist
     implementation(libs.bundles.accompanist)

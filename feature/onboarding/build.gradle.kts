@@ -43,6 +43,7 @@ android {
 
 dependencies {
     api(project(":core:designsystem"))
+    api(project(":core:firebase"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)
@@ -54,6 +55,11 @@ dependencies {
     // AndroidX lifecycles
     implementation(libs.bundles.lifecycle)
 
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.bundles.firebase)
+    implementation(libs.google.play.auth)
+
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
@@ -63,6 +69,9 @@ dependencies {
 
     // Other Jetpack Libraries
     implementation(libs.bundles.jetpack)
+
+    // Accompanist
+    implementation(libs.bundles.accompanist)
 
     // Kotlin Coroutines
     implementation(libs.bundles.coroutines)

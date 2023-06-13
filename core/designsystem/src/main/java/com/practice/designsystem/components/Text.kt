@@ -7,8 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.practice.designsystem.theme.NanumSquareRound
 
+// TODO: 색깔 기본값 말고 대안 찾기 (CompositionLocal을 쓰던가..)
 @Composable
-fun TitleLarge(
+fun DisplayLarge(
     text: String,
     modifier: Modifier = Modifier,
     textColor: Color = MaterialTheme.colorScheme.onSurface
@@ -23,7 +24,7 @@ fun TitleLarge(
 }
 
 @Composable
-fun TitleMedium(
+fun DisplayMedium(
     text: String,
     modifier: Modifier = Modifier,
     textColor: Color = MaterialTheme.colorScheme.onSurface
@@ -38,7 +39,7 @@ fun TitleMedium(
 }
 
 @Composable
-fun TitleSmall(
+fun DisplaySmall(
     text: String,
     modifier: Modifier = Modifier,
     textColor: Color = MaterialTheme.colorScheme.onSurface,
@@ -47,6 +48,141 @@ fun TitleSmall(
         text = text,
         modifier = modifier,
         style = MaterialTheme.typography.displaySmall,
+        color = textColor,
+        fontFamily = NanumSquareRound,
+    )
+}
+
+@Composable
+fun HeadlineLarge(
+    text: String,
+    modifier: Modifier = Modifier,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.headlineLarge,
+        color = textColor,
+        fontFamily = NanumSquareRound,
+    )
+}
+
+@Composable
+fun HeadlineMedium(
+    text: String,
+    modifier: Modifier = Modifier,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.headlineMedium,
+        color = textColor,
+        fontFamily = NanumSquareRound,
+    )
+}
+
+@Composable
+fun HeadlineSmall(
+    text: String,
+    modifier: Modifier = Modifier,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.headlineSmall,
+        color = textColor,
+        fontFamily = NanumSquareRound,
+    )
+}
+
+@Composable
+fun TitleLarge(
+    text: String,
+    modifier: Modifier = Modifier,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.titleLarge,
+        color = textColor,
+        fontFamily = NanumSquareRound,
+    )
+}
+
+@Composable
+fun TitleMedium(
+    text: String,
+    modifier: Modifier = Modifier,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.titleMedium,
+        color = textColor,
+        fontFamily = NanumSquareRound,
+    )
+}
+
+@Composable
+fun TitleSmall(
+    text: String,
+    modifier: Modifier = Modifier,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.titleSmall,
+        color = textColor,
+        fontFamily = NanumSquareRound,
+    )
+}
+
+@Composable
+fun LabelLarge(
+    text: String,
+    modifier: Modifier = Modifier,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.labelLarge,
+        color = textColor,
+        fontFamily = NanumSquareRound,
+    )
+}
+
+@Composable
+fun LabelMedium(
+    text: String,
+    modifier: Modifier = Modifier,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.labelMedium,
+        color = textColor,
+        fontFamily = NanumSquareRound,
+    )
+}
+
+@Composable
+fun LabelSmall(
+    text: String,
+    modifier: Modifier = Modifier,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.labelSmall,
         color = textColor,
         fontFamily = NanumSquareRound,
     )
@@ -92,21 +228,6 @@ fun BodySmall(
         text = text,
         modifier = modifier,
         style = MaterialTheme.typography.bodySmall,
-        color = textColor,
-        fontFamily = NanumSquareRound,
-    )
-}
-
-@Composable
-fun LabelLarge(
-    text: String,
-    modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface
-) {
-    Text(
-        text = text,
-        modifier = modifier,
-        style = MaterialTheme.typography.labelLarge,
         color = textColor,
         fontFamily = NanumSquareRound,
     )

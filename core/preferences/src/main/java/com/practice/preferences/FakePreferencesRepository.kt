@@ -10,6 +10,7 @@ class FakePreferencesRepository : PreferencesRepository {
         screenMode = ScreenMode.Default,
         isFirstExecution = true,
         runningWorksCount = 0,
+        schoolId = "",
     )
     private var preferences: UserPreferences = initialPreferences
 
@@ -45,6 +46,10 @@ class FakePreferencesRepository : PreferencesRepository {
         val count = preferences.runningWorksCount
         preferences = preferences.copy(runningWorksCount = count - 1)
         emitNewValue()
+    }
+
+    override suspend fun updateSchoolId(schoolId: String) {
+        preferences = preferences.copy(schoolId = schoolId)
     }
 
     override suspend fun clear() {

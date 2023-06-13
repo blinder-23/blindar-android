@@ -43,6 +43,10 @@ android {
 
 dependencies {
     api(project(":core:designsystem"))
+    api(project(":core:util"))
+    api(project(":core:firebase"))
+    api(project(":core:api"))
+    api(project(":core:preferences"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)
@@ -50,6 +54,12 @@ dependencies {
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
+
+    // Accompanist
+    implementation(libs.bundles.accompanist)
+
+    // Firebase
+    implementation(libs.firebase.ui.auth)
 
     // AndroidX lifecycles
     implementation(libs.bundles.lifecycle)
@@ -67,4 +77,12 @@ dependencies {
     // Kotlin Coroutines
     implementation(libs.bundles.coroutines)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // Unit test
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.vintage.engine)
+    testImplementation(libs.assertj.core)
+
+    // Kotlin immutable collections
+    implementation(libs.kotlinx.collections.immutable)
 }
