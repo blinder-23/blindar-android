@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,6 +19,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -54,8 +57,12 @@ fun RegisterFormScreen(
         )
     }
 
+    val textFieldFocusRequester = remember { FocusRequester() }
     ConstraintLayout(modifier = modifier) {
         val (appBar, nameCard, formNextButton) = createRefs()
+        LaunchedEffect(true) {
+            textFieldFocusRequester.requestFocus()
+        }
         BlindarTopAppBar(
             title = stringResource(id = R.string.register_form_screen),
             onBackButtonClick = onBackButtonClick,
@@ -70,6 +77,7 @@ fun RegisterFormScreen(
             onNameChange = viewModel::onNameChange,
             isValid = state.isNameValid,
             submitName = onSubmitName,
+            focusRequester = textFieldFocusRequester,
             modifier = Modifier
                 .constrainAs(nameCard) {
                     start.linkTo(parent.start)
@@ -103,6 +111,7 @@ private fun RegisterNameCard(
     onNameChange: (String) -> Unit,
     isValid: Boolean,
     submitName: () -> Unit,
+    focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
 ) {
     ConstraintLayout(modifier = modifier) {
@@ -118,11 +127,13 @@ private fun RegisterNameCard(
             onNameChange = onNameChange,
             isValid = isValid,
             submitName = submitName,
-            modifier = Modifier.constrainAs(nameField) {
-                top.linkTo(title.bottom, margin = 16.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
+            modifier = Modifier
+                .constrainAs(nameField) {
+                    top.linkTo(title.bottom, margin = 16.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .focusRequester(focusRequester),
         )
     }
 }
@@ -172,12 +183,14 @@ private fun NameTextField(
 private fun RegisterNameCardPreview() {
     var name by remember { mutableStateOf("") }
     val isNameValid by remember { derivedStateOf { NameValidator.validate(name) } }
+    val focusRequester = remember { FocusRequester() }
     BlindarTheme {
         RegisterNameCard(
             name = name,
             onNameChange = { name = it },
             isValid = isNameValid,
             submitName = {},
+            focusRequester = focusRequester,
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(16.dp),
