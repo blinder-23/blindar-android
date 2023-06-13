@@ -8,9 +8,9 @@
     <application
         android:name=".BlindarApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/blindar_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/blindar_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Blindar.SplashScreen">
         <profileable
