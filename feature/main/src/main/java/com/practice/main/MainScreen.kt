@@ -44,6 +44,7 @@ fun MainScreen(
     val context = LocalContext.current
     LaunchedEffect(true) {
         systemUiController.setStatusBarColor(systemBarColor)
+        systemUiController.setNavigationBarColor(systemBarColor)
         onLaunch()
         viewModel.onLaunch(context)
     }
