@@ -96,6 +96,7 @@ fun CalendarCard(
         ) {
             Column(
                 modifier = Modifier
+                    .fillMaxSize(0.9f)
                     .aspectRatio(1f)
                     .align(Alignment.Center)
             ) {
