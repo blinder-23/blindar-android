@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -57,14 +57,13 @@ fun HorizontalMainScreen(
                 dateShape = largeCalendarDateShape,
                 dateArrangement = Arrangement.Top,
             )
-            DailyMealSchedules(
-                items = uiState.monthlyMealScheduleState,
-                selectedDate = uiState.selectedDate,
-                onDateClick = onDateClick,
+            MainScreenContents(
+                mealUiState = uiState.selectedDateMealScheduleState.mealUiState,
+                scheduleUiState = uiState.selectedDateMealScheduleState.scheduleUiState,
+                mealColumns = mealColumns,
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxSize(),
-                mealColumns = mealColumns,
+                    .fillMaxWidth(),
             )
         }
     }
