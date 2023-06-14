@@ -44,6 +44,7 @@ android {
 dependencies {
     api(project(":core:designsystem"))
     api(project(":core:firebase"))
+    api(project(":core:work"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)

@@ -46,7 +46,7 @@ fun MainScreen(
         systemUiController.setStatusBarColor(systemBarColor)
         systemUiController.setNavigationBarColor(systemBarColor)
         onLaunch()
-        viewModel.onLaunch(context)
+        viewModel.onLaunch()
     }
 
     val calendarPageCount = 13
