@@ -22,7 +22,7 @@ import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.designsystem.theme.BlindarTheme
 
-val calendarDateShape = CircleShape.copy(all = CornerSize(5.dp))
+val calendarDateShape = CircleShape
 val largeCalendarDateShape = CircleShape.copy(all = CornerSize(15.dp))
 
 @Composable
