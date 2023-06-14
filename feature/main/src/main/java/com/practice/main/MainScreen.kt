@@ -49,6 +49,8 @@ fun MainScreen(
         viewModel.onLaunch(context)
     }
 
+    val calendarPageCount = 13
+
     val uiState by viewModel.uiState
     val calendarState = rememberCalendarState(uiState.year, uiState.month, uiState.selectedDate)
 
@@ -69,6 +71,7 @@ fun MainScreen(
         val paddingModifier = backgroundModifier.padding(it)
         if (windowSize.widthSizeClass == WindowWidthSizeClass.Expanded) {
             HorizontalMainScreen(
+                calendarPageCount = calendarPageCount,
                 modifier = paddingModifier,
                 uiState = uiState,
                 onScreenModeChange = viewModel::onScreenModeChange,
@@ -82,16 +85,16 @@ fun MainScreen(
             )
         } else {
             VerticalMainScreen(
+                calendarPageCount = calendarPageCount,
                 modifier = paddingModifier,
                 uiState = uiState,
-                onScreenModeChange = viewModel::onScreenModeChange,
                 calendarState = calendarState,
                 mealColumns = mealColumns,
                 onDateClick = viewModel::onDateClick,
                 onSwiped = viewModel::onSwiped,
                 getContentDescription = viewModel::getContentDescription,
                 getClickLabel = viewModel::getClickLabel,
-                drawUnderlineToScheduleDate = { },
+                drawUnderlineToScheduleDate = {},
             )
         }
     }

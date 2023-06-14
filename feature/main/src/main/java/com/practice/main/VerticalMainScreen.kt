@@ -2,6 +2,7 @@ package com.practice.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -16,7 +17,6 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
-import com.practice.designsystem.calendar.SwipeableCalendar
 import com.practice.designsystem.calendar.calendarDateShape
 import com.practice.designsystem.calendar.core.CalendarState
 import com.practice.designsystem.calendar.core.YearMonth
@@ -30,7 +30,7 @@ import com.practice.preferences.ScreenMode
 
 @Composable
 fun VerticalMainScreen(
-    modifier: Modifier = Modifier,
+    calendarPageCount: Int,
     uiState: MainUiState,
     calendarState: CalendarState,
     mealColumns: Int,
@@ -39,12 +39,13 @@ fun VerticalMainScreen(
     getContentDescription: (Date) -> String,
     getClickLabel: (Date) -> String,
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         MainScreenTopBar(
             schoolName = "한빛맹학교",
             modifier = Modifier
-                .fillMaxWidth(2/3f)
+                .fillMaxWidth(2 / 3f)
                 .align(Alignment.CenterHorizontally)
                 .padding(vertical = 24.dp),
         )
@@ -53,7 +54,8 @@ fun VerticalMainScreen(
                 .weight(1f)
                 .padding(horizontal = 16.dp),
         ) {
-            SwipeableCalendar(
+            CalendarCard(
+                calendarPageCount = calendarPageCount,
                 calendarState = calendarState,
                 onDateClick = onDateClick,
                 onSwiped = onSwiped,
@@ -61,7 +63,9 @@ fun VerticalMainScreen(
                 dateShape = calendarDateShape,
                 getClickLabel = getClickLabel,
                 drawBehindElement = drawUnderlineToScheduleDate,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .aspectRatio(1f),
             )
             MainScreenContents(
                 mealUiState = uiState.selectedDateMealScheduleState.mealUiState,
@@ -106,6 +110,7 @@ private fun VerticalMainScreenPreview() {
     )
     BlindarTheme {
         VerticalMainScreen(
+            calendarPageCount = 13,
             modifier = Modifier.background(MaterialTheme.colorScheme.surface),
             uiState = uiState,
             calendarState = calendarState,
@@ -114,6 +119,7 @@ private fun VerticalMainScreenPreview() {
             onSwiped = {},
             getContentDescription = { "" },
             getClickLabel = { "" },
-        ) {}
+            drawUnderlineToScheduleDate = {},
+        )
     }
 }
