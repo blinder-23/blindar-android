@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -196,15 +197,20 @@ internal fun MainScreenContents(
     mealColumns: Int,
     modifier: Modifier = Modifier
 ) {
-    Column(
+    LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(bottom = 10.dp),
     ) {
         if (!mealUiState.isEmpty) {
-            MealContent(mealUiState = mealUiState, columns = mealColumns)
+            item {
+                MealContent(mealUiState = mealUiState, columns = mealColumns)
+            }
         }
         if (!scheduleUiState.isEmpty) {
-            ScheduleContent(scheduleUiState)
+            item {
+                ScheduleContent(scheduleUiState)
+            }
         }
     }
 }
