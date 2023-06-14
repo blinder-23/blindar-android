@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="calendar_back_arrow">한 달 전으로 가기</string>
+    <string name="calendar_next_arrow">한 달 후로 가기</string>
+</resources>
