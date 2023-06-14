@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -52,6 +53,7 @@ import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.DisplayMedium
 import com.practice.designsystem.components.DisplaySmall
+import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.state.DailyMealScheduleState
 import com.practice.main.state.MealUiState
@@ -197,21 +199,35 @@ internal fun MainScreenContents(
     mealColumns: Int,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        contentPadding = PaddingValues(bottom = 10.dp),
-    ) {
-        if (!mealUiState.isEmpty) {
-            item {
-                MealContent(mealUiState = mealUiState, columns = mealColumns)
+    if (mealUiState.isEmpty && scheduleUiState.isEmpty) {
+        EmptyContentIndicator(modifier = modifier)
+    } else {
+        LazyColumn(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(bottom = 10.dp),
+        ) {
+            if (!mealUiState.isEmpty) {
+                item {
+                    MealContent(mealUiState = mealUiState, columns = mealColumns)
+                }
+            }
+            if (!scheduleUiState.isEmpty) {
+                item {
+                    ScheduleContent(scheduleUiState)
+                }
             }
         }
-        if (!scheduleUiState.isEmpty) {
-            item {
-                ScheduleContent(scheduleUiState)
-            }
-        }
+    }
+}
+
+@Composable
+private fun EmptyContentIndicator(modifier: Modifier = Modifier) {
+    Box(modifier = modifier) {
+        TitleMedium(
+            text = stringResource(id = R.string.content_empty),
+            modifier = Modifier.align(Alignment.Center),
+        )
     }
 }
 

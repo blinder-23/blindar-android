@@ -72,7 +72,9 @@ fun VerticalMainScreen(
                 mealUiState = uiState.selectedDateMealScheduleState.mealUiState,
                 scheduleUiState = uiState.selectedDateMealScheduleState.scheduleUiState,
                 mealColumns = mealColumns,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
             )
         }
     }
