@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.date.toKor
+import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.DisplayMedium
 import com.practice.designsystem.components.DisplaySmall
@@ -196,7 +198,7 @@ internal fun MainScreenContents(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(32.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         if (!mealUiState.isEmpty) {
             MealContent(mealUiState = mealUiState, columns = mealColumns)
@@ -366,12 +368,19 @@ internal fun MainScreenContent(
     modifier: Modifier = Modifier,
     contents: @Composable () -> Unit = {},
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ElevatedCard(
+        modifier = modifier
+            .fillMaxWidth(),
     ) {
-        DisplaySmall(text = title)
-        contents()
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 25.dp, vertical = 30.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            DisplaySmall(text = title)
+            contents()
+        }
     }
 }
 
@@ -443,7 +452,7 @@ val previewSchedules = (0..6).map {
 private fun MainScreenContentsPreview() {
     BlindarTheme {
         MainScreenContents(
-            modifier = Modifier.height(320.dp),
+            modifier = Modifier.height(500.dp),
             mealUiState = MealUiState(previewMenus),
             scheduleUiState = ScheduleUiState(previewSchedules),
             mealColumns = 2,
@@ -451,7 +460,7 @@ private fun MainScreenContentsPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@LightPreview
 @Composable
 private fun MealContentPreview() {
     BlindarTheme {
