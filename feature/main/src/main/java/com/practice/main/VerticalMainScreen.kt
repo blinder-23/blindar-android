@@ -1,8 +1,8 @@
 package com.practice.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -53,6 +53,7 @@ fun VerticalMainScreen(
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             CalendarCard(
                 calendarPageCount = calendarPageCount,
@@ -65,7 +66,7 @@ fun VerticalMainScreen(
                 drawBehindElement = drawUnderlineToScheduleDate,
                 modifier = Modifier
                     .weight(1f)
-                    .aspectRatio(1f),
+                    .fillMaxWidth(),
             )
             MainScreenContents(
                 mealUiState = uiState.selectedDateMealScheduleState.mealUiState,
@@ -85,7 +86,7 @@ private fun VerticalMainScreenPreview() {
     val month = 10
     var selectedDate by remember { mutableStateOf(Date(2022, 10, 11)) }
 
-    var uiState by remember {
+    val uiState by remember {
         mutableStateOf(
             MainUiState(
                 year = year,

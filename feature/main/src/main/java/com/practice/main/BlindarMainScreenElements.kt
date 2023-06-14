@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -18,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -83,37 +85,50 @@ fun CalendarCard(
     val pagerState = rememberPagerState(initialPage = initialPage)
 
     ElevatedCard(
-        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+        modifier = modifier,
     ) {
-        Column {
-            CalendarCardHeader(
-                calendarState = calendarState,
-                pagerState = pagerState,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            SwipeableCalendar(
-                itemCount = calendarPageCount,
-                calendarState = calendarState,
-                pagerState = pagerState,
-                onDateClick = onDateClick,
-                onPageChange = { pageIndex ->
-                    val offset = pageIndex - middlePage
-                    val (newYear, newMonth) = currentYearMonth.offset(offset)
-                    onSwiped(YearMonth(newYear, newMonth))
-                },
-                onSelectedDateChange = {
-                    val newPage =
-                        middlePage + calendarState.selectedDate.yearMonth.monthDiff(currentYearMonth)
-                    Log.d("CalendarCard", "Scroll from ${pagerState.currentPage} to $newPage")
-                    pagerState.animateScrollToPage(newPage)
-                },
-                getContentDescription = getContentDescription,
-                dateShape = dateShape,
-                getClickLabel = getClickLabel,
-                dateArrangement = dateArrangement,
-                drawBehindElement = drawBehindElement,
-            )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
+            Column(
+                modifier = Modifier
+                    .aspectRatio(1f)
+                    .align(Alignment.Center)
+            ) {
+                CalendarCardHeader(
+                    calendarState = calendarState,
+                    pagerState = pagerState,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                SwipeableCalendar(
+                    itemCount = calendarPageCount,
+                    calendarState = calendarState,
+                    pagerState = pagerState,
+                    onDateClick = onDateClick,
+                    onPageChange = { pageIndex ->
+                        val offset = pageIndex - middlePage
+                        val (newYear, newMonth) = currentYearMonth.offset(offset)
+                        onSwiped(YearMonth(newYear, newMonth))
+                    },
+                    onSelectedDateChange = {
+                        val newPage =
+                            middlePage + calendarState.selectedDate.yearMonth.monthDiff(
+                                currentYearMonth
+                            )
+                        Log.d("CalendarCard", "Scroll from ${pagerState.currentPage} to $newPage")
+                        pagerState.animateScrollToPage(newPage)
+                    },
+                    getContentDescription = getContentDescription,
+                    dateShape = dateShape,
+                    getClickLabel = getClickLabel,
+                    dateArrangement = dateArrangement,
+                    drawBehindElement = drawBehindElement,
+                )
+            }
         }
     }
 }
