@@ -45,7 +45,8 @@ dependencies {
     implementation(libs.hsk.ktx)
 
     api(project(":core:designsystem"))
-    api(project(":core:work"))
+    api(project(":core:combine"))
+    api(project(":core:preferences"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)
