@@ -3,4 +3,6 @@
     <color name="blindar_blue">#FF0B4F82</color>
     <color name="blindar_blue_variant">#FF073252</color>
     <color name="blindar_yellow">#FFFCDD4F</color>
+
+    <color name="surface">#FFF9F9FC</color>
 </resources>
