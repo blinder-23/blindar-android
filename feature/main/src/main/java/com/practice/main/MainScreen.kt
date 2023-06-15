@@ -23,7 +23,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.calendar.core.rememberCalendarState
@@ -37,11 +36,9 @@ fun MainScreen(
     viewModel: MainScreenViewModel,
     modifier: Modifier = Modifier,
     onLaunch: suspend () -> Unit = {},
-    onRefresh: () -> Unit = {},
 ) {
     val systemUiController = rememberSystemUiController()
     val systemBarColor = MaterialTheme.colorScheme.surface
-    val context = LocalContext.current
     LaunchedEffect(true) {
         systemUiController.setStatusBarColor(systemBarColor)
         systemUiController.setNavigationBarColor(systemBarColor)
@@ -57,17 +54,7 @@ fun MainScreen(
     val backgroundModifier = modifier.background(MaterialTheme.colorScheme.surface)
     val mealColumns = if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) 2 else 3
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingRefreshButton(
-                isLoading = uiState.isLoading,
-                onRefresh = {
-                    onRefresh()
-                    viewModel.onRefresh(context)
-                },
-            )
-        },
-    ) {
+    Scaffold {
         val paddingModifier = backgroundModifier.padding(it)
         if (windowSize.widthSizeClass == WindowWidthSizeClass.Expanded) {
             HorizontalMainScreen(

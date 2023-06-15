@@ -1,6 +1,5 @@
 package com.practice.main
 
-import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +21,6 @@ import com.practice.meal.entity.MealEntity
 import com.practice.preferences.PreferencesRepository
 import com.practice.preferences.ScreenMode
 import com.practice.schedule.entity.ScheduleEntity
-import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
@@ -88,14 +86,6 @@ class MainScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             collectPreferences()
         }
-    }
-
-    fun onRefresh(context: Context) {
-        enqueueOneTimeWork(context)
-    }
-
-    private fun enqueueOneTimeWork(context: Context) {
-        BlindarWorkManager.setOneTimeWork(context = context)
     }
 
     /**
