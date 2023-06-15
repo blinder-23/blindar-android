@@ -43,7 +43,6 @@ android {
 
 dependencies {
     api(project(":core:designsystem"))
-    api(project(":core:util"))
     api(project(":core:firebase"))
     api(project(":core:api"))
     api(project(":core:preferences"))

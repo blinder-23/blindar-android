@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -46,9 +49,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.date.toKor
+import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.DisplayMedium
 import com.practice.designsystem.components.DisplaySmall
+import com.practice.designsystem.components.TitleMedium
+import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.state.DailyMealScheduleState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.Menu
@@ -193,16 +199,35 @@ internal fun MainScreenContents(
     mealColumns: Int,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(32.dp),
-    ) {
-        if (!mealUiState.isEmpty) {
-            MealContent(mealUiState = mealUiState, columns = mealColumns)
+    if (mealUiState.isEmpty && scheduleUiState.isEmpty) {
+        EmptyContentIndicator(modifier = modifier)
+    } else {
+        LazyColumn(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(bottom = 10.dp),
+        ) {
+            if (!mealUiState.isEmpty) {
+                item {
+                    MealContent(mealUiState = mealUiState, columns = mealColumns)
+                }
+            }
+            if (!scheduleUiState.isEmpty) {
+                item {
+                    ScheduleContent(scheduleUiState)
+                }
+            }
         }
-        if (!scheduleUiState.isEmpty) {
-            ScheduleContent(scheduleUiState)
-        }
+    }
+}
+
+@Composable
+private fun EmptyContentIndicator(modifier: Modifier = Modifier) {
+    Box(modifier = modifier) {
+        TitleMedium(
+            text = stringResource(id = R.string.content_empty),
+            modifier = Modifier.align(Alignment.Center),
+        )
     }
 }
 
@@ -365,19 +390,26 @@ internal fun MainScreenContent(
     modifier: Modifier = Modifier,
     contents: @Composable () -> Unit = {},
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ElevatedCard(
+        modifier = modifier
+            .fillMaxWidth(),
     ) {
-        DisplaySmall(text = title)
-        contents()
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 25.dp, vertical = 30.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            DisplaySmall(text = title)
+            contents()
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenHeaderPreview() {
-    com.practice.designsystem.theme.BlindarTheme {
+    BlindarTheme {
         MainScreenHeader(
             year = 2022,
             month = 8,
@@ -390,7 +422,7 @@ private fun MainScreenHeaderPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenHeaderPreview_screenIconsDisabled() {
-    com.practice.designsystem.theme.BlindarTheme {
+    BlindarTheme {
         MainScreenHeader(
             year = 2022,
             month = 8,
@@ -406,7 +438,7 @@ private fun MainScreenHeaderPreview_screenIconsDisabled() {
 private fun ScreenModeIconButtonPreview() {
     val (_, icon) = screenModeIcons.first()
     var isSelected by remember { mutableStateOf(false) }
-    com.practice.designsystem.theme.BlindarTheme {
+    BlindarTheme {
         ScreenModeIconButton(
             icon = icon,
             onClick = { isSelected = !isSelected },
@@ -419,7 +451,7 @@ private fun ScreenModeIconButtonPreview() {
 @Composable
 private fun ScreenModeIconButtonsPreview() {
     var selectedMode by remember { mutableStateOf(ScreenMode.Default) }
-    com.practice.designsystem.theme.BlindarTheme {
+    BlindarTheme {
         ScreenModeIconButtons(
             screenModeIcons = screenModeIcons,
             onIconClick = { selectedMode = it },
@@ -440,9 +472,9 @@ val previewSchedules = (0..6).map {
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenContentsPreview() {
-    com.practice.designsystem.theme.BlindarTheme {
+    BlindarTheme {
         MainScreenContents(
-            modifier = Modifier.height(320.dp),
+            modifier = Modifier.height(500.dp),
             mealUiState = MealUiState(previewMenus),
             scheduleUiState = ScheduleUiState(previewSchedules),
             mealColumns = 2,
@@ -450,10 +482,10 @@ private fun MainScreenContentsPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@LightPreview
 @Composable
 private fun MealContentPreview() {
-    com.practice.designsystem.theme.BlindarTheme {
+    BlindarTheme {
         MealContent(
             mealUiState = MealUiState(previewMenus),
             columns = 2,
@@ -464,7 +496,7 @@ private fun MealContentPreview() {
 @Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
 @Composable
 private fun ListScreenItemPreview() {
-    com.practice.designsystem.theme.BlindarTheme {
+    BlindarTheme {
         DailyMealSchedule(
             DailyMealScheduleState(
                 date = Date(2022, 12, 13),

@@ -9,12 +9,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,7 +31,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
@@ -42,6 +43,7 @@ import com.practice.designsystem.calendar.core.Week
 import com.practice.designsystem.calendar.core.clickLabel
 import com.practice.designsystem.calendar.core.drawUnderline
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.util.date.DateUtil
 
 
 internal fun calendarDays(): List<DayOfWeek> = DayOfWeek.values().toList()
@@ -56,7 +58,7 @@ internal fun CalendarDays(
             CalendarDay(
                 day = day,
                 modifier = Modifier
-                    .padding(vertical = 4.dp)
+                    .padding(10.dp)
                     .weight(1f)
             )
         }
@@ -181,28 +183,30 @@ internal fun CalendarDate(
     dateBelowContent: @Composable (Date) -> Unit = {},
 ) {
     val borderColor by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colorScheme.tertiary else Transparent,
+        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Transparent,
         animationSpec = tween(
             durationMillis = 500,
             easing = FastOutSlowInEasing,
         )
     )
+    val backgroundColor =
+        if (date == DateUtil.today()) MaterialTheme.colorScheme.primary else Transparent
+    val textColor =
+        if (date == DateUtil.today()) contentColorFor(backgroundColor) else date.color(currentMonth)
     val text = if (date == Date.MAX) "" else date.dayOfMonth.toString()
 
     CalendarElement(
         text = text,
         modifier = modifier
             .clip(shape = dateShape)
+            .background(backgroundColor)
             .clickable(onClickLabel = getClickLabel(date)) { onClick(date) }
             .border(width = 2.dp, color = borderColor, shape = dateShape)
             .padding(10.dp)
             .clearAndSetSemantics {
                 contentDescription = "${date.clickLabel}\n${getContentDescription(date)}"
             },
-        textColor = date.color(
-            currentMonth = currentMonth
-        ),
-        textStyle = MaterialTheme.typography.bodyMedium,
+        textColor = textColor,
         arrangement = dateArrangement,
         drawBehindElement = {
             drawBehindElement(date)
@@ -216,14 +220,14 @@ internal fun CalendarElement(
     text: String,
     modifier: Modifier = Modifier,
     textColor: Color = Color.Unspecified,
-    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     arrangement: Arrangement.Vertical = Arrangement.Center,
     drawBehindElement: DrawScope.() -> Unit = {},
     belowContent: @Composable () -> Unit = {}
 ) {
-    var textSize by remember { mutableStateOf(textStyle.fontSize) }
+    val style = MaterialTheme.typography.bodySmall
+    var textSize by remember { mutableStateOf(style.fontSize) }
     Column(
-        modifier = modifier,
+        modifier = modifier.aspectRatio(1f),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = arrangement,
     ) {
@@ -233,8 +237,6 @@ internal fun CalendarElement(
                 .align(Alignment.CenterHorizontally)
                 .drawBehind { drawBehindElement() },
             color = textColor,
-            fontFamily = com.practice.designsystem.theme.NanumSquareRound,
-            style = textStyle,
             fontSize = textSize,
             onTextLayout = { result ->
                 if (result.hasVisualOverflow) {

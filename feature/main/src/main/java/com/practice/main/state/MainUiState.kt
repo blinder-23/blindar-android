@@ -19,6 +19,9 @@ data class MainUiState(
 ) {
     val yearMonth: YearMonth
         get() = YearMonth(year, month)
+    val selectedDateMealScheduleState: DailyMealScheduleState
+        get() = monthlyMealScheduleState.firstOrNull { it.date == selectedDate }
+            ?: DailyMealScheduleState.Empty
 }
 
 /**

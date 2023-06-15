@@ -4,14 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
 import com.hsk.ktx.date.Date
-import com.practice.designsystem.calendar.SwipeableCalendar
 import com.practice.designsystem.calendar.core.CalendarState
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.rememberCalendarState
@@ -21,12 +20,14 @@ import com.practice.main.state.DailyMealScheduleState
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.ScheduleUiState
+import com.practice.preferences.ScreenMode
 
 @Composable
 fun HorizontalMainScreen(
+    calendarPageCount: Int,
     modifier: Modifier = Modifier,
     uiState: MainUiState,
-    onScreenModeChange: (com.practice.preferences.ScreenMode) -> Unit,
+    onScreenModeChange: (ScreenMode) -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
     onDateClick: (Date) -> Unit,
@@ -44,7 +45,8 @@ fun HorizontalMainScreen(
             onScreenModeIconClick = onScreenModeChange,
         )
         Row {
-            SwipeableCalendar(
+            CalendarCard(
+                calendarPageCount = calendarPageCount,
                 modifier = Modifier.weight(1f),
                 calendarState = calendarState,
                 onDateClick = onDateClick,
@@ -55,14 +57,13 @@ fun HorizontalMainScreen(
                 dateShape = largeCalendarDateShape,
                 dateArrangement = Arrangement.Top,
             )
-            DailyMealSchedules(
-                items = uiState.monthlyMealScheduleState,
-                selectedDate = uiState.selectedDate,
-                onDateClick = onDateClick,
+            MainScreenContents(
+                mealUiState = uiState.selectedDateMealScheduleState.mealUiState,
+                scheduleUiState = uiState.selectedDateMealScheduleState.scheduleUiState,
+                mealColumns = mealColumns,
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxSize(),
-                mealColumns = mealColumns,
+                    .fillMaxWidth(),
             )
         }
     }
@@ -87,7 +88,7 @@ private fun HorizontalMainScreenPreview() {
             )
         },
         isLoading = false,
-        screenMode = com.practice.preferences.ScreenMode.Default,
+        screenMode = ScreenMode.Default,
     )
     val calendarState = rememberCalendarState(
         year = year,
@@ -96,6 +97,7 @@ private fun HorizontalMainScreenPreview() {
     )
     BlindarTheme {
         HorizontalMainScreen(
+            calendarPageCount = 13,
             modifier = Modifier.background(MaterialTheme.colorScheme.surface),
             uiState = uiState,
             onScreenModeChange = {},
@@ -105,6 +107,7 @@ private fun HorizontalMainScreenPreview() {
             onSwiped = { },
             getContentDescription = { "" },
             getClickLabel = { "" },
-        ) {}
+            drawUnderlineToScheduleDate = {},
+        )
     }
 }

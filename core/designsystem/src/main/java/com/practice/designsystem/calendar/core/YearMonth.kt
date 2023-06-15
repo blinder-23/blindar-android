@@ -7,7 +7,7 @@ data class YearMonth(
     val month: Int
 ) : Comparable<YearMonth> {
 
-    override fun toString() = "$year-$month"
+    override fun toString() = "${month}월 $year"
 
     override fun compareTo(other: YearMonth): Int {
         return if (year != other.year) year.compareTo(other.year) else month.compareTo(other.month)

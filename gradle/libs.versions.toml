@@ -28,7 +28,6 @@ violet-dreams-core = { module = 'com.github.mwy3055.violet-dreams:violet-dreams-
 violet-dreams-ui = { module = 'com.github.mwy3055.violet-dreams:violet-dreams-ui', version.ref = 'violet-dreams' }
 
 accompanist-drawablepainter = { module = 'com.google.accompanist:accompanist-drawablepainter', version.ref = 'accompanist' }
-accompanist-pager = { module = 'com.google.accompanist:accompanist-pager', version.ref = 'accompanist' }
 accompanist-placeholder-material = { module = 'com.google.accompanist:accompanist-placeholder-material', version.ref = 'accompanist' }
 accompanist-systemuicontroller = { module = 'com.google.accompanist:accompanist-systemuicontroller', version.ref = 'accompanist' }
 accompanist-navigation-animation = { module = 'com.google.accompanist:accompanist-navigation-animation', version.ref = 'accompanist' }
@@ -122,7 +121,6 @@ accompanist = [
     'accompanist-placeholder-material',
     'accompanist-systemuicontroller',
     'accompanist-drawablepainter',
-    'accompanist-pager',
     'accompanist-navigation-animation',
 ]
 android-test = ['androidx-junit', 'androidx-test-espresso-core']
