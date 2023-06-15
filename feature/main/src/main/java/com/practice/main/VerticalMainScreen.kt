@@ -47,7 +47,7 @@ fun VerticalMainScreen(
             modifier = Modifier
                 .fillMaxWidth(2 / 3f)
                 .align(Alignment.CenterHorizontally)
-                .padding(vertical = 24.dp),
+                .padding(vertical = 12.dp),
         )
         Column(
             modifier = Modifier
