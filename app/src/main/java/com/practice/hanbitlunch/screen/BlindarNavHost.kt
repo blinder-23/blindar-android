@@ -27,7 +27,6 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.practice.hanbitlunch.R
-import com.practice.login.LoginScreen
 import com.practice.main.MainScreen
 import com.practice.onboarding.onboarding.OnboardingScreen
 import com.practice.onboarding.splash.SplashScreen
@@ -141,17 +140,6 @@ fun NavGraphBuilder.blindarMainNavGraph(
         )
     }
     registerGraph(navController)
-    composable(LOGIN) {
-        LoginScreen(
-            onBackButtonClick = { navController.popBackStack() },
-            onLoginSuccess = {
-                navController.navigate(MAIN) {
-                    popUpTo(ONBOARDING) { inclusive = true }
-                }
-            },
-            modifier = Modifier.fillMaxSize(),
-        )
-    }
     composable(MAIN) {
         MainScreen(
             windowSize = windowSizeClass,
@@ -216,7 +204,6 @@ private const val REGISTER = "register"
 private const val VERIFY_PHONE = "verify_phone"
 private const val REGISTER_FORM = "register_form"
 private const val SELECT_SCHOOL = "select_school"
-private const val LOGIN = "login"
 private const val MAIN = "main_screen"
 
 private val NavBackStackEntry.route: String?
@@ -228,7 +215,6 @@ private fun priority(state: NavBackStackEntry) = when (state.route) {
     VERIFY_PHONE -> 2
     REGISTER_FORM -> 3
     SELECT_SCHOOL -> 4
-    LOGIN -> 5
     MAIN -> 6
     else -> 7
 }
