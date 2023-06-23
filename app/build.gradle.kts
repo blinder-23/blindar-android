@@ -136,7 +136,6 @@ dependencies {
 
     implementation(project(":feature:main"))
     implementation(project(":feature:onboarding"))
-    implementation(project(":feature:login"))
     implementation(project(":feature:register"))
 
     // KTX libraries

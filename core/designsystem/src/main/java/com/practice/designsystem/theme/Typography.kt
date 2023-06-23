@@ -21,18 +21,22 @@ val NanumSquareRound = FontFamily(
 val Typography = Typography(
     // Common/big-title
     displayLarge = TextStyle(
-        fontWeight = FontWeight.Bold,
-        fontSize = 40.sp,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 57.sp,
     ),
     // Common/title
     displayMedium = TextStyle(
-        fontWeight = FontWeight.Bold,
-        fontSize = 36.sp,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 45.sp,
     ),
     // Common/subtitle
     displaySmall = TextStyle(
         fontWeight = FontWeight.Bold,
-        fontSize = 22.sp,
+        fontSize = 36.sp,
+    ),
+    titleMedium = TextStyle(
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
     ),
     // Common/body
     bodyLarge = TextStyle(
@@ -53,5 +57,13 @@ val Typography = Typography(
     labelLarge = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
+    ),
+    labelMedium = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+    ),
+    labelSmall = TextStyle(
+        fontWeight = FontWeight.Light,
+        fontSize = 11.sp,
     )
 )

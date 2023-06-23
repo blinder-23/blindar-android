@@ -66,7 +66,7 @@ fun OnboardingScreen(
     val buttonAlpha = remember { Animatable(0f) }
     LaunchedEffect(true) {
         appIconOffset.animateTo(
-            targetValue = -200f,
+            targetValue = -125f,
             animationSpec = tween(
                 durationMillis = 1000,
                 easing = CubicBezierEasing(0.5f, 0.0f, 0.5f, 1f),
