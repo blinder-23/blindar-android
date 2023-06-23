@@ -1,4 +1,4 @@
-package com.practice.date
+package com.practice.util.date.daytype
 
 import com.hsk.ktx.date.Date
 import com.hsk.ktx.date.MonthDay

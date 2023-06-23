@@ -35,15 +35,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.hsk.ktx.date.DayOfWeek
-import com.practice.date.DayType
-import com.practice.date.calculateDayType
-import com.practice.date.toKor
 import com.practice.designsystem.calendar.core.CalendarPage
 import com.practice.designsystem.calendar.core.Week
 import com.practice.designsystem.calendar.core.clickLabel
 import com.practice.designsystem.calendar.core.drawUnderline
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.util.date.DateUtil
+import com.practice.util.date.daytype.DayType
+import com.practice.util.date.daytype.calculateDayType
+import com.practice.util.date.daytype.toKor
 
 
 internal fun calendarDays(): List<DayOfWeek> = DayOfWeek.values().toList()

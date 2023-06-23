@@ -49,7 +49,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
-import com.practice.date.toKor
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.DisplayMedium
@@ -65,6 +64,7 @@ import com.practice.main.state.ScheduleUiState
 import com.practice.main.state.ScreenModeIcon
 import com.practice.main.state.screenModeIcons
 import com.practice.preferences.ScreenMode
+import com.practice.util.date.daytype.toKor
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
