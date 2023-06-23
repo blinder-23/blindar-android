@@ -4,7 +4,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import com.hsk.ktx.date.Date
-import com.practice.date.isHoliday
+import com.practice.util.date.daytype.isHoliday
 
 val Date.clickLabel: String
     get() = "${month}월 ${dayOfMonth}일"

@@ -1,4 +1,4 @@
-package com.practice.date;
+package com.practice.util.date.daytype;
 
 /**
  * The MIT License (MIT)
