@@ -44,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -53,6 +54,7 @@ import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.DisplayMedium
 import com.practice.designsystem.components.DisplaySmall
+import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.state.DailyMealScheduleState
@@ -400,10 +402,22 @@ internal fun MainScreenContent(
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            DisplaySmall(text = title)
+            MainScreenContentTitle(title = title)
             contents()
         }
     }
+}
+
+@Composable
+private fun MainScreenContentTitle(
+    title: String,
+    modifier: Modifier = Modifier
+) {
+    TitleLarge(
+        text = title,
+        modifier = modifier,
+        fontWeight = FontWeight.Bold,
+    )
 }
 
 @Preview(showBackground = true)
