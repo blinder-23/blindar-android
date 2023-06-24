@@ -30,7 +30,7 @@ fun BottomNextButton(
             .padding(vertical = 8.dp),
         enabled = enabled,
     ) {
-        DisplaySmall(
+        TitleLarge(
             text = text,
             modifier = Modifier.align(Alignment.CenterVertically),
             textColor = MaterialTheme.colorScheme.onSurfaceVariant,
