@@ -2,6 +2,8 @@ package com.practice.meal.di
 
 import android.content.Context
 import androidx.room.Room
+import com.practice.meal.room.MealDao
+import com.practice.meal.room.MealDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,13 +19,13 @@ object MealRoomModule {
     @Provides
     fun provideMealDatabase(
         @ApplicationContext context: Context
-    ): com.practice.meal.room.MealDatabase = Room.databaseBuilder(
+    ): MealDatabase = Room.databaseBuilder(
         context,
-        com.practice.meal.room.MealDatabase::class.java,
+        MealDatabase::class.java,
         "meal-database"
     ).build()
 
     @Provides
-    fun provideMealDao(mealDatabase: com.practice.meal.room.MealDatabase): com.practice.meal.room.MealDao = mealDatabase.mealDao()
+    fun provideMealDao(mealDatabase: MealDatabase): MealDao = mealDatabase.mealDao()
 
 }
