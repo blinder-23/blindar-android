@@ -23,7 +23,7 @@ class RemoteSchoolModuleTest {
         assertFalse(::dataSource.isInitialized)
         hiltRule.inject()
         assert(::dataSource.isInitialized)
-        assert(dataSource is FakeRemoteSchoolDataSource)
+        assert(dataSource is RemoteSchoolDataSourceImpl)
     }
 
     @Test
