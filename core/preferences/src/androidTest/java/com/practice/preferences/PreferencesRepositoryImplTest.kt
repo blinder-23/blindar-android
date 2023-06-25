@@ -114,7 +114,7 @@ class PreferencesRepositoryImplTest {
 
     @Test
     fun repository_updateSchoolId() = runTest {
-        val schoolId = "1234567"
+        val schoolId = 1234567
         update {
             updateSchoolId(schoolId)
         }

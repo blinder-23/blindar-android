@@ -10,7 +10,7 @@ class FakePreferencesRepository : PreferencesRepository {
         screenMode = ScreenMode.Default,
         isFirstExecution = true,
         runningWorksCount = 0,
-        schoolId = "",
+        schoolId = emptySchoolId,
     )
     private var preferences: UserPreferences = initialPreferences
 
@@ -48,7 +48,7 @@ class FakePreferencesRepository : PreferencesRepository {
         emitNewValue()
     }
 
-    override suspend fun updateSchoolId(schoolId: String) {
+    override suspend fun updateSchoolId(schoolId: Int) {
         preferences = preferences.copy(schoolId = schoolId)
     }
 

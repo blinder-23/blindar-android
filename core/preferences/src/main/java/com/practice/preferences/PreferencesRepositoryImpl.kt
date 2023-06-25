@@ -2,13 +2,7 @@ package com.practice.preferences
 
 import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.MutablePreferences
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -35,7 +29,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         val SCREEN_MODE = stringPreferencesKey("screen-mode")
         val FIRST_EXECUTION = booleanPreferencesKey("first-execution")
         val RUNNING_WORKS_COUNT = intPreferencesKey("running-works-count")
-        val SCHOOL_ID = stringPreferencesKey("school-id")
+        val SCHOOL_ID = intPreferencesKey("school-id")
     }
 
     override val userPreferencesFlow: Flow<UserPreferences> = dataStore.data.catch { exception ->
@@ -96,7 +90,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         }
     }
 
-    override suspend fun updateSchoolId(schoolId: String) {
+    override suspend fun updateSchoolId(schoolId: Int) {
         edit {
             it[PreferenceKeys.SCHOOL_ID] = schoolId
         }
@@ -134,7 +128,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         )
         val isFirstExecution = preferences[PreferenceKeys.FIRST_EXECUTION] ?: true
         val runningWorksCount = preferences[PreferenceKeys.RUNNING_WORKS_COUNT] ?: 0
-        val schoolId = preferences[PreferenceKeys.SCHOOL_ID] ?: ""
+        val schoolId = preferences[PreferenceKeys.SCHOOL_ID] ?: emptySchoolId
         return UserPreferences(
             uiMode = uiMode,
             themeMode = themeMode,
