@@ -10,7 +10,7 @@ class FakeRemoteSchoolDataSource @Inject constructor() : RemoteSchoolDataSource 
         return (1..15).map {
             SchoolModel(
                 name = "학교 $it",
-                schoolId = it.toString(),
+                schoolId = it,
             )
         }
     }

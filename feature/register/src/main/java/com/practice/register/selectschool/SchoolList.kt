@@ -58,12 +58,12 @@ private fun SchoolItem(
     )
 }
 
-internal val exampleSchool = School(name = "한빛맹학교", schoolId = "")
+internal val exampleSchool = School(name = "한빛맹학교", schoolId = 0)
 internal val exampleSchools =
     (1..20).map {
         School(
             name = "${exampleSchool.name} $it",
-            schoolId = it.toString()
+            schoolId = it
         )
     }.toImmutableList()
 
