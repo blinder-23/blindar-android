@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">한빛 캘린더</string>
+    <string name="app_name">블린더</string>
+    <string name="debug_app_name">블린더 debug</string>
+
+    <string name="google_login_fail_message">로그인에 실패했습니다. 잠시 후 다시 시도해 주세요.</string>
+
+    <string name="web_client_id">593370815892-t03doihs88p3dil077qlbd1r7pdmf4rs.apps.googleusercontent.com</string>
 </resources>

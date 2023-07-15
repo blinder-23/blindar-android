@@ -20,8 +20,8 @@
 * Androidx Room, ViewModel, WorkManager 등의 라이브러리를 사용했습니다.
 * 멀티 모듈 구조를 적용하여 빌드 시간을 단축하였습니다.
 
-## 아키텍쳐
-![hanbit calendar architecture](https://user-images.githubusercontent.com/45386920/230713398-ee992457-c2b6-4676-9c08-d03c568f6917.png)
+## 모듈 구조
+![image](previews/dependency-graph-blindar.png)
 
 ## 연락처
-버그 제보 및 기능 개선 등 건의사항은 [이메일](mailto:mwy3055@gmail.com)로 보내주세요.
+버그 제보 및 기능 개선 등 건의사항은 [이메일](mailto:blinder.contact@gmail.com)로 보내주세요.

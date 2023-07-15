@@ -11,11 +11,18 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Hanbit lunch"
+rootProject.name = "blindar"
 include(":app")
-include(":database")
-include(":preferences")
-include(":domain")
 include(":benchmark")
-include(":server")
-include(":work")
+include(":core:preferences")
+include(":core:work")
+include(":core:api")
+include(":data:meal")
+include(":data:schedule")
+include(":core:combine")
+include(":core:designsystem")
+include(":feature:main")
+include(":feature:onboarding")
+include(":feature:register")
+include(":core:firebase")
+include(":core:util")

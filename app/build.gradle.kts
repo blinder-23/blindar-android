@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -11,6 +13,12 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
 android {
     compileSdk = 33
 
@@ -19,10 +27,10 @@ android {
         minSdk = 23
         targetSdk = 33
         versionCode = 1
-        versionName = "1.3.1"
+        versionName = "2.0.0"
         signingConfig = signingConfigs.getByName("debug")
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.practice.hanbitlunch.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -73,6 +81,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -125,12 +134,9 @@ dependencies {
     implementation(libs.violet.dreams.core)
     implementation(libs.violet.dreams.ui)
 
-    // Module dependency
-    implementation(project(path = ":preferences"))
-    implementation(project(path = ":database"))
-    implementation(project(path = ":domain"))
-    implementation(project(path = ":work"))
-    implementation(project(path = ":server"))
+    implementation(project(":feature:main"))
+    implementation(project(":feature:onboarding"))
+    implementation(project(":feature:register"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)
@@ -143,7 +149,6 @@ dependencies {
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
-    implementation("androidx.compose.material:material")
 
     // AndroidX WorkManager
     implementation(libs.androidx.work.runtime.ktx)
@@ -153,6 +158,7 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     kapt(libs.hilt.compiler.androidx)
+    kaptAndroidTest(libs.hilt.compiler)
     androidTestImplementation(libs.hilt.android.testing)
     implementation(libs.hilt.work)
 
@@ -160,18 +166,18 @@ dependencies {
     implementation(libs.bundles.jetpack)
 
     // Unit Test
-    testImplementation(libs.junit.jupiter)
-    testRuntimeOnly(libs.junit.vintage.engine)
-    testImplementation(libs.assertj.core)
-    androidTestUtil(libs.androidx.test.orchestrator)
+//    testImplementation(libs.junit.jupiter)
+//    testRuntimeOnly(libs.junit.vintage.engine)
+//    testImplementation(libs.assertj.core)
 
     // Instrumented Test
     androidTestImplementation(libs.bundles.android.test)
+    androidTestUtil(libs.androidx.test.orchestrator)
 
-    // Firebase Crashlytics
+    // Firebase
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics.ktx)
-    implementation(libs.firebase.crashlytics.ktx)
+    implementation(libs.bundles.firebase)
+    implementation(libs.google.play.auth)
 
     // Accompanist
     implementation(libs.bundles.accompanist)
