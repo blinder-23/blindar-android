@@ -3,15 +3,7 @@ package com.practice.main
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -19,12 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ArrowForwardIos
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -33,15 +20,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.calendar.SwipeableCalendar
-import com.practice.designsystem.calendar.core.CalendarState
-import com.practice.designsystem.calendar.core.YearMonth
-import com.practice.designsystem.calendar.core.offset
-import com.practice.designsystem.calendar.core.rememberCalendarState
-import com.practice.designsystem.calendar.core.yearMonth
+import com.practice.designsystem.calendar.core.*
 import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.theme.BlindarTheme
@@ -178,19 +162,35 @@ private fun CalendarArrow(
     modifier: Modifier = Modifier,
     iconTint: Color = MaterialTheme.colorScheme.onSurface,
 ) {
+    val backButtonDescription = stringResource(id = R.string.calendar_back_arrow)
+    val forwardButtonDescription = stringResource(id = R.string.calendar_next_arrow)
     Row(modifier = modifier) {
-        IconButton(onClick = onLeftClick) {
+        IconButton(
+            onClick = onLeftClick,
+            modifier = Modifier.semantics {
+                role = Role.Button
+                contentDescription = backButtonDescription
+            }
+        ) {
             Icon(
                 imageVector = Icons.Filled.ArrowBackIosNew,
-                contentDescription = stringResource(id = R.string.calendar_back_arrow),
+                contentDescription = null,
                 tint = iconTint,
+                modifier = Modifier.clearAndSetSemantics { },
             )
         }
-        IconButton(onClick = onRightClick) {
+        IconButton(
+            onClick = onRightClick,
+            modifier = Modifier.semantics {
+                role = Role.Button
+                contentDescription = forwardButtonDescription
+            }
+        ) {
             Icon(
                 imageVector = Icons.Filled.ArrowForwardIos,
-                contentDescription = stringResource(id = R.string.calendar_next_arrow),
+                contentDescription = null,
                 tint = iconTint,
+                modifier = Modifier.clearAndSetSemantics { },
             )
         }
     }
