@@ -14,6 +14,7 @@ import com.google.firebase.auth.PhoneAuthProvider
 import com.practice.api.school.RemoteSchoolRepository
 import com.practice.firebase.BlindarFirebase
 import com.practice.preferences.PreferencesRepository
+import com.practice.register.phonenumber.PhoneNumberValidator
 import com.practice.register.selectschool.School
 import com.practice.util.update
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,8 +42,9 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun onPhoneNumberChange(value: String) {
+        val digitsOnly = PhoneNumberValidator.filterOnlyDigits(value)
         registerUiState.update {
-            this.copy(phoneNumber = value)
+            this.copy(phoneNumber = digitsOnly)
         }
     }
 
@@ -136,9 +138,10 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun onAuthCodeChange(value: String) {
-        if (value.length <= 6) {
+        val digitsOnly = PhoneNumberValidator.filterOnlyDigits(value)
+        if (digitsOnly.length <= 6) {
             registerUiState.update {
-                this.copy(authCode = value)
+                this.copy(authCode = digitsOnly)
             }
         }
     }
