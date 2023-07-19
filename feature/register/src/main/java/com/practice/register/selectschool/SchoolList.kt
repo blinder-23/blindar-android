@@ -1,17 +1,16 @@
 package com.practice.register.selectschool
 
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BodyLarge
@@ -47,10 +46,23 @@ private fun SchoolItem(
 ) {
     ListItem(
         headlineContent = {
-            BodyLarge(text = school.name)
+            TextButton(
+                onClick = { onClick(school) },
+                colors = ButtonDefaults.textButtonColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(0.dp),
+            ) {
+                BodyLarge(
+                    text = school.name,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.weight(1f),
+                )
+            }
         },
-        modifier = modifier
-            .clickable { onClick(school) },
+        modifier = modifier,
         colors = ListItemDefaults.colors(
             containerColor = MaterialTheme.colorScheme.surface,
             headlineColor = MaterialTheme.colorScheme.onSurface,
