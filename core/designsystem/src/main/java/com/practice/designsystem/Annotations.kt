@@ -12,3 +12,10 @@ annotation class DarkPreview
 @LightPreview
 @DarkPreview
 annotation class LightAndDarkPreview
+
+@Preview(
+    name = "LightTablet",
+    showBackground = true,
+    device = "spec:width=1280dp,height=800dp,dpi=240"
+)
+annotation class LightTabletPreview
