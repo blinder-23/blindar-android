@@ -58,7 +58,7 @@ internal fun CalendarDays(
             CalendarDay(
                 day = day,
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(5.dp)
                     .weight(1f)
             )
         }
@@ -202,7 +202,8 @@ internal fun CalendarDate(
             .background(backgroundColor)
             .clickable(onClickLabel = getClickLabel(date)) { onClick(date) }
             .border(width = 2.dp, color = borderColor, shape = dateShape)
-            .padding(10.dp)
+            .aspectRatio(1f, matchHeightConstraintsFirst = true)
+            .padding(5.dp)
             .clearAndSetSemantics {
                 contentDescription = "${date.clickLabel}\n${getContentDescription(date)}"
             },
@@ -227,7 +228,7 @@ internal fun CalendarElement(
     val style = MaterialTheme.typography.bodySmall
     var textSize by remember { mutableStateOf(style.fontSize) }
     Column(
-        modifier = modifier.aspectRatio(1f),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = arrangement,
     ) {
