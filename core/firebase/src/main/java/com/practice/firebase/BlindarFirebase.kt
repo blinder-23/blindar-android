@@ -56,7 +56,7 @@ object BlindarFirebase {
         val user = task?.user
         val username = user?.displayName
         if (user != null && username != null) {
-            val schoolId = getSchoolId(username).value as String?
+            val schoolId = getSchoolId(username).value as? Long
             if (schoolId == null) {
                 // new user register
                 tryStoreUsername(
