@@ -5,4 +5,8 @@ object PhoneNumberValidator {
     fun validate(phoneNumber: String): Boolean {
         return regex.containsMatchIn(phoneNumber)
     }
+
+    fun filterOnlyDigits(value: String): String {
+        return value.filter { it.isDigit() }
+    }
 }

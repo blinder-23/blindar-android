@@ -11,16 +11,12 @@ import com.practice.combine.MealScheduleEntity
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.getFirstWeekday
 import com.practice.designsystem.calendar.core.yearMonth
-import com.practice.main.state.DailyMealScheduleState
-import com.practice.main.state.MainUiState
-import com.practice.main.state.MealUiState
-import com.practice.main.state.ScheduleUiState
-import com.practice.main.state.toMealUiState
-import com.practice.main.state.toSchedule
+import com.practice.main.state.*
 import com.practice.meal.entity.MealEntity
 import com.practice.preferences.PreferencesRepository
 import com.practice.preferences.ScreenMode
 import com.practice.schedule.entity.ScheduleEntity
+import com.practice.util.date.DateUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
@@ -186,16 +182,19 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun getContentDescription(date: Date): String {
-        return if (date == state.selectedDate) {
-            val dailyState = state.monthlyMealScheduleState.find { it.date == date }
-            if (dailyState != null) {
-                "식단: ${dailyState.mealUiState.description}\n학사일정:${dailyState.scheduleUiState.description}"
-            } else {
-                ""
-            }
+        val dailyState = state.monthlyMealScheduleState.find { it.date == date }
+
+        val isSelectedString = if (date == state.selectedDate) "선택됨" else ""
+        val isTodayString = if (date == DateUtil.today()) "오늘" else ""
+        val dailyStateString = if (dailyState != null) {
+            "식단: ${dailyState.mealUiState.description}\n학사일정:${dailyState.scheduleUiState.description}"
         } else {
             ""
         }
+
+        return listOf(isSelectedString, isTodayString, dailyStateString)
+            .filter { it.isNotEmpty() }
+            .joinToString(", ")
     }
 
     fun getClickLabel(date: Date): String =

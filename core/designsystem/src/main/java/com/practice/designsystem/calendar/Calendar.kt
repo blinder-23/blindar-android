@@ -15,11 +15,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
-import com.practice.designsystem.calendar.core.CalendarPage
-import com.practice.designsystem.calendar.core.CalendarState
-import com.practice.designsystem.calendar.core.TextsInsideDate
-import com.practice.designsystem.calendar.core.rememberCalendarState
-import com.practice.designsystem.calendar.core.yearMonth
+import com.practice.designsystem.calendar.core.*
 import com.practice.designsystem.theme.BlindarTheme
 
 val calendarDateShape = CircleShape
