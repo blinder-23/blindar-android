@@ -76,7 +76,7 @@ fun OnboardingScreen(
     BoxWithConstraints(modifier = modifier) {
         val buttonWidthRatio = if (minWidth < minHeight) 0.8f else 0.5f
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-            val buttonGuideline = createGuidelineFromBottom(0.1f)
+            val buttonGuideline = createGuidelineFromBottom(0.05f)
             val (icon, phoneLoginButton, googleLoginButton) = createRefs()
             AppIcon(
                 modifier = Modifier.constrainAs(icon) {
