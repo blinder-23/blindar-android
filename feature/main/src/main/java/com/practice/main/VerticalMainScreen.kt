@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
@@ -33,6 +34,7 @@ fun VerticalMainScreen(
     getContentDescription: (Date) -> String,
     getClickLabel: (Date) -> String,
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
+    onNavigateToSelectSchoolScreen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -42,6 +44,8 @@ fun VerticalMainScreen(
                 .fillMaxWidth(2 / 3f)
                 .align(Alignment.CenterHorizontally)
                 .padding(vertical = 12.dp),
+            onClick = onNavigateToSelectSchoolScreen,
+            onClickLabel = stringResource(id = R.string.navigate_to_school_select),
         )
         Column(
             modifier = Modifier
@@ -119,6 +123,7 @@ private fun VerticalMainScreenPreview() {
             getContentDescription = { "" },
             getClickLabel = { "" },
             drawUnderlineToScheduleDate = {},
+            onNavigateToSelectSchoolScreen = {},
         )
     }
 }

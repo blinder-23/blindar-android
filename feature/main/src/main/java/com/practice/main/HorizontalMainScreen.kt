@@ -35,6 +35,7 @@ fun HorizontalMainScreen(
     getContentDescription: (Date) -> String,
     getClickLabel: (Date) -> String,
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
+    onNavigateToSelectSchoolScreen: () -> Unit,
 ) {
     Column(modifier = modifier) {
         MainScreenHeader(
@@ -108,6 +109,7 @@ private fun HorizontalMainScreenPreview() {
             getContentDescription = { "" },
             getClickLabel = { "" },
             drawUnderlineToScheduleDate = {},
+            onNavigateToSelectSchoolScreen = {},
         )
     }
 }
