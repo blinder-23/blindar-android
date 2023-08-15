@@ -12,6 +12,7 @@ data class RegisterUiState(
     val isAuthCodeFieldEnabled: Boolean,
     val isVerifyCodeButtonEnabled: Boolean,
     val name: String,
+    val selectedSchool: School,
     val schoolQuery: String,
     val schools: ImmutableList<School>,
 ) {
@@ -28,6 +29,7 @@ data class RegisterUiState(
             isAuthCodeFieldEnabled = false,
             isVerifyCodeButtonEnabled = false,
             name = "",
+            selectedSchool = School.EmptySchool,
             schoolQuery = "",
             schools = persistentListOf(),
         )
