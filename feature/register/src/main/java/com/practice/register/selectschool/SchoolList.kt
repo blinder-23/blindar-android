@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.domain.School
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 

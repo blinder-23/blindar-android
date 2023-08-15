@@ -2,7 +2,7 @@ package com.practice.register
 
 import com.practice.register.phonenumber.PhoneNumberValidator
 import com.practice.register.registerform.NameValidator
-import com.practice.register.selectschool.School
+import com.practice.domain.School
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 

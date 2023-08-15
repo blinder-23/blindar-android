@@ -1,4 +1,4 @@
-package com.practice.register.selectschool
+package com.practice.domain
 
 data class School(
     val name: String,

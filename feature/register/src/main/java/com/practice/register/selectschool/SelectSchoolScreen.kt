@@ -26,6 +26,7 @@ import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BlindarTopAppBar
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.domain.School
 import com.practice.register.R
 import com.practice.register.RegisterViewModel
 import com.practice.util.makeToast

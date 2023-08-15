@@ -1,7 +1,7 @@
-package com.practice.register
+package com.practice.api
 
 import com.practice.api.school.pojo.SchoolModel
-import com.practice.register.selectschool.School
+import com.practice.domain.School
 
 fun SchoolModel.toSchool() = School(
     name = name,

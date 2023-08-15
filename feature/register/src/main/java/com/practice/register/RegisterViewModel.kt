@@ -15,7 +15,8 @@ import com.practice.api.school.RemoteSchoolRepository
 import com.practice.firebase.BlindarFirebase
 import com.practice.preferences.PreferencesRepository
 import com.practice.register.phonenumber.PhoneNumberValidator
-import com.practice.register.selectschool.School
+import com.practice.domain.School
+import com.practice.api.toSchool
 import com.practice.util.update
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList

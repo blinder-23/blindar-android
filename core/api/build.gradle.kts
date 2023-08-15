@@ -77,6 +77,8 @@ android {
 }
 
 dependencies {
+    api(project(":core:domain"))
+    
     implementation(libs.hsk.ktx)
 
     implementation(libs.kotlinx.coroutines.core)

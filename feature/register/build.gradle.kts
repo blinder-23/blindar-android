@@ -46,6 +46,7 @@ dependencies {
     api(project(":core:firebase"))
     api(project(":core:api"))
     api(project(":core:preferences"))
+    api(project(":core:domain"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)
