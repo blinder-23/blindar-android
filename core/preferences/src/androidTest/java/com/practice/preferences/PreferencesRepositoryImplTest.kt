@@ -115,8 +115,9 @@ class PreferencesRepositoryImplTest {
     @Test
     fun repository_updateSchoolId() = runTest {
         val schoolId = 1234567
+        val schoolName = "testSchool"
         update {
-            updateSchoolId(schoolId)
+            updateSelectedSchool(schoolId, schoolName)
         }
 
         preferences.dropFirstAndTake(1).first().apply {

@@ -23,9 +23,11 @@ data class UserPreferences(
     val isFirstExecution: Boolean = true,
     val runningWorksCount: Int = 0,
     val schoolId: Int = emptySchoolId,
+    val schoolName: String = emptySchoolName,
 ) {
     val isSchoolIdEmpty: Boolean
         get() = schoolId == emptySchoolId
 }
 
-internal const val emptySchoolId = 0
+internal const val emptySchoolId = 7010578
+internal const val emptySchoolName = "한빛맹학교"

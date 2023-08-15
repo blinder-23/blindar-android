@@ -48,8 +48,11 @@ class FakePreferencesRepository : PreferencesRepository {
         emitNewValue()
     }
 
-    override suspend fun updateSchoolId(schoolId: Int) {
-        preferences = preferences.copy(schoolId = schoolId)
+    override suspend fun updateSelectedSchool(schoolId: Int, schoolName: String) {
+        preferences = preferences.copy(
+            schoolId = schoolId,
+            schoolName = schoolName
+        )
     }
 
     override suspend fun clear() {
