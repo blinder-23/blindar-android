@@ -44,6 +44,7 @@ fun SelectSchoolScreen(
     val baseSuccessMessage = stringResource(id = R.string.school_selected_base)
     val baseFailMessage = stringResource(id = R.string.school_select_fail_base)
     SelectSchoolScreen(
+        selectedSchool = uiState.selectedSchool,
         schools = uiState.schools,
         onSchoolClick = { school ->
             viewModel.onSchoolClick(
@@ -68,6 +69,7 @@ fun SelectSchoolScreen(
 
 @Composable
 private fun SelectSchoolScreen(
+    selectedSchool: School,
     schools: ImmutableList<School>,
     onSchoolClick: (School) -> Unit,
     query: String,
@@ -89,6 +91,7 @@ private fun SelectSchoolScreen(
                 .padding(top = 21.dp, start = horizontalMargin, end = horizontalMargin),
         )
         SchoolList(
+            selectedSchool = selectedSchool,
             schools = schools,
             onSchoolClick = onSchoolClick,
             modifier = Modifier
@@ -148,6 +151,7 @@ private fun SelectSchoolScreenPreview() {
     var query by remember { mutableStateOf("") }
     BlindarTheme {
         SelectSchoolScreen(
+            selectedSchool = exampleSchools[0],
             schools = exampleSchools,
             onSchoolClick = {},
             query = query,

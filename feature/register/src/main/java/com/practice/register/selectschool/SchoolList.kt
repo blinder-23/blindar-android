@@ -20,11 +20,13 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun SchoolList(
+    selectedSchool: School,
     schools: ImmutableList<School>,
     onSchoolClick: (School) -> Unit,
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
 ) {
+    // TODO: 선택된 학교 보여주기
     Column(
         modifier = modifier
             .verticalScroll(scrollState)
@@ -96,6 +98,7 @@ private fun SchoolItemPreview() {
 private fun SchoolListPreview() {
     BlindarTheme {
         SchoolList(
+            selectedSchool = exampleSchools[0],
             schools = exampleSchools,
             onSchoolClick = {},
             modifier = Modifier
