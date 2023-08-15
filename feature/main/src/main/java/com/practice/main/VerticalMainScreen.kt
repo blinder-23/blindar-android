@@ -17,6 +17,7 @@ import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.domain.School
 import com.practice.main.state.DailyMealScheduleState
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
@@ -39,7 +40,7 @@ fun VerticalMainScreen(
 ) {
     Column(modifier = modifier) {
         MainScreenTopBar(
-            schoolName = "한빛맹학교",
+            schoolName = uiState.selectedSchool.name,
             modifier = Modifier
                 .fillMaxWidth(2 / 3f)
                 .align(Alignment.CenterHorizontally)
@@ -101,6 +102,10 @@ private fun VerticalMainScreenPreview() {
                 },
                 isLoading = false,
                 screenMode = ScreenMode.Default,
+                selectedSchool = School(
+                    name = "어떤 학교",
+                    schoolId = -1,
+                ),
             )
         )
     }

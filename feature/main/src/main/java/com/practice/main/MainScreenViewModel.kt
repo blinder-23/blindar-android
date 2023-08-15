@@ -11,6 +11,7 @@ import com.practice.combine.MealScheduleEntity
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.getFirstWeekday
 import com.practice.designsystem.calendar.core.yearMonth
+import com.practice.domain.School
 import com.practice.main.state.*
 import com.practice.meal.entity.MealEntity
 import com.practice.preferences.PreferencesRepository
@@ -63,6 +64,7 @@ class MainScreenViewModel @Inject constructor(
                 monthlyMealScheduleState = emptyList(),
                 isLoading = false,
                 screenMode = ScreenMode.Default,
+                selectedSchool = School.EmptySchool,
             )
         )
         selectedDateFlow = MutableStateFlow(current)
@@ -93,6 +95,7 @@ class MainScreenViewModel @Inject constructor(
         entity: MealScheduleEntity? = cache[selectedDate.yearMonth],
         isLoading: Boolean = state.isLoading,
         screenMode: ScreenMode = state.screenMode,
+        selectedSchool: School = state.selectedSchool,
     ) {
         val monthlyMealScheduleState = if (entity != null) {
             parseDailyState(entity)
@@ -107,6 +110,7 @@ class MainScreenViewModel @Inject constructor(
                 selectedDate = selectedDate,
                 isLoading = isLoading,
                 screenMode = screenMode,
+                selectedSchool = selectedSchool,
             )
         }
         entity?.let {
@@ -177,6 +181,10 @@ class MainScreenViewModel @Inject constructor(
             updateUiState(
                 isLoading = (it.runningWorksCount != 0),
                 screenMode = it.screenMode,
+                selectedSchool = School(
+                    name = it.schoolName,
+                    schoolId = it.schoolId,
+                )
             )
         }
     }

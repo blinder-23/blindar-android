@@ -16,6 +16,7 @@ import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.largeCalendarDateShape
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.domain.School
 import com.practice.main.state.DailyMealScheduleState
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
@@ -90,6 +91,10 @@ private fun HorizontalMainScreenPreview() {
         },
         isLoading = false,
         screenMode = ScreenMode.Default,
+        selectedSchool = School(
+            name = "어떤 학교",
+            schoolId = -1,
+        ),
     )
     val calendarState = rememberCalendarState(
         year = year,

@@ -2,6 +2,7 @@ package com.practice.main.state
 
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.YearMonth
+import com.practice.domain.School
 import com.practice.meal.entity.MealEntity
 import com.practice.preferences.ScreenMode
 import com.practice.schedule.entity.ScheduleEntity
@@ -16,6 +17,7 @@ data class MainUiState(
     val monthlyMealScheduleState: List<DailyMealScheduleState>,
     val isLoading: Boolean,
     val screenMode: ScreenMode,
+    val selectedSchool: School,
 ) {
     val yearMonth: YearMonth
         get() = YearMonth(year, month)
