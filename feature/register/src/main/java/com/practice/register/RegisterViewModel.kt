@@ -20,6 +20,7 @@ import com.practice.util.update
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,6 +39,9 @@ class RegisterViewModel @Inject constructor(
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
 
     init {
+        viewModelScope.launch {
+            collectSelectedSchool()
+        }
         updateSchoolList("")
     }
 
@@ -191,6 +195,19 @@ class RegisterViewModel @Inject constructor(
     /**
      * SelectSchoolScreen
      */
+    private suspend fun collectSelectedSchool() {
+        preferencesRepository.userPreferencesFlow.collectLatest { preferences ->
+            registerUiState.update {
+                this.copy(
+                    selectedSchool = School(
+                        name = preferences.schoolName,
+                        schoolId = preferences.schoolId,
+                    )
+                )
+            }
+        }
+    }
+
     fun onSchoolQueryChange(query: String) {
         registerUiState.update {
             this.copy(schoolQuery = query)
@@ -216,7 +233,7 @@ class RegisterViewModel @Inject constructor(
         onFail: () -> Unit
     ) {
         viewModelScope.launch {
-            preferencesRepository.updateSchoolId(school.schoolId)
+            preferencesRepository.updateSelectedSchool(school.schoolId, school.name)
         }
         BlindarFirebase.tryUpdateCurrentUserSchoolId(
             schoolId = school.schoolId,
