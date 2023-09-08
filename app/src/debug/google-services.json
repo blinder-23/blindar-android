@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "593370815892-js7rohm0f87f1l099rih5gram5ll30cr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.practice.firebase",
+            "certificate_hash": "121ea3e160a00b902dcb8ce3d9b29f32d091e5a4"
+          }
+        },
+        {
           "client_id": "593370815892-t03doihs88p3dil077qlbd1r7pdmf4rs.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -52,11 +60,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "593370815892-4etdpa9c3o8488cncv7tkkk5a71c6kmp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.practice.hanbitlunch",
+            "certificate_hash": "0efeaf67fdeceb2aa8072dd78d917a6724c0149d"
+          }
+        },
+        {
           "client_id": "593370815892-82ha93uotvgia1d1t53626qovvl0m87h.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.practice.hanbitlunch",
             "certificate_hash": "c7c84953bece0ed06bd6884e5a4b9c3cfbeffa99"
+          }
+        },
+        {
+          "client_id": "593370815892-r57u0vinipatf7iqkv03ic2ij0kdd6vh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.practice.hanbitlunch",
+            "certificate_hash": "a86e80ee17937647f53eda33c70e51b1231fbd59"
           }
         },
         {
@@ -82,18 +106,18 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:593370815892:android:f65919fce52ba0685a0381",
+        "mobilesdk_app_id": "1:593370815892:android:4b249171f50d5f355a0381",
         "android_client_info": {
           "package_name": "com.practice.hanbitlunch.debug"
         }
       },
       "oauth_client": [
         {
-          "client_id": "593370815892-d9v4maisltdn6cqegd1j5e4icr0knl93.apps.googleusercontent.com",
+          "client_id": "593370815892-r2b3rnrb3c1f18e247mr1uhdjv125pl1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.practice.hanbitlunch.debug",
-            "certificate_hash": "c7c84953bece0ed06bd6884e5a4b9c3cfbeffa99"
+            "certificate_hash": "121ea3e160a00b902dcb8ce3d9b29f32d091e5a4"
           }
         },
         {
