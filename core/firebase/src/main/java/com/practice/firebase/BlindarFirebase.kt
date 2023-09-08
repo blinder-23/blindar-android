@@ -74,6 +74,13 @@ object BlindarFirebase {
             Log.e(TAG, "sign in with google fail: $user")
             onFail()
         }
+    suspend fun getUserDataState(user: FirebaseUser): UserDataState {
+        Log.d(TAG, "user display name: ${user.displayName}")
+        if (user.displayName.isNullOrEmpty()) return UserDataState.USERNAME_MISSING
+
+        val schoolId = getSchoolId(user.displayName!!)
+        Log.d(TAG, "user school id: $schoolId")
+        return if (schoolId == null) UserDataState.SCHOOL_NOT_SELECTED else UserDataState.ALL_FILLED
     }
 
     fun signUpWithPhoneNumber(
