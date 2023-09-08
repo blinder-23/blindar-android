@@ -1,16 +1,9 @@
 package com.practice.main
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -21,6 +14,7 @@ import com.practice.designsystem.calendar.calendarDateShape
 import com.practice.designsystem.calendar.core.CalendarState
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.rememberCalendarState
+import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.state.DailyMealScheduleState
 import com.practice.main.state.MainUiState
@@ -84,9 +78,9 @@ fun VerticalMainScreen(
 @Preview(name = "Foldable", device = "spec:width=673.5dp,height=841dp,dpi=480")
 @Composable
 private fun VerticalMainScreenPreview() {
-    val year = 2022
-    val month = 10
-    var selectedDate by remember { mutableStateOf(Date(2022, 10, 11)) }
+    val now = Date.now()
+    val (year, month) = now.yearMonth
+    var selectedDate by remember { mutableStateOf(now) }
 
     val uiState by remember {
         mutableStateOf(
@@ -96,7 +90,7 @@ private fun VerticalMainScreenPreview() {
                 selectedDate = selectedDate,
                 monthlyMealScheduleState = (0..3).map {
                     DailyMealScheduleState(
-                        date = Date(2022, 10, 11).plusDays(it),
+                        date = now.plusDays(it),
                         mealUiState = MealUiState(previewMenus),
                         scheduleUiState = ScheduleUiState(previewSchedules),
                     )
@@ -114,7 +108,9 @@ private fun VerticalMainScreenPreview() {
     BlindarTheme {
         VerticalMainScreen(
             calendarPageCount = 13,
-            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .fillMaxSize(),
             uiState = uiState,
             calendarState = calendarState,
             mealColumns = 2,

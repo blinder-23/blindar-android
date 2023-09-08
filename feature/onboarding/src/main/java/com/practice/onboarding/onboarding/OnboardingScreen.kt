@@ -7,16 +7,8 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -37,6 +29,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseUser
 import com.practice.designsystem.LightPreview
+import com.practice.designsystem.LightTabletPreview
 import com.practice.designsystem.components.AppIcon
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.theme.BlindarTheme
@@ -80,44 +73,47 @@ fun OnboardingScreen(
         )
     }
 
-    val buttonFraction = 0.8f
-    ConstraintLayout(modifier = modifier) {
-        val (icon, phoneLoginButton, googleLoginButton) = createRefs()
-        AppIcon(
-            modifier = Modifier.constrainAs(icon) {
-                linkTo(
-                    start = parent.start,
-                    top = parent.top,
-                    end = parent.end,
-                    bottom = parent.bottom,
-                )
-                translationY = appIconOffset.value.dp
-            }
-        )
-        PhoneLoginButton(
-            onPhoneLogin = onPhoneLogin,
-            modifier = Modifier
-                .constrainAs(phoneLoginButton) {
-                    top.linkTo(icon.bottom, margin = 100.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
+    BoxWithConstraints(modifier = modifier) {
+        val buttonWidthRatio = if (minWidth < minHeight) 0.8f else 0.5f
+        ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+            val buttonGuideline = createGuidelineFromBottom(0.05f)
+            val (icon, phoneLoginButton, googleLoginButton) = createRefs()
+            AppIcon(
+                modifier = Modifier.constrainAs(icon) {
+                    linkTo(
+                        start = parent.start,
+                        top = parent.top,
+                        end = parent.end,
+                        bottom = parent.bottom,
+                    )
+                    translationY = appIconOffset.value.dp
                 }
-                .fillMaxWidth(fraction = buttonFraction)
-                .alpha(buttonAlpha.value),
-        )
-        GoogleLoginButton(
-            onGoogleLogin = {
-                startForResult.launch(googleSignInClient.signInIntent)
-            },
-            modifier = Modifier
-                .constrainAs(googleLoginButton) {
-                    start.linkTo(parent.start)
-                    top.linkTo(phoneLoginButton.bottom, margin = 30.dp)
-                    end.linkTo(parent.end)
-                }
-                .fillMaxWidth(fraction = buttonFraction)
-                .alpha(buttonAlpha.value),
-        )
+            )
+            PhoneLoginButton(
+                onPhoneLogin = onPhoneLogin,
+                modifier = Modifier
+                    .constrainAs(phoneLoginButton) {
+                        start.linkTo(parent.start)
+                        bottom.linkTo(googleLoginButton.top, margin = 20.dp)
+                        end.linkTo(parent.end)
+                    }
+                    .fillMaxWidth(fraction = buttonWidthRatio)
+                    .alpha(buttonAlpha.value),
+            )
+            GoogleLoginButton(
+                onGoogleLogin = {
+                    startForResult.launch(googleSignInClient.signInIntent)
+                },
+                modifier = Modifier
+                    .constrainAs(googleLoginButton) {
+                        start.linkTo(parent.start)
+                        bottom.linkTo(buttonGuideline)
+                        end.linkTo(parent.end)
+                    }
+                    .fillMaxWidth(fraction = buttonWidthRatio)
+                    .alpha(buttonAlpha.value),
+            )
+        }
     }
 }
 
@@ -201,6 +197,7 @@ private fun GoogleLoginButton(
 }
 
 @LightPreview
+@LightTabletPreview
 @Composable
 private fun OnboardingScreenPreview() {
     BlindarTheme {

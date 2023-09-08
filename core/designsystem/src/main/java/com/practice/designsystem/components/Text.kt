@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import com.practice.designsystem.theme.NanumSquareRound
 
@@ -197,7 +198,8 @@ fun LabelSmall(
 fun BodyLarge(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    textAlign: TextAlign? = null,
 ) {
     Text(
         text = text,
@@ -205,6 +207,7 @@ fun BodyLarge(
         style = MaterialTheme.typography.bodyLarge,
         color = textColor,
         fontFamily = NanumSquareRound,
+        textAlign = textAlign,
     )
 }
 

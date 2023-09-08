@@ -2,7 +2,8 @@
 <resources>
 
     <style name="Theme.Blindar" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/surface</item>
+        <item name="android:statusBarColor">@color/fui_transparent</item>
+        <item name="android:navigationBarColor">@color/fui_transparent</item>
     </style>
 
     <style name="Theme.Blindar.SplashScreen" parent="Theme.SplashScreen">

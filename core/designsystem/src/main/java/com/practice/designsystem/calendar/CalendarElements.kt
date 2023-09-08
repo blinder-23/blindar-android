@@ -6,22 +6,12 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,7 +48,7 @@ internal fun CalendarDays(
             CalendarDay(
                 day = day,
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(5.dp)
                     .weight(1f)
             )
         }
@@ -202,7 +192,8 @@ internal fun CalendarDate(
             .background(backgroundColor)
             .clickable(onClickLabel = getClickLabel(date)) { onClick(date) }
             .border(width = 2.dp, color = borderColor, shape = dateShape)
-            .padding(10.dp)
+            .aspectRatio(1f, matchHeightConstraintsFirst = true)
+            .padding(5.dp)
             .clearAndSetSemantics {
                 contentDescription = "${date.clickLabel}\n${getContentDescription(date)}"
             },
@@ -227,7 +218,7 @@ internal fun CalendarElement(
     val style = MaterialTheme.typography.bodySmall
     var textSize by remember { mutableStateOf(style.fontSize) }
     Column(
-        modifier = modifier.aspectRatio(1f),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = arrangement,
     ) {
