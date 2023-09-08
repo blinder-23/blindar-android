@@ -6,7 +6,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -32,6 +36,8 @@ import com.practice.util.makeToast
 fun VerifyPhoneNumber(
     onBackButtonClick: () -> Unit,
     onExistingUserLogin: () -> Unit,
+    onUsernameNotSet: () -> Unit,
+    onSchoolNotSelected: () -> Unit,
     onNewUserSignUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RegisterViewModel = hiltViewModel()
@@ -55,6 +61,8 @@ fun VerifyPhoneNumber(
             activity = activity,
             onNewUserSignUp = onNewUserSignUp,
             onExistingUserLogin = onExistingUserLogin,
+            onUsernameNotSet = onUsernameNotSet,
+            onSchoolNotSelected = onSchoolNotSelected,
             onCodeInvalid = onCodeInvalid,
         )
     }
@@ -81,6 +89,8 @@ fun VerifyPhoneNumber(
                         onCodeSent = { context.makeToast(codeSentMessage) },
                         onNewUserSignUp = onNewUserSignUp,
                         onExistingUserLogin = onExistingUserLogin,
+                        onUsernameNotSet = onUsernameNotSet,
+                        onSchoolNotSelected = onSchoolNotSelected,
                         onCodeInvalid = onCodeInvalid,
                         onFail = { context.makeToast(authFailMessage) },
                     )
