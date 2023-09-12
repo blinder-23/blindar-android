@@ -2,12 +2,12 @@ package com.practice.domain
 
 data class School(
     val name: String,
-    val schoolId: Int,
+    val schoolCode: Int,
 ) {
     companion object {
         val EmptySchool = School(
             name = "",
-            schoolId = -1,
+            schoolCode = -1,
         )
     }
 }
