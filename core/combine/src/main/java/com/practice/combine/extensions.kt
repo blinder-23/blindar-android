@@ -6,14 +6,14 @@ import com.practice.api.meal.pojo.NutrientModel
 import com.practice.api.meal.pojo.OriginModel
 import com.practice.api.schedule.pojo.ScheduleModel
 import com.practice.api.toEpochDate
-import com.practice.meal.entity.MealEntity
-import com.practice.meal.entity.MenuEntity
-import com.practice.meal.entity.NutrientEntity
-import com.practice.meal.entity.OriginEntity
 import com.practice.schedule.entity.ScheduleEntity
+import com.practice.domain.meal.Meal
+import com.practice.domain.meal.Menu
+import com.practice.domain.meal.Nutrient
+import com.practice.domain.meal.Origin
 
 // TODO: implement calorie from server
-fun MealModel.toMealEntity() = MealEntity(
+fun MealModel.toMealEntity() = Meal(
     schoolCode = 7010578,
     year = ymd.substring(0..3).toInt(),
     month = ymd.substring(4..5).toInt(),
@@ -24,17 +24,17 @@ fun MealModel.toMealEntity() = MealEntity(
     calorie = 0.0,
 )
 
-fun MenuModel.toMenuEntity() = MenuEntity(
+fun MenuModel.toMenuEntity() = Menu(
     name = menu,
     allergies = allergies,
 )
 
-fun OriginModel.toOriginEntity() = OriginEntity(
+fun OriginModel.toOriginEntity() = Origin(
     ingredient = ingredient,
     origin = origin,
 )
 
-fun NutrientModel.toNutrientEntity() = NutrientEntity(
+fun NutrientModel.toNutrientEntity() = Nutrient(
     name = nutrient,
     unit = unit,
     amount = amount.toDouble(),

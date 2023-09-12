@@ -1,6 +1,6 @@
-package com.practice.meal.entity
+package com.practice.domain.meal
 
-data class NutrientEntity(
+data class Nutrient(
     val name: String,
     val unit: String,
     val amount: Double,
