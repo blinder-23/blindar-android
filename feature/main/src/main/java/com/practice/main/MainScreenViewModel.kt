@@ -11,11 +11,12 @@ import com.practice.combine.MealScheduleEntity
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.getFirstWeekday
 import com.practice.designsystem.calendar.core.yearMonth
+import com.practice.domain.School
+import com.practice.domain.meal.Meal
+import com.practice.domain.schedule.Schedule
 import com.practice.main.state.*
-import com.practice.meal.entity.MealEntity
 import com.practice.preferences.PreferencesRepository
 import com.practice.preferences.ScreenMode
-import com.practice.schedule.entity.ScheduleEntity
 import com.practice.util.date.DateUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
@@ -51,7 +52,7 @@ class MainScreenViewModel @Inject constructor(
     private val selectedDateFlow: MutableStateFlow<Date>
 
     // TODO: domain 또는 data로 옮기기?
-    private val cache: MutableMap<YearMonth, MealScheduleEntity>
+    private val cache: MutableMap<CacheKey, MealScheduleEntity>
 
     init {
         val current = Date.now()
@@ -63,6 +64,7 @@ class MainScreenViewModel @Inject constructor(
                 monthlyMealScheduleState = emptyList(),
                 isLoading = false,
                 screenMode = ScreenMode.Default,
+                selectedSchool = School.EmptySchool,
             )
         )
         selectedDateFlow = MutableStateFlow(current)
@@ -76,7 +78,7 @@ class MainScreenViewModel @Inject constructor(
      */
     fun onLaunch() {
         viewModelScope.launch(Dispatchers.IO) {
-            val entity = loadMonthlyData(state.yearMonth)
+            val entity = loadMonthlyData(state.selectedSchoolCode, state.yearMonth)
             updateUiState(entity = entity)
         }
         viewModelScope.launch(Dispatchers.IO) {
@@ -90,9 +92,10 @@ class MainScreenViewModel @Inject constructor(
     private fun updateUiState(
         yearMonth: YearMonth = state.yearMonth,
         selectedDate: Date = state.selectedDate,
-        entity: MealScheduleEntity? = cache[selectedDate.yearMonth],
+        entity: MealScheduleEntity? = cache[state.cacheKey],
         isLoading: Boolean = state.isLoading,
         screenMode: ScreenMode = state.screenMode,
+        selectedSchool: School = state.selectedSchool,
     ) {
         val monthlyMealScheduleState = if (entity != null) {
             parseDailyState(entity)
@@ -107,6 +110,7 @@ class MainScreenViewModel @Inject constructor(
                 selectedDate = selectedDate,
                 isLoading = isLoading,
                 screenMode = screenMode,
+                selectedSchool = selectedSchool,
             )
         }
         entity?.let {
@@ -126,7 +130,7 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
-        val entity = loadMonthlyData(clickedDate.yearMonth)
+        val entity = loadMonthlyData(state.selectedSchoolCode, clickedDate.yearMonth)
         updateUiState(
             yearMonth = clickedDate.yearMonth,
             selectedDate = clickedDate,
@@ -134,13 +138,14 @@ class MainScreenViewModel @Inject constructor(
         )
     }
 
-    private suspend fun loadMonthlyData(yearMonth: YearMonth): MealScheduleEntity {
-        val (queryYear, queryMonth) = yearMonth
-        return if (cache.containsKey(yearMonth)) {
-            cache[yearMonth]!!
+    private suspend fun loadMonthlyData(schoolCode: Int, yearMonth: YearMonth): MealScheduleEntity {
+        val cacheKey = CacheKey(schoolCode, yearMonth)
+        return if (cache.containsKey(cacheKey)) {
+            cache[cacheKey]!!
         } else {
-            loadMealScheduleDataUseCase.loadData(queryYear, queryMonth).first().apply {
-                cache[yearMonth] = this
+            val (queryYear, queryMonth) = yearMonth
+            loadMealScheduleDataUseCase.loadData(schoolCode, queryYear, queryMonth).first().apply {
+                cache[cacheKey] = this
             }
         }
     }
@@ -154,6 +159,7 @@ class MainScreenViewModel @Inject constructor(
             val meal = mealScheduleEntity.getMeal(date)
             val schedule = mealScheduleEntity.getSchedule(date)
             DailyMealScheduleState(
+                schoolCode = mealScheduleEntity.schoolCode,
                 date = date,
                 mealUiState = meal,
                 scheduleUiState = schedule,
@@ -163,7 +169,7 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onSwiped(yearMonth: YearMonth) = viewModelScope.launch {
-        val entity = loadMonthlyData(yearMonth)
+        val entity = loadMonthlyData(state.selectedSchoolCode, yearMonth)
         if (yearMonth != state.yearMonth) {
             val firstWeekday = yearMonth.getFirstWeekday()
             updateUiState(yearMonth = yearMonth, selectedDate = firstWeekday, entity = entity)
@@ -177,6 +183,10 @@ class MainScreenViewModel @Inject constructor(
             updateUiState(
                 isLoading = (it.runningWorksCount != 0),
                 screenMode = it.screenMode,
+                selectedSchool = School(
+                    name = it.schoolName,
+                    schoolCode = it.schoolCode,
+                )
             )
         }
     }
@@ -202,6 +212,11 @@ class MainScreenViewModel @Inject constructor(
 
 }
 
+private data class CacheKey(val schoolCode: Int, val yearMonth: YearMonth)
+
+private val MainUiState.cacheKey: CacheKey
+    get()=CacheKey(selectedSchoolCode, yearMonth)
+
 private fun MealScheduleEntity.getMeal(date: Date): MealUiState {
     return try {
         meals.first { it.dateEquals(date) }
@@ -213,15 +228,15 @@ private fun MealScheduleEntity.getMeal(date: Date): MealUiState {
 
 private fun MealScheduleEntity.getSchedule(date: Date): ScheduleUiState {
     return try {
-        val schedules = schedules.filter { it.dateEquals(date) }.map { it.toSchedule() }
+        val schedules = schedules.filter { it.dateEquals(date) }
         ScheduleUiState(schedules.toPersistentList())
     } catch (e: NoSuchElementException) {
         ScheduleUiState.EmptyScheduleState
     }
 }
 
-private fun MealEntity.dateEquals(date: Date) =
+private fun Meal.dateEquals(date: Date) =
     this.year == date.year && this.month == date.month && this.day == date.dayOfMonth
 
-private fun ScheduleEntity.dateEquals(date: Date) =
+private fun Schedule.dateEquals(date: Date) =
     this.year == date.year && this.month == date.month && this.day == date.dayOfMonth

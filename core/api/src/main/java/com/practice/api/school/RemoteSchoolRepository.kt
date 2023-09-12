@@ -22,7 +22,7 @@ class RemoteSchoolRepository(
 
     suspend fun searchSupportedSchools(query: String): List<SchoolModel> {
         return withContext(ioDispatcher) {
-            getSupportedSchools().filter { it.name.contains(query) }
+            getSupportedSchools().filter { it.schoolName.contains(query) }
         }
     }
 }

@@ -31,10 +31,11 @@ class LoadMealScheduleDataUseCaseTest {
         insertMeals()
         insertSchedules()
 
-        val mealData = useCase.loadMealData(2022, 8).first()
-        val scheduleData = useCase.loadScheduleData(2022, 8).first()
-        val expected = MealScheduleEntity(2022, 8, mealData, scheduleData)
-        val actual = useCase.loadData(2022, 8).first()
+        val schoolCode = TestUtil.schoolCode
+        val mealData = useCase.loadMealData(schoolCode, 2022, 8).first()
+        val scheduleData = useCase.loadScheduleData(schoolCode, 2022, 8).first()
+        val expected = MealScheduleEntity(schoolCode, 2022, 8, mealData, scheduleData)
+        val actual = useCase.loadData(schoolCode, 2022, 8).first()
         assertThat(actual).isEqualTo(expected)
     }
 

@@ -1,6 +1,5 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -77,6 +76,8 @@ android {
 }
 
 dependencies {
+    api(project(":core:domain"))
+    
     implementation(libs.hsk.ktx)
 
     implementation(libs.kotlinx.coroutines.core)

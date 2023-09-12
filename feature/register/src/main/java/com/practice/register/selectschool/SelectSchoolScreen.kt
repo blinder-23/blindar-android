@@ -12,11 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -26,6 +22,7 @@ import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BlindarTopAppBar
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.domain.School
 import com.practice.register.R
 import com.practice.register.RegisterViewModel
 import com.practice.util.makeToast
@@ -44,9 +41,11 @@ fun SelectSchoolScreen(
     val baseSuccessMessage = stringResource(id = R.string.school_selected_base)
     val baseFailMessage = stringResource(id = R.string.school_select_fail_base)
     SelectSchoolScreen(
+        selectedSchool = uiState.selectedSchool,
         schools = uiState.schools,
         onSchoolClick = { school ->
             viewModel.onSchoolClick(
+                context = context,
                 school = school,
                 onSuccess = {
                     val successMessage = "${school.name} $baseSuccessMessage"
@@ -68,6 +67,7 @@ fun SelectSchoolScreen(
 
 @Composable
 private fun SelectSchoolScreen(
+    selectedSchool: School,
     schools: ImmutableList<School>,
     onSchoolClick: (School) -> Unit,
     query: String,
@@ -89,6 +89,7 @@ private fun SelectSchoolScreen(
                 .padding(top = 21.dp, start = horizontalMargin, end = horizontalMargin),
         )
         SchoolList(
+            selectedSchool = selectedSchool,
             schools = schools,
             onSchoolClick = onSchoolClick,
             modifier = Modifier
@@ -148,6 +149,7 @@ private fun SelectSchoolScreenPreview() {
     var query by remember { mutableStateOf("") }
     BlindarTheme {
         SelectSchoolScreen(
+            selectedSchool = exampleSchools[0],
             schools = exampleSchools,
             onSchoolClick = {},
             query = query,

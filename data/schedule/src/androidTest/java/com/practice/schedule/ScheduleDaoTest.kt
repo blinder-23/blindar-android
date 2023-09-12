@@ -43,7 +43,7 @@ class ScheduleDaoTest {
         val schedules = TestUtil.createScheduleEntityRoom(5)
         dao.insertSchedules(schedules)
 
-        val actual = dao.getSchedule(schedules[0].yearMonth).first()
+        val actual = dao.getSchedule(TestUtil.schoolCode, schedules[0].yearMonth).first()
         assertThat(actual).containsExactlyInAnyOrderElementsOf(schedules)
     }
 
@@ -56,7 +56,7 @@ class ScheduleDaoTest {
         val remain = schedules.subList(2, 5)
         dao.deleteSchedules(deleted)
 
-        val actual = dao.getSchedule(schedules[0].yearMonth).first()
+        val actual = dao.getSchedule(TestUtil.schoolCode, schedules[0].yearMonth).first()
         assertThat(actual).containsExactlyInAnyOrderElementsOf(remain)
     }
 
@@ -65,9 +65,9 @@ class ScheduleDaoTest {
         val schedules = TestUtil.createScheduleEntityRoom(5)
         val date = schedules[0].yearMonth
         dao.insertSchedules(schedules)
-        dao.deleteSchedules(date)
+        dao.deleteSchedules(TestUtil.schoolCode, date)
 
-        val actual = dao.getSchedule(date).first()
+        val actual = dao.getSchedule(TestUtil.schoolCode, date).first()
         assertThat(actual).isEmpty()
     }
 
@@ -77,7 +77,7 @@ class ScheduleDaoTest {
         dao.insertSchedules(schedules)
         dao.clear()
 
-        val actual = dao.getSchedule(schedules[0].yearMonth).first()
+        val actual = dao.getSchedule(TestUtil.schoolCode, schedules[0].yearMonth).first()
         assertThat(actual).isEmpty()
     }
 

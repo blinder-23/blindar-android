@@ -28,7 +28,7 @@ class RemoteSchoolRepositoryTest {
     fun query() = runTest {
         val query = "2"
         val expected =
-            fakeRemoteSchoolDataSource.getSupportedSchools().filter { it.name.contains(query) }
+            fakeRemoteSchoolDataSource.getSupportedSchools().filter { it.schoolName.contains(query) }
         val actual = remoteSchoolRepository.searchSupportedSchools(query)
         assertThat(expected)
             .containsExactlyInAnyOrderElementsOf(actual)

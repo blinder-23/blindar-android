@@ -3,18 +3,11 @@ package com.practice.work
 import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
-import androidx.work.CoroutineWorker
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.hsk.ktx.date.Date
 import com.practice.api.meal.RemoteMealRepository
-import com.practice.combine.toMealEntity
+import com.practice.domain.meal.Meal
 import com.practice.meal.MealRepository
-import com.practice.meal.entity.MealEntity
 import com.practice.preferences.PreferencesRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -41,33 +34,34 @@ class FetchRemoteMealWorker @AssistedInject constructor(
         val now = Date.now()
         val currentYear = now.year
         val currentMonth = now.month
+        val schoolCode = preferencesRepository.fetchInitialPreferences().schoolCode
         (currentYear downTo currentYear - 2).forEach { year ->
             (0 until 12).forEach { months ->
-                tryFetchAndStoreMeals(year, (currentMonth + months - 1) % 12 + 1)
+                tryFetchAndStoreMeals(schoolCode, year, (currentMonth + months - 1) % 12 + 1)
             }
         }
         return Result.success()
     }
 
-    private suspend fun tryFetchAndStoreMeals(year: Int, month: Int) {
+    private suspend fun tryFetchAndStoreMeals(schoolCode: Int, year: Int, month: Int) {
         try {
-            fetchAndStoreMeals(year, month)
+            fetchAndStoreMeals(schoolCode, year, month)
         } catch (e: Exception) {
             handleException(e, year, month)
         }
     }
 
-    private suspend fun fetchAndStoreMeals(year: Int, month: Int) {
-        val meals = fetchMeals(year, month)
+    private suspend fun fetchAndStoreMeals(schoolCode: Int, year: Int, month: Int) {
+        val meals = fetchMeals(schoolCode, year, month)
         storeMeals(meals)
     }
 
-    private suspend fun fetchMeals(year: Int, month: Int): List<MealEntity> =
-        remoteRepository.getMeals(year, month).response.map { it.toMealEntity() }.apply {
-            Log.d("FetchRemoteMealWorker", "meal $year $month: $size")
-        }
+    private suspend fun fetchMeals(schoolCode: Int, year: Int, month: Int): List<Meal> =
+        remoteRepository.getMeals(schoolCode, year, month).apply {
+            Log.d("FetchRemoteMealWorker", "$schoolCode meal $year $month: ${meals.size}")
+        }.meals
 
-    private suspend fun storeMeals(meals: List<MealEntity>) {
+    private suspend fun storeMeals(meals: List<Meal>) {
         localRepository.insertMeals(meals)
     }
 

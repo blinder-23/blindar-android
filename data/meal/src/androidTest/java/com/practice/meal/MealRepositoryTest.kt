@@ -22,6 +22,8 @@ class MealRepositoryTest {
     private lateinit var source: LocalMealDataSource
     private lateinit var repository: MealRepository
 
+    private val schoolCode = TestUtil.schoolCode
+
     @Before
     fun init() {
         val context = ApplicationProvider.getApplicationContext<Context>()
@@ -43,7 +45,7 @@ class MealRepositoryTest {
         val meals = TestUtil.createMealEntity(10)
         repository.insertMeals(meals)
 
-        val actual = repository.getMeals(meals[0].year, meals[0].month).first()
+        val actual = repository.getMeals(schoolCode, meals[0].year, meals[0].month).first()
         assertThat(actual).containsExactlyInAnyOrderElementsOf(meals)
     }
 
@@ -52,7 +54,7 @@ class MealRepositoryTest {
         val (meal1, meal2, meal3) = TestUtil.createMealEntity(3)
         repository.insertMeals(meal1, meal2, meal3)
 
-        val actual = repository.getMeals(meal1.year, meal1.month).first()
+        val actual = repository.getMeals(schoolCode, meal1.year, meal1.month).first()
         assertThat(actual).containsExactlyInAnyOrderElementsOf(listOf(meal1, meal2, meal3))
     }
 
@@ -62,7 +64,7 @@ class MealRepositoryTest {
         repository.insertMeals(meal1, meal2, meal3)
         repository.deleteMeals(meal1, meal2, meal3)
 
-        val actual = repository.getMeals(meal1.year, meal1.month).first()
+        val actual = repository.getMeals(schoolCode, meal1.year, meal1.month).first()
         assertThat(actual).isEmpty()
     }
 
@@ -70,9 +72,9 @@ class MealRepositoryTest {
     fun repository_deleteMeals_ByDate() = runTest {
         val meals = TestUtil.createMealEntity(10)
         repository.insertMeals(meals)
-        repository.deleteMeals(meals[0].year, meals[0].month)
+        repository.deleteMeals(schoolCode, meals[0].year, meals[0].month)
 
-        val actual = repository.getMeals(meals[0].year, meals[0].month).first()
+        val actual = repository.getMeals(schoolCode, meals[0].year, meals[0].month).first()
         assertThat(actual).isEmpty()
     }
 
@@ -82,7 +84,7 @@ class MealRepositoryTest {
         repository.insertMeals(meals)
         repository.clear()
 
-        val actual = repository.getMeals(meals[0].year, meals[0].month).first()
+        val actual = repository.getMeals(schoolCode, meals[0].year, meals[0].month).first()
         assertThat(actual).isEmpty()
     }
 }

@@ -1,6 +1,7 @@
 package com.practice.register
 
 import android.app.Activity
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -12,14 +13,17 @@ import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.practice.api.school.RemoteSchoolRepository
+import com.practice.api.toSchool
+import com.practice.domain.School
 import com.practice.firebase.BlindarFirebase
 import com.practice.preferences.PreferencesRepository
 import com.practice.register.phonenumber.PhoneNumberValidator
-import com.practice.register.selectschool.School
 import com.practice.util.update
+import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,6 +42,9 @@ class RegisterViewModel @Inject constructor(
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
 
     init {
+        viewModelScope.launch {
+            collectSelectedSchool()
+        }
         updateSchoolList("")
     }
 
@@ -202,6 +209,19 @@ class RegisterViewModel @Inject constructor(
     /**
      * SelectSchoolScreen
      */
+    private suspend fun collectSelectedSchool() {
+        preferencesRepository.userPreferencesFlow.collectLatest { preferences ->
+            registerUiState.update {
+                this.copy(
+                    selectedSchool = School(
+                        name = preferences.schoolName,
+                        schoolCode = preferences.schoolCode,
+                    )
+                )
+            }
+        }
+    }
+
     fun onSchoolQueryChange(query: String) {
         registerUiState.update {
             this.copy(schoolQuery = query)
@@ -222,15 +242,17 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun onSchoolClick(
+        context: Context,
         school: School,
         onSuccess: () -> Unit,
         onFail: () -> Unit
     ) {
         viewModelScope.launch {
-            preferencesRepository.updateSchoolId(school.schoolId)
+            preferencesRepository.updateSelectedSchool(school.schoolCode, school.name)
+            BlindarWorkManager.setOneTimeWork(context)
         }
-        BlindarFirebase.tryUpdateCurrentUserSchoolId(
-            schoolId = school.schoolId,
+        BlindarFirebase.tryUpdateCurrentUserSchoolCode(
+            schoolCode = school.schoolCode,
             onSuccess = onSuccess,
             onFail = onFail,
         )

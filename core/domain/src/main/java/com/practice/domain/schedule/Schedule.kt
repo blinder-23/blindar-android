@@ -1,6 +1,7 @@
-package com.practice.schedule.entity
+package com.practice.domain.schedule
 
-data class ScheduleEntity(
+data class Schedule(
+    val schoolCode: Int,
     val id: Int,
     val year: Int,
     val month: Int,

@@ -11,11 +11,7 @@ import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
 
@@ -84,9 +80,9 @@ object BlindarFirebase {
         Log.d(TAG, "user display name: ${user.displayName}")
         if (user.displayName.isNullOrEmpty()) return UserDataState.USERNAME_MISSING
 
-        val schoolId = getSchoolId(user.displayName!!)
-        Log.d(TAG, "user school id: $schoolId")
-        return if (schoolId == null) UserDataState.SCHOOL_NOT_SELECTED else UserDataState.ALL_FILLED
+        val schoolCode = getschoolCode(user.displayName!!)
+        Log.d(TAG, "user school id: $schoolCode")
+        return if (schoolCode == null) UserDataState.SCHOOL_NOT_SELECTED else UserDataState.ALL_FILLED
     }
 
     fun signUpWithPhoneNumber(
@@ -179,20 +175,20 @@ object BlindarFirebase {
             }
     }
 
-    fun tryUpdateCurrentUserSchoolId(
-        schoolId: Int,
+    fun tryUpdateCurrentUserSchoolCode(
+        schoolCode: Int,
         onSuccess: () -> Unit,
         onFail: () -> Unit
     ) {
         val username = auth.currentUser?.displayName
         if (username != null) {
-            database.child(usersKey).child(username).child(schoolIdKey).setValue(schoolId)
+            database.child(usersKey).child(username).child(schoolCodeKey).setValue(schoolCode)
                 .addOnSuccessListener {
-                    Log.d(TAG, "user $username school set to $schoolId")
+                    Log.d(TAG, "user $username school set to $schoolCode")
                     onSuccess()
                 }
                 .addOnFailureListener {
-                    Log.e(TAG, "user $username school set fail to $schoolId")
+                    Log.e(TAG, "user $username school set fail to $schoolCode")
                     onFail()
                 }
         } else {
@@ -201,14 +197,14 @@ object BlindarFirebase {
         }
     }
 
-    suspend fun getSchoolId(username: String): Long? {
-        val value = database.child(usersKey).child(username).child(schoolIdKey).get().await().value
-        Log.d(TAG, "username $username schoolId: $value")
+    suspend fun getschoolCode(username: String): Long? {
+        val value = database.child(usersKey).child(username).child(schoolCodeKey).get().await().value
+        Log.d(TAG, "username $username schoolCode: $value")
         return value as? Long
     }
 
     private const val usersKey = "users"
     private const val ownerKey = "owner"
-    private const val schoolIdKey = "schoolId"
+    private const val schoolCodeKey = "schoolCode"
 
 }

@@ -1,32 +1,33 @@
 package com.practice.meal
 
-import com.practice.meal.entity.MealEntity
+import com.practice.domain.meal.Meal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class FakeMealDataSource : MealDataSource {
 
-    private val mealEntities = mutableSetOf<MealEntity>()
+    private val meals = mutableSetOf<Meal>()
 
-    override suspend fun getMeals(year: Int, month: Int): Flow<List<MealEntity>> {
+    override suspend fun getMeals(schoolCode: Int, year: Int, month: Int): Flow<List<Meal>> {
         return flow {
-            emit(mealEntities.filter { it.year == year && it.month == month })
+            emit(meals.filter { it.schoolCode == schoolCode && it.year == year && it.month == month })
         }
     }
 
-    override suspend fun insertMeals(meals: List<MealEntity>) {
-        mealEntities.addAll(meals)
+    override suspend fun insertMeals(meals: List<Meal>) {
+        print("Add: $meals")
+        this.meals.addAll(meals)
     }
 
-    override suspend fun deleteMeals(meals: List<MealEntity>) {
-        mealEntities.removeAll(meals.toSet())
+    override suspend fun deleteMeals(meals: List<Meal>) {
+        this.meals.removeAll(meals.toSet())
     }
 
-    override suspend fun deleteMeals(year: Int, month: Int) {
-        mealEntities.removeAll { it.year == year && it.month == month }
+    override suspend fun deleteMeals(schoolCode: Int, year: Int, month: Int) {
+        meals.removeAll { it.schoolCode == schoolCode && it.year == year && it.month == month }
     }
 
     override suspend fun clear() {
-        mealEntities.clear()
+        meals.clear()
     }
 }

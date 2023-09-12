@@ -53,7 +53,8 @@ fun BlindarNavHost(
         modifier = modifier,
         enterTransition = {
             if ((initialState.route == SPLASH && targetState.route == ONBOARDING) ||
-                targetState.route == MAIN
+                targetState.route == MAIN ||
+                (initialState.route == MAIN && targetState.route == SELECT_SCHOOL)
             ) {
                 fadeIn()
             } else {
@@ -65,7 +66,9 @@ fun BlindarNavHost(
             }
         },
         exitTransition = {
-            if (initialState.route == SPLASH || targetState.route == MAIN) {
+            if (initialState.route == SPLASH || targetState.route == MAIN ||
+                (initialState.route == MAIN && targetState.route == SELECT_SCHOOL)
+            ) {
                 fadeOut()
             } else {
                 val direction = animationDirection(initialState, targetState)
@@ -161,6 +164,9 @@ fun NavGraphBuilder.blindarMainNavGraph(
             windowSize = windowSizeClass,
             viewModel = hiltViewModel(),
             modifier = Modifier.fillMaxSize(),
+            onNavigateToSelectSchoolScreen = {
+                navController.navigate(SELECT_SCHOOL)
+            },
         )
     }
 }

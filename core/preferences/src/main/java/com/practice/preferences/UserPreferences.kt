@@ -22,10 +22,12 @@ data class UserPreferences(
     val screenMode: ScreenMode,
     val isFirstExecution: Boolean = true,
     val runningWorksCount: Int = 0,
-    val schoolId: Int = emptySchoolId,
+    val schoolCode: Int = emptySchoolCode,
+    val schoolName: String = emptySchoolName,
 ) {
-    val isSchoolIdEmpty: Boolean
-        get() = schoolId == emptySchoolId
+    val isSchoolCodeEmpty: Boolean
+        get() = schoolCode == emptySchoolCode
 }
 
-internal const val emptySchoolId = 0
+internal const val emptySchoolCode = 7010578
+internal const val emptySchoolName = "한빛맹학교"
