@@ -21,6 +21,8 @@ class LocalScheduleDataSourceTest {
     private lateinit var database: ScheduleDatabase
     private lateinit var source: LocalScheduleDataSource
 
+    private val schoolCode = TestUtil.schoolCode
+
     @Before
     fun init() {
         val context = ApplicationProvider.getApplicationContext<Context>()
@@ -41,7 +43,7 @@ class LocalScheduleDataSourceTest {
         val schedules = TestUtil.createScheduleEntity(5)
         source.insertSchedules(schedules)
 
-        val actual = source.getSchedules(schedules[0].year, schedules[0].month).first()
+        val actual = source.getSchedules(schoolCode, schedules[0].year, schedules[0].month).first()
         assertThat(actual).containsExactlyInAnyOrderElementsOf(schedules)
     }
 
@@ -54,7 +56,7 @@ class LocalScheduleDataSourceTest {
         val remain = schedules.subList(2, 5)
         source.deleteSchedules(deleted)
 
-        val actual = source.getSchedules(schedules[0].year, schedules[0].month).first()
+        val actual = source.getSchedules(schoolCode, schedules[0].year, schedules[0].month).first()
         assertThat(actual).containsExactlyInAnyOrderElementsOf(remain)
     }
 
@@ -62,9 +64,9 @@ class LocalScheduleDataSourceTest {
     fun source_deleteSchedules_byDate() = runTest {
         val schedules = TestUtil.createScheduleEntity(5)
         source.insertSchedules(schedules)
-        source.deleteSchedules(schedules[0].year, schedules[0].month)
+        source.deleteSchedules(schoolCode, schedules[0].year, schedules[0].month)
 
-        val actual = source.getSchedules(schedules[0].year, schedules[0].month).first()
+        val actual = source.getSchedules(schoolCode, schedules[0].year, schedules[0].month).first()
         assertThat(actual).isEmpty()
     }
 
@@ -74,7 +76,7 @@ class LocalScheduleDataSourceTest {
         source.insertSchedules(schedules)
         source.clear()
 
-        val actual = source.getSchedules(schedules[0].year, schedules[0].month).first()
+        val actual = source.getSchedules(schoolCode, schedules[0].year, schedules[0].month).first()
         assertThat(actual).isEmpty()
     }
 }
