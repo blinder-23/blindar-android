@@ -56,8 +56,8 @@ object BlindarFirebase {
         val user = task?.user
         val username = user?.displayName
         if (user != null && username != null) {
-            val schoolId = getSchoolId(username).value as? Long
-            if (schoolId == null) {
+            val schoolCode = getSchoolCode(username).value as? Long
+            if (schoolCode == null) {
                 // new user register
                 tryStoreUsername(
                     username = username,
@@ -67,7 +67,7 @@ object BlindarFirebase {
                 )
             } else {
                 // existing user sign in
-                Log.d(TAG, "user ${user.uid} school id: $schoolId")
+                Log.d(TAG, "user ${user.uid} school id: $schoolCode")
                 onExistingUserLogin(user)
             }
         } else {
@@ -160,20 +160,20 @@ object BlindarFirebase {
             }
     }
 
-    fun tryUpdateCurrentUserSchoolId(
-        schoolId: Int,
+    fun tryUpdateCurrentUserSchoolCode(
+        schoolCode: Int,
         onSuccess: () -> Unit,
         onFail: () -> Unit
     ) {
         val username = auth.currentUser?.displayName
         if (username != null) {
-            database.child(usersKey).child(username).child(schoolIdKey).setValue(schoolId)
+            database.child(usersKey).child(username).child(schoolCodeKey).setValue(schoolCode)
                 .addOnSuccessListener {
-                    Log.d(TAG, "user $username school set to $schoolId")
+                    Log.d(TAG, "user $username school set to $schoolCode")
                     onSuccess()
                 }
                 .addOnFailureListener {
-                    Log.e(TAG, "user $username school set fail to $schoolId")
+                    Log.e(TAG, "user $username school set fail to $schoolCode")
                     onFail()
                 }
         } else {
@@ -182,12 +182,12 @@ object BlindarFirebase {
         }
     }
 
-    suspend fun getSchoolId(username: String): DataSnapshot {
-        return database.child(usersKey).child(username).child(schoolIdKey).get().await()
+    suspend fun getSchoolCode(username: String): DataSnapshot {
+        return database.child(usersKey).child(username).child(schoolCodeKey).get().await()
     }
 
     private const val usersKey = "users"
     private const val ownerKey = "owner"
-    private const val schoolIdKey = "schoolId"
+    private const val schoolCodeKey = "schoolCode"
 
 }

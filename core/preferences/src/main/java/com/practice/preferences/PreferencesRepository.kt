@@ -18,7 +18,7 @@ interface PreferencesRepository : CoroutineScope {
     suspend fun updateScreenMode(screenMode: ScreenMode)
     suspend fun increaseRunningWorkCount()
     suspend fun decreaseRunningWorkCount()
-    suspend fun updateSelectedSchool(schoolId: Int, schoolName: String)
+    suspend fun updateSelectedSchool(schoolCode: Int, schoolName: String)
     suspend fun clear()
     suspend fun fetchInitialPreferences(): UserPreferences
 }

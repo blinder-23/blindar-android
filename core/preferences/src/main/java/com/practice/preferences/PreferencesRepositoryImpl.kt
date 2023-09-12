@@ -29,7 +29,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         val SCREEN_MODE = stringPreferencesKey("screen-mode")
         val FIRST_EXECUTION = booleanPreferencesKey("first-execution")
         val RUNNING_WORKS_COUNT = intPreferencesKey("running-works-count")
-        val SCHOOL_ID = intPreferencesKey("school-id")
+        val SCHOOL_CODE = intPreferencesKey("school-id")
         val SCHOOL_NAME = stringPreferencesKey("school-name")
     }
 
@@ -91,9 +91,9 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         }
     }
 
-    override suspend fun updateSelectedSchool(schoolId: Int, schoolName: String) {
+    override suspend fun updateSelectedSchool(schoolCode: Int, schoolName: String) {
         edit {
-            it[PreferenceKeys.SCHOOL_ID] = schoolId
+            it[PreferenceKeys.SCHOOL_CODE] = schoolCode
             it[PreferenceKeys.SCHOOL_NAME] = schoolName
         }
     }
@@ -130,7 +130,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         )
         val isFirstExecution = preferences[PreferenceKeys.FIRST_EXECUTION] ?: true
         val runningWorksCount = preferences[PreferenceKeys.RUNNING_WORKS_COUNT] ?: 0
-        val schoolId = preferences[PreferenceKeys.SCHOOL_ID] ?: emptySchoolId
+        val schoolCode = preferences[PreferenceKeys.SCHOOL_CODE] ?: emptySchoolCode
         val schoolName = preferences[PreferenceKeys.SCHOOL_NAME] ?: emptySchoolName
         return UserPreferences(
             uiMode = uiMode,
@@ -138,7 +138,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
             screenMode = screenMode,
             isFirstExecution = isFirstExecution,
             runningWorksCount = runningWorksCount,
-            schoolId = schoolId,
+            schoolCode = schoolCode,
             schoolName = schoolName,
         )
     }
