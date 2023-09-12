@@ -59,6 +59,8 @@ class RegisterViewModel @Inject constructor(
         activity: Activity,
         onCodeSent: () -> Unit,
         onExistingUserLogin: () -> Unit,
+        onUsernameNotSet: () -> Unit,
+        onSchoolNotSelected: () -> Unit,
         onNewUserSignUp: () -> Unit,
         onFail: () -> Unit,
         onCodeInvalid: () -> Unit,
@@ -77,8 +79,10 @@ class RegisterViewModel @Inject constructor(
                         activity = activity,
                         credential = credential,
                         onExistingUserLogin = onExistingUserLogin,
+                        onUsernameNotSet = onUsernameNotSet,
+                        onSchoolNotSelected = onSchoolNotSelected,
                         onNewUserSignUp = onNewUserSignUp,
-                        onCodeInvalid = onCodeInvalid
+                        onLoginFail = onCodeInvalid,
                     )
                 }
 
@@ -156,6 +160,8 @@ class RegisterViewModel @Inject constructor(
     fun verifyAuthCode(
         activity: Activity,
         onExistingUserLogin: () -> Unit,
+        onUsernameNotSet: () -> Unit,
+        onSchoolNotSelected: () -> Unit,
         onNewUserSignUp: () -> Unit,
         onCodeInvalid: () -> Unit,
     ) {
@@ -165,8 +171,10 @@ class RegisterViewModel @Inject constructor(
             activity = activity,
             credential = credential,
             onExistingUserLogin = onExistingUserLogin,
+            onUsernameNotSet = onUsernameNotSet,
+            onSchoolNotSelected = onSchoolNotSelected,
             onNewUserSignUp = onNewUserSignUp,
-            onCodeInvalid = onCodeInvalid
+            onLoginFail = onCodeInvalid,
         )
     }
 
@@ -183,7 +191,10 @@ class RegisterViewModel @Inject constructor(
         onSuccess: () -> Unit,
         onFail: () -> Unit,
     ) {
-        Log.d(TAG, "name: ${registerUiState.value.name}, valid: ${registerUiState.value.isNameValid}")
+        Log.d(
+            TAG,
+            "name: ${registerUiState.value.name}, valid: ${registerUiState.value.isNameValid}"
+        )
         if (registerUiState.value.isNameValid) {
             BlindarFirebase.tryStoreUsername(
                 username = registerUiState.value.name,

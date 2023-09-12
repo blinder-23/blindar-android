@@ -32,6 +32,8 @@ import com.practice.util.makeToast
 fun VerifyPhoneNumber(
     onBackButtonClick: () -> Unit,
     onExistingUserLogin: () -> Unit,
+    onUsernameNotSet: () -> Unit,
+    onSchoolNotSelected: () -> Unit,
     onNewUserSignUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RegisterViewModel = hiltViewModel()
@@ -55,6 +57,8 @@ fun VerifyPhoneNumber(
             activity = activity,
             onNewUserSignUp = onNewUserSignUp,
             onExistingUserLogin = onExistingUserLogin,
+            onUsernameNotSet = onUsernameNotSet,
+            onSchoolNotSelected = onSchoolNotSelected,
             onCodeInvalid = onCodeInvalid,
         )
     }
@@ -81,6 +85,8 @@ fun VerifyPhoneNumber(
                         onCodeSent = { context.makeToast(codeSentMessage) },
                         onNewUserSignUp = onNewUserSignUp,
                         onExistingUserLogin = onExistingUserLogin,
+                        onUsernameNotSet = onUsernameNotSet,
+                        onSchoolNotSelected = onSchoolNotSelected,
                         onCodeInvalid = onCodeInvalid,
                         onFail = { context.makeToast(authFailMessage) },
                     )

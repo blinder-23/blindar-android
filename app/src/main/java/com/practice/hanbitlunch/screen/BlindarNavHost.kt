@@ -25,7 +25,6 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.firebase.auth.FirebaseAuth
 import com.practice.hanbitlunch.R
 import com.practice.main.MainScreen
 import com.practice.onboarding.onboarding.OnboardingScreen
@@ -94,24 +93,37 @@ fun NavGraphBuilder.blindarMainNavGraph(
     windowSizeClass: WindowSizeClass,
     googleSignInClient: GoogleSignInClient,
 ) {
+    val onLoginSuccess = {
+        navController.navigate(MAIN) {
+            popUpTo(SPLASH) { inclusive = true }
+        }
+    }
+    val onUsernameNotSet = {
+        navController.navigate(REGISTER_FORM) {
+            popUpTo(SPLASH) { inclusive = true }
+        }
+    }
+    val onSchoolNotSelected = {
+        navController.navigate(SELECT_SCHOOL) {
+            popUpTo(SPLASH) { inclusive = true }
+        }
+    }
+    val onAutoLoginFail = {
+        navController.navigate(ONBOARDING) {
+            popUpTo(SPLASH) { inclusive = true }
+        }
+    }
     composable(SPLASH) {
         SplashScreen(
-            login = {
-                val user = FirebaseAuth.getInstance().currentUser
-                Log.d(TAG, "current user is ${user?.uid}")
-                user != null
-            },
             onAutoLoginSuccess = {
                 Log.d(TAG, "auto login success")
-                navController.navigate(MAIN) {
-                    popUpTo(SPLASH) { inclusive = true }
-                }
+                onLoginSuccess()
             },
+            onUsernameNotSet = onUsernameNotSet,
+            onSchoolNotSelected = onSchoolNotSelected,
             onAutoLoginFail = {
                 Log.d(TAG, "auto login fail")
-                navController.navigate(ONBOARDING) {
-                    popUpTo(SPLASH) { inclusive = true }
-                }
+                onAutoLoginFail()
             },
             modifier = Modifier
                 .fillMaxSize()
@@ -142,7 +154,11 @@ fun NavGraphBuilder.blindarMainNavGraph(
                 .background(MaterialTheme.colorScheme.surface),
         )
     }
-    registerGraph(navController)
+    registerGraph(
+        navController = navController,
+        onUsernameNotSet = onUsernameNotSet,
+        onSchoolNotSelected = onSchoolNotSelected,
+    )
     composable(MAIN) {
         MainScreen(
             windowSize = windowSizeClass,
@@ -156,7 +172,11 @@ fun NavGraphBuilder.blindarMainNavGraph(
 }
 
 @OptIn(ExperimentalAnimationApi::class)
-fun NavGraphBuilder.registerGraph(navController: NavHostController) {
+fun NavGraphBuilder.registerGraph(
+    navController: NavHostController,
+    onUsernameNotSet: () -> Unit,
+    onSchoolNotSelected: () -> Unit,
+) {
     val onBackButtonClick: () -> Unit = { navController.popBackStack() }
     navigation(startDestination = VERIFY_PHONE, route = REGISTER) {
         composable(VERIFY_PHONE) {
@@ -168,6 +188,8 @@ fun NavGraphBuilder.registerGraph(navController: NavHostController) {
                     }
                 },
                 onNewUserSignUp = { navController.navigate(REGISTER_FORM) },
+                onUsernameNotSet = onUsernameNotSet,
+                onSchoolNotSelected = onSchoolNotSelected,
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.primary)

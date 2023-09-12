@@ -6,27 +6,35 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.AppIcon
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.firebase.UserDataState
 
 @Composable
 fun SplashScreen(
-    login: suspend () -> Boolean,
     onAutoLoginSuccess: () -> Unit,
+    onUsernameNotSet: () -> Unit,
+    onSchoolNotSelected: () -> Unit,
     onAutoLoginFail: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: SplashViewModel = hiltViewModel(),
 ) {
     val systemUiController = rememberSystemUiController()
     val systemBarColor = MaterialTheme.colorScheme.surface
+    val context = LocalContext.current
     LaunchedEffect(true) {
         systemUiController.setSystemBarsColor(systemBarColor)
-        if (login()) {
-            onAutoLoginSuccess()
-        } else {
-            onAutoLoginFail()
+        viewModel.enqueueOneTimeWorkIfFirstExecution(context)
+        when (viewModel.userDataState()) {
+            UserDataState.NOT_LOGGED_IN -> onAutoLoginFail()
+            UserDataState.USERNAME_MISSING -> onUsernameNotSet()
+            UserDataState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
+            UserDataState.ALL_FILLED -> onAutoLoginSuccess()
         }
     }
 
@@ -50,8 +58,9 @@ fun SplashScreen(
 private fun SplashScreenPreview() {
     BlindarTheme {
         SplashScreen(
-            login = { true },
             onAutoLoginSuccess = {},
+            onUsernameNotSet = {},
+            onSchoolNotSelected = {},
             onAutoLoginFail = {},
             modifier = Modifier
                 .fillMaxSize()
