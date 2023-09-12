@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.practice.schedule.entity.ScheduleEntity
+import com.practice.domain.schedule.Schedule
 import com.practice.schedule.room.ScheduleDatabase
 import com.practice.schedule.util.TestUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,6 +24,8 @@ class ScheduleRepositoryTest {
     private lateinit var source: LocalScheduleDataSource
     private lateinit var repository: ScheduleRepository
 
+    private val schoolCode = TestUtil.schoolCode
+
     @Before
     fun init() {
         val context = ApplicationProvider.getApplicationContext<Context>()
@@ -42,7 +44,7 @@ class ScheduleRepositoryTest {
 
     @Test
     fun repository_getSchedules_empty() = runTest {
-        val actual = repository.getSchedules(2022, 5).first()
+        val actual = repository.getSchedules(schoolCode, 2022, 5).first()
         assertThat(actual).isEmpty()
     }
 
@@ -78,7 +80,7 @@ class ScheduleRepositoryTest {
     @Test
     fun repository_deleteSchedules_byDate() = runTest {
         val schedules = insertEntities(10)
-        repository.deleteSchedules(schedules[0].year, schedules[0].month)
+        repository.deleteSchedules(schoolCode, schedules[0].year, schedules[0].month)
 
         val actual = getSchedules(schedules[0])
         assertThat(actual).isEmpty()
@@ -93,13 +95,13 @@ class ScheduleRepositoryTest {
         assertThat(actual).isEmpty()
     }
 
-    private suspend fun insertEntities(count: Int): List<ScheduleEntity> {
+    private suspend fun insertEntities(count: Int): List<Schedule> {
         val schedules = TestUtil.createScheduleEntity(count)
         repository.insertSchedules(*schedules.toTypedArray())
         return schedules
     }
 
-    private suspend fun getSchedules(schedule: ScheduleEntity): List<ScheduleEntity> {
-        return repository.getSchedules(schedule.year, schedule.month).first()
+    private suspend fun getSchedules(schedule: Schedule): List<Schedule> {
+        return repository.getSchedules(schoolCode, schedule.year, schedule.month).first()
     }
 }

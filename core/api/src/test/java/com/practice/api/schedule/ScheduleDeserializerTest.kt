@@ -14,12 +14,14 @@ class ScheduleDeserializerTest {
         {
             "response": [
                 {
+                    "school_code": 123,
                     "id": 1149108,
                     "date": 1662044400,
                     "schedule": "봉사활동 사전 교육",
                     "contents": "봉사활동 사전 교육"
                 },
                 {
+                    "school_code": 123,
                     "id": 1149109,
                     "date": 1662303600,
                     "schedule": "초등부 '독서기록 꿈자람' 시작",
@@ -31,12 +33,14 @@ class ScheduleDeserializerTest {
     private val answer = ScheduleResponse(
         listOf(
             ScheduleModel(
+                schoolCode = 123,
                 id = 1149108,
                 date = 1662044400L,
                 title = "봉사활동 사전 교육",
                 contents = "봉사활동 사전 교육",
             ),
             ScheduleModel(
+                schoolCode = 123,
                 id = 1149109,
                 date = 1662303600L,
                 title = "초등부 '독서기록 꿈자람' 시작",

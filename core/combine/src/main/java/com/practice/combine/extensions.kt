@@ -6,11 +6,11 @@ import com.practice.api.meal.pojo.NutrientModel
 import com.practice.api.meal.pojo.OriginModel
 import com.practice.api.schedule.pojo.ScheduleModel
 import com.practice.api.toEpochDate
-import com.practice.schedule.entity.ScheduleEntity
 import com.practice.domain.meal.Meal
 import com.practice.domain.meal.Menu
 import com.practice.domain.meal.Nutrient
 import com.practice.domain.meal.Origin
+import com.practice.domain.schedule.Schedule
 
 // TODO: implement calorie from server
 fun MealModel.toMealEntity() = Meal(
@@ -40,9 +40,10 @@ fun NutrientModel.toNutrientEntity() = Nutrient(
     amount = amount.toDouble(),
 )
 
-fun ScheduleModel.toScheduleEntity(): ScheduleEntity {
+fun ScheduleModel.toScheduleEntity(): Schedule {
     val date = date.toEpochDate(hourDiff = 9)
-    return ScheduleEntity(
+    return Schedule(
+        schoolCode = schoolCode,
         id = id,
         year = date.year,
         month = date.month,

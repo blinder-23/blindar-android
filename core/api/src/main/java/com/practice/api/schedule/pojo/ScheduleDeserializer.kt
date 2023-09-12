@@ -21,6 +21,7 @@ class ScheduleDeserializer : JsonDeserializer<ScheduleResponse> {
         val schedules = response.map {
             val element = it.asJsonObject
             ScheduleModel(
+                schoolCode = element.get("school_code").asInt,
                 id = element.get("id").asInt,
                 date = element.get("date").asLong,
                 title = element.get("schedule").asString,
