@@ -72,6 +72,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:domain"))
+
     // my library
     implementation(libs.hsk.ktx)
 
