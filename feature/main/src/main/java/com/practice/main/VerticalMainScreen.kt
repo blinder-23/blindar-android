@@ -95,6 +95,7 @@ private fun VerticalMainScreenPreview() {
                 selectedDate = selectedDate,
                 monthlyMealScheduleState = (0..3).map {
                     DailyMealScheduleState(
+                        schoolCode = 1,
                         date = now.plusDays(it),
                         mealUiState = MealUiState(previewMenus),
                         scheduleUiState = ScheduleUiState(previewSchedules),
@@ -104,7 +105,7 @@ private fun VerticalMainScreenPreview() {
                 screenMode = ScreenMode.Default,
                 selectedSchool = School(
                     name = "어떤 학교",
-                    schoolId = -1,
+                    schoolCode = -1,
                 ),
             )
         )

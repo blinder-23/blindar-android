@@ -84,6 +84,7 @@ private fun HorizontalMainScreenPreview() {
         selectedDate = selectedDate,
         monthlyMealScheduleState = (1..3).map {
             DailyMealScheduleState(
+                schoolCode = 1,
                 date = Date(2022, 10, 11).plusDays(it),
                 mealUiState = MealUiState(previewMenus),
                 scheduleUiState = ScheduleUiState(previewSchedules),
@@ -93,7 +94,7 @@ private fun HorizontalMainScreenPreview() {
         screenMode = ScreenMode.Default,
         selectedSchool = School(
             name = "어떤 학교",
-            schoolId = -1,
+            schoolCode = -1,
         ),
     )
     val calendarState = rememberCalendarState(
