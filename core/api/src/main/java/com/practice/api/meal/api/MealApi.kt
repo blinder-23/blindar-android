@@ -10,6 +10,7 @@ interface MealApi {
 
     @GET("meal")
     suspend fun getMeals(
+        @Query("school_code") schoolCode: Int,
         @Query("year") year: Int,
         @Query("month") month: Int
     ): MealResponse

@@ -1,13 +1,15 @@
 package com.practice.api.meal
 
 import android.util.Log
-import com.practice.api.meal.pojo.MealResponse
+import com.practice.api.meal.pojo.toMonthlyMeal
+import com.practice.domain.meal.MonthlyMeal
 
 class RemoteMealRepository(private val remote: RemoteMealDataSource) {
-    suspend fun getMeals(year: Int, month: Int): MealResponse {
+    suspend fun getMeals(schoolCode: Int, year: Int, month: Int): MonthlyMeal {
         return try {
-            remote.getMeals(year, month).apply {
-                Log.d("RemoteMealRepository", "meal $year $month: ${response.size}")
+            remote.getMeals(schoolCode, year, month).let {
+                Log.d("RemoteMealRepository", "meal $year $month: ${it.response.size}")
+                it.toMonthlyMeal(schoolCode, year, month)
             }
         } catch (e: Exception) {
             throw RemoteMealRepositoryException(e.message)

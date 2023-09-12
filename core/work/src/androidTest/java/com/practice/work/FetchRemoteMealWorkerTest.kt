@@ -7,9 +7,9 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
+import com.hsk.ktx.date.Date
 import com.practice.api.meal.FakeRemoteMealDataSource
 import com.practice.api.meal.RemoteMealRepository
-import com.practice.combine.toMealEntity
 import com.practice.meal.FakeMealDataSource
 import com.practice.meal.MealRepository
 import com.practice.preferences.FakePreferencesRepository
@@ -24,24 +24,28 @@ import org.junit.runner.RunWith
 class FetchRemoteMealWorkerTest {
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
-    private val localRepository =
-        MealRepository(FakeMealDataSource())
+    private val localRepository = MealRepository(FakeMealDataSource())
     private val remoteRepository = RemoteMealRepository(FakeRemoteMealDataSource())
     private val preferencesRepository: PreferencesRepository = FakePreferencesRepository()
 
     @Test
     fun doWork(): Unit = runBlocking {
+        val schoolCode = 1
+        preferencesRepository.updateSelectedSchool(schoolCode, "name")
+        assertThat(preferencesRepository.fetchInitialPreferences().schoolCode).isEqualTo(schoolCode)
+
+        val year = Date.now().year
         val months = (1..12)
         val remoteMeals = months.map { month ->
-            remoteRepository.getMeals(2022, month).response
-        }.flatten().map { it.toMealEntity() }
+            remoteRepository.getMeals(schoolCode, year, month)
+        }.map { it.meals }.flatten()
 
         val worker = buildWorker()
         val result = worker.doWork()
         assertThat(result).isEqualTo(ListenableWorker.Result.success())
 
         val storedMeals = months.map { month ->
-            localRepository.getMeals(2022, month).first()
+            localRepository.getMeals(schoolCode, year, month).first()
         }.flatten()
         assertThat(remoteMeals).isNotEmpty
             .containsExactlyInAnyOrderElementsOf(storedMeals)
