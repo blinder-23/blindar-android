@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-    "identityHash": "ea8b69c975a68f5a08164253868d299b",
+    "version": 2,
+    "identityHash": "c62248f4803947aab3b04173e5f2d684",
     "entities": [
       {
         "tableName": "meal",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `menu` TEXT NOT NULL, `origin` TEXT NOT NULL, `calorie` REAL NOT NULL, `nutrient` TEXT NOT NULL, `school_code` INTEGER NOT NULL, PRIMARY KEY(`date`, `school_code`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `menu` TEXT NOT NULL, `origin` TEXT NOT NULL, `calorie` REAL NOT NULL, `nutrient` TEXT NOT NULL, `school_code` INTEGER NOT NULL, PRIMARY KEY(`school_code`, `date`))",
         "fields": [
           {
             "fieldPath": "date",
@@ -48,8 +48,8 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "date",
-            "school_code"
+            "school_code",
+            "date"
           ]
         },
         "indices": [],
@@ -59,7 +59,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ea8b69c975a68f5a08164253868d299b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c62248f4803947aab3b04173e5f2d684')"
     ]
   }
 }

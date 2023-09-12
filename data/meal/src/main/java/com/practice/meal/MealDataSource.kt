@@ -1,16 +1,16 @@
 package com.practice.meal
 
-import com.practice.meal.entity.MealEntity
+import com.practice.domain.meal.Meal
 import kotlinx.coroutines.flow.Flow
 
 sealed interface MealDataSource {
-    suspend fun getMeals(year: Int, month: Int): Flow<List<MealEntity>>
+    suspend fun getMeals(schoolCode: Int, year: Int, month: Int): Flow<List<Meal>>
 
-    suspend fun insertMeals(meals: List<MealEntity>)
+    suspend fun insertMeals(meals: List<Meal>)
 
-    suspend fun deleteMeals(meals: List<MealEntity>)
+    suspend fun deleteMeals(meals: List<Meal>)
 
-    suspend fun deleteMeals(year: Int, month: Int)
+    suspend fun deleteMeals(schoolCode: Int, year: Int, month: Int)
 
     suspend fun clear()
 }
