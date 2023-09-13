@@ -36,6 +36,7 @@ fun MainScreen(
     viewModel: MainScreenViewModel,
     modifier: Modifier = Modifier,
     onLaunch: suspend () -> Unit = {},
+    onNavigateToSelectSchoolScreen: () -> Unit = {},
 ) {
     val systemUiController = rememberSystemUiController()
     val systemBarColor = MaterialTheme.colorScheme.surface
@@ -69,6 +70,7 @@ fun MainScreen(
                 getContentDescription = viewModel::getContentDescription,
                 getClickLabel = viewModel::getClickLabel,
                 drawUnderlineToScheduleDate = { },
+                onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
             )
         } else {
             VerticalMainScreen(
@@ -82,6 +84,7 @@ fun MainScreen(
                 getContentDescription = viewModel::getContentDescription,
                 getClickLabel = viewModel::getClickLabel,
                 drawUnderlineToScheduleDate = {},
+                onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
             )
         }
     }

@@ -1,11 +1,12 @@
 package com.practice.api.schedule
 
-import com.practice.api.schedule.pojo.ScheduleResponse
+import com.practice.api.schedule.pojo.toMonthlySchedule
+import com.practice.domain.schedule.MonthlySchedule
 
 class RemoteScheduleRepository(private val remote: RemoteScheduleDataSource) {
-    suspend fun getSchedules(year: Int, month: Int): ScheduleResponse {
+    suspend fun getSchedules(schoolCode: Int, year: Int, month: Int): MonthlySchedule {
         return try {
-            remote.getSchedules(year, month)
+            remote.getSchedules(schoolCode, year, month).toMonthlySchedule(schoolCode, year, month)
         } catch (e: Exception) {
             throw RemoteScheduleRepositoryException(e.message)
         }

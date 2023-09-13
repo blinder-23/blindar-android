@@ -46,7 +46,7 @@ class MealDaoTest {
         val meals = TestUtil.createMealEntityRoom(5)
         dao.insertMeals(meals)
 
-        val mealInDatabase = dao.getMeals(meals[0].yearMonth).first()
+        val mealInDatabase = dao.getMeals(TestUtil.schoolCode, meals[0].yearMonth).first()
         assertThat(mealInDatabase).isEqualTo(meals)
     }
 }

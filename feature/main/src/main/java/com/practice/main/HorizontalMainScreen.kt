@@ -16,6 +16,7 @@ import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.largeCalendarDateShape
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.domain.School
 import com.practice.main.state.DailyMealScheduleState
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
@@ -35,6 +36,7 @@ fun HorizontalMainScreen(
     getContentDescription: (Date) -> String,
     getClickLabel: (Date) -> String,
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
+    onNavigateToSelectSchoolScreen: () -> Unit,
 ) {
     Column(modifier = modifier) {
         MainScreenHeader(
@@ -82,6 +84,7 @@ private fun HorizontalMainScreenPreview() {
         selectedDate = selectedDate,
         monthlyMealScheduleState = (1..3).map {
             DailyMealScheduleState(
+                schoolCode = 1,
                 date = Date(2022, 10, 11).plusDays(it),
                 mealUiState = MealUiState(previewMenus),
                 scheduleUiState = ScheduleUiState(previewSchedules),
@@ -89,6 +92,10 @@ private fun HorizontalMainScreenPreview() {
         },
         isLoading = false,
         screenMode = ScreenMode.Default,
+        selectedSchool = School(
+            name = "어떤 학교",
+            schoolCode = -1,
+        ),
     )
     val calendarState = rememberCalendarState(
         year = year,
@@ -108,6 +115,7 @@ private fun HorizontalMainScreenPreview() {
             getContentDescription = { "" },
             getClickLabel = { "" },
             drawUnderlineToScheduleDate = {},
+            onNavigateToSelectSchoolScreen = {},
         )
     }
 }

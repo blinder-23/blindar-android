@@ -1,16 +1,16 @@
 package com.practice.schedule
 
-import com.practice.schedule.entity.ScheduleEntity
+import com.practice.domain.schedule.Schedule
 import kotlinx.coroutines.flow.Flow
 
 sealed interface ScheduleDataSource {
-    suspend fun getSchedules(year: Int, month: Int): Flow<List<ScheduleEntity>>
+    suspend fun getSchedules(schoolCode: Int, year: Int, month: Int): Flow<List<Schedule>>
 
-    suspend fun insertSchedules(schedules: List<ScheduleEntity>)
+    suspend fun insertSchedules(schedules: List<Schedule>)
 
-    suspend fun deleteSchedules(schedules: List<ScheduleEntity>)
+    suspend fun deleteSchedules(schedules: List<Schedule>)
 
-    suspend fun deleteSchedules(year: Int, month: Int)
+    suspend fun deleteSchedules(schoolCode: Int, year: Int, month: Int)
 
     suspend fun clear()
 }

@@ -1,7 +1,7 @@
 package com.practice.schedule
 
 import com.hsk.ktx.getDateString
-import com.practice.schedule.entity.ScheduleEntity
+import com.practice.domain.schedule.Schedule
 import com.practice.schedule.room.ScheduleDao
 import com.practice.schedule.room.toRoomEntities
 import com.practice.schedule.room.toScheduleEntities
@@ -10,20 +10,21 @@ import kotlinx.coroutines.flow.map
 
 class LocalScheduleDataSource(private val scheduleDao: ScheduleDao) : ScheduleDataSource {
 
-    override suspend fun getSchedules(year: Int, month: Int): Flow<List<ScheduleEntity>> {
-        return scheduleDao.getSchedule(getDateString(year, month)).map { it.toScheduleEntities() }
+    override suspend fun getSchedules(schoolCode: Int, year: Int, month: Int): Flow<List<Schedule>> {
+        return scheduleDao.getSchedule(schoolCode, getDateString(year, month))
+            .map { it.toScheduleEntities() }
     }
 
-    override suspend fun insertSchedules(schedules: List<ScheduleEntity>) {
+    override suspend fun insertSchedules(schedules: List<Schedule>) {
         scheduleDao.insertSchedules(schedules.toRoomEntities())
     }
 
-    override suspend fun deleteSchedules(schedules: List<ScheduleEntity>) {
+    override suspend fun deleteSchedules(schedules: List<Schedule>) {
         scheduleDao.deleteSchedules(schedules.toRoomEntities())
     }
 
-    override suspend fun deleteSchedules(year: Int, month: Int) {
-        scheduleDao.deleteSchedules(getDateString(year, month))
+    override suspend fun deleteSchedules(schoolCode: Int, year: Int, month: Int) {
+        scheduleDao.deleteSchedules(schoolCode, getDateString(year, month))
     }
 
     override suspend fun clear() {

@@ -2,13 +2,13 @@ package com.practice.schedule.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.hsk.ktx.getDateString
-import com.practice.schedule.entity.ScheduleEntity
+import com.practice.domain.schedule.Schedule
 
-@Entity(tableName = "schedule")
+@Entity(tableName = "schedule", primaryKeys = ["school_code", "id"])
 data class ScheduleEntityRoom(
-    @PrimaryKey val id: Int,
+    @ColumnInfo("school_code") val schoolCode: Int,
+    val id: Int,
     @ColumnInfo(name = "date") val date: String,
     @ColumnInfo(name = "event_name") val eventName: String,
     @ColumnInfo(name = "event_content") val eventContent: String,
@@ -17,14 +17,16 @@ data class ScheduleEntityRoom(
 val ScheduleEntityRoom.yearMonth: String
     get() = date.substring(0..5)
 
-fun ScheduleEntity.toRoomEntity() = ScheduleEntityRoom(
+fun Schedule.toRoomEntity() = ScheduleEntityRoom(
+    schoolCode = schoolCode,
     id = id,
     date = getDateString(year, month, day),
     eventName = eventName,
     eventContent = eventContent
 )
 
-fun ScheduleEntityRoom.toScheduleEntity() = ScheduleEntity(
+fun ScheduleEntityRoom.toScheduleEntity() = Schedule(
+    schoolCode = schoolCode,
     id = id,
     year = date.slice(0..3).toInt(),
     month = date.slice(4..5).toInt(),
@@ -33,6 +35,6 @@ fun ScheduleEntityRoom.toScheduleEntity() = ScheduleEntity(
     eventContent = eventContent
 )
 
-fun List<ScheduleEntity>.toRoomEntities() = map { it.toRoomEntity() }
+fun List<Schedule>.toRoomEntities() = map { it.toRoomEntity() }
 
 fun List<ScheduleEntityRoom>.toScheduleEntities() = map { it.toScheduleEntity() }

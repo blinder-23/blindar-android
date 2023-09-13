@@ -2,15 +2,14 @@ package com.practice.meal.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.hsk.ktx.getDateString
 import com.hsk.ktx.jsonToList
 import com.hsk.ktx.toJson
-import com.practice.meal.entity.MealEntity
+import com.practice.domain.meal.Meal
 
-@Entity(tableName = "meal")
+@Entity(tableName = "meal", primaryKeys = ["school_code", "date"])
 data class MealEntityRoom(
-    @PrimaryKey val date: String,
+    val date: String,
     val menu: String,
     val origin: String,
     val calorie: Double,
@@ -21,7 +20,7 @@ data class MealEntityRoom(
 val MealEntityRoom.yearMonth: String
     get() = date.substring(0..5)
 
-fun MealEntity.toRoomEntity() = MealEntityRoom(
+fun Meal.toRoomEntity() = MealEntityRoom(
     date = getDateString(year, month, day),
     menu = menus.toJson(),
     origin = origins.toJson(),
@@ -30,8 +29,8 @@ fun MealEntity.toRoomEntity() = MealEntityRoom(
     schoolCode = schoolCode,
 )
 
-fun MealEntityRoom.toMealEntity(): MealEntity {
-    return MealEntity(
+fun MealEntityRoom.toMealEntity(): Meal {
+    return Meal(
         schoolCode = schoolCode,
         year = date.slice(0..3).toInt(),
         month = date.slice(4..5).toInt(),
@@ -43,6 +42,6 @@ fun MealEntityRoom.toMealEntity(): MealEntity {
     )
 }
 
-fun List<MealEntity>.toRoomEntities() = map { it.toRoomEntity() }
+fun List<Meal>.toRoomEntities() = map { it.toRoomEntity() }
 
 fun List<MealEntityRoom>.toMealEntities() = map { it.toMealEntity() }

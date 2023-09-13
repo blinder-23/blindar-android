@@ -82,18 +82,18 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:593370815892:android:f65919fce52ba0685a0381",
+        "mobilesdk_app_id": "1:593370815892:android:4b249171f50d5f355a0381",
         "android_client_info": {
           "package_name": "com.practice.hanbitlunch.debug"
         }
       },
       "oauth_client": [
         {
-          "client_id": "593370815892-d9v4maisltdn6cqegd1j5e4icr0knl93.apps.googleusercontent.com",
+          "client_id": "593370815892-r2b3rnrb3c1f18e247mr1uhdjv125pl1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.practice.hanbitlunch.debug",
-            "certificate_hash": "c7c84953bece0ed06bd6884e5a4b9c3cfbeffa99"
+            "certificate_hash": "121ea3e160a00b902dcb8ce3d9b29f32d091e5a4"
           }
         },
         {

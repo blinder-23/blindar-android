@@ -15,16 +15,19 @@ import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.domain.School
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun SchoolList(
+    selectedSchool: School,
     schools: ImmutableList<School>,
     onSchoolClick: (School) -> Unit,
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
 ) {
+    // TODO: 선택된 학교 보여주기
     Column(
         modifier = modifier
             .verticalScroll(scrollState)
@@ -70,12 +73,12 @@ private fun SchoolItem(
     )
 }
 
-internal val exampleSchool = School(name = "한빛맹학교", schoolId = 0)
+internal val exampleSchool = School(name = "한빛맹학교", schoolCode = 0)
 internal val exampleSchools =
     (1..20).map {
         School(
             name = "${exampleSchool.name} $it",
-            schoolId = it
+            schoolCode = it
         )
     }.toImmutableList()
 
@@ -96,6 +99,7 @@ private fun SchoolItemPreview() {
 private fun SchoolListPreview() {
     BlindarTheme {
         SchoolList(
+            selectedSchool = exampleSchools[0],
             schools = exampleSchools,
             onSchoolClick = {},
             modifier = Modifier

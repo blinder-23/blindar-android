@@ -107,21 +107,22 @@ class PreferencesRepositoryImplTest {
     }
 
     @Test
-    fun repository_initialSchoolIdIsEmpty() = runTest {
-        val isSchoolIdEmpty = preferences.fetchInitialPreferences().isSchoolIdEmpty
-        assert(isSchoolIdEmpty)
+    fun repository_initialSchoolCodeIsEmpty() = runTest {
+        val isSchoolCodeEmpty = preferences.fetchInitialPreferences().isSchoolCodeEmpty
+        assert(isSchoolCodeEmpty)
     }
 
     @Test
-    fun repository_updateSchoolId() = runTest {
-        val schoolId = 1234567
+    fun repository_updateSchoolCode() = runTest {
+        val schoolCode = 1234567
+        val schoolName = "testSchool"
         update {
-            updateSchoolId(schoolId)
+            updateSelectedSchool(schoolCode, schoolName)
         }
 
         preferences.dropFirstAndTake(1).first().apply {
-            assert(!isSchoolIdEmpty)
-            assertThat(this.schoolId).isEqualTo(schoolId)
+            assert(!isSchoolCodeEmpty)
+            assertThat(this.schoolCode).isEqualTo(schoolCode)
         }
     }
 

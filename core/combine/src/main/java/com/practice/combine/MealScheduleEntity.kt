@@ -1,12 +1,14 @@
 package com.practice.combine
 
-import com.practice.meal.entity.MealEntity
-import com.practice.schedule.entity.ScheduleEntity
+import com.practice.domain.meal.Meal
+import com.practice.domain.schedule.Schedule
 import kotlinx.collections.immutable.ImmutableList
 
+// TODO: 이름 바꾸기 (MonthlyMealSchedule)
 data class MealScheduleEntity(
+    val schoolCode: Int,
     val year: Int,
     val month: Int,
-    val meals: ImmutableList<MealEntity>,
-    val schedules: ImmutableList<ScheduleEntity>,
+    val meals: ImmutableList<Meal>,
+    val schedules: ImmutableList<Schedule>,
 )

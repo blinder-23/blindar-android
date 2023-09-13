@@ -9,8 +9,9 @@ class FakeRemoteSchoolDataSource @Inject constructor() : RemoteSchoolDataSource 
         delay(500L)
         return (1..15).map {
             SchoolModel(
-                name = "학교 $it",
-                schoolId = it,
+                schoolName = "학교 $it",
+                schoolCode = it,
+                officeCode = it.toString(),
             )
         }
     }

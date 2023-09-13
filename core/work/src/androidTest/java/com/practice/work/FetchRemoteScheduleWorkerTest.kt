@@ -7,7 +7,10 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
-import com.practice.combine.toScheduleEntity
+import com.practice.api.schedule.FakeRemoteScheduleDataSource
+import com.practice.api.schedule.RemoteScheduleRepository
+import com.practice.preferences.FakePreferencesRepository
+import com.practice.preferences.PreferencesRepository
 import com.practice.schedule.FakeScheduleDataSource
 import com.practice.schedule.ScheduleRepository
 import kotlinx.coroutines.flow.first
@@ -20,26 +23,26 @@ import org.junit.runner.RunWith
 class FetchRemoteScheduleWorkerTest {
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
-    private val localRepository =
-        ScheduleRepository(FakeScheduleDataSource())
-    private val remoteRepository =
-        com.practice.api.schedule.RemoteScheduleRepository(com.practice.api.schedule.FakeRemoteScheduleDataSource())
-    private val preferencesRepository: com.practice.preferences.PreferencesRepository =
-        com.practice.preferences.FakePreferencesRepository()
+    private val localRepository = ScheduleRepository(FakeScheduleDataSource())
+    private val remoteRepository = RemoteScheduleRepository(FakeRemoteScheduleDataSource())
+    private val preferencesRepository: PreferencesRepository = FakePreferencesRepository()
 
     @Test
     fun doWork(): Unit = runBlocking {
+        val schoolCode = 3
+        preferencesRepository.updateSelectedSchool(schoolCode, "name")
+
         val months = (1..12)
         val remoteSchedules = months.map { month ->
-            remoteRepository.getSchedules(2022, month).schedules
-        }.flatten().map { it.toScheduleEntity() }
+            remoteRepository.getSchedules(schoolCode, 2022, month).schedules
+        }.flatten()
 
         val worker = buildWorker()
         val result = worker.doWork()
         assertThat(result).isEqualTo(ListenableWorker.Result.success())
 
         val allSchedules = months.map { month ->
-            localRepository.getSchedules(2022, month).first()
+            localRepository.getSchedules(schoolCode, 2022, month).first()
         }.flatten()
         assertThat(allSchedules).isNotEmpty
             .containsExactlyInAnyOrderElementsOf(remoteSchedules)

@@ -41,7 +41,8 @@ class LocalMealDataSourceTest {
         val meals = TestUtil.createMealEntity(10)
         source.insertMeals(meals)
 
-        val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month).first()
+        val mealsInDatabase =
+            source.getMeals(TestUtil.schoolCode, meals[0].year, meals[0].month).first()
         assertThat(mealsInDatabase).containsExactlyInAnyOrderElementsOf(meals)
     }
 
@@ -51,7 +52,8 @@ class LocalMealDataSourceTest {
         source.insertMeals(meals)
         source.deleteMeals(meals)
 
-        val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month).first()
+        val mealsInDatabase =
+            source.getMeals(TestUtil.schoolCode, meals[0].year, meals[0].month).first()
         assertThat(mealsInDatabase).isEmpty()
     }
 
@@ -59,9 +61,10 @@ class LocalMealDataSourceTest {
     fun source_deleteMeals_ByDate() = runTest {
         val meals = TestUtil.createMealEntity(10)
         source.insertMeals(meals)
-        source.deleteMeals(meals[0].year, meals[0].month)
+        source.deleteMeals(TestUtil.schoolCode, meals[0].year, meals[0].month)
 
-        val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month).first()
+        val mealsInDatabase =
+            source.getMeals(TestUtil.schoolCode, meals[0].year, meals[0].month).first()
         assertThat(mealsInDatabase).isEmpty()
     }
 
@@ -71,7 +74,8 @@ class LocalMealDataSourceTest {
         source.insertMeals(meals)
         source.clear()
 
-        val mealsInDatabase = source.getMeals(meals[0].year, meals[0].month).first()
+        val mealsInDatabase =
+            source.getMeals(TestUtil.schoolCode, meals[0].year, meals[0].month).first()
         assertThat(mealsInDatabase).isEmpty()
     }
 

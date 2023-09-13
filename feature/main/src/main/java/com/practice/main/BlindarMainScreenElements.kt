@@ -3,6 +3,7 @@ package com.practice.main
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -35,8 +36,13 @@ import kotlinx.coroutines.launch
 fun MainScreenTopBar(
     schoolName: String,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    onClickLabel: String = "",
 ) {
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier
+            .clickable(onClickLabel = onClickLabel, onClick = onClick)
+    ) {
         TitleLarge(
             text = schoolName,
             textColor = MaterialTheme.colorScheme.onSurface,

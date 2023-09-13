@@ -2,9 +2,10 @@ package com.practice.main.state
 
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.YearMonth
-import com.practice.meal.entity.MealEntity
+import com.practice.domain.School
+import com.practice.domain.meal.Meal
+import com.practice.domain.schedule.Schedule
 import com.practice.preferences.ScreenMode
-import com.practice.schedule.entity.ScheduleEntity
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -16,9 +17,14 @@ data class MainUiState(
     val monthlyMealScheduleState: List<DailyMealScheduleState>,
     val isLoading: Boolean,
     val screenMode: ScreenMode,
+    val selectedSchool: School,
 ) {
     val yearMonth: YearMonth
         get() = YearMonth(year, month)
+
+    val selectedSchoolCode: Int
+        get() = selectedSchool.schoolCode
+
     val selectedDateMealScheduleState: DailyMealScheduleState
         get() = monthlyMealScheduleState.firstOrNull { it.date == selectedDate }
             ?: DailyMealScheduleState.Empty
@@ -42,7 +48,7 @@ data class MealUiState(
     }
 }
 
-fun MealEntity.toMealUiState() = if (this.menus.isEmpty()) {
+fun Meal.toMealUiState() = if (this.menus.isEmpty()) {
     MealUiState.EmptyMealState
 } else {
     MealUiState(menus.filter { it.name != "급식우유" }.map { Menu(it.name) }.toPersistentList())
@@ -70,15 +76,5 @@ data class ScheduleUiState(
     }
 }
 
-data class Schedule(
-    private val scheduleName: String,
-    private val scheduleContent: String,
-) {
-    val displayText =
-        if (scheduleName == scheduleContent) scheduleName else "$scheduleName - $scheduleContent"
-}
-
-fun ScheduleEntity.toSchedule() = Schedule(
-    scheduleName = eventName,
-    scheduleContent = eventContent,
-)
+val Schedule.displayText: String
+    get() = if (eventName == eventContent) eventName else "$eventName - $eventContent"

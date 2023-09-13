@@ -1,4 +1,3 @@
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -46,6 +45,8 @@ dependencies {
     api(project(":core:firebase"))
     api(project(":core:api"))
     api(project(":core:preferences"))
+    api(project(":core:domain"))
+    implementation(project(":core:work"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)
