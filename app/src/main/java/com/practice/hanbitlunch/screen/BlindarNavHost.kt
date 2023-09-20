@@ -215,6 +215,7 @@ fun NavGraphBuilder.registerGraph(
                 onNavigateToMain = {
                     navController.navigate(MAIN) {
                         popUpTo(ONBOARDING) { inclusive = true }
+                        popUpTo(MAIN) { inclusive = true }
                     }
                 },
                 modifier = Modifier
