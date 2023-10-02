@@ -128,7 +128,7 @@ private fun SearchSchoolTextField(
                 IconButton(onClick = { onQueryChange("") }) {
                     Icon(
                         imageVector = Icons.Outlined.Cancel,
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.school_clear_text_field),
                     )
                 }
             }
