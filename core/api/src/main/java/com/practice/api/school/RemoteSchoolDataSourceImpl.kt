@@ -11,7 +11,7 @@ class RemoteSchoolDataSourceImpl @Inject constructor(private val api: SchoolApi)
         return try {
             api.getSupportedSchools().data.apply {
                 Log.d(TAG, "schools: ${this.map { it.schoolName }}")
-            }
+            }.sortedBy { it.schoolName }
         } catch (e: Exception) {
             Log.e(TAG, "School api error", e)
             emptyList()
