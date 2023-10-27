@@ -6,7 +6,14 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -15,7 +22,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
-import androidx.compose.material3.*
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,10 +50,20 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightPreview
-import com.practice.designsystem.components.*
+import com.practice.designsystem.components.BodyLarge
+import com.practice.designsystem.components.DisplayMedium
+import com.practice.designsystem.components.DisplaySmall
+import com.practice.designsystem.components.TitleLarge
+import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.schedule.Schedule
-import com.practice.main.state.*
+import com.practice.main.state.DailyMealScheduleState
+import com.practice.main.state.MealUiState
+import com.practice.main.state.Menu
+import com.practice.main.state.Nutrient
+import com.practice.main.state.ScheduleUiState
+import com.practice.main.state.ScreenModeIcon
+import com.practice.main.state.displayText
 import com.practice.main.state.screenModeIcons
 import com.practice.preferences.ScreenMode
 import com.practice.util.date.daytype.toKor
@@ -457,6 +478,7 @@ private fun ScreenModeIconButtonsPreview() {
 
 val previewMenus = listOf("찰보리밥", "망고마들렌", "쇠고기미역국", "콩나물파채무침", "돼지양념구이", "포기김치", "오렌지주스", "기타등등")
     .map { Menu(it) }.toImmutableList()
+val previewNutrients = (0..3).map { Nutrient("탄수화물", 123.0, "g") }.toImmutableList()
 val previewSchedules = (0..6).map {
     Schedule(
         schoolCode = 1,
@@ -475,7 +497,7 @@ private fun MainScreenContentsPreview() {
     BlindarTheme {
         MainScreenContents(
             modifier = Modifier.height(500.dp),
-            mealUiState = MealUiState(previewMenus),
+            mealUiState = MealUiState(previewMenus, previewNutrients),
             scheduleUiState = ScheduleUiState(previewSchedules),
             mealColumns = 2,
         )
@@ -487,7 +509,7 @@ private fun MainScreenContentsPreview() {
 private fun MealContentPreview() {
     BlindarTheme {
         MealContent(
-            mealUiState = MealUiState(previewMenus),
+            mealUiState = MealUiState(previewMenus, previewNutrients),
             columns = 2,
         )
     }
@@ -501,7 +523,7 @@ private fun ListScreenItemPreview() {
             DailyMealScheduleState(
                 schoolCode = 1,
                 date = Date(2022, 12, 13),
-                mealUiState = MealUiState(previewMenus),
+                mealUiState = MealUiState(previewMenus, previewNutrients),
                 scheduleUiState = ScheduleUiState(previewSchedules),
             ),
         )

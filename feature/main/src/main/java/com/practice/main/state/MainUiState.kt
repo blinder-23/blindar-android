@@ -35,7 +35,8 @@ data class MainUiState(
  */
 
 data class MealUiState(
-    val menus: ImmutableList<Menu>
+    val menus: ImmutableList<Menu>,
+    val nutrients: ImmutableList<Nutrient>,
 ) {
     val isEmpty: Boolean
         get() = menus.isEmpty()
@@ -44,19 +45,35 @@ data class MealUiState(
         get() = if (menus.isEmpty()) "식단이 없습니다." else menus.joinToString(", ") { it.name }
 
     companion object {
-        val EmptyMealState = MealUiState(persistentListOf())
+        val EmptyMealState = MealUiState(
+            menus = persistentListOf(),
+            nutrients = persistentListOf(),
+        )
     }
 }
 
 fun Meal.toMealUiState() = if (this.menus.isEmpty()) {
     MealUiState.EmptyMealState
 } else {
-    MealUiState(menus.filter { it.name != "급식우유" }.map { Menu(it.name) }.toPersistentList())
+    MealUiState(
+        menus = menus.filter { it.name != "급식우유" }.map { Menu(it.name) }.toPersistentList(),
+        nutrients = nutrients.map { Nutrient(it.name, it.amount, it.unit) }.toPersistentList()
+            .add(0, Nutrient("열량", calorie, "kcal")),
+    )
 }
 
 data class Menu(
     val name: String,
 )
+
+data class Nutrient(
+    val name: String,
+    val amount: Double,
+    val unit: String,
+) {
+    val description: String
+        get() = "$name $amount $unit"
+}
 
 /**
  * Ui state of schedule

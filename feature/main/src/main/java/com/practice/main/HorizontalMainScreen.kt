@@ -86,7 +86,7 @@ private fun HorizontalMainScreenPreview() {
             DailyMealScheduleState(
                 schoolCode = 1,
                 date = Date(2022, 10, 11).plusDays(it),
-                mealUiState = MealUiState(previewMenus),
+                mealUiState = MealUiState(previewMenus, previewNutrients),
                 scheduleUiState = ScheduleUiState(previewSchedules),
             )
         },
