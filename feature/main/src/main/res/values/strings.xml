@@ -6,4 +6,7 @@
     <string name="content_empty">데이터가 없습니다.</string>
 
     <string name="navigate_to_school_select">학교 선택 화면으로 가기</string>
+
+    <string name="nutrient_popup_title">%s 영양 정보</string>
+    <string name="nutrient_popup_close">닫기</string>
 </resources>
