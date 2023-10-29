@@ -6,12 +6,22 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,8 +29,10 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
@@ -34,6 +46,8 @@ import com.practice.util.date.DateUtil
 import com.practice.util.date.daytype.DayType
 import com.practice.util.date.daytype.calculateDayType
 import com.practice.util.date.daytype.toKor
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 
 internal fun calendarDays(): List<DayOfWeek> = DayOfWeek.values().toList()
@@ -93,6 +107,7 @@ internal fun CalendarDates(
     drawBehindElement: DrawScope.(Date) -> Unit = {},
     dateArrangement: Arrangement.Vertical = Arrangement.Center,
     dateBelowContent: @Composable (Date) -> Unit = {},
+    customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
     Column(
         modifier = modifier,
@@ -111,6 +126,7 @@ internal fun CalendarDates(
                 dateArrangement = dateArrangement,
                 drawBehindElement = drawBehindElement,
                 dateBelowContent = dateBelowContent,
+                customActions = customActions
             )
         }
     }
@@ -129,6 +145,7 @@ internal fun CalendarWeek(
     dateArrangement: Arrangement.Vertical = Arrangement.Center,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
     dateBelowContent: @Composable (Date) -> Unit = {},
+    customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
     Row(
         modifier = modifier,
@@ -150,6 +167,7 @@ internal fun CalendarWeek(
                 drawBehindElement = drawBehindElement,
                 dateArrangement = dateArrangement,
                 dateBelowContent = dateBelowContent,
+                customActions = customActions,
             )
         }
     }
@@ -171,6 +189,7 @@ internal fun CalendarDate(
     drawBehindElement: DrawScope.(Date) -> Unit = {},
     dateArrangement: Arrangement.Vertical = Arrangement.Center,
     dateBelowContent: @Composable (Date) -> Unit = {},
+    customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
     val borderColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Transparent,
@@ -196,6 +215,7 @@ internal fun CalendarDate(
             .padding(5.dp)
             .clearAndSetSemantics {
                 contentDescription = "${date.clickLabel}\n${getContentDescription(date)}"
+                this.customActions = customActions(date)
             },
         textColor = textColor,
         arrangement = dateArrangement,
