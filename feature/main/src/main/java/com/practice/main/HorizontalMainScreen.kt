@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.tooling.preview.Preview
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.CalendarState
@@ -22,6 +23,8 @@ import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.ScheduleUiState
 import com.practice.preferences.ScreenMode
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun HorizontalMainScreen(
@@ -40,6 +43,7 @@ fun HorizontalMainScreen(
     onNutrientPopupOpen: () -> Unit,
     onNutrientPopupClose: () -> Unit,
     modifier: Modifier = Modifier,
+    customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
     Column(modifier = modifier) {
         MainScreenHeader(
@@ -61,6 +65,7 @@ fun HorizontalMainScreen(
                 drawBehindElement = drawUnderlineToScheduleDate,
                 dateShape = largeCalendarDateShape,
                 dateArrangement = Arrangement.Top,
+                customActions = customActions,
             )
             MainScreenContents(
                 mealUiState = uiState.selectedDateMealScheduleState.mealUiState,

@@ -74,6 +74,7 @@ fun MainScreen(
                 isNutrientPopupVisible = uiState.isNutrientPopupVisible,
                 onNutrientPopupOpen = viewModel::openNutrientPopup,
                 onNutrientPopupClose = viewModel::closeNutrientPopup,
+                customActions = { date -> viewModel.getCustomActions(date) },
             )
         } else {
             VerticalMainScreen(
@@ -91,6 +92,7 @@ fun MainScreen(
                 isNutrientPopupVisible = uiState.isNutrientPopupVisible,
                 onNutrientPopupOpen = viewModel::openNutrientPopup,
                 onNutrientPopupClose = viewModel::closeNutrientPopup,
+                customActions = { date -> viewModel.getCustomActions(date) },
             )
         }
     }
