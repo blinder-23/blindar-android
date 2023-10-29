@@ -14,7 +14,11 @@ import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.domain.School
 import com.practice.domain.meal.Meal
 import com.practice.domain.schedule.Schedule
-import com.practice.main.state.*
+import com.practice.main.state.DailyMealScheduleState
+import com.practice.main.state.MainUiState
+import com.practice.main.state.MealUiState
+import com.practice.main.state.ScheduleUiState
+import com.practice.main.state.toMealUiState
 import com.practice.preferences.PreferencesRepository
 import com.practice.preferences.ScreenMode
 import com.practice.util.date.DateUtil
@@ -65,6 +69,7 @@ class MainScreenViewModel @Inject constructor(
                 isLoading = false,
                 screenMode = ScreenMode.Default,
                 selectedSchool = School.EmptySchool,
+                isNutrientPopupVisible = false,
             )
         )
         selectedDateFlow = MutableStateFlow(current)
@@ -96,6 +101,7 @@ class MainScreenViewModel @Inject constructor(
         isLoading: Boolean = state.isLoading,
         screenMode: ScreenMode = state.screenMode,
         selectedSchool: School = state.selectedSchool,
+        isNutrientPopupVisible: Boolean = state.isNutrientPopupVisible,
     ) {
         val monthlyMealScheduleState = if (entity != null) {
             parseDailyState(entity)
@@ -111,6 +117,7 @@ class MainScreenViewModel @Inject constructor(
                 isLoading = isLoading,
                 screenMode = screenMode,
                 selectedSchool = selectedSchool,
+                isNutrientPopupVisible = isNutrientPopupVisible,
             )
         }
         entity?.let {
@@ -210,12 +217,20 @@ class MainScreenViewModel @Inject constructor(
     fun getClickLabel(date: Date): String =
         if (date == state.selectedDate) "" else "식단 및 학사일정 보기"
 
+    fun openNutrientPopup() {
+        updateUiState(isNutrientPopupVisible = true)
+    }
+
+    fun closeNutrientPopup() {
+        updateUiState(isNutrientPopupVisible = false)
+    }
+
 }
 
 private data class CacheKey(val schoolCode: Int, val yearMonth: YearMonth)
 
 private val MainUiState.cacheKey: CacheKey
-    get()=CacheKey(selectedSchoolCode, yearMonth)
+    get() = CacheKey(selectedSchoolCode, yearMonth)
 
 private fun MealScheduleEntity.getMeal(date: Date): MealUiState {
     return try {
