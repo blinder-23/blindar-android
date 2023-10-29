@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -56,9 +57,11 @@ fun NutrientPopup(
         chipTargetNames.contains(nutrient.name)
     }
 
+    val shape = RoundedCornerShape(16.dp)
     LazyColumn(
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
+            .shadow(4.dp, shape = shape)
+            .clip(shape)
             .background(MaterialTheme.colorScheme.surface)
             .heightIn(max = 550.dp), // TODO: 높이 어떻게?
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -159,6 +162,7 @@ private fun NutrientChip(
     modifier: Modifier = Modifier,
     backgroundColor: Color = Color.Unspecified,
 ) {
+    val textColor = MaterialTheme.colorScheme.onPrimary
     Box(
         modifier = modifier
             .aspectRatio(1f)
@@ -172,8 +176,14 @@ private fun NutrientChip(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            PopupTitleLarge(text = "${nutrient.amount}${nutrient.unit}")
-            PopupBodyMedium(text = nutrient.name)
+            PopupTitleLarge(
+                text = "${nutrient.amount}${nutrient.unit}",
+                color = textColor,
+            )
+            PopupBodyMedium(
+                text = nutrient.name,
+                color = textColor,
+            )
         }
     }
 }
