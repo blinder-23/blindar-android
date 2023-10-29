@@ -26,7 +26,6 @@ import com.practice.preferences.ScreenMode
 @Composable
 fun HorizontalMainScreen(
     calendarPageCount: Int,
-    modifier: Modifier = Modifier,
     uiState: MainUiState,
     onScreenModeChange: (ScreenMode) -> Unit,
     calendarState: CalendarState,
@@ -37,6 +36,10 @@ fun HorizontalMainScreen(
     getClickLabel: (Date) -> String,
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
+    isNutrientPopupVisible: Boolean,
+    onNutrientPopupOpen: () -> Unit,
+    onNutrientPopupClose: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         MainScreenHeader(
@@ -63,6 +66,9 @@ fun HorizontalMainScreen(
                 mealUiState = uiState.selectedDateMealScheduleState.mealUiState,
                 scheduleUiState = uiState.selectedDateMealScheduleState.scheduleUiState,
                 mealColumns = mealColumns,
+                isNutrientPopupVisible = isNutrientPopupVisible,
+                onNutrientPopupOpen = onNutrientPopupOpen,
+                onNutrientPopupClose = onNutrientPopupClose,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
@@ -86,7 +92,7 @@ private fun HorizontalMainScreenPreview() {
             DailyMealScheduleState(
                 schoolCode = 1,
                 date = Date(2022, 10, 11).plusDays(it),
-                mealUiState = MealUiState(previewMenus, previewNutrients),
+                mealUiState = MealUiState(2022, 10, 11, previewMenus, previewNutrients),
                 scheduleUiState = ScheduleUiState(previewSchedules),
             )
         },
@@ -96,6 +102,7 @@ private fun HorizontalMainScreenPreview() {
             name = "어떤 학교",
             schoolCode = -1,
         ),
+        isNutrientPopupVisible = false,
     )
     val calendarState = rememberCalendarState(
         year = year,
@@ -116,6 +123,9 @@ private fun HorizontalMainScreenPreview() {
             getClickLabel = { "" },
             drawUnderlineToScheduleDate = {},
             onNavigateToSelectSchoolScreen = {},
+            isNutrientPopupVisible = false,
+            onNutrientPopupOpen = {},
+            onNutrientPopupClose = {},
         )
     }
 }

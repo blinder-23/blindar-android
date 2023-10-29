@@ -44,6 +44,9 @@ fun VerticalMainScreen(
     getClickLabel: (Date) -> String,
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
+    isNutrientPopupVisible: Boolean,
+    onNutrientPopupOpen: () -> Unit,
+    onNutrientPopupClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -79,6 +82,9 @@ fun VerticalMainScreen(
                 mealUiState = uiState.selectedDateMealScheduleState.mealUiState,
                 scheduleUiState = uiState.selectedDateMealScheduleState.scheduleUiState,
                 mealColumns = mealColumns,
+                isNutrientPopupVisible = isNutrientPopupVisible,
+                onNutrientPopupOpen = onNutrientPopupOpen,
+                onNutrientPopupClose = onNutrientPopupClose,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
@@ -105,7 +111,13 @@ private fun VerticalMainScreenPreview() {
                     DailyMealScheduleState(
                         schoolCode = 1,
                         date = now.plusDays(it),
-                        mealUiState = MealUiState(previewMenus, previewNutrients),
+                        mealUiState = MealUiState(
+                            year,
+                            month,
+                            now.dayOfMonth,
+                            previewMenus,
+                            previewNutrients
+                        ),
                         scheduleUiState = ScheduleUiState(previewSchedules),
                     )
                 },
@@ -115,6 +127,7 @@ private fun VerticalMainScreenPreview() {
                     name = "어떤 학교",
                     schoolCode = -1,
                 ),
+                isNutrientPopupVisible = false,
             )
         )
     }
@@ -138,6 +151,9 @@ private fun VerticalMainScreenPreview() {
             getClickLabel = { "" },
             drawUnderlineToScheduleDate = {},
             onNavigateToSelectSchoolScreen = {},
+            isNutrientPopupVisible = false,
+            onNutrientPopupOpen = {},
+            onNutrientPopupClose = {},
         )
     }
 }

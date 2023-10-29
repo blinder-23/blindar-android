@@ -71,6 +71,9 @@ fun MainScreen(
                 getClickLabel = viewModel::getClickLabel,
                 drawUnderlineToScheduleDate = { },
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
+                isNutrientPopupVisible = uiState.isNutrientPopupVisible,
+                onNutrientPopupOpen = viewModel::openNutrientPopup,
+                onNutrientPopupClose = viewModel::closeNutrientPopup,
             )
         } else {
             VerticalMainScreen(
@@ -85,6 +88,9 @@ fun MainScreen(
                 getClickLabel = viewModel::getClickLabel,
                 drawUnderlineToScheduleDate = {},
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
+                isNutrientPopupVisible = uiState.isNutrientPopupVisible,
+                onNutrientPopupOpen = viewModel::openNutrientPopup,
+                onNutrientPopupClose = viewModel::closeNutrientPopup,
             )
         }
     }
