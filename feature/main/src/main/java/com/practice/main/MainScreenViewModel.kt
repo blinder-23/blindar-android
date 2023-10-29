@@ -3,6 +3,7 @@ package com.practice.main
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hsk.ktx.date.Date
@@ -23,6 +24,9 @@ import com.practice.preferences.PreferencesRepository
 import com.practice.preferences.ScreenMode
 import com.practice.util.date.DateUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -223,6 +227,24 @@ class MainScreenViewModel @Inject constructor(
 
     fun closeNutrientPopup() {
         updateUiState(isNutrientPopupVisible = false)
+    }
+
+    fun getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
+        return state.monthlyMealScheduleState.getCustomActions(date)
+    }
+
+    private fun List<DailyMealScheduleState>.getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
+        return this.find { it.date == date }?.let {
+            val (_, month, day) = date
+            val actions = mutableListOf<CustomAccessibilityAction>()
+            if (!it.mealUiState.isEmpty) {
+                actions.add(CustomAccessibilityAction("${month}월 ${day}일 영양 보기") {
+                    openNutrientPopup()
+                    true
+                })
+            }
+            return actions.toImmutableList()
+        } ?: persistentListOf()
     }
 
 }
