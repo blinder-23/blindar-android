@@ -7,6 +7,9 @@
 
     <string name="navigate_to_school_select">학교 선택 화면으로 가기</string>
 
+    <string name="open_nutrient_popup_button">영양 정보</string>
+    <string name="open_schedule_popup_button">일정 추가</string>
+
     <string name="nutrient_popup_title">%s 영양 정보</string>
     <string name="nutrient_popup_close">닫기</string>
 </resources>
