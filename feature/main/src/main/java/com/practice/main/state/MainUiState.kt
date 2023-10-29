@@ -18,6 +18,7 @@ data class MainUiState(
     val isLoading: Boolean,
     val screenMode: ScreenMode,
     val selectedSchool: School,
+    val isNutrientPopupVisible: Boolean,
 ) {
     val yearMonth: YearMonth
         get() = YearMonth(year, month)
@@ -35,6 +36,9 @@ data class MainUiState(
  */
 
 data class MealUiState(
+    val year: Int,
+    val month: Int,
+    val day: Int,
     val menus: ImmutableList<Menu>,
     val nutrients: ImmutableList<Nutrient>,
 ) {
@@ -46,6 +50,9 @@ data class MealUiState(
 
     companion object {
         val EmptyMealState = MealUiState(
+            year = Date.now().year,
+            month = Date.now().month,
+            day = Date.now().dayOfMonth,
             menus = persistentListOf(),
             nutrients = persistentListOf(),
         )
@@ -56,6 +63,9 @@ fun Meal.toMealUiState() = if (this.menus.isEmpty()) {
     MealUiState.EmptyMealState
 } else {
     MealUiState(
+        year = year,
+        month = month,
+        day = day,
         menus = menus.filter { it.name != "급식우유" }.map { Menu(it.name) }.toPersistentList(),
         nutrients = nutrients.map { Nutrient(it.name, it.amount, it.unit) }.toPersistentList()
             .add(0, Nutrient("열량", calorie, "kcal")),

@@ -23,6 +23,9 @@ data class DailyMealScheduleState(
             schoolCode = EMPTY_SCHOOL_CODE,
             date = Date(2022, 10, 11),
             mealUiState = MealUiState(
+                year = 2022,
+                month = 10,
+                day = 11,
                 menus = (1..6).map { Menu("식단 $it") }.toPersistentList(),
                 nutrients = (0..3).map { Nutrient("탄수화물", 123.0, "g") }.toImmutableList()
             ),
