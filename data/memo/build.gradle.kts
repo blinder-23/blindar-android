@@ -12,7 +12,7 @@ android {
     defaultConfig {
         minSdk = 23
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.practice.memo.testutil.HiltTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -60,6 +60,9 @@ android {
 
 dependencies {
     implementation(project(":core:domain"))
+
+    // Kotlin Coroutines
+    implementation(libs.bundles.coroutines)
 
     // Room
     implementation(libs.room.runtime)
