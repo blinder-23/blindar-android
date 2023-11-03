@@ -5,12 +5,13 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MemoDao {
 
     @Query("SELECT * FROM memo WHERE user_id = :userId AND date LIKE :year || :month || '%'")
-    suspend fun getMemos(userId: String, year: Int, month: String): List<MemoEntity>
+    fun getMemos(userId: String, year: Int, month: String): Flow<List<MemoEntity>>
 
     @Insert
     suspend fun insertMemo(memo: MemoEntity)

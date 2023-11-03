@@ -4,10 +4,12 @@ import com.practice.domain.Memo
 import com.practice.memo.room.MemoDao
 import com.practice.memo.room.toEntity
 import com.practice.memo.room.toMemo
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class LocalMemoDataSource @Inject constructor(private val memoDao: MemoDao) : MemoDataSource {
-    override suspend fun getMemos(userId: String, year: Int, month: Int): List<Memo> {
+    override suspend fun getMemos(userId: String, year: Int, month: Int): Flow<List<Memo>> {
         val monthPadZeroStart = month.toString().padStart(2, '0')
         return memoDao.getMemos(userId, year, monthPadZeroStart).map { memoEntity ->
             memoEntity.toMemo()
