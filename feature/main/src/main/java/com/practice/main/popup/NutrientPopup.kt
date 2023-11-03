@@ -35,7 +35,6 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightAndDarkPreview
-import com.practice.designsystem.LightPreview
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
 import com.practice.main.state.Nutrient
@@ -162,7 +161,7 @@ private fun NutrientChip(
     modifier: Modifier = Modifier,
     backgroundColor: Color = Color.Unspecified,
 ) {
-    val textColor = MaterialTheme.colorScheme.onPrimary
+    val textColor = Color.Black
     Box(
         modifier = modifier
             .aspectRatio(1f)
@@ -221,7 +220,7 @@ private val previewNutrients = persistentListOf(
     Nutrient("철분", 5.2, "mg"),
 )
 
-@LightPreview
+@LightAndDarkPreview
 @Composable
 private fun NutrientChipPreview() {
     BlindarTheme {
