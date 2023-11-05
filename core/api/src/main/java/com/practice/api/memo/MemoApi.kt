@@ -1,6 +1,6 @@
 package com.practice.api.memo
 
-import com.practice.api.ServerRetrofit
+import com.practice.api.BlindarRetrofit
 import com.practice.api.memo.pojo.DeleteMemoResponse
 import com.practice.api.memo.pojo.GetMemoResponse
 import com.practice.api.memo.pojo.RemoteMemoEntity
@@ -31,5 +31,5 @@ interface MemoApi {
 }
 
 val memoApi: MemoApi
-    get() = ServerRetrofit.getRetrofit(GsonConverterFactory.create())
+    get() = BlindarRetrofit.getRetrofit(GsonConverterFactory.create())
         .create(MemoApi::class.java)
