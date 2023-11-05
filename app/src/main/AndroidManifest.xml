@@ -13,7 +13,8 @@
         android:roundIcon="@drawable/blindar_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Blindar.SplashScreen"
-        android:windowSoftInputMode="adjustResize">
+        android:windowSoftInputMode="adjustResize"
+        android:networkSecurityConfig="@xml/network_security_config">
         <profileable
             android:shell="true"
             tools:targetApi="29" />
