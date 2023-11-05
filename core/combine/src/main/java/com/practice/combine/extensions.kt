@@ -12,7 +12,6 @@ import com.practice.domain.meal.Nutrient
 import com.practice.domain.meal.Origin
 import com.practice.domain.schedule.Schedule
 
-// TODO: implement calorie from server
 fun MealModel.toMealEntity() = Meal(
     schoolCode = 7010578,
     year = ymd.substring(0..3).toInt(),
@@ -21,7 +20,7 @@ fun MealModel.toMealEntity() = Meal(
     menus = dishes.map { it.toMenuEntity() },
     origins = origins.map { it.toOriginEntity() },
     nutrients = nutrients.map { it.toNutrientEntity() },
-    calorie = 0.0,
+    calorie = calorie,
 )
 
 fun MenuModel.toMenuEntity() = Menu(
