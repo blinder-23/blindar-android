@@ -1,6 +1,6 @@
 package com.practice.combine.di
 
-import com.practice.combine.LoadMealScheduleDataUseCase
+import com.practice.combine.LoadMonthlyDataUseCase
 import com.practice.meal.MealRepository
 import com.practice.schedule.ScheduleRepository
 import dagger.Module
@@ -16,7 +16,7 @@ object UseCaseModule {
     fun provideLoadMealScheduleDataUseCase(
         localMealRepository: MealRepository,
         localScheduleRepository: ScheduleRepository,
-    ) = LoadMealScheduleDataUseCase(
+    ) = LoadMonthlyDataUseCase(
         localMealRepository,
         localScheduleRepository,
     )

@@ -12,10 +12,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 @ExperimentalCoroutinesApi
-class LoadMealScheduleDataUseCaseTest {
+class LoadMonthlyDataUseCaseTest {
     private val localMealRepository = MealRepository(FakeMealDataSource())
     private val localScheduleRepository = ScheduleRepository(FakeScheduleDataSource())
-    private val useCase = LoadMealScheduleDataUseCase(
+    private val useCase = LoadMonthlyDataUseCase(
         localMealRepository = localMealRepository,
         localScheduleRepository = localScheduleRepository,
     )

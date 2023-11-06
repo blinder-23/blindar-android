@@ -7,7 +7,7 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hsk.ktx.date.Date
-import com.practice.combine.LoadMealScheduleDataUseCase
+import com.practice.combine.LoadMonthlyDataUseCase
 import com.practice.combine.MealScheduleEntity
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.getFirstWeekday
@@ -38,7 +38,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-    private val loadMealScheduleDataUseCase: LoadMealScheduleDataUseCase,
+    private val loadMonthlyDataUseCase: LoadMonthlyDataUseCase,
     private val preferencesRepository: PreferencesRepository,
 ) : ViewModel() {
 
@@ -155,7 +155,7 @@ class MainScreenViewModel @Inject constructor(
             cache[cacheKey]!!
         } else {
             val (queryYear, queryMonth) = yearMonth
-            loadMealScheduleDataUseCase.loadData(schoolCode, queryYear, queryMonth).first().apply {
+            loadMonthlyDataUseCase.loadData(schoolCode, queryYear, queryMonth).first().apply {
                 cache[cacheKey] = this
             }
         }

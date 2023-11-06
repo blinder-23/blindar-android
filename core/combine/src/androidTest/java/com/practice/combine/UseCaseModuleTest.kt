@@ -14,7 +14,7 @@ class UseCaseModuleTest {
     val hiltRule = HiltAndroidRule(this)
 
     @Inject
-    lateinit var useCase: LoadMealScheduleDataUseCase
+    lateinit var useCase: LoadMonthlyDataUseCase
 
     @Test
     fun injectUseCase() {
