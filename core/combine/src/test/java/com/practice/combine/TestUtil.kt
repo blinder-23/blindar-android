@@ -1,10 +1,12 @@
 package com.practice.combine
 
+import com.practice.domain.Memo
 import com.practice.domain.meal.Meal
 import com.practice.domain.schedule.Schedule
 
 object TestUtil {
-    val schoolCode = 900
+    const val userId = "abc123"
+    const val schoolCode = 900
     fun createMealEntity(
         year: Int = 2022,
         month: Int = 8,
@@ -34,5 +36,20 @@ object TestUtil {
         day = day,
         eventName = eventName,
         eventContent = eventContent
+    )
+
+    fun createMemo(
+        id: String,
+        year: Int = 2022,
+        month: Int = 8,
+        day: Int = 1,
+        content: String = "",
+    ) = Memo(
+        id = id,
+        userId = userId,
+        year = year,
+        month = month,
+        day = day,
+        content = content,
     )
 }
