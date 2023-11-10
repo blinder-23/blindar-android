@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hsk.ktx.date.Date
 import com.practice.combine.LoadMonthlyDataUseCase
-import com.practice.combine.MealScheduleEntity
+import com.practice.combine.MonthlyData
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.getFirstWeekday
 import com.practice.designsystem.calendar.core.yearMonth
@@ -60,7 +60,7 @@ class MainScreenViewModel @Inject constructor(
     private val selectedDateFlow: MutableStateFlow<Date>
 
     // TODO: domain 또는 data로 옮기기?
-    private val cache: MutableMap<CacheKey, MealScheduleEntity>
+    private val cache: MutableMap<CacheKey, MonthlyData>
 
     init {
         val current = Date.now()
@@ -101,7 +101,7 @@ class MainScreenViewModel @Inject constructor(
     private fun updateUiState(
         yearMonth: YearMonth = state.yearMonth,
         selectedDate: Date = state.selectedDate,
-        entity: MealScheduleEntity? = cache[state.cacheKey],
+        entity: MonthlyData? = cache[state.cacheKey],
         isLoading: Boolean = state.isLoading,
         screenMode: ScreenMode = state.screenMode,
         selectedSchool: School = state.selectedSchool,
@@ -134,7 +134,7 @@ class MainScreenViewModel @Inject constructor(
             preferencesRepository.updateScreenMode(screenMode)
         }
 
-    private fun updateScheduleDates(entity: MealScheduleEntity) {
+    private fun updateScheduleDates(entity: MonthlyData) {
         _scheduleDates.value = scheduleDates.value.toMutableSet().apply {
             addAll(entity.schedules.map { Date(it.year, it.month, it.day) })
         }
@@ -149,7 +149,7 @@ class MainScreenViewModel @Inject constructor(
         )
     }
 
-    private suspend fun loadMonthlyData(schoolCode: Int, yearMonth: YearMonth): MealScheduleEntity {
+    private suspend fun loadMonthlyData(schoolCode: Int, yearMonth: YearMonth): MonthlyData {
         val cacheKey = CacheKey(schoolCode, yearMonth)
         return if (cache.containsKey(cacheKey)) {
             cache[cacheKey]!!
@@ -161,16 +161,16 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    private fun parseDailyState(mealScheduleEntity: MealScheduleEntity): List<DailyMealScheduleState> {
+    private fun parseDailyState(monthlyData: MonthlyData): List<DailyMealScheduleState> {
         val allDates = mutableSetOf<Date>().apply {
-            addAll(mealScheduleEntity.meals.map { Date(it.year, it.month, it.day) })
-            addAll(mealScheduleEntity.schedules.map { Date(it.year, it.month, it.day) })
+            addAll(monthlyData.meals.map { Date(it.year, it.month, it.day) })
+            addAll(monthlyData.schedules.map { Date(it.year, it.month, it.day) })
         }
         val newDailyData = allDates.map { date ->
-            val meal = mealScheduleEntity.getMeal(date)
-            val schedule = mealScheduleEntity.getSchedule(date)
+            val meal = monthlyData.getMeal(date)
+            val schedule = monthlyData.getSchedule(date)
             DailyMealScheduleState(
-                schoolCode = mealScheduleEntity.schoolCode,
+                schoolCode = monthlyData.schoolCode,
                 date = date,
                 mealUiState = meal,
                 scheduleUiState = schedule,
@@ -254,7 +254,7 @@ private data class CacheKey(val schoolCode: Int, val yearMonth: YearMonth)
 private val MainUiState.cacheKey: CacheKey
     get() = CacheKey(selectedSchoolCode, yearMonth)
 
-private fun MealScheduleEntity.getMeal(date: Date): MealUiState {
+private fun MonthlyData.getMeal(date: Date): MealUiState {
     return try {
         meals.first { it.dateEquals(date) }
             .toMealUiState()
@@ -263,7 +263,7 @@ private fun MealScheduleEntity.getMeal(date: Date): MealUiState {
     }
 }
 
-private fun MealScheduleEntity.getSchedule(date: Date): ScheduleUiState {
+private fun MonthlyData.getSchedule(date: Date): ScheduleUiState {
     return try {
         val schedules = schedules.filter { it.dateEquals(date) }
         ScheduleUiState(schedules.toPersistentList())

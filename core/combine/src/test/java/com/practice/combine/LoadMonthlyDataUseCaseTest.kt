@@ -34,7 +34,7 @@ class LoadMonthlyDataUseCaseTest {
         val schoolCode = TestUtil.schoolCode
         val mealData = useCase.loadMealData(schoolCode, 2022, 8).first()
         val scheduleData = useCase.loadScheduleData(schoolCode, 2022, 8).first()
-        val expected = MealScheduleEntity(schoolCode, 2022, 8, mealData, scheduleData)
+        val expected = MonthlyData(schoolCode, 2022, 8, mealData, scheduleData)
         val actual = useCase.loadData(schoolCode, 2022, 8).first()
         assertThat(actual).isEqualTo(expected)
     }

@@ -1,5 +1,6 @@
 package com.practice.combine
 
+import com.practice.domain.Memo
 import com.practice.domain.meal.Meal
 import com.practice.domain.schedule.Schedule
 import com.practice.meal.MealRepository
@@ -56,11 +57,27 @@ class LoadMonthlyDataUseCase @Inject constructor(
         return loadScheduleFromLocal(schoolCode, year, month).map { it.toImmutableList() }
     }
 
-    private suspend fun loadMealFromLocal(schoolCode: Int, year: Int, month: Int): Flow<List<Meal>> {
+    internal suspend fun loadMemoData(
+        userId: String,
+        year: Int,
+        month: Int
+    ): Flow<ImmutableList<Memo>> {
+        return loadMemoFromLocal(userId, year, month).map { it.toImmutableList() }
+    }
+
+    private suspend fun loadMealFromLocal(
+        schoolCode: Int,
+        year: Int,
+        month: Int
+    ): Flow<List<Meal>> {
         return localMealRepository.getMeals(schoolCode, year, month)
     }
 
-    private suspend fun loadScheduleFromLocal(schoolCode: Int, year: Int, month: Int): Flow<List<Schedule>> {
+    private suspend fun loadScheduleFromLocal(
+        schoolCode: Int,
+        year: Int,
+        month: Int
+    ): Flow<List<Schedule>> {
         return localScheduleRepository.getSchedules(schoolCode, year, month)
     }
 }
