@@ -15,21 +15,21 @@ import org.junit.jupiter.api.Test
 
 @ExperimentalCoroutinesApi
 class LoadMonthlyDataUseCaseTest {
-    private val localMealRepository = MealRepository(FakeMealDataSource())
-    private val localScheduleRepository = ScheduleRepository(FakeScheduleDataSource())
-    private val localMemoRepository = MemoRepository(FakeMemoDataSource())
+    private val mealRepository = MealRepository(FakeMealDataSource())
+    private val scheduleRepository = ScheduleRepository(FakeScheduleDataSource())
+    private val memoRepository = MemoRepository(FakeMemoDataSource())
 
     private val useCase = LoadMonthlyDataUseCase(
-        localMealRepository = localMealRepository,
-        localScheduleRepository = localScheduleRepository,
-        localMemoRepository = localMemoRepository,
+        localMealRepository = mealRepository,
+        localScheduleRepository = scheduleRepository,
+        localMemoRepository = memoRepository,
     )
 
     @BeforeEach
     fun setUp() = runTest {
-        localMealRepository.clear()
-        localScheduleRepository.clear()
-        localMemoRepository.clearMemoDatabase()
+        mealRepository.clear()
+        scheduleRepository.clear()
+        memoRepository.clearMemoDatabase()
     }
 
     @Test
@@ -52,16 +52,16 @@ class LoadMonthlyDataUseCaseTest {
 
     private suspend fun insertMeals() {
         val meals = (1..10).map { TestUtil.createMealEntity(day = it) }
-        localMealRepository.insertMeals(meals)
+        mealRepository.insertMeals(meals)
     }
 
     private suspend fun insertSchedules() {
         val schedules = (1..10).map { TestUtil.createScheduleEntity(day = it) }
-        localScheduleRepository.insertSchedules(schedules)
+        scheduleRepository.insertSchedules(schedules)
     }
 
     private suspend fun insertMemos() {
         val memos = (1..10).map { TestUtil.createMemo(id = it.toString()) }
-        localMemoRepository.insertMemos(memos)
+        memoRepository.insertMemos(memos)
     }
 }
