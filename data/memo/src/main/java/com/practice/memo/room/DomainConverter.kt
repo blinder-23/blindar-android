@@ -21,3 +21,5 @@ fun Memo.toEntity(): MemoEntity {
         content = content,
     )
 }
+
+fun List<MemoEntity>.toMemo() = map { it.toMemo() }

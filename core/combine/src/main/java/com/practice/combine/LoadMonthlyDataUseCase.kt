@@ -30,13 +30,18 @@ class LoadMonthlyDataUseCase @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = SupervisorJob() + Dispatchers.IO
 
-    suspend fun loadData(schoolCode: Int, year: Int, month: Int): StateFlow<MealScheduleEntity> =
-        combine(
-            loadMealData(schoolCode, year, month),
-            loadScheduleData(schoolCode, year, month)
-        ) { mealData, scheduleData ->
-            MealScheduleEntity(schoolCode, year, month, mealData, scheduleData)
-        }.stateIn(this)
+    suspend fun loadData(
+        userId: String,
+        schoolCode: Int,
+        year: Int,
+        month: Int,
+    ): StateFlow<MonthlyData> = combine(
+        loadMealData(schoolCode, year, month),
+        loadScheduleData(schoolCode, year, month),
+        loadMemoData(userId, year, month),
+    ) { mealData, scheduleData, memoData ->
+        MonthlyData(schoolCode, year, month, mealData, scheduleData, memoData)
+    }.stateIn(this)
 
     internal suspend fun loadMealData(
         schoolCode: Int,
@@ -79,5 +84,9 @@ class LoadMonthlyDataUseCase @Inject constructor(
         month: Int
     ): Flow<List<Schedule>> {
         return localScheduleRepository.getSchedules(schoolCode, year, month)
+    }
+
+    private suspend fun loadMemoFromLocal(userId: String, year: Int, month: Int): Flow<List<Memo>> {
+        return localMemoRepository.getMemos(userId, year, month)
     }
 }
