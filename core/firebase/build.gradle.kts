@@ -45,9 +45,9 @@ android {
 
 dependencies {
     // Firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth.ktx)
-    implementation(libs.firebase.database)
+    api(platform(libs.firebase.bom))
+    api(libs.firebase.auth.ktx)
+    api(libs.firebase.database)
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)

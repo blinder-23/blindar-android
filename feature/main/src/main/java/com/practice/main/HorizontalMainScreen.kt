@@ -90,6 +90,7 @@ private fun HorizontalMainScreenPreview() {
     val selectedDate = Date(2022, 10, 11)
 
     val uiState = MainUiState(
+        userId = "",
         year = year,
         month = month,
         selectedDate = selectedDate,

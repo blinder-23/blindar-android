@@ -109,6 +109,7 @@ private fun VerticalMainScreenPreview() {
     val uiState by remember {
         mutableStateOf(
             MainUiState(
+                userId = "",
                 year = year,
                 month = month,
                 selectedDate = selectedDate,

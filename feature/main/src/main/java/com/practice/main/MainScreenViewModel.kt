@@ -15,6 +15,8 @@ import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.domain.School
 import com.practice.domain.meal.Meal
 import com.practice.domain.schedule.Schedule
+import com.practice.firebase.BlindarFirebase
+import com.practice.firebase.BlindarUser
 import com.practice.main.state.DailyDataState
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
@@ -64,21 +66,18 @@ class MainScreenViewModel @Inject constructor(
 
     init {
         val current = Date.now()
-        _uiState = mutableStateOf(
-            MainUiState(
-                year = current.year,
-                month = current.month,
-                selectedDate = current,
-                monthlyMealScheduleState = emptyList(),
-                isLoading = false,
-                screenMode = ScreenMode.Default,
-                selectedSchool = School.EmptySchool,
-                isNutrientPopupVisible = false,
-            )
-        )
+        val userId = getCurrentUserId()
+        _uiState = mutableStateOf(MainUiState.EMPTY.copy(userId = userId))
         selectedDateFlow = MutableStateFlow(current)
         _scheduleDates = MutableStateFlow(emptySet())
         cache = mutableMapOf()
+    }
+
+    private fun getCurrentUserId(): String {
+        return when (val currentlyLoggedInUser = BlindarFirebase.getBlindarUser()) {
+            is BlindarUser.LoginUser -> currentlyLoggedInUser.user.uid
+            is BlindarUser.NotLoggedIn -> ""
+        }
     }
 
     /**
@@ -87,11 +86,14 @@ class MainScreenViewModel @Inject constructor(
      */
     fun onLaunch() {
         viewModelScope.launch(Dispatchers.IO) {
-            val entity = loadMonthlyData(state.selectedSchoolCode, state.yearMonth)
+            val entity = loadMonthlyData(state.userId, state.selectedSchoolCode, state.yearMonth)
             updateUiState(entity = entity)
         }
         viewModelScope.launch(Dispatchers.IO) {
             collectPreferences()
+        }
+        viewModelScope.launch {
+
         }
     }
 
@@ -99,6 +101,7 @@ class MainScreenViewModel @Inject constructor(
      * Kotlin Flow의 combine 함수를 본따 작성했다.
      */
     private fun updateUiState(
+        userId: String = state.userId,
         yearMonth: YearMonth = state.yearMonth,
         selectedDate: Date = state.selectedDate,
         entity: MonthlyData? = cache[state.cacheKey],
@@ -114,9 +117,10 @@ class MainScreenViewModel @Inject constructor(
         }
         synchronized(state) {
             state = state.copy(
+                userId = userId,
                 year = yearMonth.year,
                 month = yearMonth.month,
-                monthlyMealScheduleState = monthlyMealScheduleState,
+                monthlyDataState = monthlyMealScheduleState,
                 selectedDate = selectedDate,
                 isLoading = isLoading,
                 screenMode = screenMode,
@@ -141,7 +145,7 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
-        val entity = loadMonthlyData(state.selectedSchoolCode, clickedDate.yearMonth)
+        val entity = loadMonthlyData(state.userId, state.selectedSchoolCode, clickedDate.yearMonth)
         updateUiState(
             yearMonth = clickedDate.yearMonth,
             selectedDate = clickedDate,
@@ -149,15 +153,20 @@ class MainScreenViewModel @Inject constructor(
         )
     }
 
-    private suspend fun loadMonthlyData(schoolCode: Int, yearMonth: YearMonth): MonthlyData {
+    private suspend fun loadMonthlyData(
+        userId: String,
+        schoolCode: Int,
+        yearMonth: YearMonth
+    ): MonthlyData {
         val cacheKey = CacheKey(schoolCode, yearMonth)
         return if (cache.containsKey(cacheKey)) {
             cache[cacheKey]!!
         } else {
             val (queryYear, queryMonth) = yearMonth
-            loadMonthlyDataUseCase.loadData(schoolCode, queryYear, queryMonth).first().apply {
-                cache[cacheKey] = this
-            }
+            loadMonthlyDataUseCase.loadData(userId, schoolCode, queryYear, queryMonth).first()
+                .apply {
+                    cache[cacheKey] = this
+                }
         }
     }
 
@@ -170,6 +179,7 @@ class MainScreenViewModel @Inject constructor(
             val meal = monthlyData.getMeal(date)
             val schedule = monthlyData.getSchedule(date)
             DailyDataState(
+                userId = "",
                 schoolCode = monthlyData.schoolCode,
                 date = date,
                 mealUiState = meal,
@@ -180,7 +190,7 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onSwiped(yearMonth: YearMonth) = viewModelScope.launch {
-        val entity = loadMonthlyData(state.selectedSchoolCode, yearMonth)
+        val entity = loadMonthlyData(state.userId, state.selectedSchoolCode, yearMonth)
         if (yearMonth != state.yearMonth) {
             val firstWeekday = yearMonth.getFirstWeekday()
             updateUiState(yearMonth = yearMonth, selectedDate = firstWeekday, entity = entity)
@@ -202,8 +212,12 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
+    private suspend fun collectCurrentUser() {
+
+    }
+
     fun getContentDescription(date: Date): String {
-        val dailyState = state.monthlyMealScheduleState.find { it.date == date }
+        val dailyState = state.monthlyDataState.find { it.date == date }
 
         val isSelectedString = if (date == state.selectedDate) "선택됨" else ""
         val isTodayString = if (date == DateUtil.today()) "오늘" else ""
@@ -230,7 +244,7 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
-        return state.monthlyMealScheduleState.getCustomActions(date)
+        return state.monthlyDataState.getCustomActions(date)
     }
 
     private fun List<DailyDataState>.getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {

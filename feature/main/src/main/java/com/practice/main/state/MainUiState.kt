@@ -11,6 +11,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
 data class MainUiState(
+    val userId: String,
     val year: Int,
     val month: Int,
     val selectedDate: Date,
@@ -29,6 +30,20 @@ data class MainUiState(
     val selectedDateDataState: DailyDataState
         get() = monthlyDataState.firstOrNull { it.date == selectedDate }
             ?: DailyDataState.Empty
+
+    companion object {
+        val EMPTY = MainUiState(
+            userId = "",
+            year = Date.now().year,
+            month = Date.now().month,
+            selectedDate = Date.now(),
+            monthlyDataState = emptyList(),
+            isLoading = false,
+            screenMode = ScreenMode.Default,
+            selectedSchool = School.EmptySchool,
+            isNutrientPopupVisible = false,
+        )
+    }
 }
 
 /**
