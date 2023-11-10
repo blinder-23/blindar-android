@@ -5,13 +5,23 @@ import android.content.Intent
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
 
@@ -83,6 +93,14 @@ object BlindarFirebase {
         val schoolCode = getschoolCode(user.displayName!!)
         Log.d(TAG, "user school id: $schoolCode")
         return if (schoolCode == null) UserDataState.SCHOOL_NOT_SELECTED else UserDataState.ALL_FILLED
+    }
+
+    fun getBlindarUser(): BlindarUser {
+        val user = auth.currentUser
+        return when {
+            user != null -> BlindarUser.LoginUser(user)
+            else -> BlindarUser.NotLoggedIn
+        }
     }
 
     fun signUpWithPhoneNumber(
@@ -198,7 +216,8 @@ object BlindarFirebase {
     }
 
     suspend fun getschoolCode(username: String): Long? {
-        val value = database.child(usersKey).child(username).child(schoolCodeKey).get().await().value
+        val value =
+            database.child(usersKey).child(username).child(schoolCodeKey).get().await().value
         Log.d(TAG, "username $username schoolCode: $value")
         return value as? Long
     }
