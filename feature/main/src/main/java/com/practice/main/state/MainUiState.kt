@@ -14,7 +14,7 @@ data class MainUiState(
     val year: Int,
     val month: Int,
     val selectedDate: Date,
-    val monthlyMealScheduleState: List<DailyMealScheduleState>,
+    val monthlyDataState: List<DailyDataState>,
     val isLoading: Boolean,
     val screenMode: ScreenMode,
     val selectedSchool: School,
@@ -26,9 +26,9 @@ data class MainUiState(
     val selectedSchoolCode: Int
         get() = selectedSchool.schoolCode
 
-    val selectedDateMealScheduleState: DailyMealScheduleState
-        get() = monthlyMealScheduleState.firstOrNull { it.date == selectedDate }
-            ?: DailyMealScheduleState.Empty
+    val selectedDateDataState: DailyDataState
+        get() = monthlyDataState.firstOrNull { it.date == selectedDate }
+            ?: DailyDataState.Empty
 }
 
 /**

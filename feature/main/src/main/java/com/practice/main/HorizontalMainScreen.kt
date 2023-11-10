@@ -18,7 +18,7 @@ import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.largeCalendarDateShape
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.School
-import com.practice.main.state.DailyMealScheduleState
+import com.practice.main.state.DailyDataState
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.ScheduleUiState
@@ -68,8 +68,8 @@ fun HorizontalMainScreen(
                 customActions = customActions,
             )
             MainScreenContents(
-                mealUiState = uiState.selectedDateMealScheduleState.mealUiState,
-                scheduleUiState = uiState.selectedDateMealScheduleState.scheduleUiState,
+                mealUiState = uiState.selectedDateDataState.mealUiState,
+                scheduleUiState = uiState.selectedDateDataState.scheduleUiState,
                 mealColumns = mealColumns,
                 isNutrientPopupVisible = isNutrientPopupVisible,
                 onNutrientPopupOpen = onNutrientPopupOpen,
@@ -93,8 +93,8 @@ private fun HorizontalMainScreenPreview() {
         year = year,
         month = month,
         selectedDate = selectedDate,
-        monthlyMealScheduleState = (1..3).map {
-            DailyMealScheduleState(
+        monthlyDataState = (1..3).map {
+            DailyDataState(
                 schoolCode = 1,
                 date = Date(2022, 10, 11).plusDays(it),
                 mealUiState = MealUiState(2022, 10, 11, previewMenus, previewNutrients),

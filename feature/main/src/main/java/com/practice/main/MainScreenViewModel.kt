@@ -15,7 +15,7 @@ import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.domain.School
 import com.practice.domain.meal.Meal
 import com.practice.domain.schedule.Schedule
-import com.practice.main.state.DailyMealScheduleState
+import com.practice.main.state.DailyDataState
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.ScheduleUiState
@@ -161,7 +161,7 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    private fun parseDailyState(monthlyData: MonthlyData): List<DailyMealScheduleState> {
+    private fun parseDailyState(monthlyData: MonthlyData): List<DailyDataState> {
         val allDates = mutableSetOf<Date>().apply {
             addAll(monthlyData.meals.map { Date(it.year, it.month, it.day) })
             addAll(monthlyData.schedules.map { Date(it.year, it.month, it.day) })
@@ -169,7 +169,7 @@ class MainScreenViewModel @Inject constructor(
         val newDailyData = allDates.map { date ->
             val meal = monthlyData.getMeal(date)
             val schedule = monthlyData.getSchedule(date)
-            DailyMealScheduleState(
+            DailyDataState(
                 schoolCode = monthlyData.schoolCode,
                 date = date,
                 mealUiState = meal,
@@ -233,7 +233,7 @@ class MainScreenViewModel @Inject constructor(
         return state.monthlyMealScheduleState.getCustomActions(date)
     }
 
-    private fun List<DailyMealScheduleState>.getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
+    private fun List<DailyDataState>.getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
         return this.find { it.date == date }?.let {
             val (_, month, day) = date
             val actions = mutableListOf<CustomAccessibilityAction>()

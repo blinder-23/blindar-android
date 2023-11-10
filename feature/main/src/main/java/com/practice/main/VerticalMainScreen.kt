@@ -27,7 +27,7 @@ import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.School
-import com.practice.main.state.DailyMealScheduleState
+import com.practice.main.state.DailyDataState
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.ScheduleUiState
@@ -84,8 +84,8 @@ fun VerticalMainScreen(
                     .fillMaxWidth(),
             )
             MainScreenContents(
-                mealUiState = uiState.selectedDateMealScheduleState.mealUiState,
-                scheduleUiState = uiState.selectedDateMealScheduleState.scheduleUiState,
+                mealUiState = uiState.selectedDateDataState.mealUiState,
+                scheduleUiState = uiState.selectedDateDataState.scheduleUiState,
                 mealColumns = mealColumns,
                 isNutrientPopupVisible = isNutrientPopupVisible,
                 onNutrientPopupOpen = onNutrientPopupOpen,
@@ -112,8 +112,8 @@ private fun VerticalMainScreenPreview() {
                 year = year,
                 month = month,
                 selectedDate = selectedDate,
-                monthlyMealScheduleState = (0..3).map {
-                    DailyMealScheduleState(
+                monthlyDataState = (0..3).map {
+                    DailyDataState(
                         schoolCode = 1,
                         date = now.plusDays(it),
                         mealUiState = MealUiState(

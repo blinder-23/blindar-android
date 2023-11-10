@@ -6,20 +6,20 @@ import com.practice.util.date.DateUtil
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
-data class DailyMealScheduleState(
+data class DailyDataState(
     val schoolCode: Int,
     val date: Date,
     val mealUiState: MealUiState,
     val scheduleUiState: ScheduleUiState,
-) : Comparable<DailyMealScheduleState> {
-    override fun compareTo(other: DailyMealScheduleState): Int {
+) : Comparable<DailyDataState> {
+    override fun compareTo(other: DailyDataState): Int {
         return date.compareTo(other.date)
     }
 
     companion object {
         private const val EMPTY_SCHOOL_CODE = -1
 
-        val sample = DailyMealScheduleState(
+        val sample = DailyDataState(
             schoolCode = EMPTY_SCHOOL_CODE,
             date = Date(2022, 10, 11),
             mealUiState = MealUiState(
@@ -43,7 +43,7 @@ data class DailyMealScheduleState(
                 .toPersistentList()
             ),
         )
-        val Empty = DailyMealScheduleState(
+        val Empty = DailyDataState(
             schoolCode = EMPTY_SCHOOL_CODE,
             date = DateUtil.today(),
             mealUiState = MealUiState.EmptyMealState,
