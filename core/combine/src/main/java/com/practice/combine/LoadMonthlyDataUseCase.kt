@@ -3,6 +3,7 @@ package com.practice.combine
 import com.practice.domain.meal.Meal
 import com.practice.domain.schedule.Schedule
 import com.practice.meal.MealRepository
+import com.practice.memo.MemoRepository
 import com.practice.schedule.ScheduleRepository
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -14,14 +15,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 /**
  * UI layer should depend on this use case to get meal and schedule data.
  */
-class LoadMonthlyDataUseCase(
+class LoadMonthlyDataUseCase @Inject constructor(
     private val localMealRepository: MealRepository,
     private val localScheduleRepository: ScheduleRepository,
+    private val localMemoRepository: MemoRepository,
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = SupervisorJob() + Dispatchers.IO
