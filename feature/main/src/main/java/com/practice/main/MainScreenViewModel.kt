@@ -17,7 +17,7 @@ import com.practice.domain.meal.Meal
 import com.practice.domain.schedule.Schedule
 import com.practice.firebase.BlindarFirebase
 import com.practice.firebase.BlindarUser
-import com.practice.main.state.DailyDataState
+import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.ScheduleUiState
@@ -170,7 +170,7 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    private fun parseDailyState(monthlyData: MonthlyData): List<DailyDataState> {
+    private fun parseDailyState(monthlyData: MonthlyData): List<DailyData> {
         val allDates = mutableSetOf<Date>().apply {
             addAll(monthlyData.meals.map { Date(it.year, it.month, it.day) })
             addAll(monthlyData.schedules.map { Date(it.year, it.month, it.day) })
@@ -178,8 +178,7 @@ class MainScreenViewModel @Inject constructor(
         val newDailyData = allDates.map { date ->
             val meal = monthlyData.getMeal(date)
             val schedule = monthlyData.getSchedule(date)
-            DailyDataState(
-                userId = "",
+            DailyData(
                 schoolCode = monthlyData.schoolCode,
                 date = date,
                 mealUiState = meal,
@@ -247,7 +246,7 @@ class MainScreenViewModel @Inject constructor(
         return state.monthlyDataState.getCustomActions(date)
     }
 
-    private fun List<DailyDataState>.getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
+    private fun List<DailyData>.getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
         return this.find { it.date == date }?.let {
             val (_, month, day) = date
             val actions = mutableListOf<CustomAccessibilityAction>()

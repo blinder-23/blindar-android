@@ -18,7 +18,7 @@ import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.largeCalendarDateShape
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.School
-import com.practice.main.state.DailyDataState
+import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.ScheduleUiState
@@ -95,7 +95,7 @@ private fun HorizontalMainScreenPreview() {
         month = month,
         selectedDate = selectedDate,
         monthlyDataState = (1..3).map {
-            DailyDataState(
+            DailyData(
                 schoolCode = 1,
                 date = Date(2022, 10, 11).plusDays(it),
                 mealUiState = MealUiState(2022, 10, 11, previewMenus, previewNutrients),

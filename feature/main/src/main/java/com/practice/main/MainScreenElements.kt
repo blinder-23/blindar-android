@@ -65,7 +65,7 @@ import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.schedule.Schedule
 import com.practice.main.popup.NutrientPopup
-import com.practice.main.state.DailyDataState
+import com.practice.main.state.DailyData
 import com.practice.main.state.MealUiState
 import com.practice.main.state.Menu
 import com.practice.main.state.Nutrient
@@ -358,7 +358,7 @@ private fun MainScreenPopup(
 
 @Composable
 internal fun DailyMealSchedules(
-    items: List<DailyDataState>,
+    items: List<DailyData>,
     selectedDate: Date,
     isNutrientPopupVisible: Boolean,
     onNutrientPopupOpen: () -> Unit,
@@ -384,7 +384,7 @@ internal fun DailyMealSchedules(
             key = { item -> item.date.toEpochSecond() },
         ) { item ->
             DailyMealSchedule(
-                dailyDataState = item,
+                dailyData = item,
                 isNutrientPopupVisible = isNutrientPopupVisible,
                 onNutrientPopupOpen = onNutrientPopupOpen,
                 onNutrientPopupClose = onNutrientPopupClose,
@@ -397,7 +397,7 @@ internal fun DailyMealSchedules(
 
 @Composable
 internal fun DailyMealSchedule(
-    dailyDataState: DailyDataState,
+    dailyData: DailyData,
     isNutrientPopupVisible: Boolean,
     onNutrientPopupOpen: () -> Unit,
     onNutrientPopupClose: () -> Unit,
@@ -405,7 +405,7 @@ internal fun DailyMealSchedule(
     mealColumns: Int = 2,
     onDateClick: (Date) -> Unit = {},
 ) {
-    val date = dailyDataState.date
+    val date = dailyData.date
     Column(modifier = modifier.fillMaxWidth()) {
         DailyDay(
             date = date,
@@ -416,8 +416,8 @@ internal fun DailyMealSchedule(
             backgroundColor = MaterialTheme.colorScheme.secondary,
         )
         MainScreenContents(
-            mealUiState = dailyDataState.mealUiState,
-            scheduleUiState = dailyDataState.scheduleUiState,
+            mealUiState = dailyData.mealUiState,
+            scheduleUiState = dailyData.scheduleUiState,
             mealColumns = mealColumns,
             isNutrientPopupVisible = isNutrientPopupVisible,
             onNutrientPopupOpen = onNutrientPopupOpen,
@@ -650,7 +650,7 @@ private fun MealContentPreview() {
 private fun ListScreenItemPreview() {
     BlindarTheme {
         DailyMealSchedule(
-            DailyDataState(
+            DailyData(
                 schoolCode = 1,
                 date = Date(2022, 12, 13),
                 mealUiState = sampleMealUiState,
