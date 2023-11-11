@@ -12,6 +12,7 @@ import com.practice.combine.MonthlyData
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.getFirstWeekday
 import com.practice.designsystem.calendar.core.yearMonth
+import com.practice.domain.Memo
 import com.practice.domain.School
 import com.practice.domain.meal.Meal
 import com.practice.domain.schedule.Schedule
@@ -20,8 +21,10 @@ import com.practice.firebase.BlindarUser
 import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
+import com.practice.main.state.MemoUiState
 import com.practice.main.state.ScheduleUiState
 import com.practice.main.state.toMealUiState
+import com.practice.main.state.toUiMemo
 import com.practice.preferences.PreferencesRepository
 import com.practice.preferences.ScreenMode
 import com.practice.util.date.DateUtil
@@ -91,9 +94,6 @@ class MainScreenViewModel @Inject constructor(
         }
         viewModelScope.launch(Dispatchers.IO) {
             collectPreferences()
-        }
-        viewModelScope.launch {
-
         }
     }
 
@@ -174,15 +174,18 @@ class MainScreenViewModel @Inject constructor(
         val allDates = mutableSetOf<Date>().apply {
             addAll(monthlyData.meals.map { Date(it.year, it.month, it.day) })
             addAll(monthlyData.schedules.map { Date(it.year, it.month, it.day) })
+            addAll(monthlyData.memos.map { Date(it.year, it.month, it.day) })
         }
         val newDailyData = allDates.map { date ->
             val meal = monthlyData.getMeal(date)
             val schedule = monthlyData.getSchedule(date)
+            val memo = monthlyData.getMemo(date)
             DailyData(
                 schoolCode = monthlyData.schoolCode,
                 date = date,
                 mealUiState = meal,
                 scheduleUiState = schedule,
+                memoUiState = memo,
             )
         }.sorted()
         return newDailyData
@@ -209,10 +212,6 @@ class MainScreenViewModel @Inject constructor(
                 )
             )
         }
-    }
-
-    private suspend fun collectCurrentUser() {
-
     }
 
     fun getContentDescription(date: Date): String {
@@ -285,8 +284,25 @@ private fun MonthlyData.getSchedule(date: Date): ScheduleUiState {
     }
 }
 
+private fun MonthlyData.getMemo(date: Date): MemoUiState {
+    return try {
+        val memos = memos.filter { it.dateEquals(date) }.map { it.toUiMemo() }
+        MemoUiState(
+            year = date.year,
+            month = date.month,
+            day = date.dayOfMonth,
+            memos = memos.toPersistentList()
+        )
+    } catch (e: NoSuchElementException) {
+        MemoUiState.EmptyMemoUiState
+    }
+}
+
 private fun Meal.dateEquals(date: Date) =
     this.year == date.year && this.month == date.month && this.day == date.dayOfMonth
 
 private fun Schedule.dateEquals(date: Date) =
+    this.year == date.year && this.month == date.month && this.day == date.dayOfMonth
+
+private fun Memo.dateEquals(date: Date) =
     this.year == date.year && this.month == date.month && this.day == date.dayOfMonth

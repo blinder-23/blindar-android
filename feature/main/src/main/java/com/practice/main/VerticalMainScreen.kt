@@ -30,6 +30,7 @@ import com.practice.domain.School
 import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
+import com.practice.main.state.MemoUiState
 import com.practice.main.state.ScheduleUiState
 import com.practice.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
@@ -125,6 +126,7 @@ private fun VerticalMainScreenPreview() {
                             previewNutrients
                         ),
                         scheduleUiState = ScheduleUiState(previewSchedules),
+                        memoUiState = MemoUiState(2022, 10, 11, previewMemos),
                     )
                 },
                 isLoading = false,

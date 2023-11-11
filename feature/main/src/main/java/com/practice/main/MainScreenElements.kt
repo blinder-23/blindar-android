@@ -67,10 +67,12 @@ import com.practice.domain.schedule.Schedule
 import com.practice.main.popup.NutrientPopup
 import com.practice.main.state.DailyData
 import com.practice.main.state.MealUiState
+import com.practice.main.state.MemoUiState
 import com.practice.main.state.Menu
 import com.practice.main.state.Nutrient
 import com.practice.main.state.ScheduleUiState
 import com.practice.main.state.ScreenModeIcon
+import com.practice.main.state.UiMemo
 import com.practice.main.state.displayText
 import com.practice.main.state.screenModeIcons
 import com.practice.preferences.ScreenMode
@@ -600,6 +602,16 @@ val previewSchedules = (0..6).map {
         eventContent = "$it"
     )
 }.toImmutableList()
+val previewMemos = (1..3).map {
+    UiMemo(
+        id = it.toString(),
+        userId = "blindar",
+        year = 2022,
+        month = 10,
+        day = 11,
+        contents = "memo $it"
+    )
+}.toImmutableList()
 
 @LightAndDarkPreview
 @Composable
@@ -655,6 +667,7 @@ private fun ListScreenItemPreview() {
                 date = Date(2022, 12, 13),
                 mealUiState = sampleMealUiState,
                 scheduleUiState = ScheduleUiState(previewSchedules),
+                memoUiState = MemoUiState(year = 2022, month = 10, day = 11, memos = previewMemos),
             ),
             isNutrientPopupVisible = false,
             onNutrientPopupOpen = {},

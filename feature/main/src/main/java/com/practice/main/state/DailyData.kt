@@ -6,12 +6,12 @@ import com.practice.util.date.DateUtil
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
-// TODO: 여기에 MemoUiState 정의한 후 추가하기
 data class DailyData(
     val schoolCode: Int,
     val date: Date,
     val mealUiState: MealUiState,
     val scheduleUiState: ScheduleUiState,
+    val memoUiState: MemoUiState,
 ) : Comparable<DailyData> {
     override fun compareTo(other: DailyData): Int {
         return date.compareTo(other.date)
@@ -30,25 +30,41 @@ data class DailyData(
                 menus = (1..6).map { Menu("식단 $it") }.toPersistentList(),
                 nutrients = (0..3).map { Nutrient("탄수화물", 123.0, "g") }.toImmutableList()
             ),
-            scheduleUiState = ScheduleUiState((1..3).map {
-                Schedule(
-                    schoolCode = EMPTY_SCHOOL_CODE,
-                    year = 2022,
-                    month = 10,
-                    day = it,
-                    id = it,
-                    eventName = "제목 $it",
-                    eventContent = "학사일정 $it",
-                )
-            }
-                .toPersistentList()
+            scheduleUiState = ScheduleUiState(
+                (1..3).map {
+                    Schedule(
+                        schoolCode = EMPTY_SCHOOL_CODE,
+                        year = 2022,
+                        month = 10,
+                        day = it,
+                        id = it,
+                        eventName = "제목 $it",
+                        eventContent = "학사일정 $it",
+                    )
+                }.toPersistentList(),
             ),
+            memoUiState = MemoUiState(
+                year = 2022,
+                month = 10,
+                day = 11,
+                memos = (1..3).map {
+                    UiMemo(
+                        id = it.toString(),
+                        userId = "blindar",
+                        year = 2022,
+                        month = 10,
+                        day = 11,
+                        contents = "memo $it",
+                    )
+                }.toImmutableList()
+            )
         )
         val Empty = DailyData(
             schoolCode = EMPTY_SCHOOL_CODE,
             date = DateUtil.today(),
             mealUiState = MealUiState.EmptyMealState,
             scheduleUiState = ScheduleUiState.EmptyScheduleState,
+            memoUiState = MemoUiState.EmptyMemoUiState,
         )
     }
 }
