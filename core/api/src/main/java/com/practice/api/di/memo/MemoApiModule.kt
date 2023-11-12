@@ -1,7 +1,7 @@
 package com.practice.api.di.memo
 
-import com.practice.api.memo.MemoApi
-import com.practice.api.memo.memoApi
+import com.practice.api.memo.api.MemoApi
+import com.practice.api.memo.api.memoApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

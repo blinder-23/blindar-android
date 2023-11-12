@@ -1,4 +1,4 @@
-package com.practice.api.memo
+package com.practice.api.memo.api
 
 import com.practice.api.BlindarRetrofit
 import com.practice.api.memo.pojo.DeleteMemoResponse

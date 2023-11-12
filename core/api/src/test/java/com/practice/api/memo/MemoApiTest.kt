@@ -1,6 +1,7 @@
 package com.practice.api.memo
 
 import com.practice.api.BlindarRetrofit
+import com.practice.api.memo.api.MemoApi
 import com.practice.api.memo.pojo.RemoteMemoEntity
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
