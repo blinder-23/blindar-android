@@ -1,5 +1,6 @@
 package com.practice.combine
 
+import com.practice.api.memo.RemoteMemoRepository
 import com.practice.domain.Memo
 import com.practice.domain.meal.Meal
 import com.practice.domain.schedule.Schedule
@@ -26,6 +27,7 @@ class LoadMonthlyDataUseCase @Inject constructor(
     private val localMealRepository: MealRepository,
     private val localScheduleRepository: ScheduleRepository,
     private val localMemoRepository: MemoRepository,
+    private val remoteMemoRepository: RemoteMemoRepository,
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = SupervisorJob() + Dispatchers.IO
@@ -88,5 +90,25 @@ class LoadMonthlyDataUseCase @Inject constructor(
 
     private suspend fun loadMemoFromLocal(userId: String, year: Int, month: Int): Flow<List<Memo>> {
         return localMemoRepository.getMemos(userId, year, month)
+    }
+
+    suspend fun updateMemo(memo: Memo) {
+        val idAssignedMemo = if (memo.id.isEmpty()) {
+            memo.copy(id = memo.createId())
+        } else {
+            memo
+        }
+        remoteMemoRepository.updateMemo(idAssignedMemo)
+        localMemoRepository.updateMemo(memo)
+    }
+
+    suspend fun deleteMemo(memo: Memo) {
+        deleteMemo(memo.id)
+    }
+
+    suspend fun deleteMemo(id: String): String {
+        val message = remoteMemoRepository.deleteMemo(id)
+        localMemoRepository.deleteMemo(id)
+        return message
     }
 }
