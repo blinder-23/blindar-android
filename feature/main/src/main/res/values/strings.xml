@@ -12,4 +12,10 @@
 
     <string name="nutrient_popup_title">%s 영양 정보</string>
     <string name="nutrient_popup_close">닫기</string>
+
+    <string name="memo_popup_title">일정</string>
+    <string name="memo_popup_add_memo">+ 메모 추가하기</string>
+    <string name="memo_popup_item_label">일정 입력</string>
+    <string name="memo_popup_item_delete">%s 삭제하기</string>
+    <string name="memo_popup_close">닫기</string>
 </resources>
