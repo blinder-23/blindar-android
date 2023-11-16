@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,19 +32,21 @@ import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
+import com.practice.main.state.MemoPopupElement
 import com.practice.main.state.UiMemo
+import com.practice.main.state.UiSchedule
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun MemoPopup(
-    memos: ImmutableList<UiMemo>,
+    memoPopupElements: ImmutableList<MemoPopupElement>,
     onContentsChange: (UiMemo) -> Unit,
     onMemoDelete: (String) -> Unit,
     onPopupClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val textColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.onSurface)
+    val textColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface)
     LazyColumn(
         modifier = modifier
             .fillMaxWidth(),
@@ -59,7 +62,7 @@ fun MemoPopup(
         }
         item {
             MemoItems(
-                memos = memos,
+                memoPopupElements = memoPopupElements,
                 onContentsChange = onContentsChange,
                 onMemoDelete = onMemoDelete,
                 modifier = Modifier
@@ -88,7 +91,7 @@ fun MemoPopup(
 
 @Composable
 private fun MemoItems(
-    memos: ImmutableList<UiMemo>,
+    memoPopupElements: ImmutableList<MemoPopupElement>,
     onContentsChange: (UiMemo) -> Unit,
     onMemoDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -97,14 +100,37 @@ private fun MemoItems(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        memos.forEach { memo ->
-            MemoItem(
-                memo = memo,
-                onContentsChange = onContentsChange,
-                onMemoDelete = onMemoDelete,
-            )
+        memoPopupElements.forEach { element ->
+            when (element) {
+                is UiMemo -> MemoItem(
+                    memo = element,
+                    onContentsChange = onContentsChange,
+                    onMemoDelete = onMemoDelete,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                is UiSchedule -> ScheduleItem(
+                    uiSchedule = element,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
         }
     }
+}
+
+@Composable
+private fun ScheduleItem(
+    uiSchedule: UiSchedule,
+    modifier: Modifier = Modifier,
+) {
+    PopupElementItem(
+        enabled = false,
+        text = uiSchedule.displayText,
+        onTextChange = {},
+        label = null,
+        trailingIcon = null,
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -114,32 +140,64 @@ private fun MemoItem(
     onMemoDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    PopupElementItem(
+        enabled = true,
+        text = memo.contents,
+        onTextChange = { onContentsChange(memo.copy(contents = it)) },
+        label = {
+            PopupBodySmall(
+                text = stringResource(id = R.string.memo_popup_item_label),
+                modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+            )
+        },
+        trailingIcon = {
+            IconButton(onClick = { onMemoDelete(memo.id) }) {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = stringResource(
+                        id = R.string.memo_popup_item_delete,
+                        memo.contents,
+                    ),
+                    tint = contentColorFor(MaterialTheme.colorScheme.surface),
+                )
+            }
+        },
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun PopupElementItem(
+    enabled: Boolean,
+    text: String,
+    onTextChange: (String) -> Unit,
+    label: @Composable (() -> Unit)?,
+    trailingIcon: @Composable (() -> Unit)?,
+    modifier: Modifier = Modifier,
+) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         OutlinedTextField(
-            value = memo.contents,
-            onValueChange = { onContentsChange(memo.copy(contents = it)) },
-            label = {
-                PopupBodySmall(
-                    text = stringResource(id = R.string.memo_popup_item_label),
-                    modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-                )
-            },
+            enabled = enabled,
+            value = text,
+            onValueChange = onTextChange,
+            label = label,
             modifier = Modifier.weight(1f),
+            trailingIcon = {
+                if (enabled && text.isNotEmpty()) {
+                    IconButton(onClick = { onTextChange("") }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Clear,
+                            contentDescription = stringResource(id = R.string.memo_popup_clear_text),
+                        )
+                    }
+                }
+            }
         )
-        IconButton(onClick = { onMemoDelete(memo.id) }) {
-            Icon(
-                imageVector = Icons.Outlined.Delete,
-                contentDescription = stringResource(
-                    id = R.string.memo_popup_item_delete,
-                    memo.contents,
-                ),
-                tint = contentColorFor(MaterialTheme.colorScheme.surface),
-            )
-        }
+        trailingIcon?.invoke()
     }
 }
 
@@ -181,16 +239,29 @@ private fun CloseMemoPopupButton(
     }
 }
 
-private val previewMemos = (1..4).map {
-    UiMemo(
-        id = "test $it",
-        userId = "test",
-        year = 2023,
-        month = 11,
-        day = 13,
-        contents = "test $it",
-        isSavedOnRemote = false,
-    )
+// TODO: 프리뷰에 uiSchedule 추가하기, MemoItem(s)Preview 둘다 삭제 후 PopupPreview로 대체
+private val previewMemoPopupElements: ImmutableList<MemoPopupElement> = (1..4).map {
+    if (it <= 2) {
+        UiSchedule(
+            schoolCode = 1,
+            id = it,
+            year = 2023,
+            month = 11,
+            day = 13,
+            eventName = "test $it",
+            eventContent = "content $it",
+        )
+    } else {
+        UiMemo(
+            id = "test $it",
+            userId = "test",
+            year = 2023,
+            month = 11,
+            day = 13,
+            contents = "test $it",
+            isSavedOnRemote = false,
+        )
+    }
 }.toImmutableList()
 
 @LightAndDarkPreview
@@ -198,23 +269,8 @@ private val previewMemos = (1..4).map {
 private fun MemoItemsPreview() {
     BlindarTheme {
         MemoItems(
-            memos = previewMemos,
+            memoPopupElements = previewMemoPopupElements,
             onContentsChange = {},
-            onMemoDelete = {},
-            modifier = Modifier
-                .wrapContentWidth()
-                .background(MaterialTheme.colorScheme.surface),
-        )
-    }
-}
-
-@LightAndDarkPreview
-@Composable
-private fun MemoItemPreview() {
-    BlindarTheme {
-        MemoItem(
-            memo = previewMemos[0],
-            onContentsChange = { },
             onMemoDelete = {},
             modifier = Modifier
                 .wrapContentWidth()
@@ -228,7 +284,7 @@ private fun MemoItemPreview() {
 private fun MemoPopupPreview() {
     BlindarTheme {
         MemoPopup(
-            memos = previewMemos,
+            memoPopupElements = previewMemoPopupElements,
             onContentsChange = {},
             onMemoDelete = {},
             onPopupClose = {},
