@@ -98,8 +98,23 @@ class LoadMonthlyDataUseCase @Inject constructor(
         } else {
             memo
         }
-        remoteMemoRepository.updateMemo(idAssignedMemo)
-        localMemoRepository.updateMemo(memo)
+
+        val isSavedOnRemote = if (idAssignedMemo.isSavedOnRemote) {
+            true
+        } else {
+            tryUpdateMemoOnRemote(idAssignedMemo)
+        }
+        localMemoRepository.updateMemo(memo.copy(isSavedOnRemote = isSavedOnRemote))
+    }
+
+    private suspend fun tryUpdateMemoOnRemote(memo: Memo): Boolean {
+        return try {
+            remoteMemoRepository.updateMemo(memo)
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
     }
 
     suspend fun deleteMemo(memo: Memo) {

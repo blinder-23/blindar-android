@@ -609,7 +609,8 @@ val previewMemos = (1..3).map {
         year = 2022,
         month = 10,
         day = 11,
-        contents = "memo $it"
+        contents = "memo $it",
+        isSavedOnRemote = false,
     )
 }.toImmutableList()
 

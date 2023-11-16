@@ -10,4 +10,5 @@ data class MemoEntity(
     @ColumnInfo("user_id") val userId: String,
     val date: String,
     val content: String,
+    val isSavedOnRemote: Boolean,
 )

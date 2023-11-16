@@ -75,5 +75,6 @@ class RemoteMemoRepositoryTest {
         month = 11,
         day = 12,
         content = "content",
+        isSavedOnRemote = false,
     )
 }

@@ -28,6 +28,7 @@ data class UiMemo(
     val month: Int,
     val day: Int,
     val contents: String,
+    val isSavedOnRemote: Boolean,
 )
 
 fun Memo.toUiMemo() = UiMemo(
@@ -37,4 +38,15 @@ fun Memo.toUiMemo() = UiMemo(
     month = month,
     day = day,
     contents = content,
+    isSavedOnRemote = isSavedOnRemote,
+)
+
+fun UiMemo.toMemo() = Memo(
+    id = id,
+    userId = userId,
+    year = year,
+    month = month,
+    day = day,
+    content = contents,
+    isSavedOnRemote = isSavedOnRemote,
 )

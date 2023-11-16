@@ -9,6 +9,7 @@ fun MemoEntity.toMemo() = Memo(
     month = date.slice(4..5).toInt(),
     day = date.slice(6..7).toInt(),
     content = content,
+    isSavedOnRemote = isSavedOnRemote,
 )
 
 fun Memo.toEntity(): MemoEntity {
@@ -19,6 +20,7 @@ fun Memo.toEntity(): MemoEntity {
         userId = userId,
         date = "$year$monthPadStartZero$dayPadStartZero",
         content = content,
+        isSavedOnRemote = isSavedOnRemote,
     )
 }
 

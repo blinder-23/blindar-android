@@ -55,6 +55,7 @@ data class DailyData(
                         month = 10,
                         day = 11,
                         contents = "memo $it",
+                        isSavedOnRemote = false,
                     )
                 }.toImmutableList()
             )

@@ -8,4 +8,5 @@ data class Memo(
     val month: Int,
     val day: Int,
     val content: String,
+    val isSavedOnRemote: Boolean,
 )

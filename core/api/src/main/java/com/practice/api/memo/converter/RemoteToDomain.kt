@@ -10,4 +10,5 @@ fun RemoteMemoEntity.toMemo() = Memo(
     month = date.substring(4..5).toInt(),
     day = date.substring(6..7).toInt(),
     content = contents,
+    isSavedOnRemote = true,
 )
