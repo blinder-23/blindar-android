@@ -29,7 +29,7 @@ data class UiMemo(
     val day: Int,
     val contents: String,
     val isSavedOnRemote: Boolean,
-)
+): MemoPopupElement
 
 fun Memo.toUiMemo() = UiMemo(
     id = id,
