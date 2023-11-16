@@ -23,7 +23,9 @@ import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.MemoUiState
 import com.practice.main.state.ScheduleUiState
+import com.practice.main.state.UiMemo
 import com.practice.main.state.toMealUiState
+import com.practice.main.state.toMemo
 import com.practice.main.state.toUiMemo
 import com.practice.preferences.PreferencesRepository
 import com.practice.preferences.ScreenMode
@@ -151,6 +153,14 @@ class MainScreenViewModel @Inject constructor(
             selectedDate = clickedDate,
             entity = entity
         )
+    }
+
+    suspend fun updateMemo(uiMemo: UiMemo) {
+        loadMonthlyDataUseCase.updateMemo(uiMemo.toMemo())
+    }
+
+    suspend fun deleteMemo(uiMemo: UiMemo) {
+        loadMonthlyDataUseCase.deleteMemo(uiMemo.toMemo())
     }
 
     private suspend fun loadMonthlyData(
