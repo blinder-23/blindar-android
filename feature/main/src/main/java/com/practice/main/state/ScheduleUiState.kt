@@ -9,18 +9,48 @@ import kotlinx.collections.immutable.persistentListOf
  */
 
 data class ScheduleUiState(
-    val schedules: ImmutableList<Schedule>,
+    val uiSchedules: ImmutableList<UiSchedule>,
 ) {
     val isEmpty: Boolean
-        get() = schedules.isEmpty()
+        get() = uiSchedules.isEmpty()
 
     val description: String
-        get() = if (schedules.isEmpty()) "학사일정이 없습니다." else schedules.joinToString(", ") { it.displayText }
+        get() = if (uiSchedules.isEmpty()) "학사일정이 없습니다." else uiSchedules.joinToString(", ") { it.displayText }
 
     companion object {
         val EmptyScheduleState = ScheduleUiState(persistentListOf())
     }
 }
 
-val Schedule.displayText: String
-    get() = if (eventName == eventContent) eventName else "$eventName - $eventContent"
+data class UiSchedule(
+    val schoolCode: Int,
+    val id: Int,
+    val year: Int,
+    val month: Int,
+    val day: Int,
+    val eventName: String,
+    val eventContent: String
+) : MemoPopupElement {
+    val displayText: String
+        get() = if (eventName == eventContent) eventName else "$eventName - $eventContent"
+}
+
+fun Schedule.toUiSchedule() = UiSchedule(
+    schoolCode = schoolCode,
+    id = id,
+    year = year,
+    month = month,
+    day = day,
+    eventName = eventName,
+    eventContent = eventContent,
+)
+
+fun UiSchedule.toSchedule() = Schedule(
+    schoolCode = schoolCode,
+    id = id,
+    year = year,
+    month = month,
+    day = day,
+    eventName = eventName,
+    eventContent = eventContent,
+)

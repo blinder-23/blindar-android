@@ -27,6 +27,7 @@ import com.practice.main.state.UiMemo
 import com.practice.main.state.toMealUiState
 import com.practice.main.state.toMemo
 import com.practice.main.state.toUiMemo
+import com.practice.main.state.toUiSchedule
 import com.practice.preferences.PreferencesRepository
 import com.practice.preferences.ScreenMode
 import com.practice.util.date.DateUtil
@@ -309,8 +310,8 @@ private fun MonthlyData.getMeal(date: Date): MealUiState {
 
 private fun MonthlyData.getSchedule(date: Date): ScheduleUiState {
     return try {
-        val schedules = schedules.filter { it.dateEquals(date) }
-        ScheduleUiState(schedules.toPersistentList())
+        val uiSchedules = schedules.filter { it.dateEquals(date) }.map { it.toUiSchedule() }
+        ScheduleUiState(uiSchedules.toPersistentList())
     } catch (e: NoSuchElementException) {
         ScheduleUiState.EmptyScheduleState
     }

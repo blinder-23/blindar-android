@@ -63,7 +63,6 @@ import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.domain.schedule.Schedule
 import com.practice.main.popup.NutrientPopup
 import com.practice.main.state.DailyData
 import com.practice.main.state.MealUiState
@@ -73,7 +72,7 @@ import com.practice.main.state.Nutrient
 import com.practice.main.state.ScheduleUiState
 import com.practice.main.state.ScreenModeIcon
 import com.practice.main.state.UiMemo
-import com.practice.main.state.displayText
+import com.practice.main.state.UiSchedule
 import com.practice.main.state.screenModeIcons
 import com.practice.preferences.ScreenMode
 import com.practice.util.date.daytype.toKor
@@ -338,8 +337,8 @@ internal fun ScheduleContent(
         modifier = modifier
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            scheduleUiState.schedules.forEach { schedule ->
-                BodyLarge(text = schedule.displayText)
+            scheduleUiState.uiSchedules.forEach { uiSchedule ->
+                BodyLarge(text = uiSchedule.displayText)
             }
         }
     }
@@ -592,7 +591,7 @@ val previewMenus = listOf("찰보리밥", "망고마들렌", "쇠고기미역국
     .map { Menu(it) }.toImmutableList()
 val previewNutrients = (0..3).map { Nutrient("탄수화물", 123.0, "g") }.toImmutableList()
 val previewSchedules = (0..6).map {
-    Schedule(
+    UiSchedule(
         schoolCode = 1,
         year = 2023,
         month = 7,

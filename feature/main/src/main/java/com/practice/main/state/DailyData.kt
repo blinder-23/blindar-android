@@ -1,7 +1,6 @@
 package com.practice.main.state
 
 import com.hsk.ktx.date.Date
-import com.practice.domain.schedule.Schedule
 import com.practice.util.date.DateUtil
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -32,7 +31,7 @@ data class DailyData(
             ),
             scheduleUiState = ScheduleUiState(
                 (1..3).map {
-                    Schedule(
+                    UiSchedule(
                         schoolCode = EMPTY_SCHOOL_CODE,
                         year = 2022,
                         month = 10,
