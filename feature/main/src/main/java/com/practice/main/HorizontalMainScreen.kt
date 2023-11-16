@@ -111,6 +111,7 @@ private fun HorizontalMainScreenPreview() {
             schoolCode = -1,
         ),
         isNutrientPopupVisible = false,
+        isMemoPopupVisible = false,
     )
     val calendarState = rememberCalendarState(
         year = year,

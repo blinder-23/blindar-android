@@ -15,6 +15,7 @@ data class MainUiState(
     val screenMode: ScreenMode,
     val selectedSchool: School,
     val isNutrientPopupVisible: Boolean,
+    val isMemoPopupVisible: Boolean,
 ) {
     val yearMonth: YearMonth
         get() = YearMonth(year, month)
@@ -37,6 +38,7 @@ data class MainUiState(
             screenMode = ScreenMode.Default,
             selectedSchool = School.EmptySchool,
             isNutrientPopupVisible = false,
+            isMemoPopupVisible = false,
         )
     }
 }

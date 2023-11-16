@@ -136,6 +136,7 @@ private fun VerticalMainScreenPreview() {
                     schoolCode = -1,
                 ),
                 isNutrientPopupVisible = false,
+                isMemoPopupVisible = false,
             )
         )
     }

@@ -111,6 +111,7 @@ class MainScreenViewModel @Inject constructor(
         screenMode: ScreenMode = state.screenMode,
         selectedSchool: School = state.selectedSchool,
         isNutrientPopupVisible: Boolean = state.isNutrientPopupVisible,
+        isMemoPopupVisible: Boolean = state.isMemoPopupVisible,
     ) {
         val monthlyMealScheduleState = if (entity != null) {
             parseDailyState(entity)
@@ -128,6 +129,7 @@ class MainScreenViewModel @Inject constructor(
                 screenMode = screenMode,
                 selectedSchool = selectedSchool,
                 isNutrientPopupVisible = isNutrientPopupVisible,
+                isMemoPopupVisible = isMemoPopupVisible,
             )
         }
         entity?.let {
@@ -251,22 +253,42 @@ class MainScreenViewModel @Inject constructor(
         updateUiState(isNutrientPopupVisible = false)
     }
 
+    fun openMemoPopup() {
+        updateUiState(isMemoPopupVisible = true)
+    }
+
+    fun closeMemoPopup() {
+        updateUiState(isMemoPopupVisible = false)
+    }
+
     fun getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
         return state.monthlyDataState.getCustomActions(date)
     }
 
     private fun List<DailyData>.getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
+        val (_, month, day) = date
         return this.find { it.date == date }?.let {
-            val (_, month, day) = date
             val actions = mutableListOf<CustomAccessibilityAction>()
             if (!it.mealUiState.isEmpty) {
-                actions.add(CustomAccessibilityAction("${month}월 ${day}일 영양 보기") {
-                    openNutrientPopup()
-                    true
-                })
+                actions.add(createNutrientPopupCustomAction(month, day))
             }
-            return actions.toImmutableList()
+            actions.add(createMemoPopupCustomAction(month, day))
+            actions.toImmutableList()
         } ?: persistentListOf()
+    }
+
+    private fun createNutrientPopupCustomAction(month: Int, day: Int): CustomAccessibilityAction {
+        return CustomAccessibilityAction("${month}월 ${day}일 영양 보기") {
+            openNutrientPopup()
+            true
+        }
+    }
+
+    private fun createMemoPopupCustomAction(month: Int, day: Int): CustomAccessibilityAction {
+        return CustomAccessibilityAction("${month}월 ${day}일 메모 보기") {
+            openMemoPopup()
+            true
+        }
     }
 
 }
