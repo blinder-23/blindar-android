@@ -1,5 +1,6 @@
 package com.practice.main.popup
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -24,9 +26,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.LabelLarge
@@ -40,20 +44,28 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun MemoPopup(
-    memoPopupElements: ImmutableList<MemoPopupElement>,
+    date: Date,
+    memoPopupElements: List<MemoPopupElement>,
+    onAddMemo: () -> Unit,
     onContentsChange: (UiMemo) -> Unit,
-    onMemoDelete: (String) -> Unit,
+    onMemoDelete: (UiMemo) -> Unit,
     onPopupClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val textColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface)
+
+    val shape = RoundedCornerShape(16.dp)
     LazyColumn(
         modifier = modifier
-            .fillMaxWidth(),
+            .shadow(4.dp, shape = shape)
+            .clip(shape)
+            .background(MaterialTheme.colorScheme.surface)
+            .heightIn(max = 550.dp),
     ) {
         item {
+            val (_, month, day) = date
             PopupTitleLarge(
-                text = stringResource(id = R.string.memo_popup_title),
+                text = stringResource(id = R.string.memo_popup_title, month, day),
                 color = textColor,
                 modifier = Modifier
                     .padding(16.dp)
@@ -76,7 +88,7 @@ fun MemoPopup(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
-                    .clickable {},
+                    .clickable { onAddMemo() },
             )
         }
         item {
@@ -91,9 +103,9 @@ fun MemoPopup(
 
 @Composable
 private fun MemoItems(
-    memoPopupElements: ImmutableList<MemoPopupElement>,
+    memoPopupElements: List<MemoPopupElement>,
     onContentsChange: (UiMemo) -> Unit,
-    onMemoDelete: (String) -> Unit,
+    onMemoDelete: (UiMemo) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -124,7 +136,7 @@ private fun ScheduleItem(
     modifier: Modifier = Modifier,
 ) {
     PopupElementItem(
-        enabled = false,
+        readOnly = true,
         text = uiSchedule.displayText,
         onTextChange = {},
         label = null,
@@ -137,11 +149,12 @@ private fun ScheduleItem(
 private fun MemoItem(
     memo: UiMemo,
     onContentsChange: (UiMemo) -> Unit,
-    onMemoDelete: (String) -> Unit,
+    onMemoDelete: (UiMemo) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    Log.d("UI_MEMO", "contents: ${memo.contents}")
     PopupElementItem(
-        enabled = true,
+        readOnly = false,
         text = memo.contents,
         onTextChange = { onContentsChange(memo.copy(contents = it)) },
         label = {
@@ -151,7 +164,7 @@ private fun MemoItem(
             )
         },
         trailingIcon = {
-            IconButton(onClick = { onMemoDelete(memo.id) }) {
+            IconButton(onClick = { onMemoDelete(memo) }) {
                 Icon(
                     imageVector = Icons.Outlined.Delete,
                     contentDescription = stringResource(
@@ -168,7 +181,7 @@ private fun MemoItem(
 
 @Composable
 private fun PopupElementItem(
-    enabled: Boolean,
+    readOnly: Boolean,
     text: String,
     onTextChange: (String) -> Unit,
     label: @Composable (() -> Unit)?,
@@ -181,13 +194,14 @@ private fun PopupElementItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         OutlinedTextField(
-            enabled = enabled,
+            readOnly = readOnly,
             value = text,
             onValueChange = onTextChange,
             label = label,
             modifier = Modifier.weight(1f),
-            trailingIcon = {
-                if (enabled && text.isNotEmpty()) {
+            singleLine = true,
+            trailingIcon = if (readOnly && text.isNotEmpty()) {
+                {
                     IconButton(onClick = { onTextChange("") }) {
                         Icon(
                             imageVector = Icons.Outlined.Clear,
@@ -195,7 +209,9 @@ private fun PopupElementItem(
                         )
                     }
                 }
-            }
+            } else {
+                null
+            },
         )
         trailingIcon?.invoke()
     }
@@ -284,10 +300,12 @@ private fun MemoItemsPreview() {
 private fun MemoPopupPreview() {
     BlindarTheme {
         MemoPopup(
+            date = Date.now(),
             memoPopupElements = previewMemoPopupElements,
             onContentsChange = {},
             onMemoDelete = {},
             onPopupClose = {},
+            onAddMemo = {},
             modifier = Modifier
                 .width(350.dp)
                 .clip(RoundedCornerShape(16.dp))

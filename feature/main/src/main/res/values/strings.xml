@@ -8,12 +8,14 @@
     <string name="navigate_to_school_select">학교 선택 화면으로 가기</string>
 
     <string name="open_nutrient_popup_button">영양 정보</string>
-    <string name="open_schedule_popup_button">일정 추가</string>
+    <string name="open_memo_popup_button">메모 추가</string>
+
+    <string name="schedule_content_title">일정</string>
 
     <string name="nutrient_popup_title">%s 영양 정보</string>
     <string name="nutrient_popup_close">닫기</string>
 
-    <string name="memo_popup_title">일정 편집</string>
+    <string name="memo_popup_title">%d월 %d일 메모 편집</string>
     <string name="memo_popup_add_memo">+ 메모 추가하기</string>
     <string name="memo_popup_item_label">일정 입력</string>
     <string name="memo_popup_clear_text">%s 내용 지우기</string>

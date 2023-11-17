@@ -23,6 +23,7 @@ import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.MemoUiState
 import com.practice.main.state.ScheduleUiState
+import com.practice.main.state.UiMemo
 import com.practice.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -40,9 +41,13 @@ fun HorizontalMainScreen(
     getClickLabel: (Date) -> String,
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
-    isNutrientPopupVisible: Boolean,
     onNutrientPopupOpen: () -> Unit,
     onNutrientPopupClose: () -> Unit,
+    onAddMemo: () -> Unit,
+    onMemoPopupOpen: () -> Unit,
+    onMemoPopupClose: () -> Unit,
+    onMemoUpdate: (UiMemo) -> Unit,
+    onMemoDelete: (UiMemo) -> Unit,
     modifier: Modifier = Modifier,
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
@@ -71,10 +76,17 @@ fun HorizontalMainScreen(
             MainScreenContents(
                 mealUiState = uiState.selectedDateDataState.mealUiState,
                 scheduleUiState = uiState.selectedDateDataState.scheduleUiState,
+                memoUiState = uiState.selectedDateDataState.memoUiState,
                 mealColumns = mealColumns,
-                isNutrientPopupVisible = isNutrientPopupVisible,
+                isNutrientPopupVisible = uiState.isNutrientPopupVisible,
                 onNutrientPopupOpen = onNutrientPopupOpen,
                 onNutrientPopupClose = onNutrientPopupClose,
+                isMemoPopupVisible = uiState.isMemoPopupVisible,
+                onAddMemo = onAddMemo,
+                onMemoPopupOpen = onMemoPopupOpen,
+                onMemoPopupClose = onMemoPopupClose,
+                onMemoUpdate = onMemoUpdate,
+                onMemoDelete = onMemoDelete,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
@@ -100,8 +112,14 @@ private fun HorizontalMainScreenPreview() {
                 schoolCode = 1,
                 date = Date(2022, 10, 11).plusDays(it),
                 mealUiState = MealUiState(2022, 10, 11, previewMenus, previewNutrients),
-                scheduleUiState = ScheduleUiState(previewSchedules),
-                memoUiState = MemoUiState(2022, 10, 11, previewMemos),
+                scheduleUiState = ScheduleUiState(
+                    date = selectedDate,
+                    uiSchedules = previewSchedules,
+                ),
+                memoUiState = MemoUiState(
+                    date = selectedDate,
+                    memos = previewMemos,
+                ),
             )
         },
         isLoading = false,
@@ -121,7 +139,6 @@ private fun HorizontalMainScreenPreview() {
     BlindarTheme {
         HorizontalMainScreen(
             calendarPageCount = 13,
-            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
             uiState = uiState,
             onScreenModeChange = {},
             calendarState = calendarState,
@@ -132,9 +149,14 @@ private fun HorizontalMainScreenPreview() {
             getClickLabel = { "" },
             drawUnderlineToScheduleDate = {},
             onNavigateToSelectSchoolScreen = {},
-            isNutrientPopupVisible = false,
             onNutrientPopupOpen = {},
             onNutrientPopupClose = {},
+            onAddMemo = {},
+            onMemoPopupOpen = {},
+            onMemoPopupClose = {},
+            onMemoUpdate = {},
+            onMemoDelete = {},
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
         )
     }
 }

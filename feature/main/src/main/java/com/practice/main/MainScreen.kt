@@ -60,7 +60,6 @@ fun MainScreen(
         if (windowSize.widthSizeClass == WindowWidthSizeClass.Expanded) {
             HorizontalMainScreen(
                 calendarPageCount = calendarPageCount,
-                modifier = paddingModifier,
                 uiState = uiState,
                 onScreenModeChange = viewModel::onScreenModeChange,
                 calendarState = calendarState,
@@ -71,11 +70,15 @@ fun MainScreen(
                 getClickLabel = viewModel::getClickLabel,
                 drawUnderlineToScheduleDate = { },
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
-                isNutrientPopupVisible = uiState.isNutrientPopupVisible,
                 onNutrientPopupOpen = viewModel::openNutrientPopup,
                 onNutrientPopupClose = viewModel::closeNutrientPopup,
-                customActions = { date -> viewModel.getCustomActions(date) },
-            )
+                onAddMemo = viewModel::addMemo,
+                onMemoPopupOpen = viewModel::openMemoPopup,
+                onMemoPopupClose = viewModel::closeMemoPopup,
+                onMemoUpdate = viewModel::updateMemoOnLocal,
+                onMemoDelete = viewModel::deleteMemo,
+                modifier = paddingModifier,
+            ) { date -> viewModel.getCustomActions(date) }
         } else {
             VerticalMainScreen(
                 calendarPageCount = calendarPageCount,
@@ -89,11 +92,14 @@ fun MainScreen(
                 getClickLabel = viewModel::getClickLabel,
                 drawUnderlineToScheduleDate = {},
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
-                isNutrientPopupVisible = uiState.isNutrientPopupVisible,
                 onNutrientPopupOpen = viewModel::openNutrientPopup,
                 onNutrientPopupClose = viewModel::closeNutrientPopup,
-                customActions = { date -> viewModel.getCustomActions(date) },
-            )
+                onAddMemo = viewModel::addMemo,
+                onMemoPopupOpen = viewModel::openMemoPopup,
+                onMemoPopupClose = viewModel::closeMemoPopup,
+                onMemoUpdate = viewModel::updateMemoOnLocal,
+                onMemoDelete = viewModel::deleteMemo,
+            ) { date -> viewModel.getCustomActions(date) }
         }
     }
 }
