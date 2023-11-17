@@ -224,7 +224,7 @@ class MainScreenViewModel @Inject constructor(
         val isSelectedString = if (date == state.selectedDate) "선택됨" else ""
         val isTodayString = if (date == DateUtil.today()) "오늘" else ""
         val dailyStateString = if (dailyState != null) {
-            "식단: ${dailyState.mealUiState.description}\n학사일정:${dailyState.scheduleUiState.description}"
+            "식단: ${dailyState.mealUiState.description}\n학사일정:${dailyState.scheduleUiState.description}\n메모: ${dailyState.memoUiState.description}"
         } else {
             ""
         }

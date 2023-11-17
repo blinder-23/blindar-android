@@ -9,6 +9,10 @@ data class MemoUiState(
     val date: Date,
     val memos: List<UiMemo>,
 ) {
+
+    val description: String
+        get() = memos.joinToString(", ") { it.displayText }
+
     fun addUiMemoAtLast(memoId: String, userId: String, date: Date): MemoUiState {
         return createNewMemoUiState {
             add(UiMemo.getEmptyMemo(memoId, userId, date))
@@ -24,11 +28,11 @@ data class MemoUiState(
         }
     }
 
-    fun deleteUiMemo(uiMemo: UiMemo) : MemoUiState{
+    fun deleteUiMemo(uiMemo: UiMemo): MemoUiState {
         return createNewMemoUiState { removeAll { it.id == uiMemo.id } }
     }
 
-    private fun createNewMemoUiState(block: MutableList<UiMemo>.()->Unit): MemoUiState {
+    private fun createNewMemoUiState(block: MutableList<UiMemo>.() -> Unit): MemoUiState {
         return this.copy(memos = editMemoList(block))
     }
 
