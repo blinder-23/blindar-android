@@ -24,9 +24,18 @@ data class UserPreferences(
     val runningWorksCount: Int = 0,
     val schoolCode: Int = emptySchoolCode,
     val schoolName: String = emptySchoolName,
+    val memoIdCounter: Int = 0,
 ) {
     val isSchoolCodeEmpty: Boolean
         get() = schoolCode == emptySchoolCode
+
+    companion object {
+        val emptyPreferences = UserPreferences(
+            uiMode = UiMode.Graphic,
+            themeMode = ThemeMode.SystemDefault,
+            screenMode = ScreenMode.Default,
+        )
+    }
 }
 
 internal const val emptySchoolCode = 7010578
