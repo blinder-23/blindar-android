@@ -1,5 +1,6 @@
 package com.practice.combine
 
+import com.hsk.ktx.date.Date
 import com.practice.api.memo.RemoteMemoRepository
 import com.practice.domain.Memo
 import com.practice.domain.meal.Meal
@@ -51,7 +52,6 @@ class LoadMonthlyDataUseCase @Inject constructor(
         month: Int
     ): Flow<ImmutableList<Meal>> {
         return loadMealFromLocal(schoolCode, year, month).map {
-//            Log.d("CombineUseCase", "meal $year $month: ${it.size}")
             it.toImmutableList()
         }
     }
@@ -92,28 +92,39 @@ class LoadMonthlyDataUseCase @Inject constructor(
         return localMemoRepository.getMemos(userId, year, month)
     }
 
-    suspend fun updateMemo(memo: Memo) {
-        val idAssignedMemo = if (memo.id.isEmpty()) {
-            memo.copy(id = memo.createId())
-        } else {
-            memo
-        }
+    suspend fun updateMemoToRemote(userId: String, date: Date, updateItems: List<Memo>) {
+        val savedMemos = localMemoRepository.getMemos(userId, date)
+        deleteMemosFromRemote(savedMemos)
+        localMemoRepository.deleteMemo(userId, date)
 
-        val isSavedOnRemote = if (idAssignedMemo.isSavedOnRemote) {
-            true
-        } else {
-            tryUpdateMemoOnRemote(idAssignedMemo)
-        }
-        localMemoRepository.updateMemo(memo.copy(isSavedOnRemote = isSavedOnRemote))
+        insertMemosOnRemoteAndLocal(updateItems)
     }
 
-    private suspend fun tryUpdateMemoOnRemote(memo: Memo): Boolean {
+    private suspend fun deleteMemosFromRemote(memos: List<Memo>) {
+        memos.forEach { memo ->
+            remoteMemoRepository.deleteMemo(memo.id)
+        }
+    }
+
+    private suspend fun insertMemosOnRemoteAndLocal(memos: List<Memo>) {
+        memos.filter { it.content.isNotEmpty() }.forEach { memo ->
+            val idBackup = memo.id
+            val assignedIdFromServer = tryUpdateMemoOnRemote(memo.copy(id = ""))
+            localMemoRepository.insertMemo(
+                memo.copy(
+                    id = assignedIdFromServer ?: idBackup,
+                    isSavedOnRemote = assignedIdFromServer != null,
+                )
+            )
+        }
+    }
+
+    private suspend fun tryUpdateMemoOnRemote(memo: Memo): String? {
         return try {
             remoteMemoRepository.updateMemo(memo)
-            true
         } catch (e: Exception) {
             e.printStackTrace()
-            false
+            null
         }
     }
 
