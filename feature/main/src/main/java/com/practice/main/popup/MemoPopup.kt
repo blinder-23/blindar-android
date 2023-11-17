@@ -200,12 +200,12 @@ private fun PopupElementItem(
             label = label,
             modifier = Modifier.weight(1f),
             singleLine = true,
-            trailingIcon = if (readOnly && text.isNotEmpty()) {
+            trailingIcon = if (!readOnly && text.isNotEmpty()) {
                 {
                     IconButton(onClick = { onTextChange("") }) {
                         Icon(
                             imageVector = Icons.Outlined.Clear,
-                            contentDescription = stringResource(id = R.string.memo_popup_clear_text),
+                            contentDescription = stringResource(id = R.string.memo_popup_clear_text, text),
                         )
                     }
                 }
