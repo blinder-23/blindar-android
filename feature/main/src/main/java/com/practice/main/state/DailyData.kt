@@ -30,7 +30,8 @@ data class DailyData(
                 nutrients = (0..3).map { Nutrient("탄수화물", 123.0, "g") }.toImmutableList()
             ),
             scheduleUiState = ScheduleUiState(
-                (1..3).map {
+                date = Date(2022, 10, 11),
+                uiSchedules = (1..3).map {
                     UiSchedule(
                         schoolCode = EMPTY_SCHOOL_CODE,
                         year = 2022,
@@ -43,9 +44,7 @@ data class DailyData(
                 }.toPersistentList(),
             ),
             memoUiState = MemoUiState(
-                year = 2022,
-                month = 10,
-                day = 11,
+                date = Date(2022, 10, 11),
                 memos = (1..3).map {
                     UiMemo(
                         id = it.toString(),

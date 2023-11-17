@@ -1,5 +1,6 @@
 package com.practice.main.state
 
+import com.hsk.ktx.date.Date
 import com.practice.domain.schedule.Schedule
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -9,6 +10,7 @@ import kotlinx.collections.immutable.persistentListOf
  */
 
 data class ScheduleUiState(
+    val date: Date,
     val uiSchedules: ImmutableList<UiSchedule>,
 ) {
     val isEmpty: Boolean
@@ -18,7 +20,10 @@ data class ScheduleUiState(
         get() = if (uiSchedules.isEmpty()) "학사일정이 없습니다." else uiSchedules.joinToString(", ") { it.displayText }
 
     companion object {
-        val EmptyScheduleState = ScheduleUiState(persistentListOf())
+        val EmptyScheduleState = ScheduleUiState(
+            date = Date(1900, 1, 1),
+            uiSchedules = persistentListOf(),
+        )
     }
 }
 
@@ -31,7 +36,10 @@ data class UiSchedule(
     val eventName: String,
     val eventContent: String
 ) : MemoPopupElement {
-    val displayText: String
+    override val sortOrder: Int
+        get() = 1
+
+    override val displayText: String
         get() = if (eventName == eventContent) eventName else "$eventName - $eventContent"
 }
 

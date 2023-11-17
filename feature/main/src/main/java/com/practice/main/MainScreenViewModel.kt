@@ -37,6 +37,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -70,6 +71,8 @@ class MainScreenViewModel @Inject constructor(
     // TODO: domain 또는 data로 옮기기?
     private val cache: MutableMap<CacheKey, MonthlyData>
 
+    private var loadMonthlyDataJob: Job? = null
+
     init {
         val current = Date.now()
         val userId = getCurrentUserId()
@@ -91,11 +94,7 @@ class MainScreenViewModel @Inject constructor(
      * 아직 UI에 반영되지 않은 값을 참조하기 때문에 예외가 발생한다.
      */
     fun onLaunch() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val entity = loadMonthlyData(state.userId, state.selectedSchoolCode, state.yearMonth)
-            updateUiState(entity = entity)
-        }
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Main) {
             collectPreferences()
         }
     }
@@ -107,24 +106,21 @@ class MainScreenViewModel @Inject constructor(
         userId: String = state.userId,
         yearMonth: YearMonth = state.yearMonth,
         selectedDate: Date = state.selectedDate,
-        entity: MonthlyData? = cache[state.cacheKey],
+        monthlyData: List<DailyData> = state.monthlyDataState,
         isLoading: Boolean = state.isLoading,
         screenMode: ScreenMode = state.screenMode,
         selectedSchool: School = state.selectedSchool,
         isNutrientPopupVisible: Boolean = state.isNutrientPopupVisible,
         isMemoPopupVisible: Boolean = state.isMemoPopupVisible,
     ) {
-        val monthlyMealScheduleState = if (entity != null) {
-            parseDailyState(entity)
-        } else {
-            emptyList()
-        }
+        val isCollectNeeded =
+            userId != state.userId || yearMonth != state.yearMonth || selectedSchool != state.selectedSchool || loadMonthlyDataJob == null
         synchronized(state) {
             state = state.copy(
                 userId = userId,
                 year = yearMonth.year,
                 month = yearMonth.month,
-                monthlyDataState = monthlyMealScheduleState,
+                monthlyDataState = monthlyData,
                 selectedDate = selectedDate,
                 isLoading = isLoading,
                 screenMode = screenMode,
@@ -133,8 +129,8 @@ class MainScreenViewModel @Inject constructor(
                 isMemoPopupVisible = isMemoPopupVisible,
             )
         }
-        entity?.let {
-            updateScheduleDates(it)
+        if (isCollectNeeded) {
+            startCollectMonthlyDataJob(userId, selectedSchool.schoolCode, yearMonth)
         }
     }
 
@@ -143,27 +139,11 @@ class MainScreenViewModel @Inject constructor(
             preferencesRepository.updateScreenMode(screenMode)
         }
 
-    private fun updateScheduleDates(entity: MonthlyData) {
-        _scheduleDates.value = scheduleDates.value.toMutableSet().apply {
-            addAll(entity.schedules.map { Date(it.year, it.month, it.day) })
-        }
-    }
-
     fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
-        val entity = loadMonthlyData(state.userId, state.selectedSchoolCode, clickedDate.yearMonth)
         updateUiState(
             yearMonth = clickedDate.yearMonth,
             selectedDate = clickedDate,
-            entity = entity
         )
-    }
-
-    suspend fun updateMemo(uiMemo: UiMemo) {
-        loadMonthlyDataUseCase.updateMemo(uiMemo.toMemo())
-    }
-
-    suspend fun deleteMemo(uiMemo: UiMemo) {
-        loadMonthlyDataUseCase.deleteMemo(uiMemo.toMemo())
     }
 
     private suspend fun loadMonthlyData(
@@ -179,6 +159,20 @@ class MainScreenViewModel @Inject constructor(
             loadMonthlyDataUseCase.loadData(userId, schoolCode, queryYear, queryMonth).first()
                 .apply {
                     cache[cacheKey] = this
+                }
+        }
+    }
+
+    private fun startCollectMonthlyDataJob(userId: String, schoolCode: Int, yearMonth: YearMonth) {
+        loadMonthlyDataJob?.cancel()
+
+        val (queryYear, queryMonth) = yearMonth
+        loadMonthlyDataJob = viewModelScope.launch(Dispatchers.Main) {
+            loadMonthlyDataUseCase.loadData(userId, schoolCode, queryYear, queryMonth)
+                .collectLatest {
+                    if (!state.isMemoPopupVisible) {
+                        updateUiState(monthlyData = parseDailyState(it))
+                    }
                 }
         }
     }
@@ -205,12 +199,9 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onSwiped(yearMonth: YearMonth) = viewModelScope.launch {
-        val entity = loadMonthlyData(state.userId, state.selectedSchoolCode, yearMonth)
         if (yearMonth != state.yearMonth) {
             val firstWeekday = yearMonth.getFirstWeekday()
-            updateUiState(yearMonth = yearMonth, selectedDate = firstWeekday, entity = entity)
-        } else {
-            updateUiState(entity = entity)
+            updateUiState(yearMonth = yearMonth, selectedDate = firstWeekday)
         }
     }
 
@@ -259,7 +250,46 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun closeMemoPopup() {
+        updateMemoOnRemote()
         updateUiState(isMemoPopupVisible = false)
+    }
+
+    fun addMemo() {
+        viewModelScope.launch {
+            val newMemoId = preferencesRepository.getAndIncreaseMemoIdCount().toString()
+            updateMemoUiState {
+                state.selectedDateDataState.memoUiState.addUiMemoAtLast(
+                    newMemoId,
+                    state.userId,
+                    state.selectedDate
+                )
+            }
+        }
+    }
+
+    fun updateMemoOnLocal(uiMemo: UiMemo) {
+        updateMemoUiState {
+            state.selectedDateDataState.memoUiState.updateMemo(uiMemo)
+        }
+    }
+
+    private fun updateMemoUiState(block: () -> MemoUiState) {
+        val newMemoUiState = block()
+        val newDailyData = state.updateMemoUiState(state.selectedDate, newMemoUiState)
+        updateUiState(monthlyData = newDailyData)
+    }
+
+    private fun updateMemoOnRemote() {
+        val userId = state.userId
+        val selectedDate = state.selectedDate
+        val updateItems = state.selectedDateDataState.memoUiState.memos.map { it.toMemo() }
+        viewModelScope.launch {
+            loadMonthlyDataUseCase.updateMemoToRemote(userId, selectedDate, updateItems)
+        }
+    }
+
+    fun deleteMemo(uiMemo: UiMemo) {
+        state.selectedDateDataState.memoUiState.deleteUiMemo(uiMemo)
     }
 
     fun getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
@@ -311,7 +341,10 @@ private fun MonthlyData.getMeal(date: Date): MealUiState {
 private fun MonthlyData.getSchedule(date: Date): ScheduleUiState {
     return try {
         val uiSchedules = schedules.filter { it.dateEquals(date) }.map { it.toUiSchedule() }
-        ScheduleUiState(uiSchedules.toPersistentList())
+        ScheduleUiState(
+            date = date,
+            uiSchedules = uiSchedules.toPersistentList(),
+        )
     } catch (e: NoSuchElementException) {
         ScheduleUiState.EmptyScheduleState
     }
@@ -321,10 +354,8 @@ private fun MonthlyData.getMemo(date: Date): MemoUiState {
     return try {
         val memos = memos.filter { it.dateEquals(date) }.map { it.toUiMemo() }
         MemoUiState(
-            year = date.year,
-            month = date.month,
-            day = date.dayOfMonth,
-            memos = memos.toPersistentList()
+            date = date,
+            memos = memos.toPersistentList(),
         )
     } catch (e: NoSuchElementException) {
         MemoUiState.EmptyMemoUiState

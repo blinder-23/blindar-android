@@ -27,6 +27,16 @@ data class MainUiState(
         get() = monthlyDataState.firstOrNull { it.date == selectedDate }
             ?: DailyData.Empty
 
+    fun updateMemoUiState(date: Date, memoUiState: MemoUiState): List<DailyData> {
+        return monthlyDataState.map {
+            if (it.date == date) {
+                it.copy(memoUiState = memoUiState)
+            } else {
+                it
+            }
+        }
+    }
+
     companion object {
         val EMPTY = MainUiState(
             userId = "",
