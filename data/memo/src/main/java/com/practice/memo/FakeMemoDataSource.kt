@@ -8,6 +8,12 @@ class FakeMemoDataSource : MemoDataSource {
 
     private val memos = mutableListOf<Memo>()
 
+    override suspend fun getMemos(userId: String, year: Int, month: Int, day: Int): List<Memo> {
+        return memos.filter {
+            it.userId == userId && it.year == year && it.month == month && it.day == day
+        }
+    }
+
     override suspend fun getMemos(userId: String, year: Int, month: Int): Flow<List<Memo>> {
         return flow {
             emit(memos.filter { it.userId == userId && it.year == year && it.month == month })
@@ -35,6 +41,10 @@ class FakeMemoDataSource : MemoDataSource {
         if (targetIndex != -1) {
             memos.removeAt(targetIndex)
         }
+    }
+
+    override suspend fun deleteMemo(userId: String, year: Int, month: Int, day: Int) {
+        memos.removeAll { it.userId == userId && it.year == year && it.month == month && it.day == day }
     }
 
     override suspend fun clear() {

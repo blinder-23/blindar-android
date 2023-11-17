@@ -60,6 +60,9 @@ android {
 
 dependencies {
     implementation(project(":core:domain"))
+    implementation(project(":core:util"))
+
+    implementation(libs.hsk.ktx)
 
     // Kotlin Coroutines
     implementation(libs.bundles.coroutines)

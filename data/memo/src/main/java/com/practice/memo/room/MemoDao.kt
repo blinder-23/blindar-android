@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MemoDao {
 
+    @Query("SELECT * FROM memo WHERE user_id = :userId AND date = :date")
+    suspend fun getMemos(userId: String, date: String): List<MemoEntity>
+
     @Query("SELECT * FROM memo WHERE user_id = :userId AND date LIKE :year || :month || '%'")
     fun getMemos(userId: String, year: Int, month: String): Flow<List<MemoEntity>>
 
@@ -24,6 +27,9 @@ interface MemoDao {
 
     @Query("DELETE FROM memo WHERE id = :id")
     suspend fun deleteMemo(id: String)
+
+    @Query("DELETE FROM memo WHERE user_id = :userId AND date = :date")
+    suspend fun deleteMemo(userId: String, date: String)
 
     @Query("DELETE FROM memo")
     suspend fun clearMemoDatabase()
