@@ -28,12 +28,36 @@ data class MainUiState(
             ?: DailyData.Empty
 
     fun updateMemoUiState(date: Date, memoUiState: MemoUiState): List<DailyData> {
-        return monthlyDataState.map {
-            if (it.date == date) {
-                it.copy(memoUiState = memoUiState)
-            } else {
-                it
-            }
+        return if (monthlyDataState.any { it.date == date }) {
+            addMemoUiStateOnExistingDate(date, memoUiState)
+        } else {
+            addMemoUiStateOnNewDate(date, memoUiState)
+        }
+    }
+
+    private fun addMemoUiStateOnNewDate(
+        date: Date,
+        memoUiState: MemoUiState
+    ): List<DailyData> = monthlyDataState.toMutableList().apply {
+        add(
+            DailyData(
+                schoolCode = selectedSchoolCode,
+                date = date,
+                mealUiState = MealUiState.EmptyMealState,
+                scheduleUiState = ScheduleUiState.EmptyScheduleState,
+                memoUiState = memoUiState
+            )
+        )
+    }.sortedBy { it.date }
+
+    private fun addMemoUiStateOnExistingDate(
+        date: Date,
+        memoUiState: MemoUiState
+    ): List<DailyData> = monthlyDataState.map {
+        if (it.date == date) {
+            it.copy(memoUiState = memoUiState)
+        } else {
+            it
         }
     }
 
