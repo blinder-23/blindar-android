@@ -33,7 +33,6 @@ import com.practice.preferences.ScreenMode
 import com.practice.util.date.DateUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
@@ -300,14 +299,16 @@ class MainScreenViewModel @Inject constructor(
 
     private fun List<DailyData>.getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
         val (_, month, day) = date
-        return this.find { it.date == date }?.let {
-            val actions = mutableListOf<CustomAccessibilityAction>()
+        val actions = mutableListOf<CustomAccessibilityAction>()
+        actions.add(createMemoPopupCustomAction(month, day))
+
+        this.find { it.date == date }?.let {
             if (!it.mealUiState.isEmpty) {
                 actions.add(createNutrientPopupCustomAction(month, day))
             }
-            actions.add(createMemoPopupCustomAction(month, day))
-            actions.toImmutableList()
-        } ?: persistentListOf()
+        }
+
+        return actions.toImmutableList()
     }
 
     private fun createNutrientPopupCustomAction(month: Int, day: Int): CustomAccessibilityAction {
