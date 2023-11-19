@@ -289,7 +289,9 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun deleteMemo(uiMemo: UiMemo) {
-        state.selectedDateDataState.memoUiState.deleteUiMemo(uiMemo)
+        updateMemoUiState {
+            state.selectedDateDataState.memoUiState.deleteUiMemo(uiMemo)
+        }
     }
 
     fun getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
