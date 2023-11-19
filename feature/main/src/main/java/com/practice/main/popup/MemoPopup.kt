@@ -45,7 +45,7 @@ import kotlinx.collections.immutable.toImmutableList
 @Composable
 fun MemoPopup(
     date: Date,
-    memoPopupElements: List<MemoPopupElement>,
+    memoPopupElements: ImmutableList<MemoPopupElement>,
     onAddMemo: () -> Unit,
     onContentsChange: (UiMemo) -> Unit,
     onMemoDelete: (UiMemo) -> Unit,
@@ -103,7 +103,7 @@ fun MemoPopup(
 
 @Composable
 private fun MemoItems(
-    memoPopupElements: List<MemoPopupElement>,
+    memoPopupElements: ImmutableList<MemoPopupElement>,
     onContentsChange: (UiMemo) -> Unit,
     onMemoDelete: (UiMemo) -> Unit,
     modifier: Modifier = Modifier,

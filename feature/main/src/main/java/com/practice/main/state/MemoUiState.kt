@@ -3,11 +3,13 @@ package com.practice.main.state
 import android.util.Log
 import com.hsk.ktx.date.Date
 import com.practice.domain.Memo
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 data class MemoUiState(
     val date: Date,
-    val memos: List<UiMemo>,
+    val memos: ImmutableList<UiMemo>,
 ) {
 
     val description: String
@@ -36,11 +38,11 @@ data class MemoUiState(
         return this.copy(memos = editMemoList(block))
     }
 
-    private fun editMemoList(block: MutableList<UiMemo>.() -> Unit): List<UiMemo> {
+    private fun editMemoList(block: MutableList<UiMemo>.() -> Unit): ImmutableList<UiMemo> {
         return memos.toMutableList().apply {
             block()
             Log.d("APPLY", "updated: $this")
-        }
+        }.toImmutableList()
     }
 
     private fun catchIndexError(block: () -> Unit) {

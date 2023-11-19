@@ -2,6 +2,7 @@ package com.practice.main.state
 
 import com.hsk.ktx.date.Date
 import com.practice.util.date.DateUtil
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
@@ -16,7 +17,7 @@ data class DailyData(
         return date.compareTo(other.date)
     }
 
-    val memoPopupElements: List<MemoPopupElement>
+    val memoPopupElements: ImmutableList<MemoPopupElement>
         get() = mergeSchedulesAndMemos(scheduleUiState, memoUiState)
 
     companion object {

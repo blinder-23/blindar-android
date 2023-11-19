@@ -213,7 +213,7 @@ internal fun VerticalYearMonth(
 @Composable
 internal fun MainScreenContents(
     mealUiState: MealUiState,
-    memoPopupElements: List<MemoPopupElement>,
+    memoPopupElements: ImmutableList<MemoPopupElement>,
     mealColumns: Int,
     isNutrientPopupVisible: Boolean,
     onNutrientPopupOpen: () -> Unit,
@@ -356,7 +356,7 @@ internal fun MenuRow(
 
 @Composable
 internal fun ScheduleContent(
-    scheduleElements: List<MemoPopupElement>,
+    scheduleElements: ImmutableList<MemoPopupElement>,
     onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
