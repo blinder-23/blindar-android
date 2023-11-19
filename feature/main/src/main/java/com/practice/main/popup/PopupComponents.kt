@@ -16,6 +16,8 @@ import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.designsystem.theme.PopupTypography
 
+val popupPadding = 24.dp
+
 @Composable
 fun PopupTitleLarge(
     text: String,

@@ -32,7 +32,6 @@ import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.MemoUiState
 import com.practice.main.state.ScheduleUiState
-import com.practice.main.state.UiMemo
 import com.practice.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -51,11 +50,7 @@ fun VerticalMainScreen(
     onNavigateToSelectSchoolScreen: () -> Unit,
     onNutrientPopupOpen: () -> Unit,
     onNutrientPopupClose: () -> Unit,
-    onAddMemo: () -> Unit,
     onMemoPopupOpen: () -> Unit,
-    onMemoPopupClose: () -> Unit,
-    onMemoUpdate: (UiMemo) -> Unit,
-    onMemoDelete: (UiMemo) -> Unit,
     modifier: Modifier = Modifier,
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
@@ -91,18 +86,12 @@ fun VerticalMainScreen(
             )
             MainScreenContents(
                 mealUiState = uiState.selectedDateDataState.mealUiState,
-                scheduleUiState = uiState.selectedDateDataState.scheduleUiState,
-                memoUiState = uiState.selectedDateDataState.memoUiState,
+                memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
                 mealColumns = mealColumns,
                 isNutrientPopupVisible = uiState.isNutrientPopupVisible,
                 onNutrientPopupOpen = onNutrientPopupOpen,
                 onNutrientPopupClose = onNutrientPopupClose,
-                isMemoPopupVisible = uiState.isMemoPopupVisible,
-                onAddMemo = onAddMemo,
                 onMemoPopupOpen = onMemoPopupOpen,
-                onMemoPopupClose = onMemoPopupClose,
-                onMemoUpdate = onMemoUpdate,
-                onMemoDelete = onMemoDelete,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
@@ -166,9 +155,6 @@ private fun VerticalMainScreenPreview() {
     BlindarTheme {
         VerticalMainScreen(
             calendarPageCount = 13,
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.surface)
-                .fillMaxSize(),
             uiState = uiState,
             calendarState = calendarState,
             mealColumns = 2,
@@ -180,11 +166,10 @@ private fun VerticalMainScreenPreview() {
             onNavigateToSelectSchoolScreen = {},
             onNutrientPopupOpen = {},
             onNutrientPopupClose = {},
-            onAddMemo = {},
             onMemoPopupOpen = {},
-            onMemoPopupClose = {},
-            onMemoUpdate = {},
-            onMemoDelete = {},
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .fillMaxSize(),
         )
     }
 }

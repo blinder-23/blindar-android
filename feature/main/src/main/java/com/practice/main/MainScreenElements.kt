@@ -65,6 +65,7 @@ import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.popup.MemoPopup
 import com.practice.main.popup.NutrientPopup
+import com.practice.main.popup.popupPadding
 import com.practice.main.state.DailyData
 import com.practice.main.state.MealUiState
 import com.practice.main.state.MemoUiState
@@ -271,8 +272,6 @@ private fun EmptyContentIndicator(modifier: Modifier = Modifier) {
     }
 }
 
-private val popupPadding = 24.dp
-
 @Composable
 internal fun MealContent(
     mealUiState: MealUiState,
@@ -386,7 +385,7 @@ internal fun ScheduleContent(
 }
 
 @Composable
-private fun MainScreenPopup(
+fun MainScreenPopup(
     onClose: () -> Unit,
     content: @Composable () -> Unit = {},
 ) {
