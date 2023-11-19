@@ -38,7 +38,8 @@ class MemoDaoTest {
             id = "1",
             userId = "123",
             date = "20230908",
-            content = "memo"
+            content = "memo",
+            isSavedOnRemote = false,
         )
         dao.insertMemo(memoEntity)
 
@@ -56,7 +57,8 @@ class MemoDaoTest {
             id = "1",
             userId = "123",
             date = "20230908",
-            content = "memo"
+            content = "memo",
+            isSavedOnRemote = false,
         )
         dao.insertMemo(memoEntity)
 
@@ -79,7 +81,8 @@ class MemoDaoTest {
             id = "1",
             userId = "123",
             date = "20230908",
-            content = "memo"
+            content = "memo",
+            isSavedOnRemote = false,
         )
         dao.insertMemo(memoEntity)
 
@@ -99,7 +102,8 @@ class MemoDaoTest {
             id = "1",
             userId = "123",
             date = "20230908",
-            content = "memo"
+            content = "memo",
+            isSavedOnRemote = false,
         )
         dao.insertMemo(memoEntity)
 
@@ -120,7 +124,8 @@ class MemoDaoTest {
                 id = it.toString(),
                 userId = "123",
                 date = "20230908",
-                content = "memo $it"
+                content = "memo $it",
+                isSavedOnRemote = false,
             )
         }
         memos.forEach { dao.insertMemo(it) }

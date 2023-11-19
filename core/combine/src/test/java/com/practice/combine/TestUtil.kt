@@ -51,5 +51,6 @@ object TestUtil {
         month = month,
         day = day,
         content = content,
+        isSavedOnRemote = false,
     )
 }

@@ -102,7 +102,7 @@ class PreferencesRepositoryImplTest {
             updateIsFirstExecution(true)
         }
 
-        val isFirstExecution = preferences.dropFirstAndTake(1).first().isFirstExecution
+        val isFirstExecution = preferences.take(1).first().isFirstExecution
         assertThat(isFirstExecution).isTrue
     }
 
@@ -125,6 +125,9 @@ class PreferencesRepositoryImplTest {
             assertThat(this.schoolCode).isEqualTo(schoolCode)
         }
     }
+
+    private suspend fun PreferencesRepositoryImpl.take(take: Int) =
+        userPreferencesFlow.take(take).toList()
 
     private suspend fun PreferencesRepositoryImpl.dropFirstAndTake(take: Int) =
         userPreferencesFlow.drop(1).take(take).toList()

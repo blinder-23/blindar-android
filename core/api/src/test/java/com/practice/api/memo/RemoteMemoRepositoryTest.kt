@@ -32,7 +32,7 @@ class RemoteMemoRepositoryTest {
 
         val actualMemo = remoteMemoRepository.getAllMemos(userId)
         assertThat(actualMemo)
-            .containsExactlyInAnyOrderElementsOf(expectedMemos)
+            .containsExactlyInAnyOrderElementsOf(expectedMemos.map { it.copy(isSavedOnRemote = true) })
     }
 
     @Test
@@ -49,7 +49,7 @@ class RemoteMemoRepositoryTest {
 
         val allMemos = remoteMemoRepository.getAllMemos(userId)
         assertThat(allMemos)
-            .containsExactlyInAnyOrderElementsOf(insertedMemos)
+            .containsExactlyInAnyOrderElementsOf(insertedMemos.map { it.copy(isSavedOnRemote = true) })
     }
 
     @Test
@@ -65,7 +65,8 @@ class RemoteMemoRepositoryTest {
 
         val allMemos = remoteMemoRepository.getAllMemos(userId)
         assertThat(allMemos)
-            .containsExactlyInAnyOrderElementsOf(insertedMemos.subList(0, insertedMemos.lastIndex))
+            .containsExactlyInAnyOrderElementsOf(insertedMemos.subList(0, insertedMemos.lastIndex)
+                .map { it.copy(isSavedOnRemote = true) })
     }
 
     private fun createNewMemo(userId: String) = Memo(

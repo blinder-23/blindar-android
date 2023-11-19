@@ -1,5 +1,7 @@
 package com.practice.combine
 
+import com.practice.api.memo.FakeRemoteMemoDataSource
+import com.practice.api.memo.RemoteMemoRepository
 import com.practice.meal.FakeMealDataSource
 import com.practice.meal.MealRepository
 import com.practice.memo.FakeMemoDataSource
@@ -18,11 +20,13 @@ class LoadMonthlyDataUseCaseTest {
     private val mealRepository = MealRepository(FakeMealDataSource())
     private val scheduleRepository = ScheduleRepository(FakeScheduleDataSource())
     private val memoRepository = MemoRepository(FakeMemoDataSource())
+    private val remoteMemoRepository = RemoteMemoRepository(FakeRemoteMemoDataSource())
 
     private val useCase = LoadMonthlyDataUseCase(
         localMealRepository = mealRepository,
         localScheduleRepository = scheduleRepository,
         localMemoRepository = memoRepository,
+        remoteMemoRepository = remoteMemoRepository,
     )
 
     @BeforeEach
