@@ -16,6 +16,9 @@ data class DailyData(
         return date.compareTo(other.date)
     }
 
+    val memoPopupElements: List<MemoPopupElement>
+        get() = mergeSchedulesAndMemos(scheduleUiState, memoUiState)
+
     companion object {
         private const val EMPTY_SCHOOL_CODE = -1
 

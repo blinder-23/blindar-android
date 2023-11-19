@@ -21,8 +21,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedCard
@@ -63,11 +65,11 @@ import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.main.popup.MemoPopup
 import com.practice.main.popup.NutrientPopup
 import com.practice.main.popup.popupPadding
 import com.practice.main.state.DailyData
 import com.practice.main.state.MealUiState
+import com.practice.main.state.MemoPopupElement
 import com.practice.main.state.MemoUiState
 import com.practice.main.state.Menu
 import com.practice.main.state.Nutrient
@@ -211,22 +213,21 @@ internal fun VerticalYearMonth(
 @Composable
 internal fun MainScreenContents(
     mealUiState: MealUiState,
-    scheduleUiState: ScheduleUiState,
-    memoUiState: MemoUiState,
+    memoPopupElements: List<MemoPopupElement>,
     mealColumns: Int,
     isNutrientPopupVisible: Boolean,
     onNutrientPopupOpen: () -> Unit,
     onNutrientPopupClose: () -> Unit,
-    onAddMemo: () -> Unit,
-    isMemoPopupVisible: Boolean,
     onMemoPopupOpen: () -> Unit,
-    onMemoPopupClose: () -> Unit,
-    onMemoUpdate: (UiMemo) -> Unit,
-    onMemoDelete: (UiMemo) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (mealUiState.isEmpty && scheduleUiState.isEmpty) {
-        EmptyContentIndicator(modifier = modifier)
+    if (mealUiState.isEmpty && memoPopupElements.isEmpty()) {
+        Box(modifier = modifier) {
+            EmptyContentIndicator(
+                onClick = onMemoPopupOpen,
+                modifier = Modifier.align(Alignment.Center),
+            )
+        }
     } else {
         LazyColumn(
             modifier = modifier,
@@ -244,17 +245,11 @@ internal fun MainScreenContents(
                     )
                 }
             }
-            if (!scheduleUiState.isEmpty) {
+            if (memoPopupElements.isNotEmpty()) {
                 item {
                     ScheduleContent(
-                        scheduleUiState = scheduleUiState,
-                        memoUiState = memoUiState,
-                        onAddMemo = onAddMemo,
-                        isMemoPopupVisible = isMemoPopupVisible,
+                        scheduleElements = memoPopupElements,
                         onMemoPopupOpen = onMemoPopupOpen,
-                        onMemoPopupClose = onMemoPopupClose,
-                        onMemoUpdate = onMemoUpdate,
-                        onMemoDelete = onMemoDelete,
                     )
                 }
             }
@@ -263,12 +258,27 @@ internal fun MainScreenContents(
 }
 
 @Composable
-private fun EmptyContentIndicator(modifier: Modifier = Modifier) {
-    Box(modifier = modifier) {
-        TitleMedium(
-            text = stringResource(id = R.string.content_empty),
-            modifier = Modifier.align(Alignment.Center),
+private fun EmptyContentIndicator(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val description = stringResource(id = R.string.main_screen_add_memo_description)
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .clickable { onClick() }
+            .padding(8.dp)
+            .clearAndSetSemantics {
+                contentDescription = description
+            },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Add,
+            contentDescription = null,
         )
+        TitleMedium(text = stringResource(id = R.string.main_screen_add_memo))
     }
 }
 
@@ -346,17 +356,10 @@ internal fun MenuRow(
 
 @Composable
 internal fun ScheduleContent(
-    scheduleUiState: ScheduleUiState,
-    memoUiState: MemoUiState,
-    onAddMemo: () -> Unit,
-    isMemoPopupVisible: Boolean,
+    scheduleElements: List<MemoPopupElement>,
     onMemoPopupOpen: () -> Unit,
-    onMemoPopupClose: () -> Unit,
-    onMemoUpdate: (UiMemo) -> Unit,
-    onMemoDelete: (UiMemo) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scheduleElements = mergeSchedulesAndMemos(scheduleUiState, memoUiState)
     MainScreenContent(
         title = stringResource(id = R.string.schedule_content_title),
         modifier = modifier,
@@ -367,19 +370,6 @@ internal fun ScheduleContent(
             scheduleElements.forEach { uiSchedule ->
                 BodyLarge(text = uiSchedule.displayText)
             }
-        }
-    }
-    if (isMemoPopupVisible) {
-        MainScreenPopup(onClose = onMemoPopupClose) {
-            MemoPopup(
-                date = memoUiState.date,
-                memoPopupElements = scheduleElements,
-                onAddMemo = onAddMemo,
-                onContentsChange = onMemoUpdate,
-                onMemoDelete = onMemoDelete,
-                onPopupClose = onMemoPopupClose,
-                modifier = Modifier.padding(popupPadding),
-            )
         }
     }
 }
@@ -404,12 +394,7 @@ internal fun DailyMealSchedules(
     isNutrientPopupVisible: Boolean,
     onNutrientPopupOpen: () -> Unit,
     onNutrientPopupClose: () -> Unit,
-    isMemoPopupVisible: Boolean,
-    onAddMemo: () -> Unit,
     onMemoPopupOpen: () -> Unit,
-    onMemoPopupClose: () -> Unit,
-    onMemoUpdate: (UiMemo) -> Unit,
-    onMemoDelete: (UiMemo) -> Unit,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
     mealColumns: Int = 2,
@@ -435,13 +420,8 @@ internal fun DailyMealSchedules(
                 isNutrientPopupVisible = isNutrientPopupVisible,
                 onNutrientPopupOpen = onNutrientPopupOpen,
                 onNutrientPopupClose = onNutrientPopupClose,
-                mealColumns = mealColumns,
-                isMemoPopupVisible = isMemoPopupVisible,
-                onAddMemo = onAddMemo,
                 onMemoPopupOpen = onMemoPopupOpen,
-                onMemoPopupClose = onMemoPopupClose,
-                onMemoUpdate = onMemoUpdate,
-                onMemoDelete = onMemoDelete,
+                mealColumns = mealColumns,
                 onDateClick = onDateClick,
             )
         }
@@ -454,12 +434,7 @@ internal fun DailyMealSchedule(
     isNutrientPopupVisible: Boolean,
     onNutrientPopupOpen: () -> Unit,
     onNutrientPopupClose: () -> Unit,
-    isMemoPopupVisible: Boolean,
-    onAddMemo: () -> Unit,
     onMemoPopupOpen: () -> Unit,
-    onMemoPopupClose: () -> Unit,
-    onMemoUpdate: (UiMemo) -> Unit,
-    onMemoDelete: (UiMemo) -> Unit,
     modifier: Modifier = Modifier,
     mealColumns: Int = 2,
     onDateClick: (Date) -> Unit = {},
@@ -476,18 +451,12 @@ internal fun DailyMealSchedule(
         )
         MainScreenContents(
             mealUiState = dailyData.mealUiState,
-            scheduleUiState = dailyData.scheduleUiState,
-            memoUiState = dailyData.memoUiState,
+            memoPopupElements = dailyData.memoPopupElements,
             mealColumns = mealColumns,
             isNutrientPopupVisible = isNutrientPopupVisible,
             onNutrientPopupOpen = onNutrientPopupOpen,
             onNutrientPopupClose = onNutrientPopupClose,
-            isMemoPopupVisible = isMemoPopupVisible,
-            onAddMemo = onAddMemo,
             onMemoPopupOpen = onMemoPopupOpen,
-            onMemoPopupClose = onMemoPopupClose,
-            onMemoUpdate = onMemoUpdate,
-            onMemoDelete = onMemoDelete,
             modifier = Modifier.padding(16.dp),
         )
     }
@@ -705,26 +674,23 @@ private val sampleMealUiState = MealUiState(2022, 10, 28, previewMenus, previewN
 private fun MainScreenContentsPreview() {
     BlindarTheme {
         MainScreenContents(
-            modifier = Modifier.height(500.dp),
             mealUiState = sampleMealUiState,
-            scheduleUiState = ScheduleUiState(
-                date = Date.now(),
-                uiSchedules = previewSchedules,
-            ),
-            memoUiState = MemoUiState(
-                date = Date.now(),
-                memos = previewMemos,
+            memoPopupElements = mergeSchedulesAndMemos(
+                ScheduleUiState(
+                    date = Date.now(),
+                    uiSchedules = previewSchedules,
+                ),
+                MemoUiState(
+                    date = Date.now(),
+                    memos = previewMemos,
+                ),
             ),
             mealColumns = 2,
             isNutrientPopupVisible = false,
             onNutrientPopupOpen = {},
             onNutrientPopupClose = {},
-            isMemoPopupVisible = false,
-            onAddMemo = {},
             onMemoPopupOpen = {},
-            onMemoPopupClose = {},
-            onMemoUpdate = {},
-            onMemoDelete = {},
+            modifier = Modifier.height(500.dp),
         )
     }
 }
@@ -765,12 +731,7 @@ private fun ListScreenItemPreview() {
             isNutrientPopupVisible = false,
             onNutrientPopupOpen = {},
             onNutrientPopupClose = {},
-            isMemoPopupVisible = false,
-            onAddMemo = {},
             onMemoPopupOpen = {},
-            onMemoPopupClose = {},
-            onMemoUpdate = {},
-            onMemoDelete = {},
         )
     }
 }

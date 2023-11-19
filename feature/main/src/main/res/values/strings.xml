@@ -4,6 +4,8 @@
     <string name="calendar_next_arrow">한 달 후로 가기</string>
 
     <string name="content_empty">데이터가 없습니다.</string>
+    <string name="main_screen_add_memo">메모 추가하기</string>
+    <string name="main_screen_add_memo_description">클릭하여 메모 추가 화면을 엽니다.</string>
 
     <string name="navigate_to_school_select">학교 선택 화면으로 가기</string>
 
