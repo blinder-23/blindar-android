@@ -3,14 +3,14 @@ package com.practice.preferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlin.coroutines.CoroutineContext
 
 interface PreferencesRepository : CoroutineScope {
     override val coroutineContext: CoroutineContext
-        get() = SupervisorJob() + Dispatchers.Default
+        get() = SupervisorJob() + Dispatchers.IO
 
-    val userPreferencesFlow: Flow<UserPreferences>
+    val userPreferencesFlow: StateFlow<UserPreferences>
 
     suspend fun updateUiMode(uiMode: UiMode)
     suspend fun updateThemeMode(themeMode: ThemeMode)
@@ -19,6 +19,7 @@ interface PreferencesRepository : CoroutineScope {
     suspend fun increaseRunningWorkCount()
     suspend fun decreaseRunningWorkCount()
     suspend fun updateSelectedSchool(schoolCode: Int, schoolName: String)
+    suspend fun getAndIncreaseMemoIdCount(): Int
     suspend fun clear()
     suspend fun fetchInitialPreferences(): UserPreferences
 }

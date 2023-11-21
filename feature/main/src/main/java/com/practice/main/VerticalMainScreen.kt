@@ -1,13 +1,22 @@
 package com.practice.main
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
@@ -18,11 +27,14 @@ import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.School
-import com.practice.main.state.DailyMealScheduleState
+import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
+import com.practice.main.state.MemoUiState
 import com.practice.main.state.ScheduleUiState
 import com.practice.preferences.ScreenMode
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun VerticalMainScreen(
@@ -36,7 +48,11 @@ fun VerticalMainScreen(
     getClickLabel: (Date) -> String,
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
+    onNutrientPopupOpen: () -> Unit,
+    onNutrientPopupClose: () -> Unit,
+    onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
+    customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
     Column(modifier = modifier) {
         MainScreenTopBar(
@@ -63,14 +79,19 @@ fun VerticalMainScreen(
                 dateShape = calendarDateShape,
                 getClickLabel = getClickLabel,
                 drawBehindElement = drawUnderlineToScheduleDate,
+                customActions = customActions,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
             )
             MainScreenContents(
-                mealUiState = uiState.selectedDateMealScheduleState.mealUiState,
-                scheduleUiState = uiState.selectedDateMealScheduleState.scheduleUiState,
+                mealUiState = uiState.selectedDateDataState.mealUiState,
+                memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
                 mealColumns = mealColumns,
+                isNutrientPopupVisible = uiState.isNutrientPopupVisible,
+                onNutrientPopupOpen = onNutrientPopupOpen,
+                onNutrientPopupClose = onNutrientPopupClose,
+                onMemoPopupOpen = onMemoPopupOpen,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
@@ -90,15 +111,29 @@ private fun VerticalMainScreenPreview() {
     val uiState by remember {
         mutableStateOf(
             MainUiState(
+                userId = "",
                 year = year,
                 month = month,
                 selectedDate = selectedDate,
-                monthlyMealScheduleState = (0..3).map {
-                    DailyMealScheduleState(
+                monthlyDataState = (0..3).map {
+                    DailyData(
                         schoolCode = 1,
                         date = now.plusDays(it),
-                        mealUiState = MealUiState(previewMenus),
-                        scheduleUiState = ScheduleUiState(previewSchedules),
+                        mealUiState = MealUiState(
+                            year,
+                            month,
+                            now.dayOfMonth,
+                            previewMenus,
+                            previewNutrients
+                        ),
+                        scheduleUiState = ScheduleUiState(
+                            date = now,
+                            uiSchedules = previewSchedules,
+                        ),
+                        memoUiState = MemoUiState(
+                            date = now,
+                            memos = previewMemos,
+                        ),
                     )
                 },
                 isLoading = false,
@@ -107,6 +142,8 @@ private fun VerticalMainScreenPreview() {
                     name = "어떤 학교",
                     schoolCode = -1,
                 ),
+                isNutrientPopupVisible = false,
+                isMemoPopupVisible = false,
             )
         )
     }
@@ -118,9 +155,6 @@ private fun VerticalMainScreenPreview() {
     BlindarTheme {
         VerticalMainScreen(
             calendarPageCount = 13,
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.surface)
-                .fillMaxSize(),
             uiState = uiState,
             calendarState = calendarState,
             mealColumns = 2,
@@ -130,6 +164,12 @@ private fun VerticalMainScreenPreview() {
             getClickLabel = { "" },
             drawUnderlineToScheduleDate = {},
             onNavigateToSelectSchoolScreen = {},
+            onNutrientPopupOpen = {},
+            onNutrientPopupClose = {},
+            onMemoPopupOpen = {},
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .fillMaxSize(),
         )
     }
 }

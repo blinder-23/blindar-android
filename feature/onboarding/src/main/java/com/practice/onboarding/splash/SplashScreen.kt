@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -25,6 +26,7 @@ fun SplashScreen(
 ) {
     val systemUiController = rememberSystemUiController()
     val systemBarColor = MaterialTheme.colorScheme.surface
+    val context = LocalContext.current
     LaunchedEffect(true) {
         systemUiController.setSystemBarsColor(systemBarColor)
         when (viewModel.userDataState()) {
@@ -33,6 +35,7 @@ fun SplashScreen(
             UserDataState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
             UserDataState.ALL_FILLED -> onAutoLoginSuccess()
         }
+        viewModel.enqueueOneTimeWorkIfFirstExecution(context)
     }
 
     ConstraintLayout(modifier = modifier) {

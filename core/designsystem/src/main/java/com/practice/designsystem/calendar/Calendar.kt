@@ -11,12 +11,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
-import com.practice.designsystem.calendar.core.*
+import com.practice.designsystem.calendar.core.CalendarPage
+import com.practice.designsystem.calendar.core.CalendarState
+import com.practice.designsystem.calendar.core.TextsInsideDate
+import com.practice.designsystem.calendar.core.rememberCalendarState
+import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.designsystem.theme.BlindarTheme
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 val calendarDateShape = CircleShape
 val largeCalendarDateShape = CircleShape.copy(all = CornerSize(15.dp))
@@ -33,6 +40,7 @@ fun Calendar(
     dateShape: Shape = calendarDateShape,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
     dateBelowContent: @Composable (Date) -> Unit = {},
+    customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
     Column(
         modifier = modifier
@@ -56,6 +64,7 @@ fun Calendar(
             dateArrangement = dateArrangement,
             drawBehindElement = drawBehindElement,
             dateBelowContent = dateBelowContent,
+            customActions = customActions,
         )
     }
 }

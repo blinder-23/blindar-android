@@ -6,16 +6,33 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
-import androidx.compose.material3.*
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,12 +54,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.hsk.ktx.date.Date
+import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.LightPreview
-import com.practice.designsystem.components.*
+import com.practice.designsystem.components.BodyLarge
+import com.practice.designsystem.components.DisplayMedium
+import com.practice.designsystem.components.DisplaySmall
+import com.practice.designsystem.components.LabelLarge
+import com.practice.designsystem.components.TitleLarge
+import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.domain.schedule.Schedule
-import com.practice.main.state.*
+import com.practice.main.popup.NutrientPopup
+import com.practice.main.popup.popupPadding
+import com.practice.main.state.DailyData
+import com.practice.main.state.MealUiState
+import com.practice.main.state.MemoPopupElement
+import com.practice.main.state.MemoUiState
+import com.practice.main.state.Menu
+import com.practice.main.state.Nutrient
+import com.practice.main.state.ScheduleUiState
+import com.practice.main.state.ScreenModeIcon
+import com.practice.main.state.UiMemo
+import com.practice.main.state.UiSchedule
+import com.practice.main.state.mergeSchedulesAndMemos
 import com.practice.main.state.screenModeIcons
 import com.practice.preferences.ScreenMode
 import com.practice.util.date.daytype.toKor
@@ -178,12 +214,21 @@ internal fun VerticalYearMonth(
 @Composable
 internal fun MainScreenContents(
     mealUiState: MealUiState,
-    scheduleUiState: ScheduleUiState,
+    memoPopupElements: ImmutableList<MemoPopupElement>,
     mealColumns: Int,
+    isNutrientPopupVisible: Boolean,
+    onNutrientPopupOpen: () -> Unit,
+    onNutrientPopupClose: () -> Unit,
+    onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (mealUiState.isEmpty && scheduleUiState.isEmpty) {
-        EmptyContentIndicator(modifier = modifier)
+    if (mealUiState.isEmpty && memoPopupElements.isEmpty()) {
+        Box(modifier = modifier) {
+            EmptyContentIndicator(
+                onClick = onMemoPopupOpen,
+                modifier = Modifier.align(Alignment.Center),
+            )
+        }
     } else {
         LazyColumn(
             modifier = modifier,
@@ -192,25 +237,51 @@ internal fun MainScreenContents(
         ) {
             if (!mealUiState.isEmpty) {
                 item {
-                    MealContent(mealUiState = mealUiState, columns = mealColumns)
+                    MealContent(
+                        mealUiState = mealUiState,
+                        columns = mealColumns,
+                        isNutrientPopupVisible = isNutrientPopupVisible,
+                        onNutrientPopupOpen = onNutrientPopupOpen,
+                        onNutrientPopupClose = onNutrientPopupClose,
+                    )
                 }
             }
-            if (!scheduleUiState.isEmpty) {
-                item {
-                    ScheduleContent(scheduleUiState)
-                }
+            item {
+                ScheduleContent(
+                    scheduleElements = memoPopupElements,
+                    onMemoPopupOpen = onMemoPopupOpen,
+                )
             }
         }
     }
 }
 
 @Composable
-private fun EmptyContentIndicator(modifier: Modifier = Modifier) {
-    Box(modifier = modifier) {
-        TitleMedium(
-            text = stringResource(id = R.string.content_empty),
-            modifier = Modifier.align(Alignment.Center),
+private fun EmptyContentIndicator(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    padding: PaddingValues = PaddingValues(8.dp),
+) {
+    val description = stringResource(id = R.string.main_screen_add_memo_description)
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .clickable { onClick() }
+            .padding(padding)
+            .clearAndSetSemantics {
+                contentDescription = description
+            },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(
+            8.dp,
+            alignment = Alignment.CenterHorizontally
+        ),
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Add,
+            contentDescription = null,
         )
+        TitleMedium(text = stringResource(id = R.string.main_screen_add_memo))
     }
 }
 
@@ -218,12 +289,17 @@ private fun EmptyContentIndicator(modifier: Modifier = Modifier) {
 internal fun MealContent(
     mealUiState: MealUiState,
     columns: Int,
+    isNutrientPopupVisible: Boolean,
+    onNutrientPopupOpen: () -> Unit,
+    onNutrientPopupClose: () -> Unit,
     modifier: Modifier = Modifier,
     itemPadding: Dp = 16.dp,
 ) {
     MainScreenContent(
         title = "식단",
-        modifier = modifier
+        modifier = modifier,
+        buttonTitle = stringResource(id = R.string.open_nutrient_popup_button),
+        onButtonClick = onNutrientPopupOpen,
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -233,6 +309,23 @@ internal fun MealContent(
                 val filledMenus = fillMenus(menus, columns)
                 MenuRow(menus = filledMenus)
             }
+        }
+    }
+    if (isNutrientPopupVisible) {
+        val month = mealUiState.month
+        val day = mealUiState.day
+        MainScreenPopup(
+            onClose = onNutrientPopupClose,
+        ) {
+            NutrientPopup(
+                popupTitle = stringResource(
+                    id = R.string.nutrient_popup_title,
+                    "${month}월 ${day}일"
+                ),
+                nutrients = mealUiState.nutrients,
+                onClose = onNutrientPopupClose,
+                modifier = Modifier.padding(popupPadding),
+            )
         }
     }
 }
@@ -266,25 +359,67 @@ internal fun MenuRow(
 
 @Composable
 internal fun ScheduleContent(
-    scheduleUiState: ScheduleUiState,
+    scheduleElements: ImmutableList<MemoPopupElement>,
+    onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    MainScreenContent(
-        title = "학사일정",
-        modifier = modifier
-    ) {
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            scheduleUiState.schedules.forEach { schedule ->
-                BodyLarge(text = schedule.displayText)
+    if (scheduleElements.isEmpty()) {
+        EmptyScheduleContent(onMemoPopupOpen = onMemoPopupOpen)
+    } else {
+        MainScreenContent(
+            title = stringResource(id = R.string.schedule_content_title),
+            modifier = modifier,
+            buttonTitle = stringResource(id = R.string.open_memo_popup_button),
+            onButtonClick = onMemoPopupOpen,
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                scheduleElements.forEach { uiSchedule ->
+                    BodyLarge(text = uiSchedule.displayText)
+                }
             }
         }
     }
 }
 
 @Composable
+private fun EmptyScheduleContent(
+    onMemoPopupOpen: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    MainScreenContent(
+        padding = PaddingValues(0.dp),
+        contentAlignment = Alignment.CenterHorizontally,
+        modifier = modifier,
+    ) {
+        EmptyContentIndicator(
+            onClick = onMemoPopupOpen,
+            modifier = Modifier.fillMaxWidth(),
+            padding = PaddingValues(vertical = 12.dp),
+        )
+    }
+}
+
+@Composable
+fun MainScreenPopup(
+    onClose: () -> Unit,
+    content: @Composable () -> Unit = {},
+) {
+    Dialog(
+        onDismissRequest = onClose,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        content()
+    }
+}
+
+@Composable
 internal fun DailyMealSchedules(
-    items: List<DailyMealScheduleState>,
+    items: List<DailyData>,
     selectedDate: Date,
+    isNutrientPopupVisible: Boolean,
+    onNutrientPopupOpen: () -> Unit,
+    onNutrientPopupClose: () -> Unit,
+    onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
     mealColumns: Int = 2,
@@ -306,7 +441,11 @@ internal fun DailyMealSchedules(
             key = { item -> item.date.toEpochSecond() },
         ) { item ->
             DailyMealSchedule(
-                dailyMealScheduleState = item,
+                dailyData = item,
+                isNutrientPopupVisible = isNutrientPopupVisible,
+                onNutrientPopupOpen = onNutrientPopupOpen,
+                onNutrientPopupClose = onNutrientPopupClose,
+                onMemoPopupOpen = onMemoPopupOpen,
                 mealColumns = mealColumns,
                 onDateClick = onDateClick,
             )
@@ -316,12 +455,16 @@ internal fun DailyMealSchedules(
 
 @Composable
 internal fun DailyMealSchedule(
-    dailyMealScheduleState: DailyMealScheduleState,
+    dailyData: DailyData,
+    isNutrientPopupVisible: Boolean,
+    onNutrientPopupOpen: () -> Unit,
+    onNutrientPopupClose: () -> Unit,
+    onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
     mealColumns: Int = 2,
     onDateClick: (Date) -> Unit = {},
 ) {
-    val date = dailyMealScheduleState.date
+    val date = dailyData.date
     Column(modifier = modifier.fillMaxWidth()) {
         DailyDay(
             date = date,
@@ -332,9 +475,13 @@ internal fun DailyMealSchedule(
             backgroundColor = MaterialTheme.colorScheme.secondary,
         )
         MainScreenContents(
-            mealUiState = dailyMealScheduleState.mealUiState,
-            scheduleUiState = dailyMealScheduleState.scheduleUiState,
+            mealUiState = dailyData.mealUiState,
+            memoPopupElements = dailyData.memoPopupElements,
             mealColumns = mealColumns,
+            isNutrientPopupVisible = isNutrientPopupVisible,
+            onNutrientPopupOpen = onNutrientPopupOpen,
+            onNutrientPopupClose = onNutrientPopupClose,
+            onMemoPopupOpen = onMemoPopupOpen,
             modifier = Modifier.padding(16.dp),
         )
     }
@@ -369,8 +516,17 @@ private fun DailyDay(
 
 @Composable
 internal fun MainScreenContent(
-    title: String,
     modifier: Modifier = Modifier,
+    title: String = "",
+    buttonTitle: String = "",
+    onButtonClick: () -> Unit = {},
+    padding: PaddingValues = PaddingValues(
+        start = 25.dp,
+        top = 10.dp,
+        end = 25.dp,
+        bottom = 30.dp,
+    ),
+    contentAlignment: Alignment.Horizontal = Alignment.Start,
     contents: @Composable () -> Unit = {},
 ) {
     ElevatedCard(
@@ -379,13 +535,59 @@ internal fun MainScreenContent(
     ) {
         Column(
             modifier = Modifier
-                .padding(horizontal = 25.dp, vertical = 30.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+                .padding(padding)
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = contentAlignment,
         ) {
-            MainScreenContentTitle(title = title)
+            if (title.isNotEmpty() || buttonTitle.isNotEmpty()) {
+                MainScreenContentHeader(
+                    title = title,
+                    buttonTitle = buttonTitle,
+                    onButtonClick = onButtonClick,
+                )
+            }
             contents()
         }
+    }
+}
+
+@Composable
+private fun MainScreenContentHeader(
+    title: String,
+    modifier: Modifier = Modifier,
+    buttonTitle: String = "",
+    onButtonClick: () -> Unit = {},
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        MainScreenContentTitle(title = title)
+        Spacer(modifier = Modifier.weight(1f))
+        if (buttonTitle != "") {
+            MainScreenContentHeaderButton(title = buttonTitle, onButtonClick = onButtonClick)
+        }
+    }
+}
+
+@Composable
+private fun MainScreenContentHeaderButton(
+    title: String,
+    onButtonClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val backgroundColor = MaterialTheme.colorScheme.primary
+    Button(
+        onClick = onButtonClick,
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+    ) {
+        LabelLarge(
+            text = title,
+            textColor = contentColorFor(backgroundColor)
+        )
     }
 }
 
@@ -457,8 +659,9 @@ private fun ScreenModeIconButtonsPreview() {
 
 val previewMenus = listOf("찰보리밥", "망고마들렌", "쇠고기미역국", "콩나물파채무침", "돼지양념구이", "포기김치", "오렌지주스", "기타등등")
     .map { Menu(it) }.toImmutableList()
+val previewNutrients = (0..3).map { Nutrient("탄수화물", 123.0, "g") }.toImmutableList()
 val previewSchedules = (0..6).map {
-    Schedule(
+    UiSchedule(
         schoolCode = 1,
         year = 2023,
         month = 7,
@@ -468,16 +671,54 @@ val previewSchedules = (0..6).map {
         eventContent = "$it"
     )
 }.toImmutableList()
+val previewMemos = (1..3).map {
+    UiMemo(
+        id = it.toString(),
+        userId = "blindar",
+        year = 2022,
+        month = 10,
+        day = 11,
+        contents = "memo $it",
+        isSavedOnRemote = false,
+    )
+}.toImmutableList()
+
+@LightAndDarkPreview
+@Composable
+private fun MainScreenContentHeaderButtonPreview() {
+    BlindarTheme {
+        MainScreenContentHeaderButton(
+            title = "영양 정보",
+            onButtonClick = {},
+            modifier = Modifier.padding(16.dp),
+        )
+    }
+}
+
+private val sampleMealUiState = MealUiState(2022, 10, 28, previewMenus, previewNutrients)
 
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenContentsPreview() {
     BlindarTheme {
         MainScreenContents(
-            modifier = Modifier.height(500.dp),
-            mealUiState = MealUiState(previewMenus),
-            scheduleUiState = ScheduleUiState(previewSchedules),
+            mealUiState = sampleMealUiState,
+            memoPopupElements = mergeSchedulesAndMemos(
+                ScheduleUiState(
+                    date = Date.now(),
+                    uiSchedules = previewSchedules,
+                ),
+                MemoUiState(
+                    date = Date.now(),
+                    memos = previewMemos,
+                ),
+            ),
             mealColumns = 2,
+            isNutrientPopupVisible = false,
+            onNutrientPopupOpen = {},
+            onNutrientPopupClose = {},
+            onMemoPopupOpen = {},
+            modifier = Modifier.height(500.dp),
         )
     }
 }
@@ -487,8 +728,11 @@ private fun MainScreenContentsPreview() {
 private fun MealContentPreview() {
     BlindarTheme {
         MealContent(
-            mealUiState = MealUiState(previewMenus),
+            mealUiState = sampleMealUiState,
             columns = 2,
+            isNutrientPopupVisible = false,
+            onNutrientPopupOpen = {},
+            onNutrientPopupClose = {},
         )
     }
 }
@@ -496,14 +740,26 @@ private fun MealContentPreview() {
 @Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
 @Composable
 private fun ListScreenItemPreview() {
+    val date = Date(2022, 12, 13)
     BlindarTheme {
         DailyMealSchedule(
-            DailyMealScheduleState(
+            DailyData(
                 schoolCode = 1,
-                date = Date(2022, 12, 13),
-                mealUiState = MealUiState(previewMenus),
-                scheduleUiState = ScheduleUiState(previewSchedules),
+                date = date,
+                mealUiState = sampleMealUiState,
+                scheduleUiState = ScheduleUiState(
+                    date = date,
+                    uiSchedules = previewSchedules,
+                ),
+                memoUiState = MemoUiState(
+                    date = date,
+                    memos = previewMemos,
+                ),
             ),
+            isNutrientPopupVisible = false,
+            onNutrientPopupOpen = {},
+            onNutrientPopupClose = {},
+            onMemoPopupOpen = {},
         )
     }
 }

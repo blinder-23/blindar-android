@@ -1,6 +1,6 @@
 package com.practice.api.school.api
 
-import com.practice.api.ServerRetrofit
+import com.practice.api.BlindarRetrofit
 import com.practice.api.school.pojo.SchoolsResponse
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -11,5 +11,5 @@ interface SchoolApi {
 }
 
 val schoolApi: SchoolApi
-    get() = ServerRetrofit.getRetrofit(GsonConverterFactory.create())
+    get() = BlindarRetrofit.getRetrofit(GsonConverterFactory.create())
         .create(SchoolApi::class.java)

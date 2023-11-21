@@ -15,12 +15,15 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.CalendarPage
 import com.practice.designsystem.calendar.core.CalendarState
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.offset
 import com.practice.designsystem.calendar.core.rememberCalendarState
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -37,6 +40,7 @@ fun SwipeableCalendar(
     getClickLabel: (Date) -> String? = { null },
     dateArrangement: Arrangement.Vertical = Arrangement.Center,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
+    customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
     val currentYearMonth = YearMonth.now()
     val middlePage = itemCount / 2
@@ -71,6 +75,7 @@ fun SwipeableCalendar(
             dateArrangement = dateArrangement,
             dateShape = dateShape,
             drawBehindElement = drawBehindElement,
+            customActions = customActions,
         )
     }
 }

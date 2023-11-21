@@ -1,6 +1,10 @@
 package com.practice.api.meal.pojo
 
-import com.practice.domain.meal.*
+import com.practice.domain.meal.Meal
+import com.practice.domain.meal.Menu
+import com.practice.domain.meal.MonthlyMeal
+import com.practice.domain.meal.Nutrient
+import com.practice.domain.meal.Origin
 
 fun MealResponse.toMonthlyMeal(
     schoolCode: Int,
@@ -23,8 +27,7 @@ fun MealModel.toMeal(schoolCode: Int) = Meal(
     menus = dishes.toMenuList(),
     origins = origins.toOriginList(),
     nutrients = nutrients.toNutrientList(),
-    // TODO: 서버에서 칼로리 구현한 후에 수정
-    calorie = 0.0,
+    calorie = calorie,
 )
 
 fun List<MenuModel>.toMenuList() = map { it.toMenu() }

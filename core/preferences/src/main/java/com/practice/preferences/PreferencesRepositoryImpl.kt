@@ -2,12 +2,20 @@ package com.practice.preferences
 
 import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
+import androidx.datastore.preferences.core.MutablePreferences
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
@@ -31,20 +39,22 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         val RUNNING_WORKS_COUNT = intPreferencesKey("running-works-count")
         val SCHOOL_CODE = intPreferencesKey("school-id")
         val SCHOOL_NAME = stringPreferencesKey("school-name")
+        val MEMO_ID_COUNTER = intPreferencesKey("memo-id-counter")
     }
 
-    override val userPreferencesFlow: Flow<UserPreferences> = dataStore.data.catch { exception ->
-        when (exception) {
-            is IOException -> {
-                Log.e(TAG, "Error while reading preferences.", exception)
-                emit(emptyPreferences())
+    override val userPreferencesFlow: StateFlow<UserPreferences> =
+        dataStore.data.catch { exception ->
+            when (exception) {
+                is IOException -> {
+                    Log.e(TAG, "Error while reading preferences.", exception)
+                    emit(emptyPreferences())
+                }
+
+                else -> throw exception
             }
-
-            else -> throw exception
-        }
-    }.map { preferences ->
-        mapUserPreferences(preferences)
-    }
+        }.map { preferences ->
+            mapUserPreferences(preferences)
+        }.stateIn(this, SharingStarted.Eagerly, UserPreferences.emptyPreferences)
 
     override suspend fun updateUiMode(uiMode: UiMode) {
         edit {
@@ -98,6 +108,14 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         }
     }
 
+    override suspend fun getAndIncreaseMemoIdCount(): Int {
+        val currentCount = userPreferencesFlow.value.memoIdCounter
+        edit {
+            it[PreferenceKeys.MEMO_ID_COUNTER] = currentCount + 1
+        }
+        return currentCount
+    }
+
     override suspend fun clear() {
         edit {
             it.clear()
@@ -132,6 +150,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         val runningWorksCount = preferences[PreferenceKeys.RUNNING_WORKS_COUNT] ?: 0
         val schoolCode = preferences[PreferenceKeys.SCHOOL_CODE] ?: emptySchoolCode
         val schoolName = preferences[PreferenceKeys.SCHOOL_NAME] ?: emptySchoolName
+        val memoIdCounter = preferences[PreferenceKeys.MEMO_ID_COUNTER] ?: 0
         return UserPreferences(
             uiMode = uiMode,
             themeMode = themeMode,
@@ -140,6 +159,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
             runningWorksCount = runningWorksCount,
             schoolCode = schoolCode,
             schoolName = schoolName,
+            memoIdCounter = memoIdCounter
         )
     }
 

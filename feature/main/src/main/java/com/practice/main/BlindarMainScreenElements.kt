@@ -30,6 +30,8 @@ import com.practice.designsystem.calendar.core.*
 import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.theme.BlindarTheme
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 @Composable
@@ -66,6 +68,7 @@ fun CalendarCard(
     drawBehindElement: DrawScope.(Date) -> Unit,
     modifier: Modifier = Modifier,
     dateArrangement: Arrangement.Vertical = Arrangement.Center,
+    customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
     val currentYearMonth = YearMonth.now()
     val middlePage = calendarPageCount / 2
@@ -117,6 +120,7 @@ fun CalendarCard(
                     getClickLabel = getClickLabel,
                     dateArrangement = dateArrangement,
                     drawBehindElement = drawBehindElement,
+                    customActions = customActions,
                 )
             }
         }

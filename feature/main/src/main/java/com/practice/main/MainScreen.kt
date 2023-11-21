@@ -27,6 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.main.popup.MemoPopup
+import com.practice.main.popup.popupPadding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -60,7 +62,6 @@ fun MainScreen(
         if (windowSize.widthSizeClass == WindowWidthSizeClass.Expanded) {
             HorizontalMainScreen(
                 calendarPageCount = calendarPageCount,
-                modifier = paddingModifier,
                 uiState = uiState,
                 onScreenModeChange = viewModel::onScreenModeChange,
                 calendarState = calendarState,
@@ -70,12 +71,14 @@ fun MainScreen(
                 getContentDescription = viewModel::getContentDescription,
                 getClickLabel = viewModel::getClickLabel,
                 drawUnderlineToScheduleDate = { },
-                onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
-            )
+                onNutrientPopupOpen = viewModel::openNutrientPopup,
+                onNutrientPopupClose = viewModel::closeNutrientPopup,
+                onMemoPopupOpen = viewModel::openMemoPopup,
+                modifier = paddingModifier,
+            ) { date -> viewModel.getCustomActions(date) }
         } else {
             VerticalMainScreen(
                 calendarPageCount = calendarPageCount,
-                modifier = paddingModifier,
                 uiState = uiState,
                 calendarState = calendarState,
                 mealColumns = mealColumns,
@@ -85,6 +88,23 @@ fun MainScreen(
                 getClickLabel = viewModel::getClickLabel,
                 drawUnderlineToScheduleDate = {},
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
+                onNutrientPopupOpen = viewModel::openNutrientPopup,
+                onNutrientPopupClose = viewModel::closeNutrientPopup,
+                onMemoPopupOpen = viewModel::openMemoPopup,
+                modifier = paddingModifier,
+            ) { date -> viewModel.getCustomActions(date) }
+        }
+    }
+    if (uiState.isMemoPopupVisible) {
+        MainScreenPopup(onClose = viewModel::closeMemoPopup) {
+            MemoPopup(
+                date = uiState.selectedDateDataState.memoUiState.date,
+                memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
+                onAddMemo = viewModel::addMemo,
+                onContentsChange = viewModel::updateMemoOnLocal,
+                onMemoDelete = viewModel::deleteMemo,
+                onPopupClose = viewModel::closeMemoPopup,
+                modifier = Modifier.padding(popupPadding),
             )
         }
     }
