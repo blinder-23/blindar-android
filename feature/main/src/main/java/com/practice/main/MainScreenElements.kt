@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -245,13 +246,11 @@ internal fun MainScreenContents(
                     )
                 }
             }
-            if (memoPopupElements.isNotEmpty()) {
-                item {
-                    ScheduleContent(
-                        scheduleElements = memoPopupElements,
-                        onMemoPopupOpen = onMemoPopupOpen,
-                    )
-                }
+            item {
+                ScheduleContent(
+                    scheduleElements = memoPopupElements,
+                    onMemoPopupOpen = onMemoPopupOpen,
+                )
             }
         }
     }
@@ -260,19 +259,23 @@ internal fun MainScreenContents(
 @Composable
 private fun EmptyContentIndicator(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    padding: PaddingValues = PaddingValues(8.dp),
 ) {
     val description = stringResource(id = R.string.main_screen_add_memo_description)
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
             .clickable { onClick() }
-            .padding(8.dp)
+            .padding(padding)
             .clearAndSetSemantics {
                 contentDescription = description
             },
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(
+            8.dp,
+            alignment = Alignment.CenterHorizontally
+        ),
     ) {
         Icon(
             imageVector = Icons.Outlined.Add,
@@ -360,17 +363,39 @@ internal fun ScheduleContent(
     onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    MainScreenContent(
-        title = stringResource(id = R.string.schedule_content_title),
-        modifier = modifier,
-        buttonTitle = stringResource(id = R.string.open_memo_popup_button),
-        onButtonClick = onMemoPopupOpen,
-    ) {
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            scheduleElements.forEach { uiSchedule ->
-                BodyLarge(text = uiSchedule.displayText)
+    if (scheduleElements.isEmpty()) {
+        EmptyScheduleContent(onMemoPopupOpen = onMemoPopupOpen)
+    } else {
+        MainScreenContent(
+            title = stringResource(id = R.string.schedule_content_title),
+            modifier = modifier,
+            buttonTitle = stringResource(id = R.string.open_memo_popup_button),
+            onButtonClick = onMemoPopupOpen,
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                scheduleElements.forEach { uiSchedule ->
+                    BodyLarge(text = uiSchedule.displayText)
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun EmptyScheduleContent(
+    onMemoPopupOpen: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    MainScreenContent(
+        padding = PaddingValues(0.dp),
+        contentAlignment = Alignment.CenterHorizontally,
+        modifier = modifier,
+    ) {
+        EmptyContentIndicator(
+            onClick = onMemoPopupOpen,
+            modifier = Modifier.fillMaxWidth(),
+            padding = PaddingValues(vertical = 12.dp),
+        )
     }
 }
 
@@ -491,35 +516,38 @@ private fun DailyDay(
 
 @Composable
 internal fun MainScreenContent(
-    title: String,
     modifier: Modifier = Modifier,
+    title: String = "",
     buttonTitle: String = "",
     onButtonClick: () -> Unit = {},
+    padding: PaddingValues = PaddingValues(
+        start = 25.dp,
+        top = 10.dp,
+        end = 25.dp,
+        bottom = 30.dp,
+    ),
+    contentAlignment: Alignment.Horizontal = Alignment.Start,
     contents: @Composable () -> Unit = {},
 ) {
-    val horizontalPadding = 25.dp
-    val topPadding = 10.dp
-    val bottomPadding = 30.dp
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth(),
     ) {
         Column(
             modifier = Modifier
-                .padding(
-                    start = horizontalPadding,
-                    top = topPadding,
-                    end = horizontalPadding,
-                    bottom = bottomPadding,
-                )
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(padding)
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = contentAlignment,
         ) {
-            MainScreenContentHeader(
-                title = title,
-                buttonTitle = buttonTitle,
-                onButtonClick = onButtonClick,
-            )
+            if (title.isNotEmpty() || buttonTitle.isNotEmpty()) {
+                MainScreenContentHeader(
+                    title = title,
+                    buttonTitle = buttonTitle,
+                    onButtonClick = onButtonClick,
+                )
+            }
             contents()
         }
     }
