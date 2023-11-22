@@ -11,6 +11,7 @@ class FakePreferencesRepository : PreferencesRepository {
         isFirstExecution = true,
         runningWorksCount = 0,
         schoolCode = emptySchoolCode,
+        memoIdCounter = 0,
     )
     private var preferences: UserPreferences = initialPreferences
 
@@ -53,6 +54,15 @@ class FakePreferencesRepository : PreferencesRepository {
             schoolCode = schoolCode,
             schoolName = schoolName
         )
+    }
+
+    override suspend fun getAndIncreaseMemoIdCount(): Int {
+        val counter = preferences.memoIdCounter
+        preferences = preferences.copy(
+            memoIdCounter = counter + 1
+        )
+        emitNewValue()
+        return counter
     }
 
     override suspend fun clear() {

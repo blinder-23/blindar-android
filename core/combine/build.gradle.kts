@@ -69,6 +69,7 @@ android {
 dependencies {
     api(project(":data:meal"))
     api(project(":data:schedule"))
+    api(project(":data:memo"))
     api(project(":core:api"))
     implementation(libs.hsk.ktx)
 

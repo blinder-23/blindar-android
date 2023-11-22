@@ -5,4 +5,5 @@ data class MealModel(
     val dishes: List<MenuModel>,
     val origins: List<OriginModel>,
     val nutrients: List<NutrientModel>,
+    val calorie: Double,
 )

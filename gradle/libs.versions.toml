@@ -75,6 +75,7 @@ androidx-compose-material-icons-extended = { module = 'androidx.compose.material
 androidx-compose-material3 = { module = 'androidx.compose.material3:material3' }
 androidx-compose-material3-windowsize = { module = 'androidx.compose.material3:material3-window-size-class' }
 androidx-compose-ui = { module = 'androidx.compose.ui:ui' }
+androidx-compose-ui-text-googlefonts = { module = 'androidx.compose.ui:ui-text-google-fonts' }
 androidx-compose-ui-test = { module = 'androidx.compose.ui:ui-test' }
 androidx-compose-ui-test-junit4 = { module = 'androidx.compose.ui:ui-test-junit4' }
 androidx-compose-ui-test-manifest = { module = 'androidx.compose.ui:ui-test-manifest' }
@@ -131,6 +132,7 @@ compose = [
     'androidx-compose-material3',
     'androidx-compose-material3-windowsize',
     'androidx-compose-ui',
+    'androidx-compose-ui-text-googlefonts',
     'androidx-compose-ui-test',
     'androidx-compose-ui-test-junit4',
     'androidx-compose-ui-test-manifest',

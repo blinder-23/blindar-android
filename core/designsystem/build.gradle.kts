@@ -52,6 +52,9 @@ dependencies {
     // Accompanist
     implementation(libs.bundles.accompanist)
 
+    // Kotlin Immutable List
+    implementation(libs.kotlinx.collections.immutable)
+
     // Unit test
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.vintage.engine)

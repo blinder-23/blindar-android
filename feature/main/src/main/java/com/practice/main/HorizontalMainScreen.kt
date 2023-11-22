@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.tooling.preview.Preview
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.CalendarState
@@ -17,16 +18,18 @@ import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.largeCalendarDateShape
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.School
-import com.practice.main.state.DailyMealScheduleState
+import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
+import com.practice.main.state.MemoUiState
 import com.practice.main.state.ScheduleUiState
 import com.practice.preferences.ScreenMode
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun HorizontalMainScreen(
     calendarPageCount: Int,
-    modifier: Modifier = Modifier,
     uiState: MainUiState,
     onScreenModeChange: (ScreenMode) -> Unit,
     calendarState: CalendarState,
@@ -36,7 +39,11 @@ fun HorizontalMainScreen(
     getContentDescription: (Date) -> String,
     getClickLabel: (Date) -> String,
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
-    onNavigateToSelectSchoolScreen: () -> Unit,
+    onNutrientPopupOpen: () -> Unit,
+    onNutrientPopupClose: () -> Unit,
+    onMemoPopupOpen: () -> Unit,
+    modifier: Modifier = Modifier,
+    customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
     Column(modifier = modifier) {
         MainScreenHeader(
@@ -58,11 +65,16 @@ fun HorizontalMainScreen(
                 drawBehindElement = drawUnderlineToScheduleDate,
                 dateShape = largeCalendarDateShape,
                 dateArrangement = Arrangement.Top,
+                customActions = customActions,
             )
             MainScreenContents(
-                mealUiState = uiState.selectedDateMealScheduleState.mealUiState,
-                scheduleUiState = uiState.selectedDateMealScheduleState.scheduleUiState,
+                mealUiState = uiState.selectedDateDataState.mealUiState,
+                memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
                 mealColumns = mealColumns,
+                isNutrientPopupVisible = uiState.isNutrientPopupVisible,
+                onNutrientPopupOpen = onNutrientPopupOpen,
+                onNutrientPopupClose = onNutrientPopupClose,
+                onMemoPopupOpen = onMemoPopupOpen,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
@@ -79,15 +91,23 @@ private fun HorizontalMainScreenPreview() {
     val selectedDate = Date(2022, 10, 11)
 
     val uiState = MainUiState(
+        userId = "",
         year = year,
         month = month,
         selectedDate = selectedDate,
-        monthlyMealScheduleState = (1..3).map {
-            DailyMealScheduleState(
+        monthlyDataState = (1..3).map {
+            DailyData(
                 schoolCode = 1,
                 date = Date(2022, 10, 11).plusDays(it),
-                mealUiState = MealUiState(previewMenus),
-                scheduleUiState = ScheduleUiState(previewSchedules),
+                mealUiState = MealUiState(2022, 10, 11, previewMenus, previewNutrients),
+                scheduleUiState = ScheduleUiState(
+                    date = selectedDate,
+                    uiSchedules = previewSchedules,
+                ),
+                memoUiState = MemoUiState(
+                    date = selectedDate,
+                    memos = previewMemos,
+                ),
             )
         },
         isLoading = false,
@@ -96,6 +116,8 @@ private fun HorizontalMainScreenPreview() {
             name = "어떤 학교",
             schoolCode = -1,
         ),
+        isNutrientPopupVisible = false,
+        isMemoPopupVisible = false,
     )
     val calendarState = rememberCalendarState(
         year = year,
@@ -105,7 +127,6 @@ private fun HorizontalMainScreenPreview() {
     BlindarTheme {
         HorizontalMainScreen(
             calendarPageCount = 13,
-            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
             uiState = uiState,
             onScreenModeChange = {},
             calendarState = calendarState,
@@ -115,7 +136,10 @@ private fun HorizontalMainScreenPreview() {
             getContentDescription = { "" },
             getClickLabel = { "" },
             drawUnderlineToScheduleDate = {},
-            onNavigateToSelectSchoolScreen = {},
+            onNutrientPopupOpen = {},
+            onNutrientPopupClose = {},
+            onMemoPopupOpen = {},
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
         )
     }
 }

@@ -1,6 +1,6 @@
 package com.practice.api.meal.api
 
-import com.practice.api.ServerRetrofit
+import com.practice.api.BlindarRetrofit
 import com.practice.api.meal.pojo.MealResponse
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -17,5 +17,5 @@ interface MealApi {
 }
 
 val mealApi: MealApi
-    get() = ServerRetrofit.getRetrofit(GsonConverterFactory.create())
+    get() = BlindarRetrofit.getRetrofit(GsonConverterFactory.create())
         .create(MealApi::class.java)
