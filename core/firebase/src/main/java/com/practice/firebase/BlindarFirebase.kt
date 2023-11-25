@@ -219,11 +219,18 @@ object BlindarFirebase {
         val value =
             database.child(usersKey).child(username).child(schoolCodeKey).get().await().value
         Log.d(TAG, "username $username schoolCode: $value")
-        return value as? Long
+        if (value != null) {
+            return value as? Long
+        }
+        val oldValue =
+            database.child(usersKey).child(username).child(oldSchoolCodeKey).get().await().value
+        Log.d(TAG, "username $username old school code: $oldValue")
+        return oldValue as? Long
     }
 
     private const val usersKey = "users"
     private const val ownerKey = "owner"
-    private const val schoolCodeKey = "schoolCode"
+    private const val schoolCodeKey = "school_code"
+    private const val oldSchoolCodeKey = "schoolCode"
 
 }
