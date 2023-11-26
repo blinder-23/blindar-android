@@ -6,9 +6,12 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseUser
 import com.practice.firebase.BlindarFirebase
 import com.practice.firebase.BlindarUserStatus
+import com.practice.preferences.PreferencesRepository
 import javax.inject.Inject
 
-class RegisterManager @Inject constructor() {
+class RegisterManager @Inject constructor(
+    private val preferencesRepository: PreferencesRepository,
+) {
     suspend fun getUserState(): UserRegisterState {
         val blindarUser = BlindarFirebase.getBlindarUser()
         if (blindarUser is BlindarUserStatus.NotLoggedIn) {
@@ -20,7 +23,10 @@ class RegisterManager @Inject constructor() {
     }
 
     private suspend fun getUserDataState(firebaseUser: FirebaseUser): UserRegisterState {
+        val preferences = preferencesRepository.userPreferencesFlow.value
+        Log.d(TAG, "username: ${firebaseUser.displayName}, school empty: ${preferences.isSchoolCodeEmpty}")
         return when {
+            firebaseUser.displayName != null && !preferences.isSchoolCodeEmpty -> UserRegisterState.ALL_FILLED
             firebaseUser.displayName.isNullOrEmpty() -> UserRegisterState.USERNAME_MISSING
             BlindarFirebase.getschoolCode(firebaseUser.displayName!!) == null -> UserRegisterState.SCHOOL_NOT_SELECTED
             else -> UserRegisterState.ALL_FILLED
