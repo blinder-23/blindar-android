@@ -2,6 +2,8 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -34,5 +36,13 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:firebase"))
+    implementation(project(":core:preferences"))
 
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    kapt(libs.hilt.compiler.androidx)
+    androidTestImplementation(libs.hilt.android.testing)
+    implementation(libs.hilt.work)
 }
