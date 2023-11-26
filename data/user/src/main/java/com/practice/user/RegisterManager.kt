@@ -36,7 +36,11 @@ class RegisterManager @Inject constructor(
     private suspend fun getUserRegisterState(firebaseUser: FirebaseUser): UserRegisterState {
         val username = firebaseUser.displayName
         val preferences = preferencesRepository.userPreferencesFlow.value
-        Log.d(TAG, "username: $username, school empty: ${preferences.isSchoolCodeEmpty}")
+        Log.d(
+            TAG,
+            "username: $username, local school empty: ${preferences.isSchoolCodeEmpty}, ${preferences.isSchoolNameEmpty}"
+        )
+
         return when {
             username != null && !preferences.isSchoolCodeEmpty -> UserRegisterState.AUTO_LOGIN
             username.isNullOrEmpty() -> UserRegisterState.USERNAME_MISSING
@@ -44,9 +48,6 @@ class RegisterManager @Inject constructor(
             else -> UserRegisterState.ALL_FILLED
         }
     }
-
-    // TODO: BlindarFirebase가 담당하고 있던 로그인, 가입 전환 로직을 전부 이쪽으로 옮기자
-    // TODO: 자동 로그인과 회원 가입 완료, 이미 가입된 회원을 구분 가능? (firebase에서 학교 코드, 이름 받아오는 거는 이미 가입된 회원만, firebase에 업로드하는 건 회원 가입 완료 시에만)
 
     suspend fun parseIntentAndSignInWithGoogle(
         intent: Intent,
@@ -84,6 +85,7 @@ class RegisterManager @Inject constructor(
             getUserRegisterState(user) == UserRegisterState.ALL_FILLED -> {
                 // existing user login
                 Log.d(TAG, "user ${user.uid} re-login")
+                storeSchoolCodeAndNameToPreferences()
                 onExistingUserLogin(user)
             }
 
@@ -216,6 +218,7 @@ class RegisterManager @Inject constructor(
                     storeSchoolCodeAndNameToPreferences()
                     onExistingUserLogin()
                 }
+
                 UserRegisterState.AUTO_LOGIN -> {
                     onExistingUserLogin()
                 }
