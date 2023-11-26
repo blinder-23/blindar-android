@@ -5,6 +5,7 @@ import android.content.Intent
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseUser
@@ -153,13 +154,14 @@ object BlindarFirebase {
         }
     }
 
-    suspend fun getschoolCode(username: String): Long? {
+    suspend fun getSchoolCode(username: String = auth.currentUser?.displayName ?: ""): Long? {
         val value =
             database.child(usersKey).child(username).child(schoolCodeKey).get().await().value
         Log.d(TAG, "username $username schoolCode: $value")
         if (value != null) {
             return value as? Long
         }
+
         val oldValue =
             database.child(usersKey).child(username).child(oldSchoolCodeKey).get().await().value
         Log.d(TAG, "username $username old school code: $oldValue")

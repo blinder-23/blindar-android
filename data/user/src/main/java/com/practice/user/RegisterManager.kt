@@ -29,7 +29,7 @@ class RegisterManager @Inject constructor(
         return when {
             username != null && !preferences.isSchoolCodeEmpty -> UserRegisterState.ALL_FILLED
             username.isNullOrEmpty() -> UserRegisterState.USERNAME_MISSING
-            BlindarFirebase.getschoolCode(firebaseUser.displayName!!) == null -> UserRegisterState.SCHOOL_NOT_SELECTED
+            BlindarFirebase.getSchoolCode(firebaseUser.displayName!!) == null -> UserRegisterState.SCHOOL_NOT_SELECTED
             else -> UserRegisterState.ALL_FILLED
         }
     }
