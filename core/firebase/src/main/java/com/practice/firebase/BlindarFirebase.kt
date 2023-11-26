@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseUser
@@ -17,11 +17,7 @@ import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.practice.preferences.UserDataState
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
 
@@ -30,69 +26,19 @@ object BlindarFirebase {
     private val auth: FirebaseAuth = Firebase.auth
     private val database: DatabaseReference = Firebase.database.reference
 
-    private val job = Job()
-    private val scope = CoroutineScope(job + Dispatchers.Main)
-
-    suspend fun parseIntentAndSignInWithGoogle(
-        intent: Intent,
-        onNewUserSignUp: (FirebaseUser) -> Unit,
-        onExistingUserLogin: (FirebaseUser) -> Unit,
-        onFail: () -> Unit,
-    ) {
-        try {
-            val account = GoogleSignIn.getSignedInAccountFromIntent(intent).await()
-            signInWithGoogle(
-                idToken = account.idToken,
-                onSelectSchool = onNewUserSignUp,
-                onExistingUserLogin = onExistingUserLogin,
-                onFail = onFail
-            )
-        } catch (e: ApiException) {
-            Log.d(TAG, "parse account fail", e)
-            onFail()
-        }
+    suspend fun signInWithGoogle(intent: Intent): FirebaseUser? {
+        val account = GoogleSignIn.getSignedInAccountFromIntent(intent).await()
+        return signInWithGoogle(idToken = account.idToken)
     }
 
-    private suspend fun signInWithGoogle(
-        idToken: String?,
-        onSelectSchool: (FirebaseUser) -> Unit,
-        onExistingUserLogin: (FirebaseUser) -> Unit,
-        onFail: () -> Unit,
-    ) {
+    private suspend fun signInWithGoogle(idToken: String?): FirebaseUser? {
         val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
         val task = try {
             auth.signInWithCredential(firebaseCredential).await()
         } catch (e: CancellationException) {
             null
         }
-
-        val user = task?.user
-        if (user == null) {
-            // Google login fail
-            Log.e(TAG, "sign in with google fail: $user")
-            onFail()
-        } else if (getUserDataState(user) == com.practice.preferences.UserDataState.ALL_FILLED) {
-            // Existing user login
-            Log.d(TAG, "user ${user.uid} login")
-            onExistingUserLogin(user)
-        } else {
-            // New user registers
-            tryStoreUsername(
-                username = user.displayName!!,
-                onSuccess = { onSelectSchool(user) },
-                onFail = onFail,
-                updateProfile = false,
-            )
-        }
-    }
-
-    suspend fun getUserDataState(user: FirebaseUser): com.practice.preferences.UserDataState {
-        Log.d(TAG, "user display name: ${user.displayName}")
-        if (user.displayName.isNullOrEmpty()) return com.practice.preferences.UserDataState.USERNAME_MISSING
-
-        val schoolCode = getschoolCode(user.displayName!!)
-        Log.d(TAG, "user school id: $schoolCode")
-        return if (schoolCode == null) com.practice.preferences.UserDataState.SCHOOL_NOT_SELECTED else com.practice.preferences.UserDataState.ALL_FILLED
+        return task?.user
     }
 
     fun getBlindarUser(): BlindarUserStatus {
@@ -160,6 +106,10 @@ object BlindarFirebase {
                     onFail()
                 }
         }
+    }
+
+    fun storeUsername(username: String): Task<Void>? = auth.currentUser?.let { user ->
+        database.child(usersKey).child(username).child(ownerKey).setValue(user.uid)
     }
 
     private fun tryUpdateCurrentUsername(
