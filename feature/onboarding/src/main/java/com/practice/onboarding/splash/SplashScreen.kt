@@ -30,10 +30,13 @@ fun SplashScreen(
     LaunchedEffect(true) {
         systemUiController.setSystemBarsColor(systemBarColor)
         when (viewModel.userDataState()) {
-            UserDataState.NOT_LOGGED_IN -> onAutoLoginFail()
-            UserDataState.USERNAME_MISSING -> onUsernameNotSet()
-            UserDataState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
-            UserDataState.ALL_FILLED -> onAutoLoginSuccess()
+            UserRegisterState.NOT_LOGGED_IN -> onAutoLoginFail()
+            UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()
+            UserRegisterState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
+            UserRegisterState.ALL_FILLED -> {
+                onAutoLoginSuccess()
+                viewModel.uploadUserInfoToFirebaseOnAutoLogin(context)
+            }
         }
         viewModel.enqueueOneTimeWorkIfFirstExecution(context)
     }

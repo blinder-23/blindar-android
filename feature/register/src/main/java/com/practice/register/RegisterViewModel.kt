@@ -250,6 +250,7 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch {
             preferencesRepository.updateSelectedSchool(school.schoolCode, school.name)
             BlindarWorkManager.setOneTimeWork(context)
+            BlindarWorkManager.setUserInfoToFirebaseWork(context)
         }
         BlindarFirebase.tryUpdateCurrentUserSchoolCode(
             schoolCode = school.schoolCode,
