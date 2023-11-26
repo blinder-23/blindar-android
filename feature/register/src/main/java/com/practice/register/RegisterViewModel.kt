@@ -18,7 +18,7 @@ import com.practice.domain.School
 import com.practice.firebase.BlindarFirebase
 import com.practice.preferences.PreferencesRepository
 import com.practice.register.phonenumber.PhoneNumberValidator
-import com.practice.user.RegisterStateManager
+import com.practice.user.RegisterManager
 import com.practice.user.UserRegisterState
 import com.practice.util.update
 import com.practice.work.BlindarWorkManager
@@ -33,7 +33,7 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     private val schoolRepository: RemoteSchoolRepository,
     private val preferencesRepository: PreferencesRepository,
-    private val registerStateManager: RegisterStateManager,
+    private val registerManager: RegisterManager,
 ) : ViewModel() {
     private val TAG = "RegisterViewModel"
     var registerUiState = mutableStateOf(RegisterUiState.Empty)
@@ -196,7 +196,7 @@ class RegisterViewModel @Inject constructor(
         onExistingUserLogin: () -> Unit,
     ) {
         viewModelScope.launch {
-            when (registerStateManager.getUserState()) {
+            when (registerManager.getUserState()) {
                 UserRegisterState.NOT_LOGGED_IN -> onNewUserSignUp()
                 UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()
                 UserRegisterState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()

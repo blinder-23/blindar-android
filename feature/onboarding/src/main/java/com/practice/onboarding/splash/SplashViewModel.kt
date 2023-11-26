@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.practice.preferences.PreferencesRepository
-import com.practice.user.RegisterStateManager
+import com.practice.user.RegisterManager
 import com.practice.user.UserRegisterState
 import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
-    private val registerStateManager: RegisterStateManager,
+    private val registerManager: RegisterManager,
 ) : ViewModel() {
     suspend fun enqueueOneTimeWorkIfFirstExecution(context: Context) {
         val firstPreferences = preferencesRepository.userPreferencesFlow.first()
@@ -28,7 +28,7 @@ class SplashViewModel @Inject constructor(
     }
 
     suspend fun userDataState(): UserRegisterState {
-        return registerStateManager.getUserState()
+        return registerManager.getUserState()
     }
 
     // TODO: uploadToRemote(가칭) 함수 만들고, server와 firebase에 각각 업로드하는 함수 호출

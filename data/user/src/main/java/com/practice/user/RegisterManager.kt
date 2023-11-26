@@ -4,7 +4,7 @@ import com.practice.firebase.BlindarFirebase
 import com.practice.firebase.BlindarUserStatus
 import javax.inject.Inject
 
-class RegisterStateManager @Inject constructor() {
+class RegisterManager @Inject constructor() {
     suspend fun getUserState(): UserRegisterState {
         val blindarUser = BlindarFirebase.getBlindarUser()
         if (blindarUser !is BlindarUserStatus.NotLoggedIn) {
