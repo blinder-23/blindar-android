@@ -195,18 +195,13 @@ class RegisterViewModel @Inject constructor(
     fun onSchoolClick(
         context: Context,
         school: School,
-        onSuccess: () -> Unit,
-        onFail: () -> Unit
+        onSchoolClickCallbackFromUI: () -> Unit,
     ) {
         viewModelScope.launch {
             preferencesRepository.updateSelectedSchool(school.schoolCode, school.name)
             BlindarWorkManager.setOneTimeWork(context)
             BlindarWorkManager.setUserInfoToFirebaseWork(context)
+            onSchoolClickCallbackFromUI()
         }
-        BlindarFirebase.tryUpdateCurrentUserSchoolCode(
-            schoolCode = school.schoolCode,
-            onSuccess = onSuccess,
-            onFail = onFail,
-        )
     }
 }
