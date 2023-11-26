@@ -13,7 +13,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.AppIcon
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.firebase.UserDataState
+import com.practice.preferences.UserDataState
 
 @Composable
 fun SplashScreen(

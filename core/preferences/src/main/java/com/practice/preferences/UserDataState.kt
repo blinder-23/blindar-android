@@ -1,4 +1,4 @@
-package com.practice.firebase
+package com.practice.preferences
 
 // TODO: RegisterState 등으로 이름 바꾸기
 enum class UserDataState {

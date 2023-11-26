@@ -17,6 +17,7 @@ import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.practice.preferences.UserDataState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -71,7 +72,7 @@ object BlindarFirebase {
             // Google login fail
             Log.e(TAG, "sign in with google fail: $user")
             onFail()
-        } else if (getUserDataState(user) == UserDataState.ALL_FILLED) {
+        } else if (getUserDataState(user) == com.practice.preferences.UserDataState.ALL_FILLED) {
             // Existing user login
             Log.d(TAG, "user ${user.uid} login")
             onExistingUserLogin(user)
@@ -86,13 +87,13 @@ object BlindarFirebase {
         }
     }
 
-    suspend fun getUserDataState(user: FirebaseUser): UserDataState {
+    suspend fun getUserDataState(user: FirebaseUser): com.practice.preferences.UserDataState {
         Log.d(TAG, "user display name: ${user.displayName}")
-        if (user.displayName.isNullOrEmpty()) return UserDataState.USERNAME_MISSING
+        if (user.displayName.isNullOrEmpty()) return com.practice.preferences.UserDataState.USERNAME_MISSING
 
         val schoolCode = getschoolCode(user.displayName!!)
         Log.d(TAG, "user school id: $schoolCode")
-        return if (schoolCode == null) UserDataState.SCHOOL_NOT_SELECTED else UserDataState.ALL_FILLED
+        return if (schoolCode == null) com.practice.preferences.UserDataState.SCHOOL_NOT_SELECTED else com.practice.preferences.UserDataState.ALL_FILLED
     }
 
     fun getBlindarUser(): BlindarUser {
@@ -136,9 +137,9 @@ object BlindarFirebase {
                         Log.d(TAG, "signInWithCredential success! ${user.phoneNumber}")
                         val userDataState = getUserDataState(user)
                         when (userDataState) {
-                            UserDataState.USERNAME_MISSING -> onUsernameNotSet()
-                            UserDataState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
-                            UserDataState.ALL_FILLED -> onExistingUserLogin()
+                            com.practice.preferences.UserDataState.USERNAME_MISSING -> onUsernameNotSet()
+                            com.practice.preferences.UserDataState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
+                            com.practice.preferences.UserDataState.ALL_FILLED -> onExistingUserLogin()
                             else -> onNewUserSignUp()
                         }
                     }
