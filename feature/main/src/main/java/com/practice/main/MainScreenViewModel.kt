@@ -17,7 +17,7 @@ import com.practice.domain.School
 import com.practice.domain.meal.Meal
 import com.practice.domain.schedule.Schedule
 import com.practice.firebase.BlindarFirebase
-import com.practice.firebase.BlindarUser
+import com.practice.firebase.BlindarUserStatus
 import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
@@ -83,8 +83,8 @@ class MainScreenViewModel @Inject constructor(
 
     private fun getCurrentUserId(): String {
         return when (val currentlyLoggedInUser = BlindarFirebase.getBlindarUser()) {
-            is BlindarUser.LoginUser -> currentlyLoggedInUser.user.uid
-            is BlindarUser.NotLoggedIn -> ""
+            is BlindarUserStatus.LoginUser -> currentlyLoggedInUser.user.uid
+            is BlindarUserStatus.NotLoggedIn -> ""
         }
     }
 

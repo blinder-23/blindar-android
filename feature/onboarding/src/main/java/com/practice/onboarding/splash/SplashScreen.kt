@@ -13,7 +13,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.AppIcon
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.firebase.UserDataState
+import com.practice.user.UserRegisterState
 
 @Composable
 fun SplashScreen(
@@ -29,13 +29,16 @@ fun SplashScreen(
     val context = LocalContext.current
     LaunchedEffect(true) {
         systemUiController.setSystemBarsColor(systemBarColor)
-        when (viewModel.userDataState()) {
-            UserDataState.NOT_LOGGED_IN -> onAutoLoginFail()
-            UserDataState.USERNAME_MISSING -> onUsernameNotSet()
-            UserDataState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
-            UserDataState.ALL_FILLED -> onAutoLoginSuccess()
+        when (viewModel.getUserRegisterState()) {
+            UserRegisterState.NOT_LOGGED_IN -> onAutoLoginFail()
+            UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()
+            UserRegisterState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
+            UserRegisterState.ALL_FILLED -> onAutoLoginSuccess()
+            UserRegisterState.AUTO_LOGIN -> {
+                viewModel.uploadUserInfoToFirebaseOnAutoLogin(context)
+                onAutoLoginSuccess()
+            }
         }
-        viewModel.enqueueOneTimeWorkIfFirstExecution(context)
     }
 
     ConstraintLayout(modifier = modifier) {
