@@ -7,7 +7,7 @@ import javax.inject.Inject
 class RegisterManager @Inject constructor() {
     suspend fun getUserState(): UserRegisterState {
         val blindarUser = BlindarFirebase.getBlindarUser()
-        if (blindarUser !is BlindarUserStatus.NotLoggedIn) {
+        if (blindarUser is BlindarUserStatus.NotLoggedIn) {
             return UserRegisterState.NOT_LOGGED_IN
         }
 
