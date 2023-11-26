@@ -87,6 +87,13 @@ object BlindarFirebase {
             }
     }
 
+    fun trySignInWithPhoneAuthCredential(
+        credential: PhoneAuthCredential,
+    ): Task<AuthResult> {
+        Log.d(TAG, "trying phone sign in w/ credential $credential")
+        return auth.signInWithCredential(credential)
+    }
+
     fun tryStoreUsername(
         username: String,
         onSuccess: () -> Unit,

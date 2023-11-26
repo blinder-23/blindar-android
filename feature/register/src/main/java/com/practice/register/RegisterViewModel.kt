@@ -6,11 +6,6 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.FirebaseException
-import com.google.firebase.FirebaseTooManyRequestsException
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
-import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.practice.api.school.RemoteSchoolRepository
 import com.practice.api.toSchool
@@ -19,7 +14,6 @@ import com.practice.firebase.BlindarFirebase
 import com.practice.preferences.PreferencesRepository
 import com.practice.register.phonenumber.PhoneNumberValidator
 import com.practice.user.RegisterManager
-import com.practice.user.UserRegisterState
 import com.practice.util.update
 import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -71,76 +65,25 @@ class RegisterViewModel @Inject constructor(
         if (!registerUiState.value.isPhoneNumberValid) {
             return
         }
-        val phoneNumber = "+82${registerUiState.value.phoneNumber.substring(1)}"
-        BlindarFirebase.signUpWithPhoneNumber(
+        val phoneNumberWithNationCode = "+82${registerUiState.value.phoneNumber.substring(1)}"
+        registerManager.registerOrLoginWithPhoneNumber(
             activity = activity,
-            phoneNumber = phoneNumber,
-            callback = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                    Log.d(TAG, "onVerification complete")
-                    BlindarFirebase.signInWithPhoneAuthCredential(
-                        activity = activity,
-                        credential = credential,
-                        onRegisterOrLoginSuccessful = {
-                            onRegisterOrLoginSuccessful(
-                                onNewUserSignUp = onNewUserSignUp,
-                                onUsernameNotSet = onUsernameNotSet,
-                                onSchoolNotSelected = onSchoolNotSelected,
-                                onExistingUserLogin = onExistingUserLogin
-                            )
-                        },
-                        onLoginFail = onCodeInvalid,
-                    )
-                }
-
-                override fun onVerificationFailed(e: FirebaseException) {
-                    Log.e(TAG, "onVerificationFailed", e)
-                    onVerificationFail(e, onFail)
-                }
-
-                override fun onCodeSent(
-                    verificationId: String,
-                    token: PhoneAuthProvider.ForceResendingToken
-                ) {
-                    Log.d(TAG, "id: $verificationId, token: $token")
-                    onCodeSent()
-                    storedVerificationId = verificationId
-                    resendToken = token
-                    enableAuthCodeField()
-                    enableNextButton()
-                }
-
-                override fun onCodeAutoRetrievalTimeOut(p0: String) {
-                    // TODO: show seconds left
-                    Log.e(TAG, "code timeout! $p0")
-                    super.onCodeAutoRetrievalTimeOut(p0)
-                }
-            }
+            phoneNumberWithNationCode = phoneNumberWithNationCode,
+            coroutineScope = viewModelScope,
+            onCodeSent = { verificationId, token ->
+                onCodeSent()
+                storedVerificationId = verificationId
+                resendToken = token
+                enableAuthCodeField()
+                enableNextButton()
+            },
+            onNewUserSignUp = onNewUserSignUp,
+            onUsernameNotSet = onUsernameNotSet,
+            onSchoolNotSelected = onSchoolNotSelected,
+            onExistingUserLogin = onExistingUserLogin,
+            onVerificationFail = onFail,
+            onCodeInvalid = onCodeInvalid,
         )
-    }
-
-    private fun onVerificationFail(
-        e: FirebaseException,
-        onFail: () -> Unit,
-    ) {
-        when (e) {
-            is FirebaseAuthInvalidCredentialsException -> {
-                Log.e(TAG, "Invalid request")
-            }
-
-            is FirebaseTooManyRequestsException -> {
-                Log.e(TAG, "Firebase quota exceeded")
-            }
-
-            is FirebaseAuthMissingActivityForRecaptchaException -> {
-                Log.e(TAG, "reCAPTCHA verification attempted with null activity")
-            }
-
-            else -> {
-                Log.e(TAG, "Unknown error", e)
-            }
-        }
-        onFail()
     }
 
     private fun enableAuthCodeField() {
@@ -173,36 +116,17 @@ class RegisterViewModel @Inject constructor(
         onCodeInvalid: () -> Unit,
     ) {
         val authCode = registerUiState.value.authCode
-        val credential = PhoneAuthProvider.getCredential(storedVerificationId, authCode)
-        BlindarFirebase.signInWithPhoneAuthCredential(
+        registerManager.verifyPhoneAuthCode(
+            verificationId = storedVerificationId,
+            code = authCode,
             activity = activity,
-            credential = credential,
-            onRegisterOrLoginSuccessful = {
-                onRegisterOrLoginSuccessful(
-                    onNewUserSignUp = onNewUserSignUp,
-                    onUsernameNotSet = onUsernameNotSet,
-                    onSchoolNotSelected = onSchoolNotSelected,
-                    onExistingUserLogin = onExistingUserLogin,
-                )
-            },
-            onLoginFail = onCodeInvalid,
+            coroutineScope = viewModelScope,
+            onExistingUserLogin = onExistingUserLogin,
+            onUsernameNotSet = onUsernameNotSet,
+            onSchoolNotSelected = onSchoolNotSelected,
+            onNewUserSignUp = onNewUserSignUp,
+            onCodeInvalid = onCodeInvalid
         )
-    }
-
-    private fun onRegisterOrLoginSuccessful(
-        onNewUserSignUp: () -> Unit,
-        onUsernameNotSet: () -> Unit,
-        onSchoolNotSelected: () -> Unit,
-        onExistingUserLogin: () -> Unit,
-    ) {
-        viewModelScope.launch {
-            when (registerManager.getUserRegisterState()) {
-                UserRegisterState.NOT_LOGGED_IN -> onNewUserSignUp()
-                UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()
-                UserRegisterState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
-                UserRegisterState.ALL_FILLED -> onExistingUserLogin()
-            }
-        }
     }
 
     /**
