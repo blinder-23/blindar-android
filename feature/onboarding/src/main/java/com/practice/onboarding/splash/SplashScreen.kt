@@ -33,9 +33,10 @@ fun SplashScreen(
             UserRegisterState.NOT_LOGGED_IN -> onAutoLoginFail()
             UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()
             UserRegisterState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
-            UserRegisterState.ALL_FILLED -> {
-                onAutoLoginSuccess()
+            UserRegisterState.ALL_FILLED -> onAutoLoginSuccess()
+            UserRegisterState.AUTO_LOGIN -> {
                 viewModel.uploadUserInfoToFirebaseOnAutoLogin(context)
+                onAutoLoginSuccess()
             }
         }
         viewModel.enqueueOneTimeWorkIfFirstExecution(context)
