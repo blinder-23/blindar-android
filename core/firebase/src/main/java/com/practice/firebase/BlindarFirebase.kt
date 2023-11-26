@@ -22,7 +22,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
 
@@ -122,10 +121,7 @@ object BlindarFirebase {
     fun signInWithPhoneAuthCredential(
         activity: Activity,
         credential: PhoneAuthCredential,
-        onExistingUserLogin: () -> Unit,
-        onUsernameNotSet: () -> Unit,
-        onSchoolNotSelected: () -> Unit,
-        onNewUserSignUp: () -> Unit,
+        onRegisterOrLoginSuccessful: () -> Unit,
         onLoginFail: () -> Unit,
     ) {
         Log.d(TAG, "credential: $credential")
@@ -133,16 +129,7 @@ object BlindarFirebase {
             .addOnCompleteListener(activity) { task ->
                 val user = task.result?.user
                 if (task.isSuccessful && user != null) {
-                    scope.launch {
-                        Log.d(TAG, "signInWithCredential success! ${user.phoneNumber}")
-                        val userDataState = getUserDataState(user)
-                        when (userDataState) {
-                            com.practice.preferences.UserDataState.USERNAME_MISSING -> onUsernameNotSet()
-                            com.practice.preferences.UserDataState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
-                            com.practice.preferences.UserDataState.ALL_FILLED -> onExistingUserLogin()
-                            else -> onNewUserSignUp()
-                        }
-                    }
+                    onRegisterOrLoginSuccessful()
                 } else {
                     Log.e(TAG, "signInWithCredential failure", task.exception)
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {

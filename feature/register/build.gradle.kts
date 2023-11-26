@@ -47,6 +47,7 @@ dependencies {
     api(project(":core:preferences"))
     api(project(":core:domain"))
     implementation(project(":core:work"))
+    implementation(project(":data:user"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)

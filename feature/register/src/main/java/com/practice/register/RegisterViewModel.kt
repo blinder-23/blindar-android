@@ -18,6 +18,8 @@ import com.practice.domain.School
 import com.practice.firebase.BlindarFirebase
 import com.practice.preferences.PreferencesRepository
 import com.practice.register.phonenumber.PhoneNumberValidator
+import com.practice.user.RegisterStateManager
+import com.practice.user.UserRegisterState
 import com.practice.util.update
 import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +33,7 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     private val schoolRepository: RemoteSchoolRepository,
     private val preferencesRepository: PreferencesRepository,
+    private val registerStateManager: RegisterStateManager,
 ) : ViewModel() {
     private val TAG = "RegisterViewModel"
     var registerUiState = mutableStateOf(RegisterUiState.Empty)
@@ -78,10 +81,14 @@ class RegisterViewModel @Inject constructor(
                     BlindarFirebase.signInWithPhoneAuthCredential(
                         activity = activity,
                         credential = credential,
-                        onExistingUserLogin = onExistingUserLogin,
-                        onUsernameNotSet = onUsernameNotSet,
-                        onSchoolNotSelected = onSchoolNotSelected,
-                        onNewUserSignUp = onNewUserSignUp,
+                        onRegisterOrLoginSuccessful = {
+                            onRegisterOrLoginSuccessful(
+                                onNewUserSignUp = onNewUserSignUp,
+                                onUsernameNotSet = onUsernameNotSet,
+                                onSchoolNotSelected = onSchoolNotSelected,
+                                onExistingUserLogin = onExistingUserLogin
+                            )
+                        },
                         onLoginFail = onCodeInvalid,
                     )
                 }
@@ -170,12 +177,32 @@ class RegisterViewModel @Inject constructor(
         BlindarFirebase.signInWithPhoneAuthCredential(
             activity = activity,
             credential = credential,
-            onExistingUserLogin = onExistingUserLogin,
-            onUsernameNotSet = onUsernameNotSet,
-            onSchoolNotSelected = onSchoolNotSelected,
-            onNewUserSignUp = onNewUserSignUp,
+            onRegisterOrLoginSuccessful = {
+                onRegisterOrLoginSuccessful(
+                    onNewUserSignUp = onNewUserSignUp,
+                    onUsernameNotSet = onUsernameNotSet,
+                    onSchoolNotSelected = onSchoolNotSelected,
+                    onExistingUserLogin = onExistingUserLogin,
+                )
+            },
             onLoginFail = onCodeInvalid,
         )
+    }
+
+    private fun onRegisterOrLoginSuccessful(
+        onNewUserSignUp: () -> Unit,
+        onUsernameNotSet: () -> Unit,
+        onSchoolNotSelected: () -> Unit,
+        onExistingUserLogin: () -> Unit,
+    ) {
+        viewModelScope.launch {
+            when (registerStateManager.getUserState()) {
+                UserRegisterState.NOT_LOGGED_IN -> onNewUserSignUp()
+                UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()
+                UserRegisterState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
+                UserRegisterState.ALL_FILLED -> onExistingUserLogin()
+            }
+        }
     }
 
     /**
