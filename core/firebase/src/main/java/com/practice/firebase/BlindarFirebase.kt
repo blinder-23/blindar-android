@@ -161,6 +161,28 @@ object BlindarFirebase {
         }
     }
 
+    fun tryUpdateCurrentUserSchoolName(
+        schoolName: String,
+        onSuccess: () -> Unit,
+        onFail: () -> Unit,
+    ) {
+        val username = auth.currentUser?.displayName
+        if (username != null) {
+            database.child(usersKey).child(username).child(schoolNameKey).setValue(schoolName)
+                .addOnSuccessListener {
+                    Log.d(TAG, "user $username school name update success: $schoolName")
+                    onSuccess()
+                }
+                .addOnFailureListener {
+                    Log.e(TAG, "user $username school name update fail: $schoolName")
+                    onFail()
+                }
+        } else {
+            Log.e(TAG, "username is null while updating school name: ${auth.currentUser}")
+            onFail()
+        }
+    }
+
     suspend fun getSchoolCode(username: String = auth.currentUser?.displayName ?: ""): Long? {
         val value =
             database.child(usersKey).child(username).child(schoolCodeKey).get().await().value
@@ -175,9 +197,17 @@ object BlindarFirebase {
         return oldValue as? Long
     }
 
+    suspend fun getSchoolName(username: String = auth.currentUser?.displayName ?: ""): String? {
+        val value =
+            database.child(usersKey).child(username).child(schoolNameKey).get().await().value
+        Log.d(TAG, "get school name of user $username: $value")
+        return value as? String
+    }
+
     private const val usersKey = "users"
     private const val ownerKey = "owner"
     private const val schoolCodeKey = "school_code"
     private const val oldSchoolCodeKey = "schoolCode"
+    private const val schoolNameKey = "school_name"
 
 }
