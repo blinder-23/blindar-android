@@ -6,6 +6,7 @@ import android.util.Log
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -251,8 +252,12 @@ class RegisterManager @Inject constructor(
                 Log.e(TAG, "phone verification fail: reCAPTCHA is attempted with null activity")
             }
 
+            is FirebaseNetworkException -> {
+                Log.e(TAG, "phone verification fail: no network connection")
+            }
+
             else -> {
-                Log.e(TAG, "phone verification fail: unknown error")
+                Log.e(TAG, "phone verification fail: ${e::class.java}")
             }
         }
         onFail()
