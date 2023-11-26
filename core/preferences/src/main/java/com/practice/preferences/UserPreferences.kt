@@ -38,5 +38,5 @@ data class UserPreferences(
     }
 }
 
-internal const val emptySchoolCode = 7010578
-internal const val emptySchoolName = "한빛맹학교"
+internal const val emptySchoolCode = -1
+internal const val emptySchoolName = ""
