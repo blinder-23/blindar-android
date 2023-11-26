@@ -39,6 +39,7 @@ fun SplashScreen(
                 onAutoLoginSuccess()
             }
         }
+        // TODO: 로그인 안 됐을 땐 무의미 (삭제?)
         viewModel.enqueueOneTimeWorkIfFirstExecution(context)
     }
 
