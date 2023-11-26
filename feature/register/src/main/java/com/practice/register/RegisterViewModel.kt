@@ -80,7 +80,10 @@ class RegisterViewModel @Inject constructor(
             onNewUserSignUp = onNewUserSignUp,
             onUsernameNotSet = onUsernameNotSet,
             onSchoolNotSelected = onSchoolNotSelected,
-            onExistingUserLogin = onExistingUserLogin,
+            onExistingUserLogin = {
+                onExistingUserLogin()
+                BlindarWorkManager.setOneTimeWork(activity)
+            },
             onVerificationFail = onFail,
             onCodeInvalid = onCodeInvalid,
         )
@@ -121,7 +124,10 @@ class RegisterViewModel @Inject constructor(
             code = authCode,
             activity = activity,
             coroutineScope = viewModelScope,
-            onExistingUserLogin = onExistingUserLogin,
+            onExistingUserLogin = {
+                onExistingUserLogin()
+                BlindarWorkManager.setOneTimeWork(activity)
+            },
             onUsernameNotSet = onUsernameNotSet,
             onSchoolNotSelected = onSchoolNotSelected,
             onNewUserSignUp = onNewUserSignUp,

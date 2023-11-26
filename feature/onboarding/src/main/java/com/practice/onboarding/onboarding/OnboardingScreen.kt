@@ -58,15 +58,17 @@ fun OnboardingScreen(
     modifier: Modifier = Modifier,
     viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val startForResult = rememberGoogleLoginRequestLauncher(
         onGoogleLogin = { intent ->
             coroutineScope.launch {
                 viewModel.tryGoogleLogin(
+                    context = context,
                     intent = intent,
                     onNewUserSignUp = onNewUserSignUp,
                     onExistingUserLogin = onExistingUserLogin,
-                    onFail = onFail
+                    onFail = onFail,
                 )
             }
         },

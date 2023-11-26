@@ -1,11 +1,13 @@
 package com.practice.onboarding.onboarding
 
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.practice.user.RegisterManager
+import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -15,6 +17,7 @@ class OnboardingViewModel @Inject constructor(
 ) : ViewModel() {
 
     suspend fun tryGoogleLogin(
+        context: Context,
         intent: Intent,
         onNewUserSignUp: (FirebaseUser) -> Unit,
         onExistingUserLogin: (FirebaseUser) -> Unit,
@@ -24,7 +27,10 @@ class OnboardingViewModel @Inject constructor(
         registerManager.parseIntentAndSignInWithGoogle(
             intent = intent,
             onNewUserSignUp = onNewUserSignUp,
-            onExistingUserLogin = onExistingUserLogin,
+            onExistingUserLogin = {
+                onExistingUserLogin(it)
+                BlindarWorkManager.setOneTimeWork(context)
+            },
             onFail = onFail
         )
     }
