@@ -96,11 +96,11 @@ object BlindarFirebase {
         return if (schoolCode == null) com.practice.preferences.UserDataState.SCHOOL_NOT_SELECTED else com.practice.preferences.UserDataState.ALL_FILLED
     }
 
-    fun getBlindarUser(): BlindarUser {
+    fun getBlindarUser(): BlindarUserStatus {
         val user = auth.currentUser
         return when {
-            user != null -> BlindarUser.LoginUser(user)
-            else -> BlindarUser.NotLoggedIn
+            user != null -> BlindarUserStatus.LoginUser(user)
+            else -> BlindarUserStatus.NotLoggedIn
         }
     }
 
