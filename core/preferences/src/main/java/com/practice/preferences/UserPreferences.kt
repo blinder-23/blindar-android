@@ -29,6 +29,9 @@ data class UserPreferences(
     val isSchoolCodeEmpty: Boolean
         get() = schoolCode == emptySchoolCode
 
+    val isSchoolNameEmpty: Boolean
+        get() = schoolName == emptySchoolName
+
     companion object {
         val emptyPreferences = UserPreferences(
             uiMode = UiMode.Graphic,
