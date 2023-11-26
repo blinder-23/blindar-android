@@ -211,12 +211,19 @@ class RegisterManager @Inject constructor(
                 UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()
                 UserRegisterState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
                 UserRegisterState.ALL_FILLED -> {
-                    // TODO: 다시 로그인하면 학교 ID가 보이지 않는 문제 해결
-                    val schoolCode = BlindarFirebase.getschoolCode()
-//                    preferencesRepository.updateSelectedSchool()
+                    // 다시 로그인했을 때 학교 ID, 이름을 로컬에 저장
+                    storeSchoolCodeAndNameToPreferences()
                     onExistingUserLogin()
                 }
             }
+        }
+    }
+
+    private suspend fun storeSchoolCodeAndNameToPreferences() {
+        val schoolCode = BlindarFirebase.getSchoolCode()?.toInt()
+        val schoolName = BlindarFirebase.getSchoolName()
+        if (schoolCode != null && schoolName != null) {
+            preferencesRepository.updateSelectedSchool(schoolCode, schoolName)
         }
     }
 
