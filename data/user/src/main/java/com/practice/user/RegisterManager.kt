@@ -12,22 +12,23 @@ import javax.inject.Inject
 class RegisterManager @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
 ) {
-    suspend fun getUserState(): UserRegisterState {
+    suspend fun getUserRegisterState(): UserRegisterState {
         val blindarUser = BlindarFirebase.getBlindarUser()
         if (blindarUser is BlindarUserStatus.NotLoggedIn) {
             return UserRegisterState.NOT_LOGGED_IN
         }
 
         val user = blindarUser as BlindarUserStatus.LoginUser
-        return getUserDataState(user.user)
+        return getUserRegisterState(user.user)
     }
 
-    private suspend fun getUserDataState(firebaseUser: FirebaseUser): UserRegisterState {
+    private suspend fun getUserRegisterState(firebaseUser: FirebaseUser): UserRegisterState {
+        val username = firebaseUser.displayName
         val preferences = preferencesRepository.userPreferencesFlow.value
-        Log.d(TAG, "username: ${firebaseUser.displayName}, school empty: ${preferences.isSchoolCodeEmpty}")
+        Log.d(TAG, "username: $username, school empty: ${preferences.isSchoolCodeEmpty}")
         return when {
-            firebaseUser.displayName != null && !preferences.isSchoolCodeEmpty -> UserRegisterState.ALL_FILLED
-            firebaseUser.displayName.isNullOrEmpty() -> UserRegisterState.USERNAME_MISSING
+            username != null && !preferences.isSchoolCodeEmpty -> UserRegisterState.ALL_FILLED
+            username.isNullOrEmpty() -> UserRegisterState.USERNAME_MISSING
             BlindarFirebase.getschoolCode(firebaseUser.displayName!!) == null -> UserRegisterState.SCHOOL_NOT_SELECTED
             else -> UserRegisterState.ALL_FILLED
         }

@@ -27,8 +27,8 @@ class SplashViewModel @Inject constructor(
         Log.d(TAG, "Let's login!")
     }
 
-    suspend fun userDataState(): UserRegisterState {
-        return registerManager.getUserState()
+    suspend fun getUserRegisterState(): UserRegisterState {
+        return registerManager.getUserRegisterState()
     }
 
     // TODO: uploadToRemote(가칭) 함수 만들고, server와 firebase에 각각 업로드하는 함수 호출

@@ -196,7 +196,7 @@ class RegisterViewModel @Inject constructor(
         onExistingUserLogin: () -> Unit,
     ) {
         viewModelScope.launch {
-            when (registerManager.getUserState()) {
+            when (registerManager.getUserRegisterState()) {
                 UserRegisterState.NOT_LOGGED_IN -> onNewUserSignUp()
                 UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()
                 UserRegisterState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()

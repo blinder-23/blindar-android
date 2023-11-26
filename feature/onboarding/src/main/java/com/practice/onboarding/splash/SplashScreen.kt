@@ -29,7 +29,7 @@ fun SplashScreen(
     val context = LocalContext.current
     LaunchedEffect(true) {
         systemUiController.setSystemBarsColor(systemBarColor)
-        when (viewModel.userDataState()) {
+        when (viewModel.getUserRegisterState()) {
             UserRegisterState.NOT_LOGGED_IN -> onAutoLoginFail()
             UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()
             UserRegisterState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
