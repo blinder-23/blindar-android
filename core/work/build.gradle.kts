@@ -70,6 +70,7 @@ android {
 dependencies {
     api(project(":core:combine"))
     api(project(":core:preferences"))
+    implementation(project(":core:firebase"))
 
     implementation(libs.hsk.ktx)
 

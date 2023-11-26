@@ -3,7 +3,13 @@ package com.practice.work
 import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
-import androidx.work.*
+import androidx.work.CoroutineWorker
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
 import com.hsk.ktx.date.Date
 import com.practice.api.meal.RemoteMealRepository
 import com.practice.domain.meal.Meal
@@ -80,7 +86,7 @@ fun setPeriodicFetchMealWork(workManager: WorkManager) {
         .build()
     workManager.enqueueUniquePeriodicWork(
         periodicMealWorkTag,
-        ExistingPeriodicWorkPolicy.KEEP,
+        ExistingPeriodicWorkPolicy.UPDATE,
         periodicWork
     )
 }
@@ -91,7 +97,7 @@ fun setOneTimeFetchMealWork(workManager: WorkManager) {
         .build()
     workManager.enqueueUniqueWork(
         oneTimeMealWorkTag,
-        ExistingWorkPolicy.KEEP,
+        ExistingWorkPolicy.REPLACE,
         oneTimeWork
     )
 }

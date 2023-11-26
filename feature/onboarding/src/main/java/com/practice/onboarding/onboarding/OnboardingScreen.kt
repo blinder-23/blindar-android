@@ -1,14 +1,25 @@
 package com.practice.onboarding.onboarding
 
 import android.app.Activity
+import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -24,6 +35,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -33,9 +45,7 @@ import com.practice.designsystem.LightTabletPreview
 import com.practice.designsystem.components.AppIcon
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.firebase.BlindarFirebase
 import com.practice.onboarding.R
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -46,13 +56,23 @@ fun OnboardingScreen(
     onFail: () -> Unit,
     googleSignInClient: GoogleSignInClient,
     modifier: Modifier = Modifier,
+    viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val startForResult = rememberGoogleLoginRequestLauncher(
-        coroutineScope = coroutineScope,
-        onNewUserSignUp = onNewUserSignUp,
-        onExistingUserLogin = onExistingUserLogin,
-        onFail = onFail
+        onGoogleLogin = { intent ->
+            coroutineScope.launch {
+                viewModel.tryGoogleLogin(
+                    context = context,
+                    intent = intent,
+                    onNewUserSignUp = onNewUserSignUp,
+                    onExistingUserLogin = onExistingUserLogin,
+                    onFail = onFail,
+                )
+            }
+        },
+        onFail = viewModel::onGoogleLoginLauncherFail,
     )
 
     val appIconOffset = remember { Animatable(0f) }
@@ -119,23 +139,14 @@ fun OnboardingScreen(
 
 @Composable
 private fun rememberGoogleLoginRequestLauncher(
-    coroutineScope: CoroutineScope,
-    onNewUserSignUp: (FirebaseUser) -> Unit,
-    onExistingUserLogin: (FirebaseUser) -> Unit,
-    onFail: () -> Unit,
+    onGoogleLogin: (Intent) -> Unit,
+    onFail: (ActivityResult) -> Unit,
 ) =
     rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.let { intent ->
-                coroutineScope.launch {
-                    BlindarFirebase.parseIntentAndSignInWithGoogle(
-                        intent = intent,
-                        onNewUserSignUp = onNewUserSignUp,
-                        onExistingUserLogin = onExistingUserLogin,
-                        onFail = onFail
-                    )
-                }
-            }
+            result.data?.let(onGoogleLogin)
+        } else {
+            onFail(result)
         }
     }
 

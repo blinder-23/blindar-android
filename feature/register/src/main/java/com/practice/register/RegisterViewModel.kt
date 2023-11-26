@@ -6,11 +6,6 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.FirebaseException
-import com.google.firebase.FirebaseTooManyRequestsException
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
-import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.practice.api.school.RemoteSchoolRepository
 import com.practice.api.toSchool
@@ -18,6 +13,7 @@ import com.practice.domain.School
 import com.practice.firebase.BlindarFirebase
 import com.practice.preferences.PreferencesRepository
 import com.practice.register.phonenumber.PhoneNumberValidator
+import com.practice.user.RegisterManager
 import com.practice.util.update
 import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +27,7 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     private val schoolRepository: RemoteSchoolRepository,
     private val preferencesRepository: PreferencesRepository,
+    private val registerManager: RegisterManager,
 ) : ViewModel() {
     private val TAG = "RegisterViewModel"
     var registerUiState = mutableStateOf(RegisterUiState.Empty)
@@ -68,72 +65,28 @@ class RegisterViewModel @Inject constructor(
         if (!registerUiState.value.isPhoneNumberValid) {
             return
         }
-        val phoneNumber = "+82${registerUiState.value.phoneNumber.substring(1)}"
-        BlindarFirebase.signUpWithPhoneNumber(
+        val phoneNumberWithNationCode = "+82${registerUiState.value.phoneNumber.substring(1)}"
+        registerManager.registerOrLoginWithPhoneNumber(
             activity = activity,
-            phoneNumber = phoneNumber,
-            callback = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                    Log.d(TAG, "onVerification complete")
-                    BlindarFirebase.signInWithPhoneAuthCredential(
-                        activity = activity,
-                        credential = credential,
-                        onExistingUserLogin = onExistingUserLogin,
-                        onUsernameNotSet = onUsernameNotSet,
-                        onSchoolNotSelected = onSchoolNotSelected,
-                        onNewUserSignUp = onNewUserSignUp,
-                        onLoginFail = onCodeInvalid,
-                    )
-                }
-
-                override fun onVerificationFailed(e: FirebaseException) {
-                    Log.e(TAG, "onVerificationFailed", e)
-                    onVerificationFail(e, onFail)
-                }
-
-                override fun onCodeSent(
-                    verificationId: String,
-                    token: PhoneAuthProvider.ForceResendingToken
-                ) {
-                    Log.d(TAG, "id: $verificationId, token: $token")
-                    onCodeSent()
-                    storedVerificationId = verificationId
-                    resendToken = token
-                    enableAuthCodeField()
-                    enableNextButton()
-                }
-
-                override fun onCodeAutoRetrievalTimeOut(p0: String) {
-                    // TODO: show seconds left
-                    Log.e(TAG, "code timeout! $p0")
-                    super.onCodeAutoRetrievalTimeOut(p0)
-                }
-            }
+            phoneNumberWithNationCode = phoneNumberWithNationCode,
+            coroutineScope = viewModelScope,
+            onCodeSent = { verificationId, token ->
+                onCodeSent()
+                storedVerificationId = verificationId
+                resendToken = token
+                enableAuthCodeField()
+                enableNextButton()
+            },
+            onNewUserSignUp = onNewUserSignUp,
+            onUsernameNotSet = onUsernameNotSet,
+            onSchoolNotSelected = onSchoolNotSelected,
+            onExistingUserLogin = {
+                onExistingUserLogin()
+                BlindarWorkManager.setOneTimeWork(activity)
+            },
+            onVerificationFail = onFail,
+            onCodeInvalid = onCodeInvalid,
         )
-    }
-
-    private fun onVerificationFail(
-        e: FirebaseException,
-        onFail: () -> Unit,
-    ) {
-        when (e) {
-            is FirebaseAuthInvalidCredentialsException -> {
-                Log.e(TAG, "Invalid request")
-            }
-
-            is FirebaseTooManyRequestsException -> {
-                Log.e(TAG, "Firebase quota exceeded")
-            }
-
-            is FirebaseAuthMissingActivityForRecaptchaException -> {
-                Log.e(TAG, "reCAPTCHA verification attempted with null activity")
-            }
-
-            else -> {
-                Log.e(TAG, "Unknown error", e)
-            }
-        }
-        onFail()
     }
 
     private fun enableAuthCodeField() {
@@ -166,15 +119,19 @@ class RegisterViewModel @Inject constructor(
         onCodeInvalid: () -> Unit,
     ) {
         val authCode = registerUiState.value.authCode
-        val credential = PhoneAuthProvider.getCredential(storedVerificationId, authCode)
-        BlindarFirebase.signInWithPhoneAuthCredential(
+        registerManager.verifyPhoneAuthCode(
+            verificationId = storedVerificationId,
+            code = authCode,
             activity = activity,
-            credential = credential,
-            onExistingUserLogin = onExistingUserLogin,
+            coroutineScope = viewModelScope,
+            onExistingUserLogin = {
+                onExistingUserLogin()
+                BlindarWorkManager.setOneTimeWork(activity)
+            },
             onUsernameNotSet = onUsernameNotSet,
             onSchoolNotSelected = onSchoolNotSelected,
             onNewUserSignUp = onNewUserSignUp,
-            onLoginFail = onCodeInvalid,
+            onCodeInvalid = onCodeInvalid
         )
     }
 
@@ -244,17 +201,13 @@ class RegisterViewModel @Inject constructor(
     fun onSchoolClick(
         context: Context,
         school: School,
-        onSuccess: () -> Unit,
-        onFail: () -> Unit
+        onSchoolClickCallbackFromUI: () -> Unit,
     ) {
         viewModelScope.launch {
             preferencesRepository.updateSelectedSchool(school.schoolCode, school.name)
             BlindarWorkManager.setOneTimeWork(context)
+            BlindarWorkManager.setUserInfoToFirebaseWork(context)
+            onSchoolClickCallbackFromUI()
         }
-        BlindarFirebase.tryUpdateCurrentUserSchoolCode(
-            schoolCode = school.schoolCode,
-            onSuccess = onSuccess,
-            onFail = onFail,
-        )
     }
 }

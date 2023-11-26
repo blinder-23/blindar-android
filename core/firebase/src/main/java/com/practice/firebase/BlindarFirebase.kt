@@ -4,7 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseUser
@@ -18,10 +19,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
 
@@ -30,76 +27,26 @@ object BlindarFirebase {
     private val auth: FirebaseAuth = Firebase.auth
     private val database: DatabaseReference = Firebase.database.reference
 
-    private val job = Job()
-    private val scope = CoroutineScope(job + Dispatchers.Main)
-
-    suspend fun parseIntentAndSignInWithGoogle(
-        intent: Intent,
-        onNewUserSignUp: (FirebaseUser) -> Unit,
-        onExistingUserLogin: (FirebaseUser) -> Unit,
-        onFail: () -> Unit,
-    ) {
-        try {
-            val account = GoogleSignIn.getSignedInAccountFromIntent(intent).await()
-            signInWithGoogle(
-                idToken = account.idToken,
-                onSelectSchool = onNewUserSignUp,
-                onExistingUserLogin = onExistingUserLogin,
-                onFail = onFail
-            )
-        } catch (e: ApiException) {
-            Log.d(TAG, "parse account fail", e)
-            onFail()
-        }
+    suspend fun signInWithGoogle(intent: Intent): FirebaseUser? {
+        val account = GoogleSignIn.getSignedInAccountFromIntent(intent).await()
+        return signInWithGoogle(idToken = account.idToken)
     }
 
-    private suspend fun signInWithGoogle(
-        idToken: String?,
-        onSelectSchool: (FirebaseUser) -> Unit,
-        onExistingUserLogin: (FirebaseUser) -> Unit,
-        onFail: () -> Unit,
-    ) {
+    private suspend fun signInWithGoogle(idToken: String?): FirebaseUser? {
         val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
         val task = try {
             auth.signInWithCredential(firebaseCredential).await()
         } catch (e: CancellationException) {
             null
         }
-
-        val user = task?.user
-        if (user == null) {
-            // Google login fail
-            Log.e(TAG, "sign in with google fail: $user")
-            onFail()
-        } else if (getUserDataState(user) == UserDataState.ALL_FILLED) {
-            // Existing user login
-            Log.d(TAG, "user ${user.uid} login")
-            onExistingUserLogin(user)
-        } else {
-            // New user registers
-            tryStoreUsername(
-                username = user.displayName!!,
-                onSuccess = { onSelectSchool(user) },
-                onFail = onFail,
-                updateProfile = false,
-            )
-        }
+        return task?.user
     }
 
-    suspend fun getUserDataState(user: FirebaseUser): UserDataState {
-        Log.d(TAG, "user display name: ${user.displayName}")
-        if (user.displayName.isNullOrEmpty()) return UserDataState.USERNAME_MISSING
-
-        val schoolCode = getschoolCode(user.displayName!!)
-        Log.d(TAG, "user school id: $schoolCode")
-        return if (schoolCode == null) UserDataState.SCHOOL_NOT_SELECTED else UserDataState.ALL_FILLED
-    }
-
-    fun getBlindarUser(): BlindarUser {
+    fun getBlindarUser(): BlindarUserStatus {
         val user = auth.currentUser
         return when {
-            user != null -> BlindarUser.LoginUser(user)
-            else -> BlindarUser.NotLoggedIn
+            user != null -> BlindarUserStatus.LoginUser(user)
+            else -> BlindarUserStatus.NotLoggedIn
         }
     }
 
@@ -121,10 +68,7 @@ object BlindarFirebase {
     fun signInWithPhoneAuthCredential(
         activity: Activity,
         credential: PhoneAuthCredential,
-        onExistingUserLogin: () -> Unit,
-        onUsernameNotSet: () -> Unit,
-        onSchoolNotSelected: () -> Unit,
-        onNewUserSignUp: () -> Unit,
+        onRegisterOrLoginSuccessful: () -> Unit,
         onLoginFail: () -> Unit,
     ) {
         Log.d(TAG, "credential: $credential")
@@ -132,16 +76,7 @@ object BlindarFirebase {
             .addOnCompleteListener(activity) { task ->
                 val user = task.result?.user
                 if (task.isSuccessful && user != null) {
-                    scope.launch {
-                        Log.d(TAG, "signInWithCredential success! ${user.phoneNumber}")
-                        val userDataState = getUserDataState(user)
-                        when (userDataState) {
-                            UserDataState.USERNAME_MISSING -> onUsernameNotSet()
-                            UserDataState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
-                            UserDataState.ALL_FILLED -> onExistingUserLogin()
-                            else -> onNewUserSignUp()
-                        }
-                    }
+                    onRegisterOrLoginSuccessful()
                 } else {
                     Log.e(TAG, "signInWithCredential failure", task.exception)
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
@@ -150,6 +85,13 @@ object BlindarFirebase {
                     }
                 }
             }
+    }
+
+    fun trySignInWithPhoneAuthCredential(
+        credential: PhoneAuthCredential,
+    ): Task<AuthResult> {
+        Log.d(TAG, "trying phone sign in w/ credential $credential")
+        return auth.signInWithCredential(credential)
     }
 
     fun tryStoreUsername(
@@ -172,6 +114,10 @@ object BlindarFirebase {
                     onFail()
                 }
         }
+    }
+
+    fun storeUsername(username: String): Task<Void>? = auth.currentUser?.let { user ->
+        database.child(usersKey).child(username).child(ownerKey).setValue(user.uid)
     }
 
     private fun tryUpdateCurrentUsername(
@@ -215,15 +161,53 @@ object BlindarFirebase {
         }
     }
 
-    suspend fun getschoolCode(username: String): Long? {
+    fun tryUpdateCurrentUserSchoolName(
+        schoolName: String,
+        onSuccess: () -> Unit,
+        onFail: () -> Unit,
+    ) {
+        val username = auth.currentUser?.displayName
+        if (username != null) {
+            database.child(usersKey).child(username).child(schoolNameKey).setValue(schoolName)
+                .addOnSuccessListener {
+                    Log.d(TAG, "user $username school name update success: $schoolName")
+                    onSuccess()
+                }
+                .addOnFailureListener {
+                    Log.e(TAG, "user $username school name update fail: $schoolName")
+                    onFail()
+                }
+        } else {
+            Log.e(TAG, "username is null while updating school name: ${auth.currentUser}")
+            onFail()
+        }
+    }
+
+    suspend fun getSchoolCode(username: String = auth.currentUser?.displayName ?: ""): Long? {
         val value =
             database.child(usersKey).child(username).child(schoolCodeKey).get().await().value
         Log.d(TAG, "username $username schoolCode: $value")
-        return value as? Long
+        if (value != null) {
+            return value as? Long
+        }
+
+        val oldValue =
+            database.child(usersKey).child(username).child(oldSchoolCodeKey).get().await().value
+        Log.d(TAG, "username $username old school code: $oldValue")
+        return oldValue as? Long
+    }
+
+    suspend fun getSchoolName(username: String = auth.currentUser?.displayName ?: ""): String? {
+        val value =
+            database.child(usersKey).child(username).child(schoolNameKey).get().await().value
+        Log.d(TAG, "get school name of user $username: $value")
+        return value as? String
     }
 
     private const val usersKey = "users"
     private const val ownerKey = "owner"
-    private const val schoolCodeKey = "schoolCode"
+    private const val schoolCodeKey = "school_code"
+    private const val oldSchoolCodeKey = "schoolCode"
+    private const val schoolNameKey = "school_name"
 
 }

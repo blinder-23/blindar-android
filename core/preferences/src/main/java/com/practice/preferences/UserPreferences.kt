@@ -29,6 +29,9 @@ data class UserPreferences(
     val isSchoolCodeEmpty: Boolean
         get() = schoolCode == emptySchoolCode
 
+    val isSchoolNameEmpty: Boolean
+        get() = schoolName == emptySchoolName
+
     companion object {
         val emptyPreferences = UserPreferences(
             uiMode = UiMode.Graphic,
@@ -38,5 +41,5 @@ data class UserPreferences(
     }
 }
 
-internal const val emptySchoolCode = 7010578
-internal const val emptySchoolName = "한빛맹학교"
+internal const val emptySchoolCode = -1
+internal const val emptySchoolName = ""

@@ -44,7 +44,6 @@ fun SelectSchoolScreen(
 
     val context = LocalContext.current
     val baseSuccessMessage = stringResource(id = R.string.school_selected_base)
-    val baseFailMessage = stringResource(id = R.string.school_select_fail_base)
     SelectSchoolScreen(
         selectedSchool = uiState.selectedSchool,
         schools = uiState.schools,
@@ -52,16 +51,11 @@ fun SelectSchoolScreen(
             viewModel.onSchoolClick(
                 context = context,
                 school = school,
-                onSuccess = {
-                    val successMessage = "${school.name} $baseSuccessMessage"
-                    onNavigateToMain()
-                    context.makeToast(successMessage)
-                },
-                onFail = {
-                    val failMessage = "${school.name} $baseFailMessage"
-                    context.makeToast(failMessage)
-                }
-            )
+            ) {
+                val successMessage = "${school.name} $baseSuccessMessage"
+                onNavigateToMain()
+                context.makeToast(successMessage)
+            }
         },
         query = uiState.schoolQuery,
         onQueryChange = viewModel::onSchoolQueryChange,
