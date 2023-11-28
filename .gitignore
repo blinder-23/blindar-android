@@ -1,7 +1,7 @@
 *.iml
 .gradle
 /local.properties
-/.idea
+.idea/
 .DS_Store
 /build
 /captures
@@ -9,3 +9,4 @@
 .cxx
 /gradle.properties
 app/src/main/res/xml/network_security_config.xml
+shelved.patch
