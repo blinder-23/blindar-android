@@ -20,4 +20,8 @@ object BlindarWorkManager {
     fun setUserInfoToFirebaseWork(context: Context) {
         UploadUserInfoToFirebaseWork.setOneTimeWork(context)
     }
+
+    fun setFetchMemoFromServerWork(context: Context, userId: String) {
+        LoadMemoFromServerWork.setOneTimeWork(context, userId)
+    }
 }
