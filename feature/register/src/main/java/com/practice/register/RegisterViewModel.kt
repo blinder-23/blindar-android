@@ -11,6 +11,7 @@ import com.practice.api.school.RemoteSchoolRepository
 import com.practice.api.toSchool
 import com.practice.domain.School
 import com.practice.firebase.BlindarFirebase
+import com.practice.firebase.BlindarUserStatus
 import com.practice.preferences.PreferencesRepository
 import com.practice.register.phonenumber.PhoneNumberValidator
 import com.practice.user.RegisterManager
@@ -127,6 +128,13 @@ class RegisterViewModel @Inject constructor(
             onExistingUserLogin = {
                 onExistingUserLogin()
                 BlindarWorkManager.setOneTimeWork(activity)
+
+                val user = BlindarFirebase.getBlindarUser()
+                Log.d(TAG, "is user already registered? ${user is BlindarUserStatus.LoginUser}")
+                if (user is BlindarUserStatus.LoginUser) {
+                    Log.d(TAG, "load memo from server of user")
+                    BlindarWorkManager.setFetchMemoFromServerWork(activity, user.user.uid)
+                }
             },
             onUsernameNotSet = onUsernameNotSet,
             onSchoolNotSelected = onSchoolNotSelected,
