@@ -40,6 +40,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         val SCHOOL_CODE = intPreferencesKey("school-id")
         val SCHOOL_NAME = stringPreferencesKey("school-name")
         val MEMO_ID_COUNTER = intPreferencesKey("memo-id-counter")
+        val NOTIFICATION_ENABLED = booleanPreferencesKey("daily-notification-enabled")
     }
 
     override val userPreferencesFlow: StateFlow<UserPreferences> =
@@ -116,6 +117,12 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         return currentCount
     }
 
+    override suspend fun updateDailyAlarmState(isEnabled: Boolean) {
+        edit {
+            it[PreferenceKeys.NOTIFICATION_ENABLED] = isEnabled
+        }
+    }
+
     override suspend fun clear() {
         edit {
             it.clear()
@@ -151,6 +158,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         val schoolCode = preferences[PreferenceKeys.SCHOOL_CODE] ?: emptySchoolCode
         val schoolName = preferences[PreferenceKeys.SCHOOL_NAME] ?: emptySchoolName
         val memoIdCounter = preferences[PreferenceKeys.MEMO_ID_COUNTER] ?: 0
+        val isDailyNotificationEnabled = preferences[PreferenceKeys.NOTIFICATION_ENABLED] ?: false
         return UserPreferences(
             uiMode = uiMode,
             themeMode = themeMode,
@@ -159,7 +167,8 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
             runningWorksCount = runningWorksCount,
             schoolCode = schoolCode,
             schoolName = schoolName,
-            memoIdCounter = memoIdCounter
+            memoIdCounter = memoIdCounter,
+            isDailyAlarmEnabled = isDailyNotificationEnabled,
         )
     }
 

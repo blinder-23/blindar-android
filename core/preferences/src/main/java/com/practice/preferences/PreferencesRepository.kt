@@ -20,6 +20,7 @@ interface PreferencesRepository : CoroutineScope {
     suspend fun decreaseRunningWorkCount()
     suspend fun updateSelectedSchool(schoolCode: Int, schoolName: String)
     suspend fun getAndIncreaseMemoIdCount(): Int
+    suspend fun updateDailyAlarmState(isEnabled: Boolean)
     suspend fun clear()
     suspend fun fetchInitialPreferences(): UserPreferences
 }
