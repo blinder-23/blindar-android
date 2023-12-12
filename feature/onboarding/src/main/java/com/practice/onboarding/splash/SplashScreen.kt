@@ -13,6 +13,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.AppIcon
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.notification.BlindarNotificationManager
 import com.practice.user.UserRegisterState
 
 @Composable
@@ -39,6 +40,7 @@ fun SplashScreen(
                 onAutoLoginSuccess()
             }
         }
+        BlindarNotificationManager.createNotificationChannels(context)
     }
 
     ConstraintLayout(modifier = modifier) {
