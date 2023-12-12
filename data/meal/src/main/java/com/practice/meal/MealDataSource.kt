@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 sealed interface MealDataSource {
     suspend fun getMeals(schoolCode: Int, year: Int, month: Int): Flow<List<Meal>>
 
+    suspend fun getMeal(schoolCode: Int, year: Int, month: Int, dayOfMonth: Int): List<Meal>
+
     suspend fun insertMeals(meals: List<Meal>)
 
     suspend fun deleteMeals(meals: List<Meal>)

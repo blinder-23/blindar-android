@@ -14,6 +14,17 @@ class FakeMealDataSource : MealDataSource {
         }
     }
 
+    override suspend fun getMeal(
+        schoolCode: Int,
+        year: Int,
+        month: Int,
+        dayOfMonth: Int,
+    ): List<Meal> {
+        return meals.filter {
+            it.schoolCode == schoolCode && it.year == year && it.month == month && it.day == dayOfMonth
+        }
+    }
+
     override suspend fun insertMeals(meals: List<Meal>) {
         print("Add: $meals")
         this.meals.addAll(meals)
