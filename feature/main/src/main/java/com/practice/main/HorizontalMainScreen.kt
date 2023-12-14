@@ -18,6 +18,7 @@ import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.largeCalendarDateShape
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.School
+import com.practice.main.state.DailyAlarmIconState
 import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
@@ -34,6 +35,7 @@ fun HorizontalMainScreen(
     onScreenModeChange: (ScreenMode) -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
+    onAlarmIconClick: ()->Unit,
     onDateClick: (Date) -> Unit,
     onSwiped: (YearMonth) -> Unit,
     getContentDescription: (Date) -> String,
@@ -118,6 +120,7 @@ private fun HorizontalMainScreenPreview() {
         ),
         isNutrientPopupVisible = false,
         isMemoPopupVisible = false,
+        dailyAlarmIconState = DailyAlarmIconState.Enabled,
     )
     val calendarState = rememberCalendarState(
         year = year,
@@ -131,6 +134,7 @@ private fun HorizontalMainScreenPreview() {
             onScreenModeChange = {},
             calendarState = calendarState,
             mealColumns = 3,
+            onAlarmIconClick = {},
             onDateClick = {},
             onSwiped = { },
             getContentDescription = { "" },

@@ -1,6 +1,13 @@
 package com.practice.main
 
+import android.Manifest
+import android.content.Context
+import android.os.Build
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.Role
@@ -41,6 +49,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.core.app.NotificationManagerCompat
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.calendar.SwipeableCalendar
@@ -60,19 +69,28 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreenTopBar(
     schoolName: String,
+    iconState: DailyAlarmIconState,
+    onAlarmIconClick: () -> Unit,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     onClickLabel: String = "",
 ) {
     Box(
-        modifier = modifier
-            .clickable(onClickLabel = onClickLabel, onClick = onClick)
+        modifier = modifier,
     ) {
         TitleLarge(
             text = schoolName,
             textColor = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .align(Alignment.Center)
+                .padding(16.dp)
+                .clickable(onClickLabel = onClickLabel, onClick = onClick),
+        )
+        DailyAlarmIcon(
+            iconState = iconState,
+            onClick = onAlarmIconClick,
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
                 .padding(16.dp),
         )
     }
@@ -84,11 +102,23 @@ private fun DailyAlarmIcon(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
+    val permissionWarningMessage =
+        stringResource(id = R.string.notification_permission_rejected_warning)
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                onClick()
+                Toast.makeText(context, R.string.daily_alarm_icon_clicked_to_enabled, Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, permissionWarningMessage, Toast.LENGTH_SHORT).show()
+            }
+        }
+
     IconButton(
         onClick = {
-            if (iconState != DailyAlarmIconState.Loading) {
-                onClick()
-            }
+            onDailyAlarmIconClick(iconState, context, launcher, onClick)
         },
         modifier = modifier,
     ) {
@@ -97,6 +127,39 @@ private fun DailyAlarmIcon(
             contentDescription = stringResource(id = iconState.iconDescriptionId),
             tint = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface),
         )
+    }
+}
+
+private fun onDailyAlarmIconClick(
+    iconState: DailyAlarmIconState,
+    context: Context,
+    launcher: ManagedActivityResultLauncher<String, Boolean>,
+    onClick: () -> Unit,
+) {
+    val toastMessageId = when (iconState) {
+        DailyAlarmIconState.Loading -> null
+
+        DailyAlarmIconState.Disabled -> {
+            val areNotificationsEnabled =
+                NotificationManagerCompat.from(context).areNotificationsEnabled()
+            if (!areNotificationsEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                null
+            } else if (areNotificationsEnabled) {
+                onClick()
+                R.string.daily_alarm_icon_clicked_to_enabled
+            } else {
+                null
+            }
+        }
+
+        DailyAlarmIconState.Enabled -> {
+            onClick()
+            R.string.daily_alarm_icon_clicked_to_disabled
+        }
+    }
+    toastMessageId?.let {
+        Toast.makeText(context, toastMessageId, Toast.LENGTH_SHORT).show()
     }
 }
 
@@ -278,6 +341,8 @@ private fun MainScreenTopBarPreview() {
     BlindarTheme {
         MainScreenTopBar(
             schoolName = "한빛맹학교",
+            iconState = DailyAlarmIconState.Enabled,
+            onAlarmIconClick = {},
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface),
