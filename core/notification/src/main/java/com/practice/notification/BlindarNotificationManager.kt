@@ -13,6 +13,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.hsk.ktx.date.Date
 import com.practice.domain.meal.Meal
 import com.practice.notification.message.MealMessageBuilder
+import com.practice.notification.message.ScheduleMessageBuilder
 
 object BlindarNotificationManager {
 
@@ -112,7 +113,20 @@ object BlindarNotificationManager {
         val builder = buildMealNotification(context, title, body)
 
         val notificationId: Int = date.toEpochSecond().toInt()
-        notifyIfPermissionIsGranted(context, builder, notificationId)
+        notifyIfPermissionIsGranted(context, builder, notificationId, "meal")
+
+        return notificationId
+    }
+
+    fun createScheduleNotification(context: Context, date: Date, contents: List<String>): Int {
+        val scheduleMessageBuilder = ScheduleMessageBuilder(date, contents)
+        val title = scheduleMessageBuilder.title
+        val body = scheduleMessageBuilder.body
+
+        val builder = buildScheduleNotification(context, title, body)
+
+        val notificationId: Int = date.toEpochSecond().toInt() + 1
+        notifyIfPermissionIsGranted(context, builder, notificationId, "schedule")
 
         return notificationId
     }
@@ -126,6 +140,20 @@ object BlindarNotificationManager {
             context = context,
             channelId = dailyNoticeMealChannelId,
             iconId = R.drawable.restaurant,
+            title = title,
+            body = body,
+        )
+    }
+
+    private fun buildScheduleNotification(
+        context: Context,
+        title: String,
+        body: String,
+    ): NotificationCompat.Builder {
+        return buildNotification(
+            context = context,
+            channelId = dailyNoticeScheduleChannelId,
+            iconId = R.drawable.calendar,
             title = title,
             body = body,
         )
@@ -149,6 +177,7 @@ object BlindarNotificationManager {
         context: Context,
         builder: NotificationCompat.Builder,
         notificationId: Int,
+        logTitle: String = ""
     ) {
         with(NotificationManagerCompat.from(context)) {
             if ((ActivityCompat.checkSelfPermission(
@@ -156,9 +185,9 @@ object BlindarNotificationManager {
                 ) == PackageManager.PERMISSION_GRANTED) && areNotificationsEnabled()
             ) {
                 notify(notificationId, builder.build())
-                log("Meal notification is sent!")
+                log("notification $logTitle is sent!")
             } else {
-                log("Meal notification could not be sent because of the permission lack")
+                log("notification $logTitle could not be sent because of the permission lack")
             }
         }
     }
