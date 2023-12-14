@@ -11,7 +11,11 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.hsk.ktx.date.Date
+import com.practice.domain.Memo
 import com.practice.domain.meal.Meal
+import com.practice.domain.schedule.Schedule
+import com.practice.firebase.BlindarFirebase
+import com.practice.firebase.BlindarUserStatus
 import com.practice.meal.MealRepository
 import com.practice.memo.MemoRepository
 import com.practice.notification.BlindarNotificationManager
@@ -34,8 +38,10 @@ class DailyNotificationWork @AssistedInject constructor(
     override suspend fun doWork(): Result {
         return if (isNotificationEnabled()) {
             logNotificationIsEnabled()
+
             val now = Date.now()
-            sendDailyNotification(context, now)
+            sendDailyNotification(now, context)
+
             Result.success()
         } else {
             logNotificationIsDisabled()
@@ -47,9 +53,9 @@ class DailyNotificationWork @AssistedInject constructor(
         return preferencesRepository.userPreferencesFlow.value.isDailyAlarmEnabled
     }
 
-    private suspend fun sendDailyNotification(context: Context, date: Date) {
-        // TODO: 데이터 받아서 알림으로
+    private suspend fun sendDailyNotification(date: Date, context: Context) {
         sendDailyMealNotification(date, context)
+        sendDailyScheduleNotification(date, context)
     }
 
     private fun logNotificationIsEnabled() {
@@ -67,9 +73,38 @@ class DailyNotificationWork @AssistedInject constructor(
         }
     }
 
-    private suspend fun getDailyMealData(): List<Meal> {
+    private suspend fun sendDailyScheduleNotification(date: Date, context: Context) {
+        val schedules = getDailyScheduleDate(date)
+        val memos = getDailyMemoDate(date)
+
+        val contents = combineScheduleAndMemo(schedules, memos)
+        if (contents.isNotEmpty()) {
+            BlindarNotificationManager.createScheduleNotification(context, date, contents)
+        }
+    }
+
+    private suspend fun getDailyMealData(date: Date): List<Meal> {
         val schoolId = preferencesRepository.userPreferencesFlow.value.schoolCode
         return localMealRepository.getMeal(schoolId, date)
+    }
+
+    private suspend fun getDailyScheduleDate(date: Date): List<Schedule> {
+        val schoolId = preferencesRepository.userPreferencesFlow.value.schoolCode
+        return localScheduleRepository.getSchedules(schoolId, date)
+    }
+
+    private suspend fun getDailyMemoDate(date: Date): List<Memo> {
+        return when (val user = BlindarFirebase.getBlindarUser()) {
+            is BlindarUserStatus.NotLoggedIn -> emptyList()
+            is BlindarUserStatus.LoginUser -> {
+                val userId = user.user.uid
+                localMemoRepository.getMemos(userId, date)
+            }
+        }
+    }
+
+    private fun combineScheduleAndMemo(schedules: List<Schedule>, memos: List<Memo>): List<String> {
+        return schedules.map { it.eventName } + memos.map { it.content }
     }
 
     private fun log(message: String) {
@@ -96,7 +131,7 @@ class DailyNotificationWork @AssistedInject constructor(
             val oneTimeWOrk = OneTimeWorkRequestBuilder<DailyNotificationWork>()
                 .addTag(workTag + "dtd")
                 .build()
-            workManager.enqueueUniqueWork(workTag+"dtd", ExistingWorkPolicy.REPLACE, oneTimeWOrk)
+            workManager.enqueueUniqueWork(workTag + "dtd", ExistingWorkPolicy.REPLACE, oneTimeWOrk)
         }
     }
 }
