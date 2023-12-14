@@ -1,11 +1,20 @@
 package com.practice.notification
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.annotation.ChecksSdkIntAtLeast
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.hsk.ktx.date.Date
+import com.practice.domain.meal.Meal
+import com.practice.notification.message.MealMessageBuilder
 
 object BlindarNotificationManager {
 
@@ -49,7 +58,7 @@ object BlindarNotificationManager {
 
     private fun createDailyNoticeMealChannel(
         context: Context,
-        notificationManager: NotificationManager
+        notificationManager: NotificationManager,
     ) {
         val name = context.getString(R.string.daily_alarm_meal_channel_name)
         val description = context.getString(R.string.daily_alarm_meal_channel_description)
@@ -104,6 +113,73 @@ object BlindarNotificationManager {
             block()
         }
     }
+
+    /**
+     * 실제 알림을 만드는 코드
+     */
+    fun createMealNotification(context: Context, date: Date, meals: List<Meal>): Int {
+        val mealMessageBuilder = MealMessageBuilder(date, meals)
+        val title = mealMessageBuilder.title
+        val body = mealMessageBuilder.body
+
+        val builder = buildMealNotification(context, title, body)
+
+        val notificationId: Int = date.toEpochSecond().toInt()
+        notifyIfPermissionIsGranted(context, builder, notificationId)
+
+        return notificationId
+    }
+
+    private fun buildMealNotification(
+        context: Context,
+        title: String,
+        body: String,
+    ): NotificationCompat.Builder {
+        return buildNotification(
+            context = context,
+            channelId = dailyNoticeMealChannelId,
+            iconId = R.drawable.restaurant,
+            title = title,
+            body = body,
+        )
+    }
+
+    private fun buildNotification(
+        context: Context,
+        channelId: String,
+        iconId: Int,
+        title: String,
+        body: String,
+    ): NotificationCompat.Builder {
+        return NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(iconId)
+            .setContentTitle(title)
+            .setContentText(body)
+    }
+
+    private fun notifyIfPermissionIsGranted(
+        context: Context,
+        builder: NotificationCompat.Builder,
+        notificationId: Int,
+    ) {
+        with(NotificationManagerCompat.from(context)) {
+            if ((ActivityCompat.checkSelfPermission(
+                    context, Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED) && areNotificationsEnabled()
+            ) {
+                notify(notificationId, builder.build())
+                log("Meal notification is sent!")
+            } else {
+                log("Meal notification could not be sent because of the permission lack")
+            }
+        }
+    }
+
+    private fun log(message: String) {
+        Log.d(TAG, message)
+    }
+
+    private const val TAG = "BlinderNotificationManager"
 
     private const val dailyNoticeChannelGroupId = "daily-notice-channel-group"
 
