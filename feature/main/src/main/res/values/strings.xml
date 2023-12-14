@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="daily_alarm_icon_loading">데일리 알림 상태를 로드하고 있습니다. 잠시만 기다려 주세요.</string>
+    <string name="daily_alarm_icon_enabled">데일리 알림이 활성화되어 있습니다. 비활성화려면 두 번 탭하세요.</string>
+    <string name="daily_alarm_icon_disabled">데일리 알림 비활성화되어 있습니다. 활성화하려면 두 번 탭하세요.</string>
     <string name="calendar_back_arrow">한 달 전으로 가기</string>
     <string name="calendar_next_arrow">한 달 후로 가기</string>
 

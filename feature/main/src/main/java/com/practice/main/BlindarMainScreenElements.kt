@@ -4,7 +4,15 @@ import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -12,7 +20,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ArrowForwardIos
-import androidx.compose.material3.*
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -21,15 +34,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.*
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.calendar.SwipeableCalendar
-import com.practice.designsystem.calendar.core.*
+import com.practice.designsystem.calendar.core.CalendarState
+import com.practice.designsystem.calendar.core.YearMonth
+import com.practice.designsystem.calendar.core.offset
+import com.practice.designsystem.calendar.core.rememberCalendarState
+import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.main.state.DailyAlarmIconState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
@@ -51,6 +74,28 @@ fun MainScreenTopBar(
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(16.dp),
+        )
+    }
+}
+
+@Composable
+private fun DailyAlarmIcon(
+    iconState: DailyAlarmIconState,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    IconButton(
+        onClick = {
+            if (iconState != DailyAlarmIconState.Loading) {
+                onClick()
+            }
+        },
+        modifier = modifier,
+    ) {
+        Icon(
+            imageVector = iconState.icon,
+            contentDescription = stringResource(id = iconState.iconDescriptionId),
+            tint = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface),
         )
     }
 }
@@ -237,5 +282,32 @@ private fun MainScreenTopBarPreview() {
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface),
         )
+    }
+}
+
+@LightAndDarkPreview
+@Composable
+private fun DailyAlarmIconPreview() {
+    BlindarTheme {
+        Row(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
+            DailyAlarmIcon(
+                iconState = DailyAlarmIconState.Enabled,
+                onClick = {},
+                modifier = Modifier
+                    .padding(16.dp),
+            )
+            DailyAlarmIcon(
+                iconState = DailyAlarmIconState.Disabled,
+                onClick = {},
+                modifier = Modifier
+                    .padding(16.dp),
+            )
+            DailyAlarmIcon(
+                iconState = DailyAlarmIconState.Loading,
+                onClick = {},
+                modifier = Modifier
+                    .padding(16.dp),
+            )
+        }
     }
 }
