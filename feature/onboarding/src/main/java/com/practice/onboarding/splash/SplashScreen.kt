@@ -15,6 +15,7 @@ import com.practice.designsystem.components.AppIcon
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.notification.BlindarNotificationManager
 import com.practice.user.UserRegisterState
+import com.practice.work.BlindarWorkManager
 
 @Composable
 fun SplashScreen(
@@ -41,6 +42,7 @@ fun SplashScreen(
             }
         }
         BlindarNotificationManager.createNotificationChannels(context)
+        BlindarWorkManager.setDailyNotificationWork(context)
     }
 
     ConstraintLayout(modifier = modifier) {
