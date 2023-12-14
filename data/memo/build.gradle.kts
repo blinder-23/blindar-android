@@ -10,7 +10,7 @@ android {
     compileSdk = 33
 
     defaultConfig {
-        minSdk = 23
+        minSdk = 26
 
         testInstrumentationRunner = "com.practice.memo.testutil.HiltTestRunner"
         consumerProguardFiles("consumer-rules.pro")

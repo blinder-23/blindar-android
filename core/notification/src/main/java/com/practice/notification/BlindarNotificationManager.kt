@@ -6,9 +6,7 @@ import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
 import android.util.Log
-import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -37,15 +35,13 @@ object BlindarNotificationManager {
         context: Context,
         notificationManager: NotificationManager,
     ) {
-        runOnlyOverOreo {
-            val groupName = context.getString(R.string.daily_alarm_channel_group)
-            notificationManager.createNotificationChannelGroup(
-                NotificationChannelGroup(
-                    dailyNoticeChannelGroupId,
-                    groupName,
-                )
+        val groupName = context.getString(R.string.daily_alarm_channel_group)
+        notificationManager.createNotificationChannelGroup(
+            NotificationChannelGroup(
+                dailyNoticeChannelGroupId,
+                groupName,
             )
-        }
+        )
     }
 
     private fun createNotificationChannels(
@@ -96,22 +92,13 @@ object BlindarNotificationManager {
         groupId: String = "",
         notificationManager: NotificationManager,
     ) {
-        runOnlyOverOreo {
-            val channel = NotificationChannel(id, name, importance).apply {
-                description = descriptionText
-                if (groupId.isNotEmpty()) {
-                    group = groupId
-                }
+        val channel = NotificationChannel(id, name, importance).apply {
+            description = descriptionText
+            if (groupId.isNotEmpty()) {
+                group = groupId
             }
-            notificationManager.createNotificationChannel(channel)
         }
-    }
-
-    @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.O)
-    private fun runOnlyOverOreo(block: () -> Unit) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            block()
-        }
+        notificationManager.createNotificationChannel(channel)
     }
 
     /**

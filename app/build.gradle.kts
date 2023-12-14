@@ -24,7 +24,7 @@ android {
 
     defaultConfig {
         applicationId = "com.practice.hanbitlunch"
-        minSdk = 23
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "2.1.2"
