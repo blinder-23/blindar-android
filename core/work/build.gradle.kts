@@ -71,6 +71,7 @@ dependencies {
     api(project(":core:combine"))
     api(project(":core:preferences"))
     implementation(project(":core:firebase"))
+    implementation(project(":core:notification"))
 
     implementation(libs.hsk.ktx)
 
