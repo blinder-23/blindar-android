@@ -8,9 +8,26 @@ class FakeScheduleDataSource : ScheduleDataSource {
 
     private val scheduleEntities = mutableSetOf<Schedule>()
 
-    override suspend fun getSchedules(schoolCode: Int, year: Int, month: Int): Flow<List<Schedule>> {
+    override suspend fun getSchedules(
+        schoolCode: Int,
+        year: Int,
+        month: Int,
+    ): Flow<List<Schedule>> {
         return flow {
             emit(scheduleEntities.filter { it.schoolCode == schoolCode && it.year == year && it.month == month })
+        }
+    }
+
+    override suspend fun getSchedules(schoolCode: Int, ymd: String): List<Schedule> {
+        return try {
+            val year = ymd.substring(0..3).toInt()
+            val month = ymd.substring(4..5).toInt()
+            val day = ymd.substring(6..7).toInt()
+            scheduleEntities.filter {
+                it.schoolCode == schoolCode && it.year == year && it.month == month && it.day == day
+            }
+        } catch (e: NumberFormatException) {
+            emptyList()
         }
     }
 
