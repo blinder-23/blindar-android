@@ -34,7 +34,8 @@ class DailyNotificationWork @AssistedInject constructor(
     override suspend fun doWork(): Result {
         return if (isNotificationEnabled()) {
             logNotificationIsEnabled()
-            sendDailyNotification(context)
+            val now = Date.now()
+            sendDailyNotification(context, now)
             Result.success()
         } else {
             logNotificationIsDisabled()
@@ -46,9 +47,9 @@ class DailyNotificationWork @AssistedInject constructor(
         return preferencesRepository.userPreferencesFlow.value.isDailyAlarmEnabled
     }
 
-    private suspend fun sendDailyNotification(context: Context) {
+    private suspend fun sendDailyNotification(context: Context, date: Date) {
         // TODO: 데이터 받아서 알림으로
-        sendDailyMealNotification(context)
+        sendDailyMealNotification(date, context)
     }
 
     private fun logNotificationIsEnabled() {
@@ -59,8 +60,8 @@ class DailyNotificationWork @AssistedInject constructor(
         log("Notification is disabled at ${Date.now()}")
     }
 
-    private suspend fun sendDailyMealNotification(context: Context) {
-        val meals = getDailyMealData()
+    private suspend fun sendDailyMealNotification(date: Date, context: Context) {
+        val meals = getDailyMealData(date)
         if (meals.isNotEmpty()) {
             BlindarNotificationManager.createMealNotification(context, date, meals)
         }
@@ -68,8 +69,7 @@ class DailyNotificationWork @AssistedInject constructor(
 
     private suspend fun getDailyMealData(): List<Meal> {
         val schoolId = preferencesRepository.userPreferencesFlow.value.schoolCode
-        val now = Date.now()
-        return localMealRepository.getMeal(schoolId, now)
+        return localMealRepository.getMeal(schoolId, date)
     }
 
     private fun log(message: String) {
