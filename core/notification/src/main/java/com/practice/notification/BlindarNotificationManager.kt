@@ -142,6 +142,7 @@ object BlindarNotificationManager {
             .setSmallIcon(iconId)
             .setContentTitle(title)
             .setContentText(body)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(body))
     }
 
     private fun notifyIfPermissionIsGranted(
