@@ -14,7 +14,7 @@ object DateUtil {
         return "$formattedYear$formattedMonth$formattedDayOfMonth"
     }
 
-    fun getNextTimeOffsetInMillis(hour: Int, minute: Int, second: Int): Long {
+    fun getNextTimeOffsetInSeconds(hour: Int, minute: Int, second: Int): Long {
         val now = LocalDateTime.now()
         val zone = ZoneOffset.systemDefault()
         val time = LocalDateTime.now().withHour(hour).withMinute(minute).withSecond(second)

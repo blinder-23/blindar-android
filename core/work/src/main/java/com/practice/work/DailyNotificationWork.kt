@@ -116,8 +116,9 @@ class DailyNotificationWork @AssistedInject constructor(
         private const val workTag = "daily-notification-work"
 
         fun setPeriodicDailyNotificationWork(workManager: WorkManager) {
+            val initialDelay = getInitialDelayInSeconds()
             val periodicWork = PeriodicWorkRequestBuilder<DailyNotificationWork>(1, TimeUnit.DAYS)
-                .setInitialDelay(getInitialDelay(), TimeUnit.MILLISECONDS)
+                .setInitialDelay(initialDelay, TimeUnit.SECONDS)
                 .addTag(workTag)
                 .build()
             workManager.enqueueUniquePeriodicWork(
@@ -136,6 +137,6 @@ class DailyNotificationWork @AssistedInject constructor(
     }
 }
 
-private fun getInitialDelay(): Long {
-    return DateUtil.getNextTimeOffsetInMillis(8, 0, 0)
+private fun getInitialDelayInSeconds(): Long {
+    return DateUtil.getNextTimeOffsetInSeconds(8, 0, 0)
 }
