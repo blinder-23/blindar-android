@@ -24,10 +24,4 @@ object BlindarWorkManager {
     fun setFetchMemoFromServerWork(context: Context, userId: String) {
         LoadMemoFromServerWork.setOneTimeWork(context, userId)
     }
-
-    fun setDailyNotificationWork(context: Context) {
-        val workManager = WorkManager.getInstance(context)
-        DailyNotificationWork.setPeriodicDailyNotificationWork(workManager)
-        DailyNotificationWork.setOneTimeDailyNotificationWork(workManager)
-    }
 }

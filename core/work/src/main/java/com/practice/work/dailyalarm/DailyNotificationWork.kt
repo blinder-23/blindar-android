@@ -1,13 +1,11 @@
-package com.practice.work
+package com.practice.work.dailyalarm
 
 import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
-import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.hsk.ktx.date.Date
@@ -21,10 +19,8 @@ import com.practice.memo.MemoRepository
 import com.practice.notification.BlindarNotificationManager
 import com.practice.preferences.PreferencesRepository
 import com.practice.schedule.ScheduleRepository
-import com.practice.util.date.DateUtil
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import java.util.concurrent.TimeUnit
 
 @HiltWorker
 class DailyNotificationWork @AssistedInject constructor(
@@ -36,6 +32,7 @@ class DailyNotificationWork @AssistedInject constructor(
     private val preferencesRepository: PreferencesRepository,
 ) : CoroutineWorker(context, workerParams) {
     override suspend fun doWork(): Result {
+        logWorkId()
         return if (isNotificationEnabled()) {
             logNotificationIsEnabled()
 
@@ -49,8 +46,8 @@ class DailyNotificationWork @AssistedInject constructor(
         }
     }
 
-    private fun isNotificationEnabled(): Boolean {
-        return preferencesRepository.userPreferencesFlow.value.isDailyAlarmEnabled
+    private suspend fun isNotificationEnabled(): Boolean {
+        return preferencesRepository.fetchInitialPreferences().isDailyAlarmEnabled
     }
 
     private suspend fun sendDailyNotification(date: Date, context: Context) {
@@ -107,6 +104,10 @@ class DailyNotificationWork @AssistedInject constructor(
         return schedules.map { it.eventName } + memos.map { it.content }
     }
 
+    private fun logWorkId() {
+        log("ID $id started")
+    }
+
     private fun log(message: String) {
         Log.d(TAG, message)
     }
@@ -115,28 +116,11 @@ class DailyNotificationWork @AssistedInject constructor(
         private const val TAG = "DailyNotificationWork"
         private const val workTag = "daily-notification-work"
 
-        fun setPeriodicDailyNotificationWork(workManager: WorkManager) {
-            val initialDelay = getInitialDelayInSeconds()
-            val periodicWork = PeriodicWorkRequestBuilder<DailyNotificationWork>(1, TimeUnit.DAYS)
-                .setInitialDelay(initialDelay, TimeUnit.SECONDS)
+        fun setOneTimeDailyNotificationWork(workManager: WorkManager) {
+            val oneTimeWork = OneTimeWorkRequestBuilder<DailyNotificationWork>()
                 .addTag(workTag)
                 .build()
-            workManager.enqueueUniquePeriodicWork(
-                workTag,
-                ExistingPeriodicWorkPolicy.UPDATE,
-                periodicWork
-            )
-        }
-
-        fun setOneTimeDailyNotificationWork(workManager: WorkManager) {
-            val oneTimeWOrk = OneTimeWorkRequestBuilder<DailyNotificationWork>()
-                .addTag(workTag + "dtd")
-                .build()
-            workManager.enqueueUniqueWork(workTag + "dtd", ExistingWorkPolicy.REPLACE, oneTimeWOrk)
+            workManager.enqueueUniqueWork(workTag, ExistingWorkPolicy.REPLACE, oneTimeWork)
         }
     }
-}
-
-private fun getInitialDelayInSeconds(): Long {
-    return DateUtil.getNextTimeOffsetInSeconds(8, 0, 0)
 }
