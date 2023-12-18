@@ -15,44 +15,48 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
 @HiltWorker
-class UploadUserInfoToFirebaseWork @AssistedInject constructor(
+class UploadUserInfoWork @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val preferencesRepository: PreferencesRepository,
 ) : Worker(context, workerParams) {
     override fun doWork(): Result {
-        uploadToFirebase()
+        uploadUsername()
+        uploadSchoolCode()
+        uploadSchoolName()
         return Result.success()
     }
 
-    private fun uploadToFirebase() {
-        uploadUsernameToFirebaseDatabase()
-        uploadSchoolCodeToFirebase()
-        uploadSchoolNameToFirebase()
-    }
-
     // TODO: work에 analytics event 넣기
-    private fun uploadUsernameToFirebaseDatabase() {
+    private fun uploadUsername() {
         val blindarUser = BlindarFirebase.getBlindarUser()
         if (blindarUser is BlindarUserStatus.LoginUser) {
             blindarUser.user.displayName?.let { username ->
-                BlindarFirebase.tryStoreUsername(
-                    username = username,
-                    onSuccess = {
-                        Log.d(TAG, "upload user id success")
-                    },
-                    onFail = {
-                        Log.d(TAG, "upload user id fail")
-                    },
-                )
+                uploadUsernameToFirebase(username)
             }
         }
     }
 
-    private fun uploadSchoolCodeToFirebase() {
+    private fun uploadUsernameToFirebase(username: String) {
+        BlindarFirebase.tryStoreUsername(
+            username = username,
+            onSuccess = {
+                Log.d(TAG, "upload user id success")
+            },
+            onFail = {
+                Log.d(TAG, "upload user id fail")
+            },
+        )
+    }
+
+    private fun uploadSchoolCode() {
         if (preferencesRepository.userPreferencesFlow.value.isSchoolCodeEmpty) return
 
         val schoolCode = preferencesRepository.userPreferencesFlow.value.schoolCode
+        uploadSchoolCodeToFirebase(schoolCode)
+    }
+
+    private fun uploadSchoolCodeToFirebase(schoolCode: Int) {
         BlindarFirebase.tryUpdateCurrentUserSchoolCode(
             schoolCode = schoolCode,
             onSuccess = {
@@ -64,10 +68,14 @@ class UploadUserInfoToFirebaseWork @AssistedInject constructor(
         )
     }
 
-    private fun uploadSchoolNameToFirebase() {
+    private fun uploadSchoolName() {
         if (preferencesRepository.userPreferencesFlow.value.isSchoolNameEmpty) return
 
         val schoolName = preferencesRepository.userPreferencesFlow.value.schoolName
+        uploadSchoolNameToFirebase(schoolName)
+    }
+
+    private fun uploadSchoolNameToFirebase(schoolName: String) {
         BlindarFirebase.tryUpdateCurrentUserSchoolName(
             schoolName = schoolName,
             onSuccess = { Log.d(TAG, "upload school name success") },
@@ -81,7 +89,7 @@ class UploadUserInfoToFirebaseWork @AssistedInject constructor(
 
         fun setOneTimeWork(context: Context) {
             val workManager = WorkManager.getInstance(context)
-            val oneTimeWork = OneTimeWorkRequestBuilder<UploadUserInfoToFirebaseWork>()
+            val oneTimeWork = OneTimeWorkRequestBuilder<UploadUserInfoWork>()
                 .addTag(workerTag)
                 .build()
             workManager.enqueueUniqueWork(
