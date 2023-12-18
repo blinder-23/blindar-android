@@ -31,6 +31,8 @@ fun SplashScreen(
     val context = LocalContext.current
     LaunchedEffect(true) {
         systemUiController.setSystemBarsColor(systemBarColor)
+        BlindarNotificationManager.createNotificationChannels(context)
+        BlindarWorkManager.setDailyNotificationWork(context)
         when (viewModel.getUserRegisterState()) {
             UserRegisterState.NOT_LOGGED_IN -> onAutoLoginFail()
             UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()
@@ -41,8 +43,6 @@ fun SplashScreen(
                 onAutoLoginSuccess()
             }
         }
-        BlindarNotificationManager.createNotificationChannels(context)
-        BlindarWorkManager.setDailyNotificationWork(context)
     }
 
     ConstraintLayout(modifier = modifier) {
