@@ -21,10 +21,14 @@ class UploadUserInfoToFirebaseWork @AssistedInject constructor(
     private val preferencesRepository: PreferencesRepository,
 ) : Worker(context, workerParams) {
     override fun doWork(): Result {
+        uploadToFirebase()
+        return Result.success()
+    }
+
+    private fun uploadToFirebase() {
         uploadUsernameToFirebaseDatabase()
         uploadSchoolCodeToFirebase()
         uploadSchoolNameToFirebase()
-        return Result.success()
     }
 
     // TODO: work에 analytics event 넣기
