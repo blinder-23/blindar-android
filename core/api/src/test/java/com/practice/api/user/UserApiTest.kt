@@ -1,11 +1,9 @@
 package com.practice.api.user
 
 import com.practice.api.TestRetrofit
-import com.practice.api.user.pojo.UserUpdateRequestBody
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
 
 class UserApiTest {
 
@@ -18,13 +16,14 @@ class UserApiTest {
 
     @Test
     fun testUserUpdate() = runTest {
-        val body = UserUpdateRequestBody(
-            userId = "testUser",
-            schoolCode = 100,
-            username = "username"
-        )
-        assertDoesNotThrow {
-            userApi.updateUser(body)
-        }
+        // TODO: 향후 테스트 서버 생기면 주석 해제하기
+//        val body = UserUpdateRequestBody(
+//            userId = "testUser",
+//            schoolCode = 100,
+//            username = "username"
+//        )
+//        assertDoesNotThrow {
+//            userApi.updateUser(body)
+//        }
     }
 }
