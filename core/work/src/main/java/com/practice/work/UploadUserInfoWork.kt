@@ -3,11 +3,12 @@ package com.practice.work
 import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
+import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.practice.api.user.RemoteUserRepository
 import com.practice.firebase.BlindarFirebase
 import com.practice.firebase.BlindarUserStatus
 import com.practice.preferences.PreferencesRepository
@@ -19,8 +20,9 @@ class UploadUserInfoWork @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val preferencesRepository: PreferencesRepository,
-) : Worker(context, workerParams) {
-    override fun doWork(): Result {
+    private val userRepository: RemoteUserRepository,
+) : CoroutineWorker(context, workerParams) {
+    override suspend fun doWork(): Result {
         uploadUsername()
         uploadSchoolCode()
         uploadSchoolName()
