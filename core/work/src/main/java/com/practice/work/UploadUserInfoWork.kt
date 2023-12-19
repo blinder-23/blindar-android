@@ -23,66 +23,111 @@ class UploadUserInfoWork @AssistedInject constructor(
     private val userRepository: RemoteUserRepository,
 ) : CoroutineWorker(context, workerParams) {
     override suspend fun doWork(): Result {
-        uploadUsername()
-        uploadSchoolCode()
-        uploadSchoolName()
+        val username = getUsername()
+        val userId = getUserId()
+        val schoolCode = getSchoolCode()
+        val schoolName = getSchoolName()
+
+        uploadToFirebase(username, schoolCode, schoolName)
+        uploadToServer(userId, schoolCode, username)
         return Result.success()
     }
 
-    // TODO: work에 analytics event 넣기
-    private fun uploadUsername() {
+    private fun getUsername(): String? {
         val blindarUser = BlindarFirebase.getBlindarUser()
-        if (blindarUser is BlindarUserStatus.LoginUser) {
-            blindarUser.user.displayName?.let { username ->
-                uploadUsernameToFirebase(username)
-            }
+        return if (blindarUser is BlindarUserStatus.LoginUser) {
+            blindarUser.user.displayName
+        } else {
+            null
         }
     }
 
-    private fun uploadUsernameToFirebase(username: String) {
-        BlindarFirebase.tryStoreUsername(
-            username = username,
-            onSuccess = {
-                Log.d(TAG, "upload user id success")
-            },
-            onFail = {
-                Log.d(TAG, "upload user id fail")
-            },
-        )
+    private fun getUserId(): String? {
+        val blindarUser = BlindarFirebase.getBlindarUser()
+        return if (blindarUser is BlindarUserStatus.LoginUser) {
+            blindarUser.user.uid
+        } else {
+            null
+        }
     }
 
-    private fun uploadSchoolCode() {
-        if (preferencesRepository.userPreferencesFlow.value.isSchoolCodeEmpty) return
+    private fun getSchoolCode(): Int? {
+        return preferencesRepository.userPreferencesFlow.value.let {
+            if (it.isSchoolCodeEmpty) null else it.schoolCode
+        }
+    }
 
-        val schoolCode = preferencesRepository.userPreferencesFlow.value.schoolCode
+    private fun getSchoolName(): String? {
+        return preferencesRepository.userPreferencesFlow.value.let {
+            if (it.isSchoolNameEmpty) null else it.schoolName
+        }
+    }
+
+    private fun uploadToFirebase(username: String?, schoolCode: Int?, schoolName: String?) {
+        uploadUsernameToFirebase(username)
         uploadSchoolCodeToFirebase(schoolCode)
-    }
-
-    private fun uploadSchoolCodeToFirebase(schoolCode: Int) {
-        BlindarFirebase.tryUpdateCurrentUserSchoolCode(
-            schoolCode = schoolCode,
-            onSuccess = {
-                Log.d(TAG, "upload school id success")
-            },
-            onFail = {
-                Log.e(TAG, "upload school id fail")
-            },
-        )
-    }
-
-    private fun uploadSchoolName() {
-        if (preferencesRepository.userPreferencesFlow.value.isSchoolNameEmpty) return
-
-        val schoolName = preferencesRepository.userPreferencesFlow.value.schoolName
         uploadSchoolNameToFirebase(schoolName)
     }
 
-    private fun uploadSchoolNameToFirebase(schoolName: String) {
-        BlindarFirebase.tryUpdateCurrentUserSchoolName(
-            schoolName = schoolName,
-            onSuccess = { Log.d(TAG, "upload school name success") },
-            onFail = { Log.e(TAG, "upload school name fail") },
-        )
+    private fun uploadUsernameToFirebase(username: String?) {
+        username?.let {
+            BlindarFirebase.tryStoreUsername(
+                username = username,
+                onSuccess = {
+                    log("upload username to firebase success")
+                },
+                onFail = {
+                    log("upload username to firebase fail")
+                },
+            )
+        } ?: run {
+            logError("upload username to firebase fail: username is null")
+        }
+    }
+
+    private fun uploadSchoolCodeToFirebase(schoolCode: Int?) {
+        schoolCode?.let {
+            BlindarFirebase.tryUpdateCurrentUserSchoolCode(
+                schoolCode = schoolCode,
+                onSuccess = {
+                    log("upload school code to firebase success")
+                },
+                onFail = {
+                    logError("upload school to firebase code fail")
+                },
+            )
+        } ?: run {
+            logError("upload school code to firebase fail: school code is null")
+        }
+    }
+
+    private fun uploadSchoolNameToFirebase(schoolName: String?) {
+        schoolName?.let {
+            BlindarFirebase.tryUpdateCurrentUserSchoolName(
+                schoolName = schoolName,
+                onSuccess = { log("upload school name to firebase success") },
+                onFail = { logError("upload school name to firebase fail") },
+            )
+        } ?: run {
+            logError("upload school name to firebase fail: school name is null")
+        }
+    }
+
+    private suspend fun uploadToServer(userId: String?, schoolCode: Int?, username: String?) {
+        if (userId != null && schoolCode != null && username != null) {
+            userRepository.updateUserInfo(userId, schoolCode, username)
+            log("upload user info to server success: $userId, $schoolCode, $username")
+        } else {
+            logError("upload user into to server fail: $userId, $schoolCode, $username")
+        }
+    }
+
+    private fun log(message: String) {
+        Log.d(TAG, message)
+    }
+
+    private fun logError(message: String) {
+        Log.e(TAG, message)
     }
 
     companion object {
