@@ -27,7 +27,7 @@ android {
         minSdk = 26
         targetSdk = 33
         versionCode = 1
-        versionName = "2.1.2"
+        versionName = "2.2.0"
         signingConfig = signingConfigs.getByName("debug")
 
         testInstrumentationRunner = "com.practice.hanbitlunch.HiltTestRunner"
