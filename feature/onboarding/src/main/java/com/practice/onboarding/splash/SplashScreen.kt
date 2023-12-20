@@ -13,7 +13,9 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.AppIcon
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.notification.BlindarNotificationManager
 import com.practice.user.UserRegisterState
+import com.practice.work.dailyalarm.DailyNotificationAlarmReceiver
 
 @Composable
 fun SplashScreen(
@@ -29,6 +31,8 @@ fun SplashScreen(
     val context = LocalContext.current
     LaunchedEffect(true) {
         systemUiController.setSystemBarsColor(systemBarColor)
+        BlindarNotificationManager.createNotificationChannels(context)
+        DailyNotificationAlarmReceiver.setInitialAlarm(context)
         when (viewModel.getUserRegisterState()) {
             UserRegisterState.NOT_LOGGED_IN -> onAutoLoginFail()
             UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()

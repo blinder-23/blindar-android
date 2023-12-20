@@ -10,7 +10,7 @@ android {
     compileSdk = 33
 
     defaultConfig {
-        minSdk = 23
+        minSdk = 26
         targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -71,6 +71,8 @@ dependencies {
     api(project(":core:combine"))
     api(project(":core:preferences"))
     implementation(project(":core:firebase"))
+    implementation(project(":core:notification"))
+    implementation(project(":core:util"))
 
     implementation(libs.hsk.ktx)
 

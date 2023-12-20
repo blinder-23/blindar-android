@@ -10,7 +10,7 @@ android {
     compileSdk = 33
 
     defaultConfig {
-        minSdk = 23
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -44,6 +44,7 @@ dependencies {
     api(project(":core:designsystem"))
     api(project(":core:firebase"))
     api(project(":core:work"))
+    implementation(project(":core:notification"))
     implementation(project(":data:user"))
 
     // KTX libraries

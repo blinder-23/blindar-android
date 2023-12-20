@@ -5,14 +5,23 @@ import com.practice.domain.schedule.Schedule
 import com.practice.schedule.room.ScheduleDao
 import com.practice.schedule.room.toRoomEntities
 import com.practice.schedule.room.toScheduleEntities
+import com.practice.schedule.room.toScheduleEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class LocalScheduleDataSource(private val scheduleDao: ScheduleDao) : ScheduleDataSource {
 
-    override suspend fun getSchedules(schoolCode: Int, year: Int, month: Int): Flow<List<Schedule>> {
+    override suspend fun getSchedules(
+        schoolCode: Int,
+        year: Int,
+        month: Int,
+    ): Flow<List<Schedule>> {
         return scheduleDao.getSchedule(schoolCode, getDateString(year, month))
             .map { it.toScheduleEntities() }
+    }
+
+    override suspend fun getSchedules(schoolCode: Int, ymd: String): List<Schedule> {
+        return scheduleDao.getSchedules(schoolCode, ymd).map { it.toScheduleEntity() }
     }
 
     override suspend fun insertSchedules(schedules: List<Schedule>) {

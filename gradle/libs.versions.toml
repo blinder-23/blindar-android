@@ -31,6 +31,7 @@ accompanist-drawablepainter = { module = 'com.google.accompanist:accompanist-dra
 accompanist-placeholder-material = { module = 'com.google.accompanist:accompanist-placeholder-material', version.ref = 'accompanist' }
 accompanist-systemuicontroller = { module = 'com.google.accompanist:accompanist-systemuicontroller', version.ref = 'accompanist' }
 accompanist-navigation-animation = { module = 'com.google.accompanist:accompanist-navigation-animation', version.ref = 'accompanist' }
+accompanist-permission = { module = 'com.google.accompanist:accompanist-permissions', version.ref = 'accompanist' }
 
 androidx-collection-ktx = 'androidx.collection:collection-ktx:1.2.0'
 androidx-core-ktx = 'androidx.core:core-ktx:1.10.1'
@@ -123,6 +124,7 @@ accompanist = [
     'accompanist-systemuicontroller',
     'accompanist-drawablepainter',
     'accompanist-navigation-animation',
+    'accompanist-permission'
 ]
 android-test = ['androidx-junit', 'androidx-test-espresso-core']
 compose = [

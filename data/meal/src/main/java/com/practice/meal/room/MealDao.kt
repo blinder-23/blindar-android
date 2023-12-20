@@ -1,6 +1,10 @@
 package com.practice.meal.room
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -8,6 +12,9 @@ interface MealDao {
 
     @Query("SELECT * FROM meal WHERE school_code = :schoolCode AND date LIKE :yearMonthString || '%%'")
     fun getMeals(schoolCode: Int, yearMonthString: String): Flow<List<MealEntityRoom>>
+
+    @Query("SELECT * FROM meal WHERE school_code = :schoolCode AND date = :dateString")
+    suspend fun getMeal(schoolCode: Int, dateString: String): List<MealEntityRoom>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMeals(meals: List<MealEntityRoom>)

@@ -27,6 +27,7 @@ import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.School
+import com.practice.main.state.DailyAlarmIconState
 import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
@@ -42,6 +43,7 @@ fun VerticalMainScreen(
     uiState: MainUiState,
     calendarState: CalendarState,
     mealColumns: Int,
+    onAlarmIconClick: () -> Unit,
     onDateClick: (Date) -> Unit,
     onSwiped: (YearMonth) -> Unit,
     getContentDescription: (Date) -> String,
@@ -57,12 +59,13 @@ fun VerticalMainScreen(
     Column(modifier = modifier) {
         MainScreenTopBar(
             schoolName = uiState.selectedSchool.name,
-            modifier = Modifier
-                .fillMaxWidth(2 / 3f)
-                .align(Alignment.CenterHorizontally)
-                .padding(vertical = 12.dp),
             onClick = onNavigateToSelectSchoolScreen,
             onClickLabel = stringResource(id = R.string.navigate_to_school_select),
+            iconState = uiState.dailyAlarmIconState,
+            onAlarmIconClick = onAlarmIconClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally),
         )
         Column(
             modifier = Modifier
@@ -144,6 +147,7 @@ private fun VerticalMainScreenPreview() {
                 ),
                 isNutrientPopupVisible = false,
                 isMemoPopupVisible = false,
+                dailyAlarmIconState = DailyAlarmIconState.Enabled,
             )
         )
     }
@@ -158,6 +162,7 @@ private fun VerticalMainScreenPreview() {
             uiState = uiState,
             calendarState = calendarState,
             mealColumns = 2,
+            onAlarmIconClick = {},
             onDateClick = { selectedDate = it },
             onSwiped = {},
             getContentDescription = { "" },
