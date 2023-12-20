@@ -11,7 +11,9 @@ class FakePreferencesRepository : PreferencesRepository {
         isFirstExecution = true,
         runningWorksCount = 0,
         schoolCode = emptySchoolCode,
+        schoolName = emptySchoolName,
         memoIdCounter = 0,
+        isDailyAlarmEnabled = false,
     )
     private var preferences: UserPreferences = initialPreferences
 
@@ -63,6 +65,12 @@ class FakePreferencesRepository : PreferencesRepository {
         )
         emitNewValue()
         return counter
+    }
+
+    override suspend fun updateDailyAlarmState(isEnabled: Boolean) {
+        preferences = preferences.copy(
+            isDailyAlarmEnabled = isEnabled
+        )
     }
 
     override suspend fun clear() {

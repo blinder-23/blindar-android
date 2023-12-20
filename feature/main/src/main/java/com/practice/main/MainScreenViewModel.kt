@@ -18,6 +18,7 @@ import com.practice.domain.meal.Meal
 import com.practice.domain.schedule.Schedule
 import com.practice.firebase.BlindarFirebase
 import com.practice.firebase.BlindarUserStatus
+import com.practice.main.state.DailyAlarmIconState
 import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
@@ -111,6 +112,7 @@ class MainScreenViewModel @Inject constructor(
         selectedSchool: School = state.selectedSchool,
         isNutrientPopupVisible: Boolean = state.isNutrientPopupVisible,
         isMemoPopupVisible: Boolean = state.isMemoPopupVisible,
+        dailyAlarmIconState: DailyAlarmIconState = state.dailyAlarmIconState,
     ) {
         val isCollectNeeded =
             userId != state.userId || yearMonth != state.yearMonth || selectedSchool != state.selectedSchool || loadMonthlyDataJob == null
@@ -126,6 +128,7 @@ class MainScreenViewModel @Inject constructor(
                 selectedSchool = selectedSchool,
                 isNutrientPopupVisible = isNutrientPopupVisible,
                 isMemoPopupVisible = isMemoPopupVisible,
+                dailyAlarmIconState = dailyAlarmIconState,
             )
         }
         if (isCollectNeeded) {
@@ -144,6 +147,22 @@ class MainScreenViewModel @Inject constructor(
             selectedDate = clickedDate,
         )
     }
+
+    fun onDailyAlarmIconClick() {
+        val nextPreferencesState = getNextDailyAlarmStateAndPreferences()
+        if (nextPreferencesState != null) {
+            viewModelScope.launch {
+                preferencesRepository.updateDailyAlarmState(nextPreferencesState)
+            }
+        }
+    }
+
+    private fun getNextDailyAlarmStateAndPreferences(): Boolean? =
+        when (state.dailyAlarmIconState) {
+            DailyAlarmIconState.Loading -> null
+            DailyAlarmIconState.Enabled -> false
+            DailyAlarmIconState.Disabled -> true
+        }
 
     private suspend fun loadMonthlyData(
         userId: String,
@@ -212,7 +231,8 @@ class MainScreenViewModel @Inject constructor(
                 selectedSchool = School(
                     name = it.schoolName,
                     schoolCode = it.schoolCode,
-                )
+                ),
+                dailyAlarmIconState = if (it.isDailyAlarmEnabled) DailyAlarmIconState.Enabled else DailyAlarmIconState.Disabled,
             )
         }
     }

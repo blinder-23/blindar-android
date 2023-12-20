@@ -1,5 +1,7 @@
 package com.practice.schedule
 
+import com.hsk.ktx.date.Date
+import com.hsk.ktx.getDateString
 import com.practice.domain.schedule.Schedule
 import kotlinx.coroutines.flow.Flow
 
@@ -7,6 +9,11 @@ class ScheduleRepository(private val dataSource: ScheduleDataSource) {
 
     suspend fun getSchedules(schoolCode: Int, year: Int, month: Int): Flow<List<Schedule>> {
         return dataSource.getSchedules(schoolCode, year, month)
+    }
+
+    suspend fun getSchedules(schoolCode: Int, date: Date): List<Schedule> {
+        val (year, month, day) = date
+        return dataSource.getSchedules(schoolCode, getDateString(year, month, day))
     }
 
     suspend fun insertSchedules(schedules: List<Schedule>) {

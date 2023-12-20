@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 sealed interface ScheduleDataSource {
     suspend fun getSchedules(schoolCode: Int, year: Int, month: Int): Flow<List<Schedule>>
 
+    suspend fun getSchedules(schoolCode: Int, ymd: String): List<Schedule>
+
     suspend fun insertSchedules(schedules: List<Schedule>)
 
     suspend fun deleteSchedules(schedules: List<Schedule>)
