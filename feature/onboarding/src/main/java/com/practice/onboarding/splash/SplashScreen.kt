@@ -22,6 +22,7 @@ import com.practice.notification.BlindarNotificationManager
 import com.practice.onboarding.R
 import com.practice.user.UserRegisterState
 import com.practice.work.dailyalarm.DailyNotificationAlarmReceiver
+import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
@@ -39,6 +40,7 @@ fun SplashScreen(
         systemUiController.setSystemBarsColor(systemBarColor)
         BlindarNotificationManager.createNotificationChannels(context)
         DailyNotificationAlarmReceiver.setInitialAlarm(context)
+        delay(300L) // SupportText를 충분히 오래 보여주기 위함
         when (viewModel.getUserRegisterState()) {
             UserRegisterState.NOT_LOGGED_IN -> onAutoLoginFail()
             UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()
