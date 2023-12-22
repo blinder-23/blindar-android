@@ -169,6 +169,7 @@ fun LabelMedium(
     text: String,
     modifier: Modifier = Modifier,
     textColor: Color = MaterialTheme.colorScheme.onSurface,
+    textAlign: TextAlign? = null,
 ) {
     Text(
         text = text,
@@ -176,6 +177,7 @@ fun LabelMedium(
         style = MaterialTheme.typography.labelMedium,
         color = textColor,
         fontFamily = NanumSquareRound,
+        textAlign = textAlign,
     )
 }
 
