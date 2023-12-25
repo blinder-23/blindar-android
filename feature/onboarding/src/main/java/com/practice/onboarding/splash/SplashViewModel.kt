@@ -19,11 +19,11 @@ class SplashViewModel @Inject constructor(
     suspend fun enqueueOneTimeWorkIfFirstExecution(context: Context) {
         val firstPreferences = preferencesRepository.userPreferencesFlow.first()
         if (firstPreferences.isFirstExecution) {
-            BlindarWorkManager.setOneTimeWork(context = context)
+            BlindarWorkManager.setOneTimeFetchDataWork(context = context)
             preferencesRepository.updateIsFirstExecution(false)
             Log.d(TAG, "first work enqueued.")
         }
-        BlindarWorkManager.setPeriodicWork(context)
+        BlindarWorkManager.setPeriodicFetchDataWork(context)
         Log.d(TAG, "Let's login!")
     }
 
@@ -31,8 +31,17 @@ class SplashViewModel @Inject constructor(
         return registerManager.getUserRegisterState()
     }
 
-    fun uploadUserInfoOnAutoLogin(context: Context) {
+    fun onAutoLogin(context: Context) {
+        uploadUserInfoOnAutoLogin(context)
+        fetchDataFromRemoteOnAutoLogin(context)
+    }
+
+    private fun uploadUserInfoOnAutoLogin(context: Context) {
         BlindarWorkManager.setUserInfoToRemoteWork(context)
+    }
+
+    private fun fetchDataFromRemoteOnAutoLogin(context: Context) {
+        BlindarWorkManager.setOneTimeFetchDataWork(context)
     }
 
     companion object {
