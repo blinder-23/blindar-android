@@ -11,6 +11,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.theme.BlindarTheme
@@ -51,12 +52,14 @@ fun PopupBodySmall(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
+    fontStyle: FontStyle? = null,
 ) {
     PopupText(
         text = text,
         textStyle = PopupTypography.bodySmall,
         modifier = modifier,
         color = color,
+        fontStyle = fontStyle,
     )
 }
 
@@ -66,12 +69,14 @@ private fun PopupText(
     textStyle: TextStyle,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
+    fontStyle: FontStyle? = null,
 ) {
     CompositionLocalProvider(LocalTextStyle provides textStyle) {
         Text(
             text = text,
             modifier = modifier,
             color = color,
+            fontStyle = fontStyle,
         )
     }
 }
