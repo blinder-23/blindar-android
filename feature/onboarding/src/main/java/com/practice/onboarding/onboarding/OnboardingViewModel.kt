@@ -29,7 +29,7 @@ class OnboardingViewModel @Inject constructor(
             onNewUserSignUp = onNewUserSignUp,
             onExistingUserLogin = {
                 onExistingUserLogin(it)
-                BlindarWorkManager.setOneTimeWork(context)
+                BlindarWorkManager.setOneTimeFetchDataWork(context)
                 BlindarWorkManager.setFetchMemoFromServerWork(context, it.uid)
             },
             onFail = onFail
