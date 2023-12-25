@@ -17,7 +17,7 @@ object BlindarWorkManager {
         setOneTimeFetchMealWork(workManager)
     }
 
-    fun setUserInfoToFirebaseWork(context: Context) {
+    fun setUserInfoToRemoteWork(context: Context) {
         UploadUserInfoWork.setOneTimeWork(context)
     }
 

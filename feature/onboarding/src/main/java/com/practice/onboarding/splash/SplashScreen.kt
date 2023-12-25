@@ -47,7 +47,7 @@ fun SplashScreen(
             UserRegisterState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
             UserRegisterState.ALL_FILLED -> onAutoLoginSuccess()
             UserRegisterState.AUTO_LOGIN -> {
-                viewModel.uploadUserInfoToFirebaseOnAutoLogin(context)
+                viewModel.uploadUserInfoOnAutoLogin(context)
                 onAutoLoginSuccess()
             }
         }

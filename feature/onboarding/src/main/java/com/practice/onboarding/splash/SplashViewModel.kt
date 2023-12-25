@@ -31,9 +31,8 @@ class SplashViewModel @Inject constructor(
         return registerManager.getUserRegisterState()
     }
 
-    // TODO: uploadToRemote(가칭) 함수 만들고, server와 firebase에 각각 업로드하는 함수 호출
-    fun uploadUserInfoToFirebaseOnAutoLogin(context: Context) {
-        BlindarWorkManager.setUserInfoToFirebaseWork(context)
+    fun uploadUserInfoOnAutoLogin(context: Context) {
+        BlindarWorkManager.setUserInfoToRemoteWork(context)
     }
 
     companion object {
