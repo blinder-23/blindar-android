@@ -43,10 +43,12 @@ fun BlindarNavHost(
     googleSignInClient: GoogleSignInClient,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberAnimatedNavController(),
+    onNavigateToMainScreen: () ->Unit = {},
 ) {
     val tweenSpec = tween<IntOffset>(
         durationMillis = 200,
     )
+
     AnimatedNavHost(
         navController = navController,
         startDestination = SPLASH,
@@ -83,6 +85,7 @@ fun BlindarNavHost(
             navController = navController,
             windowSizeClass = windowSizeClass,
             googleSignInClient = googleSignInClient,
+            onNavigateToMainScreen = onNavigateToMainScreen,
         )
     }
 }
@@ -92,6 +95,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
     navController: NavHostController,
     windowSizeClass: WindowSizeClass,
     googleSignInClient: GoogleSignInClient,
+    onNavigateToMainScreen: () -> Unit,
 ) {
     val onLoginSuccess = {
         navController.navigate(MAIN) {
@@ -117,6 +121,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
         SplashScreen(
             onAutoLoginSuccess = {
                 Log.d(TAG, "auto login success")
+                onNavigateToMainScreen()
                 onLoginSuccess()
             },
             onUsernameNotSet = onUsernameNotSet,
@@ -158,6 +163,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
         navController = navController,
         onUsernameNotSet = onUsernameNotSet,
         onSchoolNotSelected = onSchoolNotSelected,
+        onNavigateToMainScreen = onNavigateToMainScreen,
     )
     composable(MAIN) {
         MainScreen(
@@ -176,6 +182,7 @@ fun NavGraphBuilder.registerGraph(
     navController: NavHostController,
     onUsernameNotSet: () -> Unit,
     onSchoolNotSelected: () -> Unit,
+    onNavigateToMainScreen: () -> Unit,
 ) {
     val onBackButtonClick: () -> Unit = { navController.popBackStack() }
     navigation(startDestination = VERIFY_PHONE, route = REGISTER) {
@@ -183,6 +190,7 @@ fun NavGraphBuilder.registerGraph(
             VerifyPhoneNumber(
                 onBackButtonClick = onBackButtonClick,
                 onExistingUserLogin = {
+                    onNavigateToMainScreen()
                     navController.navigate(MAIN) {
                         popUpTo(ONBOARDING) { inclusive = true }
                     }
@@ -213,6 +221,7 @@ fun NavGraphBuilder.registerGraph(
             SelectSchoolScreen(
                 onBackButtonClick = onBackButtonClick,
                 onNavigateToMain = {
+                    onNavigateToMainScreen()
                     navController.navigate(MAIN) {
                         popUpTo(ONBOARDING) { inclusive = true }
                         popUpTo(MAIN) { inclusive = true }
