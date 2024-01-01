@@ -83,8 +83,8 @@ fun MainScreenTopBar(
             textColor = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .align(Alignment.Center)
-                .padding(16.dp)
-                .clickable(onClickLabel = onClickLabel, onClick = onClick),
+                .clickable(onClickLabel = onClickLabel, onClick = onClick)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
         )
         DailyAlarmIcon(
             iconState = iconState,
