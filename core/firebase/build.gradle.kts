@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.practice.firebase"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 26

@@ -11,11 +11,11 @@ val url: String = gradleLocalProperties(rootDir).getProperty("server.url")
 
 android {
     namespace = "com.practice.api"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
 
         testInstrumentationRunner = "com.practice.api.HiltTestRunner"
         consumerProguardFiles.add(File("consumer-rules.pro"))
