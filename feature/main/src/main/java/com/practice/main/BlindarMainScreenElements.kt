@@ -1,6 +1,7 @@
 package com.practice.main
 
 import android.Manifest
+import android.app.AlarmManager
 import android.content.Context
 import android.os.Build
 import android.util.Log
@@ -50,6 +51,9 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.getSystemService
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.calendar.SwipeableCalendar
@@ -96,6 +100,7 @@ fun MainScreenTopBar(
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun DailyAlarmIcon(
     iconState: DailyAlarmIconState,
@@ -106,13 +111,37 @@ private fun DailyAlarmIcon(
 
     val permissionWarningMessage =
         stringResource(id = R.string.notification_permission_rejected_warning)
+    val onPermissionGranted = {
+        onClick()
+        Toast.makeText(
+            context,
+            R.string.daily_alarm_icon_clicked_to_enabled,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+    val onPermissionDenied = {
+        Toast.makeText(context, permissionWarningMessage, Toast.LENGTH_SHORT).show()
+    }
+
+    val exactAlarmPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(permission = Manifest.permission.USE_EXACT_ALARM) { granted ->
+            Log.d("MainScreenElements", "exact alarm permission? $granted")
+            if (granted) {
+                onPermissionGranted()
+            } else {
+                onPermissionDenied()
+            }
+        }
+    } else {
+        null
+    }
+
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
-                onClick()
-                Toast.makeText(context, R.string.daily_alarm_icon_clicked_to_enabled, Toast.LENGTH_SHORT).show()
+                exactAlarmPermissionState?.launchPermissionRequest() ?: onPermissionGranted()
             } else {
-                Toast.makeText(context, permissionWarningMessage, Toast.LENGTH_SHORT).show()
+                onPermissionDenied()
             }
         }
 
@@ -136,12 +165,11 @@ private fun onDailyAlarmIconClick(
     launcher: ManagedActivityResultLauncher<String, Boolean>,
     onClick: () -> Unit,
 ) {
+    val areNotificationsEnabled = context.isNotificationAndExactAlarmEnabled()
     val toastMessageId = when (iconState) {
         DailyAlarmIconState.Loading -> null
 
         DailyAlarmIconState.Disabled -> {
-            val areNotificationsEnabled =
-                NotificationManagerCompat.from(context).areNotificationsEnabled()
             if (!areNotificationsEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 null
@@ -161,6 +189,16 @@ private fun onDailyAlarmIconClick(
     toastMessageId?.let {
         Toast.makeText(context, toastMessageId, Toast.LENGTH_SHORT).show()
     }
+}
+
+private fun Context.isNotificationAndExactAlarmEnabled(): Boolean {
+    val isNotificationEnabled = NotificationManagerCompat.from(this).areNotificationsEnabled()
+    val isExactAlarmEnabled = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        getSystemService<AlarmManager>()!!.canScheduleExactAlarms()
+    } else {
+        true
+    }
+    return isNotificationEnabled && isExactAlarmEnabled
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -183,7 +221,7 @@ fun CalendarCard(
 
     val monthDiff = calendarState.yearMonth.monthDiff(currentYearMonth)
     val initialPage = (middlePage + monthDiff).coerceIn(0, calendarPageCount - 1)
-    val pagerState = rememberPagerState(initialPage = initialPage)
+    val pagerState = rememberPagerState(initialPage = initialPage) { calendarPageCount }
 
     ElevatedCard(
         shape = RoundedCornerShape(16.dp),

@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.practice.onboarding"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 26

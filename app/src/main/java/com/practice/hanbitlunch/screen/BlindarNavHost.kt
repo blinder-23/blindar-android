@@ -1,7 +1,7 @@
 package com.practice.hanbitlunch.screen
 
 import android.util.Log
-import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -20,10 +20,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.practice.hanbitlunch.R
 import com.practice.main.MainScreen
@@ -36,20 +36,19 @@ import com.practice.util.makeToast
 
 private val TAG = "BlindarNavHost"
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun BlindarNavHost(
     windowSizeClass: WindowSizeClass,
     googleSignInClient: GoogleSignInClient,
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberAnimatedNavController(),
-    onNavigateToMainScreen: () ->Unit = {},
+    navController: NavHostController = rememberNavController(),
+    onNavigateToMainScreen: () -> Unit = {},
 ) {
     val tweenSpec = tween<IntOffset>(
         durationMillis = 200,
     )
 
-    AnimatedNavHost(
+    NavHost(
         navController = navController,
         startDestination = SPLASH,
         modifier = modifier,
@@ -257,10 +256,9 @@ private fun priority(state: NavBackStackEntry) = when (state.route) {
     else -> 7
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 private fun animationDirection(initialState: NavBackStackEntry, targetState: NavBackStackEntry) =
     if (priority(initialState) > priority(targetState)) {
-        AnimatedContentScope.SlideDirection.Right
+        AnimatedContentTransitionScope.SlideDirection.Right
     } else {
-        AnimatedContentScope.SlideDirection.Left
+        AnimatedContentTransitionScope.SlideDirection.Left
     }

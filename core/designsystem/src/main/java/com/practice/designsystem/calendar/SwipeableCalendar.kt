@@ -30,7 +30,7 @@ import kotlinx.collections.immutable.persistentListOf
 fun SwipeableCalendar(
     itemCount: Int,
     modifier: Modifier = Modifier,
-    pagerState: PagerState = rememberPagerState(),
+    pagerState: PagerState = rememberPagerState { itemCount },
     calendarState: CalendarState = rememberCalendarState(),
     onDateClick: (Date) -> Unit = {},
     onPageChange: (Int) -> Unit = {},
@@ -57,7 +57,6 @@ fun SwipeableCalendar(
     }
 
     HorizontalPager(
-        pageCount = itemCount,
         state = pagerState,
         modifier = modifier
             .background(MaterialTheme.colorScheme.surface)
