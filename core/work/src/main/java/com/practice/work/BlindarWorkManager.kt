@@ -10,10 +10,14 @@ object BlindarWorkManager {
         setPeriodicFetchMealWork(workManager)
     }
 
-    fun setOneTimeFetchDataWork(context: Context) {
+    fun setOneTimeFetchDataWork(
+        context: Context,
+        clearMealDatabase: Boolean = false,
+        clearScheduleDatabase: Boolean = false,
+    ) {
         val workManager = WorkManager.getInstance(context)
-        setOneTimeFetchScheduleWork(workManager)
-        setOneTimeFetchMealWork(workManager)
+        setOneTimeFetchScheduleWork(workManager, clearMealDatabase)
+        setOneTimeFetchMealWork(workManager, clearScheduleDatabase)
     }
 
     fun setUserInfoToRemoteWork(context: Context) {
