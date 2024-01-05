@@ -41,7 +41,7 @@ data class DailyData(
                         year = 2022,
                         month = 10,
                         day = it,
-                        id = it,
+                        id = it.toLong(),
                         eventName = "제목 $it",
                         eventContent = "학사일정 $it",
                     )

@@ -83,7 +83,7 @@ class RegisterViewModel @Inject constructor(
             onSchoolNotSelected = onSchoolNotSelected,
             onExistingUserLogin = {
                 onExistingUserLogin()
-                BlindarWorkManager.setOneTimeWork(activity)
+                BlindarWorkManager.setOneTimeFetchDataWork(activity)
             },
             onVerificationFail = onFail,
             onCodeInvalid = onCodeInvalid,
@@ -127,7 +127,7 @@ class RegisterViewModel @Inject constructor(
             coroutineScope = viewModelScope,
             onExistingUserLogin = {
                 onExistingUserLogin()
-                BlindarWorkManager.setOneTimeWork(activity)
+                BlindarWorkManager.setOneTimeFetchDataWork(activity)
 
                 val user = BlindarFirebase.getBlindarUser()
                 Log.d(TAG, "is user already registered? ${user is BlindarUserStatus.LoginUser}")
@@ -213,8 +213,8 @@ class RegisterViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             preferencesRepository.updateSelectedSchool(school.schoolCode, school.name)
-            BlindarWorkManager.setOneTimeWork(context)
-            BlindarWorkManager.setUserInfoToFirebaseWork(context)
+            BlindarWorkManager.setOneTimeFetchDataWork(context)
+            BlindarWorkManager.setUserInfoToRemoteWork(context)
             onSchoolClickCallbackFromUI()
         }
     }

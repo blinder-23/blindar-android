@@ -4,20 +4,19 @@ import android.content.Context
 import androidx.work.WorkManager
 
 object BlindarWorkManager {
-    // TODO: 그냥 work가 아닌 data work로 바꾸기
-    fun setPeriodicWork(context: Context) {
+    fun setPeriodicFetchDataWork(context: Context) {
         val workManager = WorkManager.getInstance(context)
         setPeriodicFetchScheduleWork(workManager)
         setPeriodicFetchMealWork(workManager)
     }
 
-    fun setOneTimeWork(context: Context) {
+    fun setOneTimeFetchDataWork(context: Context) {
         val workManager = WorkManager.getInstance(context)
         setOneTimeFetchScheduleWork(workManager)
         setOneTimeFetchMealWork(workManager)
     }
 
-    fun setUserInfoToFirebaseWork(context: Context) {
+    fun setUserInfoToRemoteWork(context: Context) {
         UploadUserInfoWork.setOneTimeWork(context)
     }
 

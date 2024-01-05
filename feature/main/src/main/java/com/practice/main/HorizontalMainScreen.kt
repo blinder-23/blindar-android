@@ -5,12 +5,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.CalendarState
 import com.practice.designsystem.calendar.core.YearMonth
@@ -35,12 +39,13 @@ fun HorizontalMainScreen(
     onScreenModeChange: (ScreenMode) -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
-    onAlarmIconClick: ()->Unit,
+    onAlarmIconClick: () -> Unit,
     onDateClick: (Date) -> Unit,
     onSwiped: (YearMonth) -> Unit,
     getContentDescription: (Date) -> String,
     getClickLabel: (Date) -> String,
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
+    onNavigateToSelectSchoolScreen: () -> Unit,
     onNutrientPopupOpen: () -> Unit,
     onNutrientPopupClose: () -> Unit,
     onMemoPopupOpen: () -> Unit,
@@ -48,14 +53,20 @@ fun HorizontalMainScreen(
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
     Column(modifier = modifier) {
-        MainScreenHeader(
-            year = uiState.year,
-            month = uiState.month,
-            screenModeIconsEnabled = false,
-            selectedScreenMode = uiState.screenMode,
-            onScreenModeIconClick = onScreenModeChange,
+        MainScreenTopBar(
+            schoolName = uiState.selectedSchool.name,
+            onClick = onNavigateToSelectSchoolScreen,
+            onClickLabel = stringResource(id = R.string.navigate_to_school_select),
+            iconState = uiState.dailyAlarmIconState,
+            onAlarmIconClick = onAlarmIconClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
         )
-        Row {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
             CalendarCard(
                 calendarPageCount = calendarPageCount,
                 modifier = Modifier.weight(1f),
@@ -140,6 +151,7 @@ private fun HorizontalMainScreenPreview() {
             getContentDescription = { "" },
             getClickLabel = { "" },
             drawUnderlineToScheduleDate = {},
+            onNavigateToSelectSchoolScreen = {},
             onNutrientPopupOpen = {},
             onNutrientPopupClose = {},
             onMemoPopupOpen = {},

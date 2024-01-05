@@ -255,12 +255,11 @@ private fun CloseMemoPopupButton(
     }
 }
 
-// TODO: 프리뷰에 uiSchedule 추가하기, MemoItem(s)Preview 둘다 삭제 후 PopupPreview로 대체
 private val previewMemoPopupElements: ImmutableList<MemoPopupElement> = (1..4).map {
     if (it <= 2) {
         UiSchedule(
             schoolCode = 1,
-            id = it,
+            id = it.toLong(),
             year = 2023,
             month = 11,
             day = 13,

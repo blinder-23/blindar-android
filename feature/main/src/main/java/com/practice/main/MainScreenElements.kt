@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Cached
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -532,6 +533,7 @@ internal fun MainScreenContent(
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth(),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
     ) {
         Column(
             modifier = Modifier
@@ -666,7 +668,7 @@ val previewSchedules = (0..6).map {
         year = 2023,
         month = 7,
         day = it + 1,
-        id = it,
+        id = it.toLong(),
         eventName = "학사일정 $it",
         eventContent = "$it"
     )

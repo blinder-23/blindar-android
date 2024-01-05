@@ -7,11 +7,11 @@ plugins {
 
 android {
     namespace = "com.practice.meal"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
 
         testInstrumentationRunner = "com.practice.meal.util.HiltTestRunner"
         consumerProguardFiles.add(File("consumer-rules.pro"))

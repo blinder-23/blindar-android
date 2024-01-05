@@ -72,6 +72,7 @@ fun MainScreen(
                 getContentDescription = viewModel::getContentDescription,
                 getClickLabel = viewModel::getClickLabel,
                 drawUnderlineToScheduleDate = { },
+                onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
                 onNutrientPopupOpen = viewModel::openNutrientPopup,
                 onNutrientPopupClose = viewModel::closeNutrientPopup,
                 onMemoPopupOpen = viewModel::openMemoPopup,

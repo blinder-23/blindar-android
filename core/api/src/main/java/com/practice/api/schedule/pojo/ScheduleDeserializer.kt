@@ -22,7 +22,7 @@ class ScheduleDeserializer : JsonDeserializer<ScheduleResponse> {
             val element = it.asJsonObject
             ScheduleModel(
                 schoolCode = element.get("school_code").asInt,
-                id = element.get("id").asInt,
+                id = element.get("id").asLong,
                 date = element.get("date").asLong,
                 title = element.get("schedule").asString,
                 contents = element.get("contents").asString,
