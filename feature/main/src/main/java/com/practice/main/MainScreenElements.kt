@@ -668,7 +668,7 @@ val previewSchedules = (0..6).map {
         year = 2023,
         month = 7,
         day = it + 1,
-        id = it,
+        id = it.toLong(),
         eventName = "학사일정 $it",
         eventContent = "$it"
     )
