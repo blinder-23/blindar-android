@@ -1,5 +1,6 @@
 package com.practice.main
 
+import android.content.Context
 import android.os.Build
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -34,6 +35,7 @@ import com.practice.main.state.toUiSchedule
 import com.practice.preferences.PreferencesRepository
 import com.practice.preferences.ScreenMode
 import com.practice.util.date.DateUtil
+import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -158,6 +160,14 @@ class MainScreenViewModel @Inject constructor(
                 preferencesRepository.updateDailyAlarmState(nextPreferencesState)
             }
         }
+    }
+
+    fun onRefreshIconClick(context: Context) {
+        BlindarWorkManager.setOneTimeFetchDataWork(
+            context = context,
+            clearMealDatabase = true,
+            clearScheduleDatabase = true,
+        )
     }
 
     private fun getNextDailyAlarmStateAndPreferences(): Boolean? =
