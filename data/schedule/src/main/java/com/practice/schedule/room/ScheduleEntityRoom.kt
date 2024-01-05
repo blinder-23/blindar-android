@@ -8,7 +8,7 @@ import com.practice.domain.schedule.Schedule
 @Entity(tableName = "schedule", primaryKeys = ["school_code", "id"])
 data class ScheduleEntityRoom(
     @ColumnInfo("school_code") val schoolCode: Int,
-    val id: Int,
+    val id: Long,
     @ColumnInfo(name = "date") val date: String,
     @ColumnInfo(name = "event_name") val eventName: String,
     @ColumnInfo(name = "event_content") val eventContent: String,

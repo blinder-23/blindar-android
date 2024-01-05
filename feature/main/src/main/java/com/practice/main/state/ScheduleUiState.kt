@@ -29,7 +29,7 @@ data class ScheduleUiState(
 
 data class UiSchedule(
     val schoolCode: Int,
-    val id: Int,
+    val id: Long,
     val year: Int,
     val month: Int,
     val day: Int,
