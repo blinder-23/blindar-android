@@ -46,6 +46,7 @@ dependencies {
     api(project(":core:designsystem"))
     api(project(":core:combine"))
     api(project(":core:preferences"))
+    implementation(project(":core:work"))
     implementation(project(":core:domain"))
     implementation(project(":core:firebase"))
 

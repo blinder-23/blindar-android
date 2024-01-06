@@ -3,7 +3,14 @@ package com.practice.work
 import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
-import androidx.work.*
+import androidx.work.CoroutineWorker
+import androidx.work.Data
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
 import com.hsk.ktx.date.Date
 import com.practice.api.schedule.RemoteScheduleRepository
 import com.practice.domain.schedule.Schedule
@@ -23,11 +30,22 @@ class FetchRemoteScheduleWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
+        clearDatabaseIfValueIsSet()
         preferencesRepository.increaseRunningWorkCount()
         val result = fetchRemoteSchedules()
         preferencesRepository.decreaseRunningWorkCount()
-        Log.d("FetchRemoteScheduleWorker", "finished!")
+        Log.d(TAG, "finished!")
         return result
+    }
+
+    private suspend fun clearDatabaseIfValueIsSet() {
+        val clearDatabase = inputData.getBoolean(clearDatabaseKey, false)
+        if (clearDatabase) {
+            Log.d(TAG, "clear database")
+            localRepository.clear()
+        } else {
+            Log.d(TAG, "doesn't clear database")
+        }
     }
 
     private suspend fun fetchRemoteSchedules(): Result {
@@ -64,9 +82,21 @@ class FetchRemoteScheduleWorker @AssistedInject constructor(
     }
 
     private fun handleException(e: Exception, year: Int, month: Int): Result {
-        Log.e("FetchRemoteScheduleWork", "$year, $month has an exception: ${e.message}")
+        Log.e(TAG, "$year, $month has an exception: ${e.message}")
         e.printStackTrace()
         return Result.failure()
+    }
+
+    companion object {
+        fun createData(clearDatabase: Boolean): Data {
+            return Data.Builder()
+                .putBoolean(clearDatabaseKey, clearDatabase)
+                .build()
+        }
+
+        private const val clearDatabaseKey = "clear-schedule-database"
+
+        private const val TAG = "FetchRemoteScheduleWorker"
     }
 }
 
@@ -84,9 +114,10 @@ fun setPeriodicFetchScheduleWork(workManager: WorkManager) {
     )
 }
 
-fun setOneTimeFetchScheduleWork(workManager: WorkManager) {
+fun setOneTimeFetchScheduleWork(workManager: WorkManager, clearDatabase: Boolean = false) {
     val oneTimeWork = OneTimeWorkRequestBuilder<FetchRemoteScheduleWorker>()
         .addTag(oneTimeScheduleWorkTag)
+        .setInputData(FetchRemoteScheduleWorker.createData(clearDatabase))
         .build()
     workManager.enqueueUniqueWork(
         oneTimeScheduleWorkTag,

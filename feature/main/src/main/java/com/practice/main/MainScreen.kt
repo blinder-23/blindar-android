@@ -23,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.calendar.core.rememberCalendarState
@@ -57,6 +58,7 @@ fun MainScreen(
     val backgroundModifier = modifier.background(MaterialTheme.colorScheme.surface)
     val mealColumns = if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) 2 else 3
 
+    val context = LocalContext.current
     Scaffold {
         val paddingModifier = backgroundModifier.padding(it)
         if (windowSize.widthSizeClass == WindowWidthSizeClass.Expanded) {
@@ -66,6 +68,7 @@ fun MainScreen(
                 onScreenModeChange = viewModel::onScreenModeChange,
                 calendarState = calendarState,
                 mealColumns = mealColumns,
+                onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
                 onAlarmIconClick = viewModel::onDailyAlarmIconClick,
                 onDateClick = viewModel::onDateClick,
                 onSwiped = viewModel::onSwiped,
@@ -84,6 +87,7 @@ fun MainScreen(
                 uiState = uiState,
                 calendarState = calendarState,
                 mealColumns = mealColumns,
+                onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
                 onAlarmIconClick = viewModel::onDailyAlarmIconClick,
                 onDateClick = viewModel::onDateClick,
                 onSwiped = viewModel::onSwiped,

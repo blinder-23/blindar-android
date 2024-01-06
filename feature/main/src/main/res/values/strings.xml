@@ -14,6 +14,8 @@
     <string name="main_screen_add_memo">메모 추가하기</string>
     <string name="main_screen_add_memo_description">클릭하여 메모 추가 화면을 엽니다.</string>
 
+    <string name="main_screen_refresh_icon_description">데이터 다시 로드하기</string>
+
     <string name="navigate_to_school_select">학교 선택 화면으로 가기</string>
 
     <string name="open_nutrient_popup_button">영양 정보</string>
