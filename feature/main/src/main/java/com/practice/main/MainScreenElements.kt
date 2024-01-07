@@ -61,11 +61,11 @@ import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.popup.NutrientPopup
 import com.practice.main.popup.popupPadding
 import com.practice.main.state.MemoPopupElement
-import com.practice.main.state.MemoUiState
 import com.practice.main.state.Menu
 import com.practice.main.state.Nutrient
 import com.practice.main.state.UiMeal
 import com.practice.main.state.UiMemo
+import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedule
 import com.practice.main.state.UiSchedules
 import com.practice.main.state.mergeSchedulesAndMemos
@@ -523,7 +523,7 @@ private fun MainScreenContentsPreview() {
                     date = Date.now(),
                     uiSchedules = previewSchedules,
                 ),
-                MemoUiState(
+                UiMemos(
                     date = Date.now(),
                     memos = previewMemos,
                 ),

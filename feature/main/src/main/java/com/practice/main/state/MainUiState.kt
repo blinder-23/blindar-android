@@ -25,17 +25,17 @@ data class MainUiState(
         get() = monthlyDataState.firstOrNull { it.date == selectedDate }
             ?: DailyData.Empty
 
-    fun updateMemoUiState(date: Date, memoUiState: MemoUiState): List<DailyData> {
+    fun updateMemoUiState(date: Date, uiMemos: UiMemos): List<DailyData> {
         return if (monthlyDataState.any { it.date == date }) {
-            addMemoUiStateOnExistingDate(date, memoUiState)
+            addMemoUiStateOnExistingDate(date, uiMemos)
         } else {
-            addMemoUiStateOnNewDate(date, memoUiState)
+            addMemoUiStateOnNewDate(date, uiMemos)
         }
     }
 
     private fun addMemoUiStateOnNewDate(
         date: Date,
-        memoUiState: MemoUiState
+        uiMemos: UiMemos
     ): List<DailyData> = monthlyDataState.toMutableList().apply {
         add(
             DailyData(
@@ -43,17 +43,17 @@ data class MainUiState(
                 date = date,
                 uiMeal = UiMeal.EmptyUiMeal,
                 uiSchedules = UiSchedules.EmptyUiSchedules,
-                memoUiState = memoUiState
+                uiMemos = uiMemos
             )
         )
     }.sortedBy { it.date }
 
     private fun addMemoUiStateOnExistingDate(
         date: Date,
-        memoUiState: MemoUiState
+        uiMemos: UiMemos
     ): List<DailyData> = monthlyDataState.map {
         if (it.date == date) {
-            it.copy(memoUiState = memoUiState)
+            it.copy(uiMemos = uiMemos)
         } else {
             it
         }

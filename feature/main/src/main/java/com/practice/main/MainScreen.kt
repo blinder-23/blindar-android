@@ -90,7 +90,7 @@ fun MainScreen(
     if (uiState.isMemoPopupVisible) {
         MainScreenPopup(onClose = viewModel::closeMemoPopup) {
             MemoPopup(
-                date = uiState.selectedDateDataState.memoUiState.date,
+                date = uiState.selectedDateDataState.uiMemos.date,
                 memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
                 onAddMemo = viewModel::addMemo,
                 onContentsChange = viewModel::updateMemoOnLocal,

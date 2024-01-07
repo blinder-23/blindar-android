@@ -5,11 +5,11 @@ import kotlinx.collections.immutable.toImmutableList
 
 fun mergeSchedulesAndMemos(
     uiSchedules: UiSchedules,
-    memoUiState: MemoUiState,
+    uiMemos: UiMemos,
 ): ImmutableList<MemoPopupElement> {
     return mutableListOf<MemoPopupElement>().apply {
         addAll(uiSchedules.uiSchedules)
-        addAll(memoUiState.memos)
+        addAll(uiMemos.memos)
         sortBy { it.sortOrder }
     }.toImmutableList()
 }

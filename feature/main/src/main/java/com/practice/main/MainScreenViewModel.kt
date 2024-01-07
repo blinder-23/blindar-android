@@ -23,9 +23,9 @@ import com.practice.firebase.BlindarFirebase
 import com.practice.firebase.BlindarUserStatus
 import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
-import com.practice.main.state.MemoUiState
 import com.practice.main.state.UiMeal
 import com.practice.main.state.UiMemo
+import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedules
 import com.practice.main.state.toMealUiState
 import com.practice.main.state.toMemo
@@ -160,15 +160,15 @@ class MainScreenViewModel @Inject constructor(
             addAll(monthlyData.memos.map { Date(it.year, it.month, it.day) })
         }
         val newDailyData = allDates.map { date ->
-            val meal = monthlyData.getMeal(date)
-            val schedule = monthlyData.getSchedule(date)
-            val memo = monthlyData.getMemo(date)
+            val uiMeal = monthlyData.getMeal(date)
+            val uiSchedules = monthlyData.getSchedule(date)
+            val uiMemos = monthlyData.getMemo(date)
             DailyData(
                 schoolCode = monthlyData.schoolCode,
                 date = date,
-                uiMeal = meal,
-                uiSchedules = schedule,
-                memoUiState = memo,
+                uiMeal = uiMeal,
+                uiSchedules = uiSchedules,
+                uiMemos = uiMemos,
             )
         }.sorted()
         return newDailyData
@@ -199,7 +199,7 @@ class MainScreenViewModel @Inject constructor(
         val isSelectedString = if (date == state.selectedDate) "선택됨" else ""
         val isTodayString = if (date == DateUtil.today()) "오늘" else ""
         val dailyStateString = if (dailyState != null) {
-            "식단: ${dailyState.uiMeal.description}\n학사일정:${dailyState.uiSchedules.description}\n메모: ${dailyState.memoUiState.description}"
+            "식단: ${dailyState.uiMeal.description}\n학사일정:${dailyState.uiSchedules.description}\n메모: ${dailyState.uiMemos.description}"
         } else {
             ""
         }
@@ -233,7 +233,7 @@ class MainScreenViewModel @Inject constructor(
         viewModelScope.launch {
             val newMemoId = preferencesRepository.getAndIncreaseMemoIdCount().toString()
             updateMemoUiState {
-                state.selectedDateDataState.memoUiState.addUiMemoAtLast(
+                state.selectedDateDataState.uiMemos.addUiMemoAtLast(
                     newMemoId,
                     state.userId,
                     state.selectedDate
@@ -244,11 +244,11 @@ class MainScreenViewModel @Inject constructor(
 
     fun updateMemoOnLocal(uiMemo: UiMemo) {
         updateMemoUiState {
-            state.selectedDateDataState.memoUiState.updateMemo(uiMemo)
+            state.selectedDateDataState.uiMemos.updateMemo(uiMemo)
         }
     }
 
-    private fun updateMemoUiState(block: () -> MemoUiState) {
+    private fun updateMemoUiState(block: () -> UiMemos) {
         val newMemoUiState = block()
         val newDailyData = state.updateMemoUiState(state.selectedDate, newMemoUiState)
         updateUiState(monthlyData = newDailyData)
@@ -257,7 +257,7 @@ class MainScreenViewModel @Inject constructor(
     private fun updateMemoOnRemote() {
         val userId = state.userId
         val selectedDate = state.selectedDate
-        val updateItems = state.selectedDateDataState.memoUiState.memos.map { it.toMemo() }
+        val updateItems = state.selectedDateDataState.uiMemos.memos.map { it.toMemo() }
         viewModelScope.launch {
             loadMonthlyDataUseCase.updateMemoToRemote(userId, selectedDate, updateItems)
         }
@@ -265,7 +265,7 @@ class MainScreenViewModel @Inject constructor(
 
     fun deleteMemo(uiMemo: UiMemo) {
         updateMemoUiState {
-            state.selectedDateDataState.memoUiState.deleteUiMemo(uiMemo)
+            state.selectedDateDataState.uiMemos.deleteUiMemo(uiMemo)
         }
     }
 
@@ -343,15 +343,15 @@ private fun MonthlyData.getSchedule(date: Date): UiSchedules {
     }
 }
 
-private fun MonthlyData.getMemo(date: Date): MemoUiState {
+private fun MonthlyData.getMemo(date: Date): UiMemos {
     return try {
         val memos = memos.filter { it.dateEquals(date) }.map { it.toUiMemo() }
-        MemoUiState(
+        UiMemos(
             date = date,
             memos = memos.toPersistentList(),
         )
     } catch (e: NoSuchElementException) {
-        MemoUiState.EmptyMemoUiState
+        UiMemos.EmptyUiMemos
     }
 }
 
