@@ -9,7 +9,7 @@ import kotlinx.collections.immutable.persistentListOf
  * Ui state of schedule
  */
 
-data class ScheduleUiState(
+data class UiSchedules(
     val date: Date,
     val uiSchedules: ImmutableList<UiSchedule>,
 ) {
@@ -20,7 +20,7 @@ data class ScheduleUiState(
         get() = if (uiSchedules.isEmpty()) "학사일정이 없습니다." else uiSchedules.joinToString(", ") { it.displayText }
 
     companion object {
-        val EmptyScheduleState = ScheduleUiState(
+        val EmptyUiSchedules = UiSchedules(
             date = Date(1900, 1, 1),
             uiSchedules = persistentListOf(),
         )

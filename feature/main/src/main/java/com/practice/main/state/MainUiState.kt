@@ -3,7 +3,6 @@ package com.practice.main.state
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.domain.School
-import com.practice.preferences.preferences.ScreenMode
 
 data class MainUiState(
     val userId: String,
@@ -12,11 +11,9 @@ data class MainUiState(
     val selectedDate: Date,
     val monthlyDataState: List<DailyData>,
     val isLoading: Boolean,
-    val screenMode: ScreenMode,
     val selectedSchool: School,
     val isNutrientPopupVisible: Boolean,
     val isMemoPopupVisible: Boolean,
-    val dailyAlarmIconState: DailyAlarmIconState,
 ) {
     val yearMonth: YearMonth
         get() = YearMonth(year, month)
@@ -28,35 +25,35 @@ data class MainUiState(
         get() = monthlyDataState.firstOrNull { it.date == selectedDate }
             ?: DailyData.Empty
 
-    fun updateMemoUiState(date: Date, memoUiState: MemoUiState): List<DailyData> {
+    fun updateMemoUiState(date: Date, uiMemos: UiMemos): List<DailyData> {
         return if (monthlyDataState.any { it.date == date }) {
-            addMemoUiStateOnExistingDate(date, memoUiState)
+            addMemoUiStateOnExistingDate(date, uiMemos)
         } else {
-            addMemoUiStateOnNewDate(date, memoUiState)
+            addMemoUiStateOnNewDate(date, uiMemos)
         }
     }
 
     private fun addMemoUiStateOnNewDate(
         date: Date,
-        memoUiState: MemoUiState
+        uiMemos: UiMemos
     ): List<DailyData> = monthlyDataState.toMutableList().apply {
         add(
             DailyData(
                 schoolCode = selectedSchoolCode,
                 date = date,
-                mealUiState = MealUiState.EmptyMealState,
-                scheduleUiState = ScheduleUiState.EmptyScheduleState,
-                memoUiState = memoUiState
+                uiMeal = UiMeal.EmptyUiMeal,
+                uiSchedules = UiSchedules.EmptyUiSchedules,
+                uiMemos = uiMemos
             )
         )
     }.sortedBy { it.date }
 
     private fun addMemoUiStateOnExistingDate(
         date: Date,
-        memoUiState: MemoUiState
+        uiMemos: UiMemos
     ): List<DailyData> = monthlyDataState.map {
         if (it.date == date) {
-            it.copy(memoUiState = memoUiState)
+            it.copy(uiMemos = uiMemos)
         } else {
             it
         }
@@ -70,11 +67,9 @@ data class MainUiState(
             selectedDate = Date.now(),
             monthlyDataState = emptyList(),
             isLoading = false,
-            screenMode = ScreenMode.Default,
             selectedSchool = School.EmptySchool,
             isNutrientPopupVisible = false,
             isMemoPopupVisible = false,
-            dailyAlarmIconState = DailyAlarmIconState.Loading,
         )
     }
 }

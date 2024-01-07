@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.ManagedVirtualDevice
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -29,21 +31,21 @@ android {
     testOptions {
         managedDevices {
             devices {
-                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api30atd").apply {
+                maybeCreate<ManagedVirtualDevice>("pixel2api30atd").apply {
                     device = "Pixel 2"
                     apiLevel = 30
                     systemImageSource = "aosp-atd"
                 }
             }
             devices {
-                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api30").apply {
+                maybeCreate<ManagedVirtualDevice>("pixel2api30").apply {
                     device = "Pixel 2"
                     apiLevel = 30
                     systemImageSource = "aosp"
                 }
             }
             devices {
-                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api27").apply {
+                maybeCreate<ManagedVirtualDevice>("pixel2api27").apply {
                     device = "Pixel 2"
                     apiLevel = 27
                     systemImageSource = "aosp"
