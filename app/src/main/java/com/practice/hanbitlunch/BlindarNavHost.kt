@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen
+package com.practice.hanbitlunch
 
 import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -25,7 +25,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.practice.hanbitlunch.R
 import com.practice.main.MainScreen
 import com.practice.onboarding.onboarding.OnboardingScreen
 import com.practice.onboarding.splash.SplashScreen
