@@ -3,7 +3,7 @@ package com.practice.main.state
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.domain.School
-import com.practice.preferences.ScreenMode
+import com.practice.preferences.preferences.ScreenMode
 
 data class MainUiState(
     val userId: String,

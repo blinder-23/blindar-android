@@ -33,7 +33,7 @@ import com.practice.main.state.toMemo
 import com.practice.main.state.toUiMemo
 import com.practice.main.state.toUiSchedule
 import com.practice.preferences.PreferencesRepository
-import com.practice.preferences.ScreenMode
+import com.practice.preferences.preferences.ScreenMode
 import com.practice.util.date.DateUtil
 import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel

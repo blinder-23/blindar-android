@@ -81,7 +81,7 @@ import com.practice.main.state.UiMemo
 import com.practice.main.state.UiSchedule
 import com.practice.main.state.mergeSchedulesAndMemos
 import com.practice.main.state.screenModeIcons
-import com.practice.preferences.ScreenMode
+import com.practice.preferences.preferences.ScreenMode
 import com.practice.util.date.daytype.toKor
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList

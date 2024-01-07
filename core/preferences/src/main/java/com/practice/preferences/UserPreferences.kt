@@ -1,20 +1,8 @@
 package com.practice.preferences
 
-enum class UiMode {
-    Graphic,
-    ScreenReader,
-}
-
-enum class ThemeMode {
-    Light,
-    Dark,
-    SystemDefault,
-}
-
-enum class ScreenMode {
-    Default,
-    List,
-}
+import com.practice.preferences.preferences.ScreenMode
+import com.practice.preferences.preferences.ThemeMode
+import com.practice.preferences.preferences.UiMode
 
 data class UserPreferences(
     val uiMode: UiMode,

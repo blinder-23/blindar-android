@@ -1,5 +1,8 @@
 package com.practice.preferences
 
+import com.practice.preferences.preferences.ScreenMode
+import com.practice.preferences.preferences.ThemeMode
+import com.practice.preferences.preferences.UiMode
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakePreferencesRepository : PreferencesRepository {
