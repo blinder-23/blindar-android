@@ -32,8 +32,8 @@ import com.practice.main.previewSchedules
 import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MemoUiState
-import com.practice.main.state.ScheduleUiState
 import com.practice.main.state.UiMeal
+import com.practice.main.state.UiSchedules
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -119,7 +119,7 @@ private fun HorizontalCalendarMainScreenPreview() {
                 schoolCode = 1,
                 date = Date(2022, 10, 11).plusDays(it),
                 uiMeal = UiMeal(2022, 10, 11, previewMenus, previewNutrients),
-                scheduleUiState = ScheduleUiState(
+                uiSchedules = UiSchedules(
                     date = selectedDate,
                     uiSchedules = previewSchedules,
                 ),

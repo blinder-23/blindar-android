@@ -24,9 +24,9 @@ import com.practice.firebase.BlindarUserStatus
 import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MemoUiState
-import com.practice.main.state.ScheduleUiState
 import com.practice.main.state.UiMeal
 import com.practice.main.state.UiMemo
+import com.practice.main.state.UiSchedules
 import com.practice.main.state.toMealUiState
 import com.practice.main.state.toMemo
 import com.practice.main.state.toUiMemo
@@ -167,7 +167,7 @@ class MainScreenViewModel @Inject constructor(
                 schoolCode = monthlyData.schoolCode,
                 date = date,
                 uiMeal = meal,
-                scheduleUiState = schedule,
+                uiSchedules = schedule,
                 memoUiState = memo,
             )
         }.sorted()
@@ -199,7 +199,7 @@ class MainScreenViewModel @Inject constructor(
         val isSelectedString = if (date == state.selectedDate) "선택됨" else ""
         val isTodayString = if (date == DateUtil.today()) "오늘" else ""
         val dailyStateString = if (dailyState != null) {
-            "식단: ${dailyState.uiMeal.description}\n학사일정:${dailyState.scheduleUiState.description}\n메모: ${dailyState.memoUiState.description}"
+            "식단: ${dailyState.uiMeal.description}\n학사일정:${dailyState.uiSchedules.description}\n메모: ${dailyState.memoUiState.description}"
         } else {
             ""
         }
@@ -331,15 +331,15 @@ private fun MonthlyData.getMeal(date: Date): UiMeal {
     }
 }
 
-private fun MonthlyData.getSchedule(date: Date): ScheduleUiState {
+private fun MonthlyData.getSchedule(date: Date): UiSchedules {
     return try {
         val uiSchedules = schedules.filter { it.dateEquals(date) }.map { it.toUiSchedule() }
-        ScheduleUiState(
+        UiSchedules(
             date = date,
             uiSchedules = uiSchedules.toPersistentList(),
         )
     } catch (e: NoSuchElementException) {
-        ScheduleUiState.EmptyScheduleState
+        UiSchedules.EmptyUiSchedules
     }
 }
 

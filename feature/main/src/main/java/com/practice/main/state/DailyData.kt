@@ -10,7 +10,7 @@ data class DailyData(
     val schoolCode: Int,
     val date: Date,
     val uiMeal: UiMeal,
-    val scheduleUiState: ScheduleUiState,
+    val uiSchedules: UiSchedules,
     val memoUiState: MemoUiState,
 ) : Comparable<DailyData> {
     override fun compareTo(other: DailyData): Int {
@@ -18,7 +18,7 @@ data class DailyData(
     }
 
     val memoPopupElements: ImmutableList<MemoPopupElement>
-        get() = mergeSchedulesAndMemos(scheduleUiState, memoUiState)
+        get() = mergeSchedulesAndMemos(uiSchedules, memoUiState)
 
     companion object {
         private const val EMPTY_SCHOOL_CODE = -1
@@ -33,7 +33,7 @@ data class DailyData(
                 menus = (1..6).map { Menu("식단 $it") }.toPersistentList(),
                 nutrients = (0..3).map { Nutrient("탄수화물", 123.0, "g") }.toImmutableList()
             ),
-            scheduleUiState = ScheduleUiState(
+            uiSchedules = UiSchedules(
                 date = Date(2022, 10, 11),
                 uiSchedules = (1..3).map {
                     UiSchedule(
@@ -66,7 +66,7 @@ data class DailyData(
             schoolCode = EMPTY_SCHOOL_CODE,
             date = DateUtil.today(),
             uiMeal = UiMeal.EmptyUiMeal,
-            scheduleUiState = ScheduleUiState.EmptyScheduleState,
+            uiSchedules = UiSchedules.EmptyUiSchedules,
             memoUiState = MemoUiState.EmptyMemoUiState,
         )
     }

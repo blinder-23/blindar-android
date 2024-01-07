@@ -64,10 +64,10 @@ import com.practice.main.state.MemoPopupElement
 import com.practice.main.state.MemoUiState
 import com.practice.main.state.Menu
 import com.practice.main.state.Nutrient
-import com.practice.main.state.ScheduleUiState
 import com.practice.main.state.UiMeal
 import com.practice.main.state.UiMemo
 import com.practice.main.state.UiSchedule
+import com.practice.main.state.UiSchedules
 import com.practice.main.state.mergeSchedulesAndMemos
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -519,7 +519,7 @@ private fun MainScreenContentsPreview() {
         MainScreenContents(
             uiMeal = sampleUiMeal,
             memoPopupElements = mergeSchedulesAndMemos(
-                ScheduleUiState(
+                UiSchedules(
                     date = Date.now(),
                     uiSchedules = previewSchedules,
                 ),
