@@ -19,6 +19,7 @@
     <string name="settings_daily_alarm_disable">데일리 알림 비활성화하기</string>
     <string name="settings_daily_alarm_enabled">데일리 알림을 켭니다.</string>
     <string name="settings_daily_alarm_disabled">데일리 알림을 끕니다.</string>
+    <string name="settings_daily_alarm_permission_error">알림 권한이 허용되지 않으면 데일리 알림을 볼 수 없습니다.</string>
 
     <string name="close">닫기</string>
 </resources>

@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -13,12 +14,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -111,10 +111,6 @@ private fun SettingsScreen(
             onBackButtonClick = onBackButtonClick,
             modifier = Modifier.fillMaxWidth(),
         )
-        Divider(
-            modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.onSurface,
-        )
         SettingsItems(
             uiState = uiState,
             onToggleDailyMode = onToggleDailyMode,
@@ -193,7 +189,9 @@ private fun DailyModeSetting(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Column(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             TitleMedium(
@@ -221,33 +219,34 @@ private fun DailyAlarmSetting(
     onToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val permissionLauncher = rememberNotificationPermissionLauncher(isDailyAlarmEnabled, onToggle)
+
+    val context = LocalContext.current
+    val onClick = {
+        onDailyAlarmClick(!isDailyAlarmEnabled, context, permissionLauncher) {
+            onToggle(!isDailyAlarmEnabled)
+        }
+    }
+
     val titleDescription =
         stringResource(id = if (isDailyAlarmEnabled) R.string.settings_daily_alarm_title_description_enabled else R.string.settings_daily_alarm_title_description_disabled)
     val onClickLabel =
         stringResource(id = if (isDailyAlarmEnabled) R.string.settings_daily_alarm_disable else R.string.settings_daily_alarm_enable)
-    val onToggleMessage =
-        stringResource(id = if (isDailyAlarmEnabled) R.string.settings_daily_alarm_disabled else R.string.settings_daily_alarm_enabled)
-
-    val context = LocalContext.current
-    val afterToggle = {
-        Toast.makeText(context, onToggleMessage, Toast.LENGTH_SHORT).show()
-    }
 
     Row(
         modifier = modifier
             .semantics(mergeDescendants = true) {}
             .clickable(
-                onClick = {
-                    onToggle(!isDailyAlarmEnabled)
-                    afterToggle()
-                },
+                onClick = onClick,
                 onClickLabel = onClickLabel,
             )
             .padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Column(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             TitleMedium(
@@ -260,10 +259,7 @@ private fun DailyAlarmSetting(
         }
         Switch(
             checked = isDailyAlarmEnabled,
-            onCheckedChange = {
-                onToggle(!isDailyAlarmEnabled)
-                afterToggle()
-            },
+            onCheckedChange = { onClick() },
             modifier = Modifier.clearAndSetSemantics { },
         )
     }
@@ -274,16 +270,21 @@ private fun CloseSettingsButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = MaterialTheme.colorScheme.primaryContainer
+    val shape = RoundedCornerShape(12.dp)
     TextButton(
         onClick = onClick,
+        shape = shape,
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(backgroundColor),
+            .clip(shape),
+        colors = ButtonDefaults.textButtonColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        ),
+        contentPadding = PaddingValues(12.dp),
     ) {
         TitleMedium(
             text = stringResource(id = R.string.close),
-            textColor = contentColorFor(backgroundColor),
+            textColor = MaterialTheme.colorScheme.onPrimaryContainer,
         )
     }
 }
