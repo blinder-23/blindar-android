@@ -1,9 +1,10 @@
 package com.practice.main
 
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,15 +17,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cached
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,18 +33,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -59,155 +53,128 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
-import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BodyLarge
-import com.practice.designsystem.components.DisplayMedium
-import com.practice.designsystem.components.DisplaySmall
 import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.popup.NutrientPopup
 import com.practice.main.popup.popupPadding
-import com.practice.main.state.DailyData
 import com.practice.main.state.MealUiState
 import com.practice.main.state.MemoPopupElement
 import com.practice.main.state.MemoUiState
 import com.practice.main.state.Menu
 import com.practice.main.state.Nutrient
 import com.practice.main.state.ScheduleUiState
-import com.practice.main.state.ScreenModeIcon
 import com.practice.main.state.UiMemo
 import com.practice.main.state.UiSchedule
 import com.practice.main.state.mergeSchedulesAndMemos
-import com.practice.main.state.screenModeIcons
-import com.practice.preferences.preferences.ScreenMode
-import com.practice.util.date.daytype.toKor
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-internal fun MainScreenHeader(
-    year: Int,
-    month: Int,
-    selectedScreenMode: ScreenMode,
+fun MainScreenTopBar(
+    schoolName: String,
+    isLoading: Boolean,
+    onRefreshIconClick: () -> Unit,
+    onSettingsIconClick: () -> Unit,
     modifier: Modifier = Modifier,
-    screenModeIconsEnabled: Boolean = true,
-    onScreenModeIconClick: (ScreenMode) -> Unit = {},
+    onSchoolNameClick: () -> Unit = {},
+    onClickLabel: String = "",
 ) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(start = 16.dp, top = 13.dp, end = 16.dp, bottom = 13.dp)
-    ) {
-        VerticalYearMonth(
-            year = year,
-            month = month,
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .semantics(mergeDescendants = true) {
-                    contentDescription = "${year}년 ${month}월"
-                },
-        )
-        ScreenModeIconButtons(
-            screenModeIcons = screenModeIcons,
-            selectedMode = selectedScreenMode,
-            onIconClick = onScreenModeIconClick,
-            enabled = screenModeIconsEnabled,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .clearAndSetSemantics { },
-        )
-    }
-}
-
-@Composable
-fun RefreshIcon(
-    iconAlpha: () -> Float,
-    modifier: Modifier = Modifier,
-) {
-    Icon(
-        imageVector = Icons.Filled.Cached,
-        contentDescription = "새로고침하기",
-        tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = iconAlpha()),
         modifier = modifier,
-    )
-}
-
-@Composable
-private fun ScreenModeIconButtons(
-    screenModeIcons: List<ScreenModeIcon>,
-    onIconClick: (ScreenMode) -> Unit,
-    selectedMode: ScreenMode,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-) {
-    Row(modifier = modifier) {
-        screenModeIcons.forEach { (screenMode, icon) ->
-            ScreenModeIconButton(
-                icon = icon,
-                onClick = { onIconClick(screenMode) },
-                isSelected = (screenMode == selectedMode),
-                enabled = enabled,
-            )
-        }
+    ) {
+        TitleLarge(
+            text = schoolName,
+            textColor = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .clickable(onClickLabel = onClickLabel, onClick = onSchoolNameClick)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+        )
+        MainTopBarActions(
+            isLoading = isLoading,
+            onRefreshIconClick = onRefreshIconClick,
+            onSettingsIconClick = onSettingsIconClick,
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .wrapContentSize(),
+        )
     }
 }
 
 @Composable
-private fun ScreenModeIconButton(
-    icon: ImageVector,
+private fun MainTopBarActions(
+    isLoading: Boolean,
+    onRefreshIconClick: () -> Unit,
+    onSettingsIconClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        ForceRefreshIcon(
+            isLoading = isLoading,
+            onClick = onRefreshIconClick,
+        )
+        SettingsIcon(onClick = onSettingsIconClick)
+    }
+}
+
+@Composable
+private fun ForceRefreshIcon(
+    isLoading: Boolean,
     onClick: () -> Unit,
-    isSelected: Boolean,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
+    modifier: Modifier = Modifier
 ) {
-    val transition = updateTransition(targetState = isSelected, label = "isSelected")
-    val elevation by transition.animateDp(label = "transition") {
-        if (it && enabled) 10.dp else 0.dp
-    }
-    val alpha by transition.animateFloat(label = "alpha") {
-        if (it && enabled) 1f else if (enabled) 0.7f else 0f
-    }
-    val backgroundColor by transition.animateColor(label = "background") {
-        if (it && enabled) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
-    }
+    val loadingTransition = rememberInfiniteTransition("loading")
+    val angle by loadingTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = if (isLoading) 360f else 0f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = 1500,
+                easing = CubicBezierEasing(0.5f, 0.0f, 0.5f, 1.0f)
+            ),
+        ),
+        label = "loading-angle",
+    )
+    val iconDescription = stringResource(id = R.string.main_screen_refresh_icon_description)
+
     IconButton(
         onClick = onClick,
         modifier = modifier
-            .clip(CircleShape.copy(all = CornerSize(4.dp)))
-            .background(backgroundColor)
-            .shadow(elevation = elevation)
-            .alpha(alpha),
-        enabled = enabled,
+            .semantics(mergeDescendants = true) {
+                contentDescription = iconDescription
+            }
+            .rotate(angle),
     ) {
         Icon(
-            imageVector = icon,
+            imageVector = Icons.Filled.Refresh,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onPrimary,
         )
     }
 }
 
 @Composable
-internal fun VerticalYearMonth(
-    year: Int,
-    month: Int,
+private fun SettingsIcon(
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val textColor = MaterialTheme.colorScheme.onPrimary
-    Column(
-        verticalArrangement = Arrangement.spacedBy(13.dp),
-        modifier = modifier,
+    val description = stringResource(id = R.string.main_screen_settings_icon_description)
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+            .semantics(mergeDescendants = true) {
+                contentDescription = description
+            }
     ) {
-        DisplaySmall(
-            text = "${year}년",
-            textColor = textColor,
-        )
-        DisplayMedium(
-            text = "${month}월",
-            textColor = textColor,
+        Icon(
+            imageVector = Icons.Filled.Settings,
+            contentDescription = null,
         )
     }
 }
@@ -569,43 +536,19 @@ private fun MainScreenContentsPreview() {
     }
 }
 
-@LightPreview
+@LightAndDarkPreview
 @Composable
-private fun MealContentPreview() {
+private fun MainScreenTopBarPreview() {
+    var isLoading by remember { mutableStateOf(false) }
     BlindarTheme {
-        MealContent(
-            mealUiState = sampleMealUiState,
-            columns = 2,
-            isNutrientPopupVisible = false,
-            onNutrientPopupOpen = {},
-            onNutrientPopupClose = {},
-        )
-    }
-}
-
-@Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
-@Composable
-private fun ListScreenItemPreview() {
-    val date = Date(2022, 12, 13)
-    BlindarTheme {
-        DailyMealSchedule(
-            DailyData(
-                schoolCode = 1,
-                date = date,
-                mealUiState = sampleMealUiState,
-                scheduleUiState = ScheduleUiState(
-                    date = date,
-                    uiSchedules = previewSchedules,
-                ),
-                memoUiState = MemoUiState(
-                    date = date,
-                    memos = previewMemos,
-                ),
-            ),
-            isNutrientPopupVisible = false,
-            onNutrientPopupOpen = {},
-            onNutrientPopupClose = {},
-            onMemoPopupOpen = {},
+        MainScreenTopBar(
+            schoolName = "한빛맹학교",
+            isLoading = isLoading,
+            onRefreshIconClick = { isLoading = !isLoading },
+            onSettingsIconClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface),
         )
     }
 }

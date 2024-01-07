@@ -1,14 +1,8 @@
 package com.practice.main
 
 import android.util.Log
-import androidx.compose.animation.core.CubicBezierEasing
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,8 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ArrowForwardIos
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -34,14 +26,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -62,118 +49,11 @@ import com.practice.designsystem.calendar.core.offset
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.designsystem.components.LabelLarge
-import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.theme.BlindarTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
-@Composable
-fun MainScreenTopBar(
-    schoolName: String,
-    isLoading: Boolean,
-    onRefreshIconClick: () -> Unit,
-    onSettingsIconClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    onSchoolNameClick: () -> Unit = {},
-    onClickLabel: String = "",
-) {
-    Box(
-        modifier = modifier,
-    ) {
-        TitleLarge(
-            text = schoolName,
-            textColor = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .clickable(onClickLabel = onClickLabel, onClick = onSchoolNameClick)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-        )
-        MainTopBarActions(
-            isLoading = isLoading,
-            onRefreshIconClick = onRefreshIconClick,
-            onSettingsIconClick = onSettingsIconClick,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .wrapContentSize(),
-        )
-    }
-}
-
-@Composable
-private fun MainTopBarActions(
-    isLoading: Boolean,
-    onRefreshIconClick: () -> Unit,
-    onSettingsIconClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier.padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        ForceRefreshIcon(
-            isLoading = isLoading,
-            onClick = onRefreshIconClick,
-        )
-        SettingsIcon(onClick = onSettingsIconClick)
-    }
-}
-
-@Composable
-private fun ForceRefreshIcon(
-    isLoading: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val loadingTransition = rememberInfiniteTransition("loading")
-    val angle by loadingTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = if (isLoading) 360f else 0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = 1500,
-                easing = CubicBezierEasing(0.5f, 0.0f, 0.5f, 1.0f)
-            ),
-        ),
-        label = "loading-angle",
-    )
-    val iconDescription = stringResource(id = R.string.main_screen_refresh_icon_description)
-
-    IconButton(
-        onClick = onClick,
-        modifier = modifier
-            .semantics(mergeDescendants = true) {
-                contentDescription = iconDescription
-            }
-            .rotate(angle),
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Refresh,
-            contentDescription = null,
-        )
-    }
-}
-
-@Composable
-private fun SettingsIcon(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val description = stringResource(id = R.string.main_screen_settings_icon_description)
-    IconButton(
-        onClick = onClick,
-        modifier = modifier
-            .semantics(mergeDescendants = true) {
-                contentDescription = description
-            }
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Settings,
-            contentDescription = null,
-        )
-    }
-}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -343,23 +223,6 @@ private fun CalendarCardPreview() {
                 .aspectRatio(1f)
                 .wrapContentSize()
                 .padding(16.dp),
-        )
-    }
-}
-
-@LightAndDarkPreview
-@Composable
-private fun MainScreenTopBarPreview() {
-    var isLoading by remember { mutableStateOf(false) }
-    BlindarTheme {
-        MainScreenTopBar(
-            schoolName = "한빛맹학교",
-            isLoading = isLoading,
-            onRefreshIconClick = { isLoading = !isLoading },
-            onSettingsIconClick = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surface),
         )
     }
 }
