@@ -9,6 +9,9 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.practice.preferences.preferences.MainScreenMode
+import com.practice.preferences.preferences.ScreenMode
+import com.practice.preferences.preferences.ThemeMode
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -57,9 +60,9 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
             mapUserPreferences(preferences)
         }.stateIn(this, SharingStarted.Eagerly, UserPreferences.emptyPreferences)
 
-    override suspend fun updateUiMode(uiMode: UiMode) {
+    override suspend fun updateMainScreenMode(mainScreenMode: MainScreenMode) {
         edit {
-            it[PreferenceKeys.UI_MODE] = uiMode.name
+            it[PreferenceKeys.UI_MODE] = mainScreenMode.name
         }
     }
 
@@ -144,8 +147,8 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
 
 
     private fun mapUserPreferences(preferences: Preferences): UserPreferences {
-        val uiMode = UiMode.valueOf(
-            value = preferences[PreferenceKeys.UI_MODE] ?: UiMode.Graphic.name
+        val mainScreenMode = MainScreenMode.valueOf(
+            value = preferences[PreferenceKeys.UI_MODE] ?: MainScreenMode.Calendar.name
         )
         val themeMode = ThemeMode.valueOf(
             value = preferences[PreferenceKeys.THEME_MODE] ?: ThemeMode.SystemDefault.name
@@ -160,7 +163,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         val memoIdCounter = preferences[PreferenceKeys.MEMO_ID_COUNTER] ?: 0
         val isDailyNotificationEnabled = preferences[PreferenceKeys.NOTIFICATION_ENABLED] ?: false
         return UserPreferences(
-            uiMode = uiMode,
+            mainScreenMode = mainScreenMode,
             themeMode = themeMode,
             screenMode = screenMode,
             isFirstExecution = isFirstExecution,

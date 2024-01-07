@@ -15,6 +15,7 @@
     <string name="main_screen_add_memo_description">클릭하여 메모 추가 화면을 엽니다.</string>
 
     <string name="main_screen_refresh_icon_description">데이터 다시 로드하기</string>
+    <string name="main_screen_settings_icon_description">설정 화면으로 이동</string>
 
     <string name="navigate_to_school_select">학교 선택 화면으로 가기</string>
 

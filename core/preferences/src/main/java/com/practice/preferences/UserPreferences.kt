@@ -1,23 +1,11 @@
 package com.practice.preferences
 
-enum class UiMode {
-    Graphic,
-    ScreenReader,
-}
-
-enum class ThemeMode {
-    Light,
-    Dark,
-    SystemDefault,
-}
-
-enum class ScreenMode {
-    Default,
-    List,
-}
+import com.practice.preferences.preferences.MainScreenMode
+import com.practice.preferences.preferences.ScreenMode
+import com.practice.preferences.preferences.ThemeMode
 
 data class UserPreferences(
-    val uiMode: UiMode,
+    val mainScreenMode: MainScreenMode,
     val themeMode: ThemeMode,
     val screenMode: ScreenMode,
     val isFirstExecution: Boolean,
@@ -35,7 +23,7 @@ data class UserPreferences(
 
     companion object {
         val emptyPreferences = UserPreferences(
-            uiMode = UiMode.Graphic,
+            mainScreenMode = MainScreenMode.Calendar,
             themeMode = ThemeMode.SystemDefault,
             screenMode = ScreenMode.Default,
             isFirstExecution = true,

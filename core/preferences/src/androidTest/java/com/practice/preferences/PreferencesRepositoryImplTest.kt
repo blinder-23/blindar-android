@@ -7,6 +7,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.practice.preferences.preferences.MainScreenMode
+import com.practice.preferences.preferences.ScreenMode
+import com.practice.preferences.preferences.ThemeMode
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.take
@@ -46,30 +49,30 @@ class PreferencesRepositoryImplTest {
     }
 
     private fun preferences(
-        uiMode: UiMode = UiMode.Graphic,
+        mainScreenMode: MainScreenMode = MainScreenMode.Calendar,
         themeMode: ThemeMode = ThemeMode.SystemDefault,
         screenMode: ScreenMode = ScreenMode.Default,
-    ): UserPreferences = UserPreferences(uiMode, themeMode, screenMode)
+    ): UserPreferences = UserPreferences.emptyPreferences.copy(mainScreenMode, themeMode, screenMode)
 
     @Test
     fun repository_fetchInitialPreferences() = runTest {
         val initialPreferences = preferences.fetchInitialPreferences()
-        assertThat(initialPreferences.uiMode).isEqualTo(UiMode.Graphic)
+        assertThat(initialPreferences.mainScreenMode).isEqualTo(MainScreenMode.Calendar)
         assertThat(initialPreferences.themeMode).isEqualTo(ThemeMode.SystemDefault)
     }
 
     @Test
     fun repository_updateUiMode() = runTest {
         update {
-            updateUiMode(UiMode.ScreenReader)
-            updateUiMode(UiMode.Graphic)
-            updateUiMode(UiMode.ScreenReader)
+            updateMainScreenMode(MainScreenMode.Daily)
+            updateMainScreenMode(MainScreenMode.Calendar)
+            updateMainScreenMode(MainScreenMode.Daily)
         }
         val result = preferences.dropFirstAndTake(3)
 
-        assertThat(result[0]).isEqualTo(preferences(UiMode.ScreenReader))
-        assertThat(result[1]).isEqualTo(preferences(UiMode.Graphic))
-        assertThat(result[2]).isEqualTo(preferences(UiMode.ScreenReader))
+        assertThat(result[0]).isEqualTo(preferences(MainScreenMode.Daily))
+        assertThat(result[1]).isEqualTo(preferences(MainScreenMode.Calendar))
+        assertThat(result[2]).isEqualTo(preferences(MainScreenMode.Daily))
     }
 
     @Test
@@ -88,12 +91,12 @@ class PreferencesRepositoryImplTest {
     fun repository_updateBoth() = runTest {
         update {
             updateThemeMode(ThemeMode.Light)
-            updateUiMode(UiMode.ScreenReader)
+            updateMainScreenMode(MainScreenMode.Daily)
         }
         val result = preferences.dropFirstAndTake(2)
 
-        assertThat(result[0]).isEqualTo(preferences(UiMode.Graphic, ThemeMode.Light))
-        assertThat(result[1]).isEqualTo(preferences(UiMode.ScreenReader, ThemeMode.Light))
+        assertThat(result[0]).isEqualTo(preferences(MainScreenMode.Calendar, ThemeMode.Light))
+        assertThat(result[1]).isEqualTo(preferences(MainScreenMode.Daily, ThemeMode.Light))
     }
 
     @Test
