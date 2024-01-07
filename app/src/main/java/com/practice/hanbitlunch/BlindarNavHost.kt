@@ -31,6 +31,7 @@ import com.practice.onboarding.splash.SplashScreen
 import com.practice.register.phonenumber.VerifyPhoneNumber
 import com.practice.register.registerform.RegisterFormScreen
 import com.practice.register.selectschool.SelectSchoolScreen
+import com.practice.settings.Settings
 import com.practice.util.makeToast
 
 private val TAG = "BlindarNavHost"
@@ -173,6 +174,14 @@ fun NavGraphBuilder.blindarMainNavGraph(
             },
         )
     }
+    composable(SETTINGS) {
+        Settings(
+            onBackButtonClick = {
+                navController.popBackStack()
+            },
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -241,6 +250,7 @@ private const val VERIFY_PHONE = "verify_phone"
 private const val REGISTER_FORM = "register_form"
 private const val SELECT_SCHOOL = "select_school"
 private const val MAIN = "main_screen"
+private const val SETTINGS = "settings"
 
 private val NavBackStackEntry.route: String?
     get() = this.destination.route
