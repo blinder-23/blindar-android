@@ -155,6 +155,7 @@ private fun ForceRefreshIcon(
         Icon(
             imageVector = Icons.Filled.Refresh,
             contentDescription = null,
+            tint = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface),
         )
     }
 }
@@ -170,11 +171,12 @@ private fun SettingsIcon(
         modifier = modifier
             .semantics(mergeDescendants = true) {
                 contentDescription = description
-            }
+            },
     ) {
         Icon(
             imageVector = Icons.Filled.Settings,
             contentDescription = null,
+            tint = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface),
         )
     }
 }
