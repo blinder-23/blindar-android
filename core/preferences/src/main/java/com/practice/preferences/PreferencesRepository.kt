@@ -1,7 +1,6 @@
 package com.practice.preferences
 
 import com.practice.preferences.preferences.MainScreenMode
-import com.practice.preferences.preferences.ScreenMode
 import com.practice.preferences.preferences.ThemeMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +17,6 @@ interface PreferencesRepository : CoroutineScope {
     suspend fun updateMainScreenMode(mainScreenMode: MainScreenMode)
     suspend fun updateThemeMode(themeMode: ThemeMode)
     suspend fun updateIsFirstExecution(isFirstExecution: Boolean)
-    suspend fun updateScreenMode(screenMode: ScreenMode)
     suspend fun increaseRunningWorkCount()
     suspend fun decreaseRunningWorkCount()
     suspend fun updateSelectedSchool(schoolCode: Int, schoolName: String)

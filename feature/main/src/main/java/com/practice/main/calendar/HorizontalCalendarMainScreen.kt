@@ -35,7 +35,6 @@ import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.MemoUiState
 import com.practice.main.state.ScheduleUiState
-import com.practice.preferences.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -43,7 +42,6 @@ import kotlinx.collections.immutable.persistentListOf
 fun HorizontalCalendarMainScreen(
     calendarPageCount: Int,
     uiState: MainUiState,
-    onScreenModeChange: (ScreenMode) -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
     onRefreshIconClick: () -> Unit,
@@ -133,7 +131,6 @@ private fun HorizontalCalendarMainScreenPreview() {
             )
         },
         isLoading = false,
-        screenMode = ScreenMode.Default,
         selectedSchool = School(
             name = "어떤 학교",
             schoolCode = -1,
@@ -151,7 +148,6 @@ private fun HorizontalCalendarMainScreenPreview() {
         HorizontalCalendarMainScreen(
             calendarPageCount = 13,
             uiState = uiState,
-            onScreenModeChange = {},
             calendarState = calendarState,
             mealColumns = 3,
             onRefreshIconClick = {},

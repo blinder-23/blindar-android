@@ -33,7 +33,6 @@ import com.practice.main.state.toMemo
 import com.practice.main.state.toUiMemo
 import com.practice.main.state.toUiSchedule
 import com.practice.preferences.PreferencesRepository
-import com.practice.preferences.preferences.ScreenMode
 import com.practice.util.date.DateUtil
 import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -113,7 +112,6 @@ class MainScreenViewModel @Inject constructor(
         selectedDate: Date = state.selectedDate,
         monthlyData: List<DailyData> = state.monthlyDataState,
         isLoading: Boolean = state.isLoading,
-        screenMode: ScreenMode = state.screenMode,
         selectedSchool: School = state.selectedSchool,
         isNutrientPopupVisible: Boolean = state.isNutrientPopupVisible,
         isMemoPopupVisible: Boolean = state.isMemoPopupVisible,
@@ -129,7 +127,6 @@ class MainScreenViewModel @Inject constructor(
                 monthlyDataState = monthlyData,
                 selectedDate = selectedDate,
                 isLoading = isLoading,
-                screenMode = screenMode,
                 selectedSchool = selectedSchool,
                 isNutrientPopupVisible = isNutrientPopupVisible,
                 isMemoPopupVisible = isMemoPopupVisible,
@@ -140,11 +137,6 @@ class MainScreenViewModel @Inject constructor(
             startCollectMonthlyDataJob(userId, selectedSchool.schoolCode, yearMonth)
         }
     }
-
-    fun onScreenModeChange(screenMode: ScreenMode) =
-        viewModelScope.launch {
-            preferencesRepository.updateScreenMode(screenMode)
-        }
 
     fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
         updateUiState(
@@ -240,7 +232,6 @@ class MainScreenViewModel @Inject constructor(
         preferencesRepository.userPreferencesFlow.collectLatest {
             updateUiState(
                 isLoading = (it.runningWorksCount != 0),
-                screenMode = it.screenMode,
                 selectedSchool = School(
                     name = it.schoolName,
                     schoolCode = it.schoolCode,

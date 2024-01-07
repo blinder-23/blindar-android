@@ -3,7 +3,6 @@ package com.practice.main.state
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.domain.School
-import com.practice.preferences.preferences.ScreenMode
 
 data class MainUiState(
     val userId: String,
@@ -12,7 +11,6 @@ data class MainUiState(
     val selectedDate: Date,
     val monthlyDataState: List<DailyData>,
     val isLoading: Boolean,
-    val screenMode: ScreenMode,
     val selectedSchool: School,
     val isNutrientPopupVisible: Boolean,
     val isMemoPopupVisible: Boolean,
@@ -70,7 +68,6 @@ data class MainUiState(
             selectedDate = Date.now(),
             monthlyDataState = emptyList(),
             isLoading = false,
-            screenMode = ScreenMode.Default,
             selectedSchool = School.EmptySchool,
             isNutrientPopupVisible = false,
             isMemoPopupVisible = false,

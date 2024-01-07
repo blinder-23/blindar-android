@@ -40,7 +40,6 @@ import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
 import com.practice.main.state.MemoUiState
 import com.practice.main.state.ScheduleUiState
-import com.practice.preferences.preferences.ScreenMode
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -149,7 +148,6 @@ private fun VerticalCalendarMainScreenPreview() {
                     )
                 },
                 isLoading = false,
-                screenMode = ScreenMode.Default,
                 selectedSchool = School(
                     name = "어떤 학교",
                     schoolCode = -1,

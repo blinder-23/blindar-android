@@ -51,7 +51,6 @@ fun MainScreen(
             HorizontalCalendarMainScreen(
                 calendarPageCount = calendarPageCount,
                 uiState = uiState,
-                onScreenModeChange = viewModel::onScreenModeChange,
                 calendarState = calendarState,
                 mealColumns = mealColumns,
                 onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
