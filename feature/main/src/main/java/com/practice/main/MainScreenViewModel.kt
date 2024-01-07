@@ -42,9 +42,7 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -66,14 +64,7 @@ class MainScreenViewModel @Inject constructor(
             _uiState.value = value
         }
 
-    private val _scheduleDates: MutableStateFlow<Set<Date>>
-    val scheduleDates: StateFlow<Set<Date>>
-        get() = _scheduleDates
-
     private val selectedDateFlow: MutableStateFlow<Date>
-
-    // TODO: domain 또는 data로 옮기기?
-    private val cache: MutableMap<CacheKey, MonthlyData>
 
     private var loadMonthlyDataJob: Job? = null
 
@@ -82,8 +73,6 @@ class MainScreenViewModel @Inject constructor(
         val userId = getCurrentUserId()
         _uiState = mutableStateOf(MainUiState.EMPTY.copy(userId = userId))
         selectedDateFlow = MutableStateFlow(current)
-        _scheduleDates = MutableStateFlow(emptySet())
-        cache = mutableMapOf()
     }
 
     private fun getCurrentUserId(): String {
@@ -145,45 +134,12 @@ class MainScreenViewModel @Inject constructor(
         )
     }
 
-    fun onDailyAlarmIconClick() {
-        val nextPreferencesState = getNextDailyAlarmStateAndPreferences()
-        if (nextPreferencesState != null) {
-            viewModelScope.launch {
-                preferencesRepository.updateDailyAlarmState(nextPreferencesState)
-            }
-        }
-    }
-
     fun onRefreshIconClick(context: Context) {
         BlindarWorkManager.setOneTimeFetchDataWork(
             context = context,
             clearMealDatabase = true,
             clearScheduleDatabase = true,
         )
-    }
-
-    private fun getNextDailyAlarmStateAndPreferences(): Boolean? =
-        when (state.dailyAlarmIconState) {
-            DailyAlarmIconState.Loading -> null
-            DailyAlarmIconState.Enabled -> false
-            DailyAlarmIconState.Disabled -> true
-        }
-
-    private suspend fun loadMonthlyData(
-        userId: String,
-        schoolCode: Int,
-        yearMonth: YearMonth
-    ): MonthlyData {
-        val cacheKey = CacheKey(schoolCode, yearMonth)
-        return if (cache.containsKey(cacheKey)) {
-            cache[cacheKey]!!
-        } else {
-            val (queryYear, queryMonth) = yearMonth
-            loadMonthlyDataUseCase.loadData(userId, schoolCode, queryYear, queryMonth).first()
-                .apply {
-                    cache[cacheKey] = this
-                }
-        }
     }
 
     private fun startCollectMonthlyDataJob(userId: String, schoolCode: Int, yearMonth: YearMonth) {
@@ -369,11 +325,6 @@ class MainScreenViewModel @Inject constructor(
     }
 
 }
-
-private data class CacheKey(val schoolCode: Int, val yearMonth: YearMonth)
-
-private val MainUiState.cacheKey: CacheKey
-    get() = CacheKey(selectedSchoolCode, yearMonth)
 
 private fun MonthlyData.getMeal(date: Date): MealUiState {
     return try {
