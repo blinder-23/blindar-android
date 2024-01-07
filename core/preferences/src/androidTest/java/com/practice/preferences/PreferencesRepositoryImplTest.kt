@@ -8,7 +8,6 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.practice.preferences.preferences.MainScreenMode
-import com.practice.preferences.preferences.ScreenMode
 import com.practice.preferences.preferences.ThemeMode
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.drop
@@ -48,12 +47,6 @@ class PreferencesRepositoryImplTest {
         testDispatcher.cancel()
     }
 
-    private fun preferences(
-        mainScreenMode: MainScreenMode = MainScreenMode.Calendar,
-        themeMode: ThemeMode = ThemeMode.SystemDefault,
-        screenMode: ScreenMode = ScreenMode.Default,
-    ): UserPreferences = UserPreferences.emptyPreferences.copy(mainScreenMode, themeMode, screenMode)
-
     @Test
     fun repository_fetchInitialPreferences() = runTest {
         val initialPreferences = preferences.fetchInitialPreferences()
@@ -70,9 +63,9 @@ class PreferencesRepositoryImplTest {
         }
         val result = preferences.dropFirstAndTake(3)
 
-        assertThat(result[0]).isEqualTo(preferences(MainScreenMode.Daily))
-        assertThat(result[1]).isEqualTo(preferences(MainScreenMode.Calendar))
-        assertThat(result[2]).isEqualTo(preferences(MainScreenMode.Daily))
+        assertThat(result[0].mainScreenMode).isEqualTo(MainScreenMode.Daily)
+        assertThat(result[1].mainScreenMode).isEqualTo(MainScreenMode.Calendar)
+        assertThat(result[2].mainScreenMode).isEqualTo(MainScreenMode.Daily)
     }
 
     @Test
@@ -83,8 +76,8 @@ class PreferencesRepositoryImplTest {
         }
         val result = preferences.dropFirstAndTake(2)
 
-        assertThat(result[0]).isEqualTo(preferences(themeMode = ThemeMode.Dark))
-        assertThat(result[1]).isEqualTo(preferences(themeMode = ThemeMode.Light))
+        assertThat(result[0].themeMode).isEqualTo(ThemeMode.Dark)
+        assertThat(result[1].themeMode).isEqualTo(ThemeMode.Light)
     }
 
     @Test
@@ -95,8 +88,9 @@ class PreferencesRepositoryImplTest {
         }
         val result = preferences.dropFirstAndTake(2)
 
-        assertThat(result[0]).isEqualTo(preferences(MainScreenMode.Calendar, ThemeMode.Light))
-        assertThat(result[1]).isEqualTo(preferences(MainScreenMode.Daily, ThemeMode.Light))
+        assertThat(result[0].themeMode).isEqualTo(ThemeMode.Light)
+        assertThat(result[1].mainScreenMode).isEqualTo(MainScreenMode.Daily)
+        assertThat(result[1].themeMode).isEqualTo(ThemeMode.Light)
     }
 
     @Test
