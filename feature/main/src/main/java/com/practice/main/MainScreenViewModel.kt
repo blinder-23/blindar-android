@@ -23,9 +23,9 @@ import com.practice.firebase.BlindarFirebase
 import com.practice.firebase.BlindarUserStatus
 import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
-import com.practice.main.state.MealUiState
 import com.practice.main.state.MemoUiState
 import com.practice.main.state.ScheduleUiState
+import com.practice.main.state.UiMeal
 import com.practice.main.state.UiMemo
 import com.practice.main.state.toMealUiState
 import com.practice.main.state.toMemo
@@ -166,7 +166,7 @@ class MainScreenViewModel @Inject constructor(
             DailyData(
                 schoolCode = monthlyData.schoolCode,
                 date = date,
-                mealUiState = meal,
+                uiMeal = meal,
                 scheduleUiState = schedule,
                 memoUiState = memo,
             )
@@ -199,7 +199,7 @@ class MainScreenViewModel @Inject constructor(
         val isSelectedString = if (date == state.selectedDate) "선택됨" else ""
         val isTodayString = if (date == DateUtil.today()) "오늘" else ""
         val dailyStateString = if (dailyState != null) {
-            "식단: ${dailyState.mealUiState.description}\n학사일정:${dailyState.scheduleUiState.description}\n메모: ${dailyState.memoUiState.description}"
+            "식단: ${dailyState.uiMeal.description}\n학사일정:${dailyState.scheduleUiState.description}\n메모: ${dailyState.memoUiState.description}"
         } else {
             ""
         }
@@ -298,7 +298,7 @@ class MainScreenViewModel @Inject constructor(
         actions.add(createMemoPopupCustomAction(month, day))
 
         this.find { it.date == date }?.let {
-            if (!it.mealUiState.isEmpty) {
+            if (!it.uiMeal.isEmpty) {
                 actions.add(createNutrientPopupCustomAction(month, day))
             }
         }
@@ -322,12 +322,12 @@ class MainScreenViewModel @Inject constructor(
 
 }
 
-private fun MonthlyData.getMeal(date: Date): MealUiState {
+private fun MonthlyData.getMeal(date: Date): UiMeal {
     return try {
         meals.first { it.dateEquals(date) }
             .toMealUiState()
     } catch (e: NoSuchElementException) {
-        MealUiState.EmptyMealState
+        UiMeal.EmptyUiMeal
     }
 }
 

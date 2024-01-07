@@ -9,7 +9,7 @@ import kotlinx.collections.immutable.toPersistentList
 data class DailyData(
     val schoolCode: Int,
     val date: Date,
-    val mealUiState: MealUiState,
+    val uiMeal: UiMeal,
     val scheduleUiState: ScheduleUiState,
     val memoUiState: MemoUiState,
 ) : Comparable<DailyData> {
@@ -26,7 +26,7 @@ data class DailyData(
         val sample = DailyData(
             schoolCode = EMPTY_SCHOOL_CODE,
             date = Date(2022, 10, 11),
-            mealUiState = MealUiState(
+            uiMeal = UiMeal(
                 year = 2022,
                 month = 10,
                 day = 11,
@@ -65,7 +65,7 @@ data class DailyData(
         val Empty = DailyData(
             schoolCode = EMPTY_SCHOOL_CODE,
             date = DateUtil.today(),
-            mealUiState = MealUiState.EmptyMealState,
+            uiMeal = UiMeal.EmptyUiMeal,
             scheduleUiState = ScheduleUiState.EmptyScheduleState,
             memoUiState = MemoUiState.EmptyMemoUiState,
         )

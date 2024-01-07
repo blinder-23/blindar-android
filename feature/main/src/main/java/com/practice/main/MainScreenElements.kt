@@ -60,12 +60,12 @@ import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.popup.NutrientPopup
 import com.practice.main.popup.popupPadding
-import com.practice.main.state.MealUiState
 import com.practice.main.state.MemoPopupElement
 import com.practice.main.state.MemoUiState
 import com.practice.main.state.Menu
 import com.practice.main.state.Nutrient
 import com.practice.main.state.ScheduleUiState
+import com.practice.main.state.UiMeal
 import com.practice.main.state.UiMemo
 import com.practice.main.state.UiSchedule
 import com.practice.main.state.mergeSchedulesAndMemos
@@ -183,7 +183,7 @@ private fun SettingsIcon(
 
 @Composable
 internal fun MainScreenContents(
-    mealUiState: MealUiState,
+    uiMeal: UiMeal,
     memoPopupElements: ImmutableList<MemoPopupElement>,
     mealColumns: Int,
     isNutrientPopupVisible: Boolean,
@@ -192,7 +192,7 @@ internal fun MainScreenContents(
     onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (mealUiState.isEmpty && memoPopupElements.isEmpty()) {
+    if (uiMeal.isEmpty && memoPopupElements.isEmpty()) {
         Box(modifier = modifier) {
             EmptyContentIndicator(
                 onClick = onMemoPopupOpen,
@@ -205,10 +205,10 @@ internal fun MainScreenContents(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(bottom = 10.dp),
         ) {
-            if (!mealUiState.isEmpty) {
+            if (!uiMeal.isEmpty) {
                 item {
                     MealContent(
-                        mealUiState = mealUiState,
+                        uiMeal = uiMeal,
                         columns = mealColumns,
                         isNutrientPopupVisible = isNutrientPopupVisible,
                         onNutrientPopupOpen = onNutrientPopupOpen,
@@ -257,7 +257,7 @@ private fun EmptyContentIndicator(
 
 @Composable
 internal fun MealContent(
-    mealUiState: MealUiState,
+    uiMeal: UiMeal,
     columns: Int,
     isNutrientPopupVisible: Boolean,
     onNutrientPopupOpen: () -> Unit,
@@ -275,15 +275,15 @@ internal fun MealContent(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(itemPadding)
         ) {
-            mealUiState.menus.chunked(columns).forEach { menus ->
+            uiMeal.menus.chunked(columns).forEach { menus ->
                 val filledMenus = fillMenus(menus, columns)
                 MenuRow(menus = filledMenus)
             }
         }
     }
     if (isNutrientPopupVisible) {
-        val month = mealUiState.month
-        val day = mealUiState.day
+        val month = uiMeal.month
+        val day = uiMeal.day
         MainScreenPopup(
             onClose = onNutrientPopupClose,
         ) {
@@ -292,7 +292,7 @@ internal fun MealContent(
                     id = R.string.nutrient_popup_title,
                     "${month}월 ${day}일"
                 ),
-                nutrients = mealUiState.nutrients,
+                nutrients = uiMeal.nutrients,
                 onClose = onNutrientPopupClose,
                 modifier = Modifier.padding(popupPadding),
             )
@@ -510,14 +510,14 @@ private fun MainScreenContentHeaderButtonPreview() {
     }
 }
 
-private val sampleMealUiState = MealUiState(2022, 10, 28, previewMenus, previewNutrients)
+private val sampleUiMeal = UiMeal(2022, 10, 28, previewMenus, previewNutrients)
 
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenContentsPreview() {
     BlindarTheme {
         MainScreenContents(
-            mealUiState = sampleMealUiState,
+            uiMeal = sampleUiMeal,
             memoPopupElements = mergeSchedulesAndMemos(
                 ScheduleUiState(
                     date = Date.now(),

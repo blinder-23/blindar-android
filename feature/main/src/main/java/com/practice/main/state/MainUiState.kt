@@ -41,7 +41,7 @@ data class MainUiState(
             DailyData(
                 schoolCode = selectedSchoolCode,
                 date = date,
-                mealUiState = MealUiState.EmptyMealState,
+                uiMeal = UiMeal.EmptyUiMeal,
                 scheduleUiState = ScheduleUiState.EmptyScheduleState,
                 memoUiState = memoUiState
             )
