@@ -86,8 +86,7 @@ fun MainScreenTopBar(
     schoolName: String,
     isLoading: Boolean,
     onRefreshIconClick: () -> Unit,
-    iconState: DailyAlarmIconState,
-    onAlarmIconClick: () -> Unit,
+    onSettingsIconClick: () -> Unit,
     modifier: Modifier = Modifier,
     onSchoolNameClick: () -> Unit = {},
     onClickLabel: String = "",
@@ -106,8 +105,7 @@ fun MainScreenTopBar(
         MainTopBarActions(
             isLoading = isLoading,
             onRefreshIconClick = onRefreshIconClick,
-            alarmIconState = iconState,
-            onAlarmIconClick = onAlarmIconClick,
+            onSettingsIconClick = onSettingsIconClick,
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .wrapContentSize(),
@@ -119,8 +117,7 @@ fun MainScreenTopBar(
 private fun MainTopBarActions(
     isLoading: Boolean,
     onRefreshIconClick: () -> Unit,
-    alarmIconState: DailyAlarmIconState,
-    onAlarmIconClick: () -> Unit,
+    onSettingsIconClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -132,10 +129,7 @@ private fun MainTopBarActions(
             isLoading = isLoading,
             onClick = onRefreshIconClick,
         )
-        DailyAlarmIcon(
-            iconState = alarmIconState,
-            onClick = onAlarmIconClick,
-        )
+        SettingsIcon(onClick = onSettingsIconClick)
     }
 }
 
@@ -174,105 +168,24 @@ private fun ForceRefreshIcon(
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-private fun DailyAlarmIcon(
-    iconState: DailyAlarmIconState,
+private fun SettingsIcon(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-
-    val permissionWarningMessage =
-        stringResource(id = R.string.notification_permission_rejected_warning)
-    val onPermissionGranted = {
-        onClick()
-        Toast.makeText(
-            context,
-            R.string.daily_alarm_icon_clicked_to_enabled,
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-    val onPermissionDenied = {
-        Toast.makeText(context, permissionWarningMessage, Toast.LENGTH_SHORT).show()
-    }
-
-    val exactAlarmPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        rememberPermissionState(permission = Manifest.permission.USE_EXACT_ALARM) { granted ->
-            Log.d("MainScreenElements", "exact alarm permission? $granted")
-            if (granted) {
-                onPermissionGranted()
-            } else {
-                onPermissionDenied()
-            }
-        }
-    } else {
-        null
-    }
-
-    val launcher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                exactAlarmPermissionState?.launchPermissionRequest() ?: onPermissionGranted()
-            } else {
-                onPermissionDenied()
-            }
-        }
-
+    val description = stringResource(id = R.string.main_screen_settings_icon_description)
     IconButton(
-        onClick = {
-            onDailyAlarmIconClick(iconState, context, launcher, onClick)
-        },
-        modifier = modifier,
+        onClick = onClick,
+        modifier = modifier
+            .semantics(mergeDescendants = true) {
+                contentDescription = description
+            }
     ) {
         Icon(
-            imageVector = iconState.icon,
-            contentDescription = stringResource(id = iconState.iconDescriptionId),
-            tint = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface),
+            imageVector = Icons.Filled.Settings,
+            contentDescription = null,
         )
     }
-}
-
-private fun onDailyAlarmIconClick(
-    iconState: DailyAlarmIconState,
-    context: Context,
-    launcher: ManagedActivityResultLauncher<String, Boolean>,
-    onClick: () -> Unit,
-) {
-    val areNotificationsEnabled = context.isNotificationAndExactAlarmEnabled()
-    val toastMessageId = when (iconState) {
-        DailyAlarmIconState.Loading -> null
-
-        DailyAlarmIconState.Disabled -> {
-            if (!areNotificationsEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                null
-            } else if (areNotificationsEnabled) {
-                onClick()
-                R.string.daily_alarm_icon_clicked_to_enabled
-            } else {
-                null
-            }
-        }
-
-        DailyAlarmIconState.Enabled -> {
-            onClick()
-            R.string.daily_alarm_icon_clicked_to_disabled
-        }
-    }
-    toastMessageId?.let {
-        Toast.makeText(context, toastMessageId, Toast.LENGTH_SHORT).show()
-    }
-}
-
-private fun Context.isNotificationAndExactAlarmEnabled(): Boolean {
-    val isNotificationEnabled = NotificationManagerCompat.from(this).areNotificationsEnabled()
-    val isExactAlarmEnabled = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        getSystemService<AlarmManager>()!!.canScheduleExactAlarms()
-    } else {
-        true
-    }
-    return isNotificationEnabled && isExactAlarmEnabled
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -456,38 +369,10 @@ private fun MainScreenTopBarPreview() {
             schoolName = "한빛맹학교",
             isLoading = isLoading,
             onRefreshIconClick = { isLoading = !isLoading },
-            iconState = DailyAlarmIconState.Enabled,
-            onAlarmIconClick = {},
+            onSettingsIconClick = {},
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface),
         )
-    }
-}
-
-@LightAndDarkPreview
-@Composable
-private fun DailyAlarmIconPreview() {
-    BlindarTheme {
-        Row(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
-            DailyAlarmIcon(
-                iconState = DailyAlarmIconState.Enabled,
-                onClick = {},
-                modifier = Modifier
-                    .padding(16.dp),
-            )
-            DailyAlarmIcon(
-                iconState = DailyAlarmIconState.Disabled,
-                onClick = {},
-                modifier = Modifier
-                    .padding(16.dp),
-            )
-            DailyAlarmIcon(
-                iconState = DailyAlarmIconState.Loading,
-                onClick = {},
-                modifier = Modifier
-                    .padding(16.dp),
-            )
-        }
     }
 }

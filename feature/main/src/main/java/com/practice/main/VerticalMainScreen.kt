@@ -44,7 +44,7 @@ fun VerticalMainScreen(
     calendarState: CalendarState,
     mealColumns: Int,
     onRefreshIconClick: () -> Unit,
-    onAlarmIconClick: () -> Unit,
+    onSettingsIconClick: () -> Unit,
     onDateClick: (Date) -> Unit,
     onSwiped: (YearMonth) -> Unit,
     getContentDescription: (Date) -> String,
@@ -60,15 +60,14 @@ fun VerticalMainScreen(
     Column(modifier = modifier) {
         MainScreenTopBar(
             schoolName = uiState.selectedSchool.name,
-            onSchoolNameClick = onNavigateToSelectSchoolScreen,
-            onClickLabel = stringResource(id = R.string.navigate_to_school_select),
             isLoading = uiState.isLoading,
             onRefreshIconClick = onRefreshIconClick,
-            iconState = uiState.dailyAlarmIconState,
-            onAlarmIconClick = onAlarmIconClick,
+            onSettingsIconClick = onSettingsIconClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally),
+            onSchoolNameClick = onNavigateToSelectSchoolScreen,
+            onClickLabel = stringResource(id = R.string.navigate_to_school_select),
         )
         Column(
             modifier = Modifier
@@ -166,7 +165,7 @@ private fun VerticalMainScreenPreview() {
             calendarState = calendarState,
             mealColumns = 2,
             onRefreshIconClick = {},
-            onAlarmIconClick = {},
+            onSettingsIconClick = {},
             onDateClick = { selectedDate = it },
             onSwiped = {},
             getContentDescription = { "" },

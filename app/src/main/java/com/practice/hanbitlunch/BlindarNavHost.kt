@@ -172,6 +172,9 @@ fun NavGraphBuilder.blindarMainNavGraph(
             onNavigateToSelectSchoolScreen = {
                 navController.navigate(SELECT_SCHOOL)
             },
+            onNavigateToSettingsScreen = {
+                navController.navigate(SETTINGS)
+            },
         )
     }
     composable(SETTINGS) {

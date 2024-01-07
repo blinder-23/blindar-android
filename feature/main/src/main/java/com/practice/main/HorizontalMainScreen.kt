@@ -40,7 +40,7 @@ fun HorizontalMainScreen(
     calendarState: CalendarState,
     mealColumns: Int,
     onRefreshIconClick: () -> Unit,
-    onAlarmIconClick: () -> Unit,
+    onSettingsIconClick: () -> Unit,
     onDateClick: (Date) -> Unit,
     onSwiped: (YearMonth) -> Unit,
     getContentDescription: (Date) -> String,
@@ -56,15 +56,14 @@ fun HorizontalMainScreen(
     Column(modifier = modifier) {
         MainScreenTopBar(
             schoolName = uiState.selectedSchool.name,
-            onSchoolNameClick = onNavigateToSelectSchoolScreen,
-            onClickLabel = stringResource(id = R.string.navigate_to_school_select),
             isLoading = uiState.isLoading,
             onRefreshIconClick = onRefreshIconClick,
-            iconState = uiState.dailyAlarmIconState,
-            onAlarmIconClick = onAlarmIconClick,
+            onSettingsIconClick = onSettingsIconClick,
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.CenterHorizontally)
+                .align(Alignment.CenterHorizontally),
+            onSchoolNameClick = onNavigateToSelectSchoolScreen,
+            onClickLabel = stringResource(id = R.string.navigate_to_school_select)
         )
         Row(
             modifier = Modifier.padding(16.dp),
@@ -149,7 +148,7 @@ private fun HorizontalMainScreenPreview() {
             calendarState = calendarState,
             mealColumns = 3,
             onRefreshIconClick = {},
-            onAlarmIconClick = {},
+            onSettingsIconClick = {},
             onDateClick = {},
             onSwiped = { },
             getContentDescription = { "" },

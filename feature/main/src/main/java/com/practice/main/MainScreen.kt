@@ -37,9 +37,10 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     windowSize: WindowSizeClass,
     viewModel: MainScreenViewModel,
+    onNavigateToSelectSchoolScreen: () -> Unit,
+    onNavigateToSettingsScreen: ()->Unit,
     modifier: Modifier = Modifier,
     onLaunch: suspend () -> Unit = {},
-    onNavigateToSelectSchoolScreen: () -> Unit = {},
 ) {
     val systemUiController = rememberSystemUiController()
     val systemBarColor = MaterialTheme.colorScheme.surface
@@ -69,7 +70,7 @@ fun MainScreen(
                 calendarState = calendarState,
                 mealColumns = mealColumns,
                 onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
-                onAlarmIconClick = viewModel::onDailyAlarmIconClick,
+                onSettingsIconClick = onNavigateToSettingsScreen,
                 onDateClick = viewModel::onDateClick,
                 onSwiped = viewModel::onSwiped,
                 getContentDescription = viewModel::getContentDescription,
@@ -88,7 +89,7 @@ fun MainScreen(
                 calendarState = calendarState,
                 mealColumns = mealColumns,
                 onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
-                onAlarmIconClick = viewModel::onDailyAlarmIconClick,
+                onSettingsIconClick = onNavigateToSettingsScreen,
                 onDateClick = viewModel::onDateClick,
                 onSwiped = viewModel::onSwiped,
                 getContentDescription = viewModel::getContentDescription,
