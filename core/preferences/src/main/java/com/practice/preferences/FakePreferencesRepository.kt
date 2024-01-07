@@ -1,14 +1,14 @@
 package com.practice.preferences
 
+import com.practice.preferences.preferences.MainScreenMode
 import com.practice.preferences.preferences.ScreenMode
 import com.practice.preferences.preferences.ThemeMode
-import com.practice.preferences.preferences.UiMode
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakePreferencesRepository : PreferencesRepository {
 
     private val initialPreferences = UserPreferences(
-        uiMode = UiMode.Graphic,
+        mainScreenMode = MainScreenMode.Calendar,
         themeMode = ThemeMode.SystemDefault,
         screenMode = ScreenMode.Default,
         isFirstExecution = true,
@@ -22,8 +22,8 @@ class FakePreferencesRepository : PreferencesRepository {
 
     override val userPreferencesFlow = MutableStateFlow(preferences)
 
-    override suspend fun updateUiMode(uiMode: UiMode) {
-        preferences = preferences.copy(uiMode = uiMode)
+    override suspend fun updateMainScreenMode(mainScreenMode: MainScreenMode) {
+        preferences = preferences.copy(mainScreenMode = mainScreenMode)
         emitNewValue()
     }
 

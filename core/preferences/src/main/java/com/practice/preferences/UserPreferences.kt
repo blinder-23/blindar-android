@@ -1,11 +1,11 @@
 package com.practice.preferences
 
+import com.practice.preferences.preferences.MainScreenMode
 import com.practice.preferences.preferences.ScreenMode
 import com.practice.preferences.preferences.ThemeMode
-import com.practice.preferences.preferences.UiMode
 
 data class UserPreferences(
-    val uiMode: UiMode,
+    val mainScreenMode: MainScreenMode,
     val themeMode: ThemeMode,
     val screenMode: ScreenMode,
     val isFirstExecution: Boolean,
@@ -23,7 +23,7 @@ data class UserPreferences(
 
     companion object {
         val emptyPreferences = UserPreferences(
-            uiMode = UiMode.Graphic,
+            mainScreenMode = MainScreenMode.Calendar,
             themeMode = ThemeMode.SystemDefault,
             screenMode = ScreenMode.Default,
             isFirstExecution = true,
