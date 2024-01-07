@@ -1,4 +1,4 @@
-package com.practice.main
+package com.practice.main.calendar
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -50,6 +50,7 @@ import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.main.R
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
