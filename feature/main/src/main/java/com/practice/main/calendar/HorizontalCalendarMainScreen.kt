@@ -29,7 +29,6 @@ import com.practice.main.previewMemos
 import com.practice.main.previewMenus
 import com.practice.main.previewNutrients
 import com.practice.main.previewSchedules
-import com.practice.main.state.DailyAlarmIconState
 import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
 import com.practice.main.state.MealUiState
@@ -137,7 +136,6 @@ private fun HorizontalCalendarMainScreenPreview() {
         ),
         isNutrientPopupVisible = false,
         isMemoPopupVisible = false,
-        dailyAlarmIconState = DailyAlarmIconState.Enabled,
     )
     val calendarState = rememberCalendarState(
         year = year,
