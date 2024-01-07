@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.calendar.core.rememberCalendarState
+import com.practice.main.calendar.HorizontalCalendarMainScreen
+import com.practice.main.calendar.VerticalCalendarMainScreen
 import com.practice.main.popup.MemoPopup
 import com.practice.main.popup.popupPadding
 
@@ -21,7 +23,7 @@ fun MainScreen(
     windowSize: WindowSizeClass,
     viewModel: MainScreenViewModel,
     onNavigateToSelectSchoolScreen: () -> Unit,
-    onNavigateToSettingsScreen: ()->Unit,
+    onNavigateToSettingsScreen: () -> Unit,
     modifier: Modifier = Modifier,
     onLaunch: suspend () -> Unit = {},
 ) {
@@ -46,7 +48,7 @@ fun MainScreen(
     Scaffold {
         val paddingModifier = backgroundModifier.padding(it)
         if (windowSize.widthSizeClass == WindowWidthSizeClass.Expanded) {
-            HorizontalMainScreen(
+            HorizontalCalendarMainScreen(
                 calendarPageCount = calendarPageCount,
                 uiState = uiState,
                 onScreenModeChange = viewModel::onScreenModeChange,
@@ -66,7 +68,7 @@ fun MainScreen(
                 modifier = paddingModifier,
             ) { date -> viewModel.getCustomActions(date) }
         } else {
-            VerticalMainScreen(
+            VerticalCalendarMainScreen(
                 calendarPageCount = calendarPageCount,
                 uiState = uiState,
                 calendarState = calendarState,

@@ -1,13 +1,17 @@
-package com.practice.main
+package com.practice.main.calendar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -16,13 +20,20 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
+import com.practice.designsystem.calendar.calendarDateShape
 import com.practice.designsystem.calendar.core.CalendarState
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.rememberCalendarState
-import com.practice.designsystem.calendar.largeCalendarDateShape
+import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.School
-import com.practice.main.calendar.CalendarCard
+import com.practice.main.MainScreenContents
+import com.practice.main.MainScreenTopBar
+import com.practice.main.R
+import com.practice.main.previewMemos
+import com.practice.main.previewMenus
+import com.practice.main.previewNutrients
+import com.practice.main.previewSchedules
 import com.practice.main.state.DailyAlarmIconState
 import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiState
@@ -34,10 +45,9 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun HorizontalMainScreen(
+fun VerticalCalendarMainScreen(
     calendarPageCount: Int,
     uiState: MainUiState,
-    onScreenModeChange: (ScreenMode) -> Unit,
     calendarState: CalendarState,
     mealColumns: Int,
     onRefreshIconClick: () -> Unit,
@@ -64,24 +74,27 @@ fun HorizontalMainScreen(
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally),
             onSchoolNameClick = onNavigateToSelectSchoolScreen,
-            onClickLabel = stringResource(id = R.string.navigate_to_school_select)
+            onClickLabel = stringResource(id = R.string.navigate_to_school_select),
         )
-        Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             CalendarCard(
                 calendarPageCount = calendarPageCount,
-                modifier = Modifier.weight(1f),
                 calendarState = calendarState,
                 onDateClick = onDateClick,
                 onSwiped = onSwiped,
                 getContentDescription = getContentDescription,
+                dateShape = calendarDateShape,
                 getClickLabel = getClickLabel,
                 drawBehindElement = drawUnderlineToScheduleDate,
-                dateShape = largeCalendarDateShape,
-                dateArrangement = Arrangement.Top,
                 customActions = customActions,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
             )
             MainScreenContents(
                 mealUiState = uiState.selectedDateDataState.mealUiState,
@@ -99,59 +112,69 @@ fun HorizontalMainScreen(
     }
 }
 
-@Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=480")
+@Preview(name = "Phone", device = "spec:width=411dp,height=891dp")
+@Preview(name = "Foldable", device = "spec:width=673.5dp,height=841dp,dpi=480")
 @Composable
-private fun HorizontalMainScreenPreview() {
-    val year = 2022
-    val month = 10
-    val selectedDate = Date(2022, 10, 11)
+private fun VerticalCalendarMainScreenPreview() {
+    val now = Date.now()
+    val (year, month) = now.yearMonth
+    var selectedDate by remember { mutableStateOf(now) }
 
-    val uiState = MainUiState(
-        userId = "",
-        year = year,
-        month = month,
-        selectedDate = selectedDate,
-        monthlyDataState = (1..3).map {
-            DailyData(
-                schoolCode = 1,
-                date = Date(2022, 10, 11).plusDays(it),
-                mealUiState = MealUiState(2022, 10, 11, previewMenus, previewNutrients),
-                scheduleUiState = ScheduleUiState(
-                    date = selectedDate,
-                    uiSchedules = previewSchedules,
+    val uiState by remember {
+        mutableStateOf(
+            MainUiState(
+                userId = "",
+                year = year,
+                month = month,
+                selectedDate = selectedDate,
+                monthlyDataState = (0..3).map {
+                    DailyData(
+                        schoolCode = 1,
+                        date = now.plusDays(it),
+                        mealUiState = MealUiState(
+                            year,
+                            month,
+                            now.dayOfMonth,
+                            previewMenus,
+                            previewNutrients
+                        ),
+                        scheduleUiState = ScheduleUiState(
+                            date = now,
+                            uiSchedules = previewSchedules,
+                        ),
+                        memoUiState = MemoUiState(
+                            date = now,
+                            memos = previewMemos,
+                        ),
+                    )
+                },
+                isLoading = false,
+                screenMode = ScreenMode.Default,
+                selectedSchool = School(
+                    name = "어떤 학교",
+                    schoolCode = -1,
                 ),
-                memoUiState = MemoUiState(
-                    date = selectedDate,
-                    memos = previewMemos,
-                ),
+                isNutrientPopupVisible = false,
+                isMemoPopupVisible = false,
+                dailyAlarmIconState = DailyAlarmIconState.Enabled,
             )
-        },
-        isLoading = false,
-        screenMode = ScreenMode.Default,
-        selectedSchool = School(
-            name = "어떤 학교",
-            schoolCode = -1,
-        ),
-        isNutrientPopupVisible = false,
-        isMemoPopupVisible = false,
-        dailyAlarmIconState = DailyAlarmIconState.Enabled,
-    )
+        )
+    }
     val calendarState = rememberCalendarState(
         year = year,
         month = month,
         selectedDate = selectedDate,
     )
     BlindarTheme {
-        HorizontalMainScreen(
+        VerticalCalendarMainScreen(
             calendarPageCount = 13,
             uiState = uiState,
-            onScreenModeChange = {},
             calendarState = calendarState,
-            mealColumns = 3,
+            mealColumns = 2,
             onRefreshIconClick = {},
             onSettingsIconClick = {},
-            onDateClick = {},
-            onSwiped = { },
+            onDateClick = { selectedDate = it },
+            onSwiped = {},
             getContentDescription = { "" },
             getClickLabel = { "" },
             drawUnderlineToScheduleDate = {},
@@ -159,7 +182,9 @@ private fun HorizontalMainScreenPreview() {
             onNutrientPopupOpen = {},
             onNutrientPopupClose = {},
             onMemoPopupOpen = {},
-            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .fillMaxSize(),
         )
     }
 }
