@@ -11,11 +11,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.main.calendar.HorizontalCalendarMainScreen
 import com.practice.main.calendar.VerticalCalendarMainScreen
 import com.practice.main.popup.MemoPopup
+import com.practice.main.popup.NutrientPopup
 import com.practice.main.popup.popupPadding
 
 @Composable
@@ -62,7 +64,6 @@ fun MainScreen(
                 drawUnderlineToScheduleDate = { },
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
                 onNutrientPopupOpen = viewModel::openNutrientPopup,
-                onNutrientPopupClose = viewModel::closeNutrientPopup,
                 onMemoPopupOpen = viewModel::openMemoPopup,
                 modifier = paddingModifier,
             ) { date -> viewModel.getCustomActions(date) }
@@ -81,10 +82,27 @@ fun MainScreen(
                 drawUnderlineToScheduleDate = {},
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
                 onNutrientPopupOpen = viewModel::openNutrientPopup,
-                onNutrientPopupClose = viewModel::closeNutrientPopup,
                 onMemoPopupOpen = viewModel::openMemoPopup,
                 modifier = paddingModifier,
             ) { date -> viewModel.getCustomActions(date) }
+        }
+    }
+    if (uiState.isNutrientPopupVisible) {
+        val uiMeal = uiState.selectedDateDataState.uiMeal
+        val month = uiMeal.month
+        val day = uiMeal.day
+        MainScreenPopup(
+            onClose = viewModel::closeNutrientPopup,
+        ) {
+            NutrientPopup(
+                popupTitle = stringResource(
+                    id = R.string.nutrient_popup_title,
+                    "${month}월 ${day}일"
+                ),
+                nutrients = uiMeal.nutrients,
+                onClose = viewModel::closeNutrientPopup,
+                modifier = Modifier.padding(popupPadding),
+            )
         }
     }
     if (uiState.isMemoPopupVisible) {
