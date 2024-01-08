@@ -2,6 +2,7 @@ package com.practice.main
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hsk.ktx.date.Date
 import com.practice.api.feedback.RemoteFeedbackRepository
+import com.practice.api.toEpochDate
 import com.practice.combine.LoadMonthlyDataUseCase
 import com.practice.combine.MonthlyData
 import com.practice.designsystem.calendar.core.YearMonth
@@ -129,10 +131,16 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
+        Log.d("MainViewModel", "clicked date: $clickedDate")
         updateUiState(
             yearMonth = clickedDate.yearMonth,
             selectedDate = clickedDate,
         )
+    }
+
+    fun onDateInput(dateInMillis: Long) {
+        val date = (dateInMillis / 1000).toEpochDate(9)
+        onDateClick(date)
     }
 
     fun onRefreshIconClick(context: Context) {
