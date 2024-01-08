@@ -11,7 +11,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.main.calendar.HorizontalCalendarMainScreen
@@ -89,16 +88,11 @@ fun MainScreen(
     }
     if (uiState.isNutrientPopupVisible) {
         val uiMeal = uiState.selectedDateDataState.uiMeal
-        val month = uiMeal.month
-        val day = uiMeal.day
         MainScreenPopup(
             onClose = viewModel::closeNutrientPopup,
         ) {
             NutrientPopup(
-                popupTitle = stringResource(
-                    id = R.string.nutrient_popup_title,
-                    "${month}월 ${day}일"
-                ),
+                uiMeal = uiMeal,
                 nutrients = uiMeal.nutrients,
                 onClose = viewModel::closeNutrientPopup,
                 modifier = Modifier.padding(popupPadding),
