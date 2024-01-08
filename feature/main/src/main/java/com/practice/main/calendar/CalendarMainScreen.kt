@@ -8,22 +8,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.main.MainScreenViewModel
+import com.practice.main.mealColumns
 
 @Composable
 fun CalendarMainScreen(
     windowSize: WindowSizeClass,
     viewModel: MainScreenViewModel,
-    mealColumns: Int,
-    onNavigateToSettingsScreen: ()->Unit,
-    onNavigateToSelectSchoolScreen: ()->Unit,
+    onNavigateToSettingsScreen: () -> Unit,
+    onNavigateToSelectSchoolScreen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState
 
     val calendarState = rememberCalendarState(uiState.year, uiState.month, uiState.selectedDate)
     val calendarPageCount = 13
 
-    val context = LocalContext.current
+    val mealColumns = windowSize.mealColumns
+
     when (windowSize.widthSizeClass) {
         WindowWidthSizeClass.Expanded -> {
             HorizontalCalendarMainScreen(

@@ -38,7 +38,6 @@ fun MainScreen(
     val uiState by viewModel.uiState
 
     val backgroundModifier = modifier.background(MaterialTheme.colorScheme.surface)
-    val mealColumns = if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) 2 else 3
 
     Scaffold {
         val paddingModifier = backgroundModifier.padding(it)
@@ -51,7 +50,6 @@ fun MainScreen(
                 CalendarMainScreen(
                     windowSize = windowSize,
                     viewModel = viewModel,
-                    mealColumns = mealColumns,
                     onNavigateToSettingsScreen = onNavigateToSettingsScreen,
                     onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
                     modifier = paddingModifier,
@@ -91,3 +89,6 @@ fun MainScreen(
         }
     }
 }
+
+val WindowSizeClass.mealColumns: Int
+    get() = if (this.widthSizeClass == WindowWidthSizeClass.Compact) 2 else 3
