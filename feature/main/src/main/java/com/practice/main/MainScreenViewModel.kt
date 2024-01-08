@@ -22,6 +22,7 @@ import com.practice.domain.schedule.Schedule
 import com.practice.firebase.BlindarFirebase
 import com.practice.firebase.BlindarUserStatus
 import com.practice.main.state.DailyData
+import com.practice.main.state.MainUiMode
 import com.practice.main.state.MainUiState
 import com.practice.main.state.UiMeal
 import com.practice.main.state.UiMemo
@@ -30,6 +31,7 @@ import com.practice.main.state.UiSchedules
 import com.practice.main.state.toMealUiState
 import com.practice.main.state.toMemo
 import com.practice.main.state.toUiMemo
+import com.practice.main.state.toUiMode
 import com.practice.main.state.toUiSchedule
 import com.practice.preferences.PreferencesRepository
 import com.practice.util.date.DateUtil
@@ -103,6 +105,7 @@ class MainScreenViewModel @Inject constructor(
         selectedSchool: School = state.selectedSchool,
         isNutrientPopupVisible: Boolean = state.isNutrientPopupVisible,
         isMemoPopupVisible: Boolean = state.isMemoPopupVisible,
+        mainUiMode: MainUiMode = state.mainUiMode
     ) {
         val isCollectNeeded =
             userId != state.userId || yearMonth != state.yearMonth || selectedSchool != state.selectedSchool || loadMonthlyDataJob == null
@@ -117,6 +120,7 @@ class MainScreenViewModel @Inject constructor(
                 selectedSchool = selectedSchool,
                 isNutrientPopupVisible = isNutrientPopupVisible,
                 isMemoPopupVisible = isMemoPopupVisible,
+                mainUiMode = mainUiMode,
             )
         }
         if (isCollectNeeded) {
@@ -189,6 +193,7 @@ class MainScreenViewModel @Inject constructor(
                     name = it.schoolName,
                     schoolCode = it.schoolCode,
                 ),
+                mainUiMode = it.mainScreenMode.toUiMode(),
             )
         }
     }

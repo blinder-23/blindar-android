@@ -30,6 +30,7 @@ import com.practice.main.previewMenus
 import com.practice.main.previewNutrients
 import com.practice.main.previewSchedules
 import com.practice.main.state.DailyData
+import com.practice.main.state.MainUiMode
 import com.practice.main.state.MainUiState
 import com.practice.main.state.UiMeal
 import com.practice.main.state.UiMemos
@@ -136,6 +137,7 @@ private fun HorizontalCalendarMainScreenPreview() {
         ),
         isNutrientPopupVisible = false,
         isMemoPopupVisible = false,
+        mainUiMode = MainUiMode.CALENDAR,
     )
     val calendarState = rememberCalendarState(
         year = year,
