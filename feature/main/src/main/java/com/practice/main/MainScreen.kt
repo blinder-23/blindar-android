@@ -2,6 +2,7 @@ package com.practice.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -10,10 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.components.TitleLarge
 import com.practice.main.calendar.CalendarMainScreen
 import com.practice.main.daily.DailyMainScreen
+import com.practice.main.popup.MainScreenModePopup
 import com.practice.main.popup.MemoPopup
 import com.practice.main.popup.NutrientPopup
 import com.practice.main.popup.popupPadding
@@ -48,7 +51,7 @@ fun MainScreen(
                 TitleLarge(text = "TODO!")
             }
 
-            MainUiMode.CALENDAR -> {
+            MainUiMode.NOT_SET, MainUiMode.CALENDAR -> {
                 CalendarMainScreen(
                     windowSize = windowSize,
                     viewModel = viewModel,
@@ -93,6 +96,17 @@ fun MainScreen(
                 onMemoDelete = viewModel::deleteMemo,
                 onPopupClose = viewModel::closeMemoPopup,
                 modifier = Modifier.padding(popupPadding),
+            )
+        }
+    }
+
+    if (uiState.mainUiMode == MainUiMode.NOT_SET) {
+        MainScreenPopup(onClose = { viewModel.onMainScreenModeSet(MainUiMode.CALENDAR) }) {
+            MainScreenModePopup(
+                onScreenModeSet = viewModel::onMainScreenModeSet,
+                modifier = Modifier
+                    .padding(popupPadding)
+                    .widthIn(max = 600.dp),
             )
         }
     }
