@@ -8,6 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.practice.designsystem.components.TitleLarge
 import com.practice.main.MainScreenViewModel
+import com.practice.main.daily.picker.rememberDailyDatePickerState
+import com.practice.main.daily.picker.toTextFieldFormat
 import com.practice.main.mealColumns
 
 @Composable
@@ -23,15 +25,21 @@ fun DailyMainScreen(
 
     val mealColumns = windowSize.mealColumns
 
+    val datePickerState = rememberDailyDatePickerState(
+        initialDate = uiState.selectedDate,
+        initialTextFieldValue = uiState.selectedDate.toTextFieldFormat(),
+        onDateInput = viewModel::onDateClick,
+    )
+
     when (windowSize.widthSizeClass) {
         WindowWidthSizeClass.Expanded -> {
             HorizontalDailyMainScreen(
                 uiState = uiState,
+                datePickerState = datePickerState,
                 mealColumns = mealColumns,
-                onSchoolNameClick = onNavigateToSelectSchoolScreen,
                 onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
                 onSettingsIconClick = onNavigateToSettingsScreen,
-                onSelectDate = viewModel::onDateClick,
+                onSchoolNameClick = onNavigateToSelectSchoolScreen,
                 onNutrientPopupOpen = viewModel::openNutrientPopup,
                 onMemoPopupOpen = viewModel::openMemoPopup,
                 modifier = modifier,

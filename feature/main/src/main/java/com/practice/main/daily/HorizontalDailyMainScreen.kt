@@ -45,21 +45,15 @@ import com.practice.main.state.UiSchedules
 @Composable
 fun HorizontalDailyMainScreen(
     uiState: MainUiState,
+    datePickerState: DailyDatePickerState,
     mealColumns: Int,
     onRefreshIconClick: () -> Unit,
     onSettingsIconClick: () -> Unit,
     onSchoolNameClick: () -> Unit,
-    onSelectDate: (Date) -> Unit,
     onNutrientPopupOpen: () -> Unit,
     onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val datePickerState = rememberDailyDatePickerState(
-        initialDate = uiState.selectedDate,
-        initialTextFieldValue = uiState.selectedDate.toTextFieldFormat(),
-        onDateInput = onSelectDate,
-    )
-
     Column(modifier = modifier) {
         MainScreenTopBar(
             schoolName = uiState.selectedSchool.name,
@@ -178,14 +172,19 @@ private fun HorizontalDailyMainScreenPreview() {
         isMemoPopupVisible = false,
         mainUiMode = MainUiMode.DAILY,
     )
+    val datePickerState = rememberDailyDatePickerState(
+        initialDate = uiState.selectedDate,
+        initialTextFieldValue = uiState.selectedDate.toTextFieldFormat(),
+        onDateInput = { },
+    )
     BlindarTheme {
         HorizontalDailyMainScreen(
             uiState = uiState,
+            datePickerState = datePickerState,
             mealColumns = 3,
             onRefreshIconClick = {},
             onSettingsIconClick = {},
             onSchoolNameClick = {},
-            onSelectDate = {},
             onNutrientPopupOpen = {},
             onMemoPopupOpen = {},
             modifier = Modifier
