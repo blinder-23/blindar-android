@@ -186,7 +186,8 @@ internal fun MainScreenContents(
     mealColumns: Int,
     onNutrientPopupOpen: () -> Unit,
     onMemoPopupOpen: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    header: @Composable (() -> Unit)? = null,
 ) {
     if (uiMeal.isEmpty && memoPopupElements.isEmpty()) {
         Box(modifier = modifier) {
@@ -201,6 +202,11 @@ internal fun MainScreenContents(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(bottom = 10.dp),
         ) {
+            header?.let {
+                item {
+                    header()
+                }
+            }
             if (!uiMeal.isEmpty) {
                 item {
                     MealContent(
