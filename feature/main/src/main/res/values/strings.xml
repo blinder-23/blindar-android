@@ -10,6 +10,23 @@
     <string name="calendar_back_arrow">한 달 전으로 가기</string>
     <string name="calendar_next_arrow">한 달 후로 가기</string>
 
+    <string name="daily_date_picker_title">입력한 날짜</string>
+    <string name="daily_date_picker_headline_format">%d년 %d월 %d일 %s</string>
+    <string name="daily_date_picker_label">날짜 입력</string>
+    <string name="daily_date_picker_placeholder">예시: 20240109</string>
+    <string name="daily_date_picker_error">잘못된 날짜입니다.</string>
+
+    <string name="quick_navigation_minus_7">일주일 전</string>
+    <string name="quick_navigation_minus_1">어제</string>
+    <string name="quick_navigation_today">오늘</string>
+    <string name="quick_navigation_plus_1">내일</string>
+    <string name="quick_navigation_plus_7">일주일 후</string>
+    <string name="quick_navigation_minus_7_description">일주일 전 데이터 보기</string>
+    <string name="quick_navigation_minus_1_description">어제 데이터 보기</string>
+    <string name="quick_navigation_today_description">오늘 데이터 보기</string>
+    <string name="quick_navigation_plus_1_description">내일 데이터 보기</string>
+    <string name="quick_navigation_plus_7_description">일주일 후 데이터 보기</string>
+
     <string name="content_empty">데이터가 없습니다.</string>
     <string name="main_screen_add_memo">메모 추가하기</string>
     <string name="main_screen_add_memo_description">클릭하여 메모 추가 화면을 엽니다.</string>
