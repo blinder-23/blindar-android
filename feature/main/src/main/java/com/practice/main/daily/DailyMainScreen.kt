@@ -25,7 +25,17 @@ fun DailyMainScreen(
 
     when (windowSize.widthSizeClass) {
         WindowWidthSizeClass.Expanded -> {
-
+            HorizontalDailyMainScreen(
+                uiState = uiState,
+                mealColumns = mealColumns,
+                onSchoolNameClick = onNavigateToSelectSchoolScreen,
+                onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
+                onSettingsIconClick = onNavigateToSettingsScreen,
+                onSelectDate = viewModel::onDateClick,
+                onNutrientPopupOpen = viewModel::openNutrientPopup,
+                onMemoPopupOpen = viewModel::openMemoPopup,
+                modifier = modifier,
+            )
         }
 
         else -> {
