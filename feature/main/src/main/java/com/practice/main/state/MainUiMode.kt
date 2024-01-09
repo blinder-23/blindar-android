@@ -6,7 +6,14 @@ enum class MainUiMode {
     LOADING,
     NOT_SET,
     CALENDAR,
-    DAILY,
+    DAILY;
+
+    fun toMainScreenMode(): MainScreenMode? = when (this) {
+        LOADING -> null
+        NOT_SET -> MainScreenMode.NOT_SELECTED
+        CALENDAR -> MainScreenMode.Calendar
+        DAILY -> MainScreenMode.Daily
+    }
 }
 
 fun MainScreenMode.toUiMode() = when (this) {

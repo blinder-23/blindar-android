@@ -159,6 +159,14 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
+    fun onMainScreenModeSet(mainUiMode: MainUiMode) {
+        mainUiMode.toMainScreenMode()?.let { mainScreenMode ->
+            viewModelScope.launch {
+                preferencesRepository.updateMainScreenMode(mainScreenMode)
+            }
+        }
+    }
+
     private fun parseDailyState(monthlyData: MonthlyData): List<DailyData> {
         val allDates = mutableSetOf<Date>().apply {
             addAll(monthlyData.meals.map { Date(it.year, it.month, it.day) })
