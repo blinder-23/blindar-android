@@ -1,4 +1,4 @@
-package com.practice.main.daily.components
+package com.practice.main.daily.picker
 
 import android.util.Log
 import androidx.compose.runtime.Composable

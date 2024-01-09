@@ -1,4 +1,4 @@
-package com.practice.main.daily.components
+package com.practice.main.daily.picker
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping

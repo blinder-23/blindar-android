@@ -1,4 +1,4 @@
-package com.practice.main.daily.components
+package com.practice.main.daily.picker
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

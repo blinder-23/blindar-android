@@ -1,4 +1,4 @@
-package com.practice.main.daily
+package com.practice.main.daily.components
 
 import androidx.annotation.StringRes
 import com.practice.main.R
