@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.practice.designsystem.components.TitleLarge
 import com.practice.main.MainScreenViewModel
 import com.practice.main.daily.picker.rememberDailyDatePickerState
 import com.practice.main.daily.picker.toTextFieldFormat
@@ -47,8 +46,17 @@ fun DailyMainScreen(
         }
 
         else -> {
-            // TODO: Vertical Daily Main Screen
-            TitleLarge(text = "TODO!")
+            VerticalDailyMainScreen(
+                uiState = uiState,
+                datePickerState = datePickerState,
+                mealColumns = mealColumns,
+                onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
+                onSettingsIconClick = onNavigateToSettingsScreen,
+                onSchoolNameClick = onNavigateToSelectSchoolScreen,
+                onNutrientPopupOpen = viewModel::openNutrientPopup,
+                onMemoPopupOpen = viewModel::openMemoPopup,
+                modifier = modifier,
+            )
         }
     }
 }
