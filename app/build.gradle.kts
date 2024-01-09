@@ -27,7 +27,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 1
-        versionName = "2.2.1"
+        versionName = "2.3.0"
         signingConfig = signingConfigs.getByName("debug")
 
         testInstrumentationRunner = "com.practice.hanbitlunch.HiltTestRunner"
@@ -137,6 +137,7 @@ dependencies {
     implementation(project(":feature:main"))
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:register"))
+    implementation(project(":feature:settings"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)

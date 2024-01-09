@@ -7,7 +7,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
-data class MemoUiState(
+data class UiMemos(
     val date: Date,
     val memos: ImmutableList<UiMemo>,
 ) {
@@ -15,13 +15,13 @@ data class MemoUiState(
     val description: String
         get() = memos.joinToString(", ") { it.displayText }
 
-    fun addUiMemoAtLast(memoId: String, userId: String, date: Date): MemoUiState {
+    fun addUiMemoAtLast(memoId: String, userId: String, date: Date): UiMemos {
         return createNewMemoUiState {
             add(UiMemo.getEmptyMemo(memoId, userId, date))
         }
     }
 
-    fun updateMemo(uiMemo: UiMemo): MemoUiState {
+    fun updateMemo(uiMemo: UiMemo): UiMemos {
         return createNewMemoUiState {
             val index = indexOfFirst { it.id == uiMemo.id }
             catchIndexError {
@@ -30,11 +30,11 @@ data class MemoUiState(
         }
     }
 
-    fun deleteUiMemo(uiMemo: UiMemo): MemoUiState {
+    fun deleteUiMemo(uiMemo: UiMemo): UiMemos {
         return createNewMemoUiState { removeAll { it.id == uiMemo.id } }
     }
 
-    private fun createNewMemoUiState(block: MutableList<UiMemo>.() -> Unit): MemoUiState {
+    private fun createNewMemoUiState(block: MutableList<UiMemo>.() -> Unit): UiMemos {
         return this.copy(memos = editMemoList(block))
     }
 
@@ -54,7 +54,7 @@ data class MemoUiState(
     }
 
     companion object {
-        val EmptyMemoUiState = MemoUiState(
+        val EmptyUiMemos = UiMemos(
             date = Date.now(),
             memos = persistentListOf(),
         )

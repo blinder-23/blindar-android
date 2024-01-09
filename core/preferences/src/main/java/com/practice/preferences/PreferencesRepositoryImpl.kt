@@ -9,6 +9,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.practice.preferences.preferences.MainScreenMode
+import com.practice.preferences.preferences.ThemeMode
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -32,9 +34,9 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
     private val TAG = "PreferencesRepository"
 
     private object PreferenceKeys {
-        val UI_MODE = stringPreferencesKey("ui-mode")
+//        val UI_MODE = stringPreferencesKey("ui-mode")
+        val MAIN_SCREEN_MODE = stringPreferencesKey("main-screen-mode")
         val THEME_MODE = stringPreferencesKey("theme-mode")
-        val SCREEN_MODE = stringPreferencesKey("screen-mode")
         val FIRST_EXECUTION = booleanPreferencesKey("first-execution")
         val RUNNING_WORKS_COUNT = intPreferencesKey("running-works-count")
         val SCHOOL_CODE = intPreferencesKey("school-id")
@@ -57,9 +59,9 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
             mapUserPreferences(preferences)
         }.stateIn(this, SharingStarted.Eagerly, UserPreferences.emptyPreferences)
 
-    override suspend fun updateUiMode(uiMode: UiMode) {
+    override suspend fun updateMainScreenMode(mainScreenMode: MainScreenMode) {
         edit {
-            it[PreferenceKeys.UI_MODE] = uiMode.name
+            it[PreferenceKeys.MAIN_SCREEN_MODE] = mainScreenMode.name
         }
     }
 
@@ -72,12 +74,6 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
     override suspend fun updateIsFirstExecution(isFirstExecution: Boolean) {
         edit {
             it[PreferenceKeys.FIRST_EXECUTION] = isFirstExecution
-        }
-    }
-
-    override suspend fun updateScreenMode(screenMode: ScreenMode) {
-        edit {
-            it[PreferenceKeys.SCREEN_MODE] = screenMode.name
         }
     }
 
@@ -144,14 +140,11 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
 
 
     private fun mapUserPreferences(preferences: Preferences): UserPreferences {
-        val uiMode = UiMode.valueOf(
-            value = preferences[PreferenceKeys.UI_MODE] ?: UiMode.Graphic.name
+        val mainScreenMode = MainScreenMode.valueOf(
+            value = preferences[PreferenceKeys.MAIN_SCREEN_MODE] ?: MainScreenMode.NOT_SELECTED.name
         )
         val themeMode = ThemeMode.valueOf(
             value = preferences[PreferenceKeys.THEME_MODE] ?: ThemeMode.SystemDefault.name
-        )
-        val screenMode = ScreenMode.valueOf(
-            value = preferences[PreferenceKeys.SCREEN_MODE] ?: ScreenMode.Default.name
         )
         val isFirstExecution = preferences[PreferenceKeys.FIRST_EXECUTION] ?: true
         val runningWorksCount = preferences[PreferenceKeys.RUNNING_WORKS_COUNT] ?: 0
@@ -160,9 +153,8 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         val memoIdCounter = preferences[PreferenceKeys.MEMO_ID_COUNTER] ?: 0
         val isDailyNotificationEnabled = preferences[PreferenceKeys.NOTIFICATION_ENABLED] ?: false
         return UserPreferences(
-            uiMode = uiMode,
+            mainScreenMode = mainScreenMode,
             themeMode = themeMode,
-            screenMode = screenMode,
             isFirstExecution = isFirstExecution,
             runningWorksCount = runningWorksCount,
             schoolCode = schoolCode,

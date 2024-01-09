@@ -15,7 +15,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.firebase.R
-import com.practice.hanbitlunch.screen.BlindarNavHost
 import com.practice.preferences.PreferencesRepository
 import com.practice.util.LocalActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,7 +43,7 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize(),
                         googleSignInClient = getGoogleSignInClient(),
                         onNavigateToMainScreen = {
-                            WindowCompat.setDecorFitsSystemWindows(window, true)
+//                            WindowCompat.setDecorFitsSystemWindows(window, true)
                         }
                     )
                 }

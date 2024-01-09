@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
+import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
@@ -29,11 +30,22 @@ class FetchRemoteMealWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
+        clearDatabaseIfValueIsSet()
         preferencesRepository.increaseRunningWorkCount()
         val result = fetchRemoteMeals()
         preferencesRepository.decreaseRunningWorkCount()
-        Log.d("FetchRemoteMealWorker", "finished!")
+        Log.d(TAG, "finished!")
         return result
+    }
+
+    private suspend fun clearDatabaseIfValueIsSet() {
+        val clearDatabase = inputData.getBoolean(clearDatabaseKey, false)
+        if (clearDatabase) {
+            Log.d(TAG, "clear database")
+            localRepository.clear()
+        } else {
+            Log.d(TAG, "doesn't clear database")
+        }
     }
 
     private suspend fun fetchRemoteMeals(): Result {
@@ -64,7 +76,7 @@ class FetchRemoteMealWorker @AssistedInject constructor(
 
     private suspend fun fetchMeals(schoolCode: Int, year: Int, month: Int): List<Meal> =
         remoteRepository.getMeals(schoolCode, year, month).apply {
-            Log.d("FetchRemoteMealWorker", "$schoolCode meal $year $month: ${meals.size}")
+            Log.d(TAG, "$schoolCode meal $year $month: ${meals.size}")
         }.meals
 
     private suspend fun storeMeals(meals: List<Meal>) {
@@ -72,8 +84,20 @@ class FetchRemoteMealWorker @AssistedInject constructor(
     }
 
     private fun handleException(e: Exception, year: Int, month: Int): Result {
-        Log.e("FetchRemoteMealWorker", "$year, $month has an exception: ${e.message}")
+        Log.e(TAG, "$year, $month has an exception: ${e.message}")
         return Result.failure()
+    }
+
+    companion object {
+        fun createData(clearDatabase: Boolean): Data {
+            return Data.Builder()
+                .putBoolean(clearDatabaseKey, clearDatabase)
+                .build()
+        }
+
+        private const val clearDatabaseKey = "clear-meal-database"
+
+        private const val TAG = "FetchRemoteMealWorker"
     }
 }
 
@@ -91,9 +115,10 @@ fun setPeriodicFetchMealWork(workManager: WorkManager) {
     )
 }
 
-fun setOneTimeFetchMealWork(workManager: WorkManager) {
+fun setOneTimeFetchMealWork(workManager: WorkManager, clearDatabase: Boolean = false) {
     val oneTimeWork = OneTimeWorkRequestBuilder<FetchRemoteMealWorker>()
         .addTag(oneTimeMealWorkTag)
+        .setInputData(FetchRemoteMealWorker.createData(clearDatabase))
         .build()
     workManager.enqueueUniqueWork(
         oneTimeMealWorkTag,

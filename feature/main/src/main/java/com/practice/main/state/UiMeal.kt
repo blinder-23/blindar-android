@@ -9,8 +9,8 @@ import kotlinx.collections.immutable.toPersistentList
 /**
  * Ui state of meal
  */
-// TODO: UiMeal로 이름 바꾸기?
-data class MealUiState(
+// TODO: 향후 하루에 여러 개의 식단을 지우너하게 되면 UiMeals 추가하기
+data class UiMeal(
     val year: Int,
     val month: Int,
     val day: Int,
@@ -24,7 +24,7 @@ data class MealUiState(
         get() = if (menus.isEmpty()) "식단이 없습니다." else menus.joinToString(", ") { it.name }
 
     companion object {
-        val EmptyMealState = MealUiState(
+        val EmptyUiMeal = UiMeal(
             year = Date.now().year,
             month = Date.now().month,
             day = Date.now().dayOfMonth,
@@ -35,9 +35,9 @@ data class MealUiState(
 }
 
 fun Meal.toMealUiState() = if (this.menus.isEmpty()) {
-    MealUiState.EmptyMealState
+    UiMeal.EmptyUiMeal
 } else {
-    MealUiState(
+    UiMeal(
         year = year,
         month = month,
         day = day,

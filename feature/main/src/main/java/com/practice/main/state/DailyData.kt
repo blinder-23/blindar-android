@@ -9,16 +9,16 @@ import kotlinx.collections.immutable.toPersistentList
 data class DailyData(
     val schoolCode: Int,
     val date: Date,
-    val mealUiState: MealUiState,
-    val scheduleUiState: ScheduleUiState,
-    val memoUiState: MemoUiState,
+    val uiMeal: UiMeal,
+    val uiSchedules: UiSchedules,
+    val uiMemos: UiMemos,
 ) : Comparable<DailyData> {
     override fun compareTo(other: DailyData): Int {
         return date.compareTo(other.date)
     }
 
     val memoPopupElements: ImmutableList<MemoPopupElement>
-        get() = mergeSchedulesAndMemos(scheduleUiState, memoUiState)
+        get() = mergeSchedulesAndMemos(uiSchedules, uiMemos)
 
     companion object {
         private const val EMPTY_SCHOOL_CODE = -1
@@ -26,14 +26,14 @@ data class DailyData(
         val sample = DailyData(
             schoolCode = EMPTY_SCHOOL_CODE,
             date = Date(2022, 10, 11),
-            mealUiState = MealUiState(
+            uiMeal = UiMeal(
                 year = 2022,
                 month = 10,
                 day = 11,
                 menus = (1..6).map { Menu("식단 $it") }.toPersistentList(),
                 nutrients = (0..3).map { Nutrient("탄수화물", 123.0, "g") }.toImmutableList()
             ),
-            scheduleUiState = ScheduleUiState(
+            uiSchedules = UiSchedules(
                 date = Date(2022, 10, 11),
                 uiSchedules = (1..3).map {
                     UiSchedule(
@@ -47,7 +47,7 @@ data class DailyData(
                     )
                 }.toPersistentList(),
             ),
-            memoUiState = MemoUiState(
+            uiMemos = UiMemos(
                 date = Date(2022, 10, 11),
                 memos = (1..3).map {
                     UiMemo(
@@ -65,9 +65,9 @@ data class DailyData(
         val Empty = DailyData(
             schoolCode = EMPTY_SCHOOL_CODE,
             date = DateUtil.today(),
-            mealUiState = MealUiState.EmptyMealState,
-            scheduleUiState = ScheduleUiState.EmptyScheduleState,
-            memoUiState = MemoUiState.EmptyMemoUiState,
+            uiMeal = UiMeal.EmptyUiMeal,
+            uiSchedules = UiSchedules.EmptyUiSchedules,
+            uiMemos = UiMemos.EmptyUiMemos,
         )
     }
 }

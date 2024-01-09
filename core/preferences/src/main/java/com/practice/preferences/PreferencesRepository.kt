@@ -1,5 +1,7 @@
 package com.practice.preferences
 
+import com.practice.preferences.preferences.MainScreenMode
+import com.practice.preferences.preferences.ThemeMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -12,10 +14,9 @@ interface PreferencesRepository : CoroutineScope {
 
     val userPreferencesFlow: StateFlow<UserPreferences>
 
-    suspend fun updateUiMode(uiMode: UiMode)
+    suspend fun updateMainScreenMode(mainScreenMode: MainScreenMode)
     suspend fun updateThemeMode(themeMode: ThemeMode)
     suspend fun updateIsFirstExecution(isFirstExecution: Boolean)
-    suspend fun updateScreenMode(screenMode: ScreenMode)
     suspend fun increaseRunningWorkCount()
     suspend fun decreaseRunningWorkCount()
     suspend fun updateSelectedSchool(schoolCode: Int, schoolName: String)

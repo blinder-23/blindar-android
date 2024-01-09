@@ -1,4 +1,4 @@
-package com.practice.hanbitlunch.screen
+package com.practice.hanbitlunch
 
 import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -25,13 +25,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.practice.hanbitlunch.R
 import com.practice.main.MainScreen
 import com.practice.onboarding.onboarding.OnboardingScreen
 import com.practice.onboarding.splash.SplashScreen
 import com.practice.register.phonenumber.VerifyPhoneNumber
 import com.practice.register.registerform.RegisterFormScreen
 import com.practice.register.selectschool.SelectSchoolScreen
+import com.practice.settings.Settings
 import com.practice.util.makeToast
 
 private val TAG = "BlindarNavHost"
@@ -130,6 +130,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
                 onAutoLoginFail()
             },
             modifier = Modifier
+                .safeDrawingPadding()
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface),
         )
@@ -154,6 +155,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
             },
             googleSignInClient = googleSignInClient,
             modifier = Modifier
+                .safeDrawingPadding()
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface),
         )
@@ -172,6 +174,17 @@ fun NavGraphBuilder.blindarMainNavGraph(
             onNavigateToSelectSchoolScreen = {
                 navController.navigate(SELECT_SCHOOL)
             },
+            onNavigateToSettingsScreen = {
+                navController.navigate(SETTINGS)
+            },
+        )
+    }
+    composable(SETTINGS) {
+        Settings(
+            onBackButtonClick = {
+                navController.popBackStack()
+            },
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }
@@ -242,6 +255,7 @@ private const val VERIFY_PHONE = "verify_phone"
 private const val REGISTER_FORM = "register_form"
 private const val SELECT_SCHOOL = "select_school"
 private const val MAIN = "main_screen"
+private const val SETTINGS = "settings"
 
 private val NavBackStackEntry.route: String?
     get() = this.destination.route
