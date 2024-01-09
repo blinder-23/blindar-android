@@ -130,6 +130,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
                 onAutoLoginFail()
             },
             modifier = Modifier
+                .safeDrawingPadding()
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface),
         )
@@ -154,6 +155,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
             },
             googleSignInClient = googleSignInClient,
             modifier = Modifier
+                .safeDrawingPadding()
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface),
         )

@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize(),
                         googleSignInClient = getGoogleSignInClient(),
                         onNavigateToMainScreen = {
-                            WindowCompat.setDecorFitsSystemWindows(window, true)
+//                            WindowCompat.setDecorFitsSystemWindows(window, true)
                         }
                     )
                 }

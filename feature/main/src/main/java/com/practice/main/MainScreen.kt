@@ -13,9 +13,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.practice.designsystem.components.TitleLarge
 import com.practice.main.calendar.CalendarMainScreen
 import com.practice.main.daily.DailyMainScreen
+import com.practice.main.loading.LoadingMainScreen
 import com.practice.main.popup.MainScreenModePopup
 import com.practice.main.popup.MemoPopup
 import com.practice.main.popup.NutrientPopup
@@ -48,7 +48,9 @@ fun MainScreen(
         val paddingModifier = backgroundModifier.padding(it)
         when (uiState.mainUiMode) {
             MainUiMode.LOADING -> {
-                TitleLarge(text = "TODO!")
+                LoadingMainScreen(
+                    modifier = paddingModifier,
+                )
             }
 
             MainUiMode.NOT_SET, MainUiMode.CALENDAR -> {
