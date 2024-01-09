@@ -103,7 +103,7 @@ private fun Date.toHeadlineFormat(): String {
         year,
         month,
         dayOfMonth,
-        dayOfWeek.fullName,
+        dayOfWeek.shortName,
     )
 }
 

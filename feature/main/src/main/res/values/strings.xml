@@ -11,7 +11,7 @@
     <string name="calendar_next_arrow">한 달 후로 가기</string>
 
     <string name="daily_date_picker_title">입력한 날짜</string>
-    <string name="daily_date_picker_headline_format">%d년 %d월 %d일 %s</string>
+    <string name="daily_date_picker_headline_format">%d년 %d월 %d일 (%s)</string>
     <string name="daily_date_picker_label">날짜 입력</string>
     <string name="daily_date_picker_placeholder">예시: 20240109</string>
     <string name="daily_date_picker_error">잘못된 날짜입니다.</string>
