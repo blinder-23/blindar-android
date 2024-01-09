@@ -34,7 +34,8 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
     private val TAG = "PreferencesRepository"
 
     private object PreferenceKeys {
-        val UI_MODE = stringPreferencesKey("ui-mode")
+//        val UI_MODE = stringPreferencesKey("ui-mode")
+        val MAIN_SCREEN_MODE = stringPreferencesKey("main-screen-mode")
         val THEME_MODE = stringPreferencesKey("theme-mode")
         val FIRST_EXECUTION = booleanPreferencesKey("first-execution")
         val RUNNING_WORKS_COUNT = intPreferencesKey("running-works-count")
@@ -60,7 +61,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
 
     override suspend fun updateMainScreenMode(mainScreenMode: MainScreenMode) {
         edit {
-            it[PreferenceKeys.UI_MODE] = mainScreenMode.name
+            it[PreferenceKeys.MAIN_SCREEN_MODE] = mainScreenMode.name
         }
     }
 
@@ -140,7 +141,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
 
     private fun mapUserPreferences(preferences: Preferences): UserPreferences {
         val mainScreenMode = MainScreenMode.valueOf(
-            value = preferences[PreferenceKeys.UI_MODE] ?: MainScreenMode.Calendar.name
+            value = preferences[PreferenceKeys.MAIN_SCREEN_MODE] ?: MainScreenMode.NOT_SELECTED.name
         )
         val themeMode = ThemeMode.valueOf(
             value = preferences[PreferenceKeys.THEME_MODE] ?: ThemeMode.SystemDefault.name
