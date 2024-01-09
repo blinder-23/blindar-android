@@ -187,14 +187,21 @@ internal fun MainScreenContents(
     onNutrientPopupOpen: () -> Unit,
     onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
+    emptyContentAlignment: Alignment = Alignment.Center,
     header: @Composable (() -> Unit)? = null,
 ) {
     if (uiMeal.isEmpty && memoPopupElements.isEmpty()) {
         Box(modifier = modifier) {
-            EmptyContentIndicator(
-                onClick = onMemoPopupOpen,
-                modifier = Modifier.align(Alignment.Center),
-            )
+            Column(
+                modifier = Modifier
+                    .align(emptyContentAlignment)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                header?.invoke()
+                EmptyContentIndicator(onClick = onMemoPopupOpen)
+            }
         }
     } else {
         LazyColumn(
@@ -202,10 +209,8 @@ internal fun MainScreenContents(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(bottom = 10.dp),
         ) {
-            header?.let {
-                item {
-                    header()
-                }
+            item {
+                header?.invoke()
             }
             if (!uiMeal.isEmpty) {
                 item {

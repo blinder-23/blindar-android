@@ -90,7 +90,10 @@ private fun VerticalDailyMainScreenContents(
             mealColumns = mealColumns,
             onNutrientPopupOpen = onNutrientPopupOpen,
             onMemoPopupOpen = onMemoPopupOpen,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            emptyContentAlignment = Alignment.TopCenter,
             header = {
                 DatePickerCard(
                     datePickerState = datePickerState,
