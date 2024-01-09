@@ -43,6 +43,7 @@ android {
 dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:preferences"))
+    implementation(project(":core:util"))
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))

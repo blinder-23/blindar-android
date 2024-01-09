@@ -34,10 +34,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
+import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
+import com.practice.main.previewMenus
 import com.practice.main.state.Nutrient
+import com.practice.main.state.UiMeal
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -46,7 +49,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NutrientPopup(
-    popupTitle: String,
+    uiMeal: UiMeal,
     nutrients: ImmutableList<Nutrient>,
     onClose: () -> Unit,
     modifier: Modifier = Modifier
@@ -55,6 +58,10 @@ fun NutrientPopup(
     val (chipNutrients, listNutrients) = nutrients.partition { nutrient ->
         chipTargetNames.contains(nutrient.name)
     }
+
+    val month = uiMeal.month
+    val day = uiMeal.day
+    val popupTitle = stringResource(id = R.string.nutrient_popup_title, "${month}월 ${day}일")
 
     val shape = RoundedCornerShape(16.dp)
     LazyColumn(
@@ -274,6 +281,7 @@ private fun NutrientPopupCloseButtonPreview() {
 @Composable
 private fun NutrientPopupPreview() {
     BlindarTheme {
+        val now = Date.now()
         Box(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.primary)
@@ -281,7 +289,13 @@ private fun NutrientPopupPreview() {
                 .fillMaxSize()
         ) {
             NutrientPopup(
-                popupTitle = stringResource(id = R.string.nutrient_popup_title, "10월 27일"),
+                uiMeal = UiMeal(
+                    now.year,
+                    now.month,
+                    now.dayOfMonth,
+                    previewMenus,
+                    previewNutrients
+                ),
                 nutrients = previewNutrients,
                 onClose = {},
                 modifier = Modifier

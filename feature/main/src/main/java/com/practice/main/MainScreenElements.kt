@@ -58,8 +58,6 @@ import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.main.popup.NutrientPopup
-import com.practice.main.popup.popupPadding
 import com.practice.main.state.MemoPopupElement
 import com.practice.main.state.Menu
 import com.practice.main.state.Nutrient
@@ -186,18 +184,24 @@ internal fun MainScreenContents(
     uiMeal: UiMeal,
     memoPopupElements: ImmutableList<MemoPopupElement>,
     mealColumns: Int,
-    isNutrientPopupVisible: Boolean,
     onNutrientPopupOpen: () -> Unit,
-    onNutrientPopupClose: () -> Unit,
     onMemoPopupOpen: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    emptyContentAlignment: Alignment = Alignment.Center,
+    header: @Composable (() -> Unit)? = null,
 ) {
     if (uiMeal.isEmpty && memoPopupElements.isEmpty()) {
         Box(modifier = modifier) {
-            EmptyContentIndicator(
-                onClick = onMemoPopupOpen,
-                modifier = Modifier.align(Alignment.Center),
-            )
+            Column(
+                modifier = Modifier
+                    .align(emptyContentAlignment)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                header?.invoke()
+                EmptyContentIndicator(onClick = onMemoPopupOpen)
+            }
         }
     } else {
         LazyColumn(
@@ -205,14 +209,15 @@ internal fun MainScreenContents(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(bottom = 10.dp),
         ) {
+            item {
+                header?.invoke()
+            }
             if (!uiMeal.isEmpty) {
                 item {
                     MealContent(
                         uiMeal = uiMeal,
                         columns = mealColumns,
-                        isNutrientPopupVisible = isNutrientPopupVisible,
                         onNutrientPopupOpen = onNutrientPopupOpen,
-                        onNutrientPopupClose = onNutrientPopupClose,
                     )
                 }
             }
@@ -259,9 +264,7 @@ private fun EmptyContentIndicator(
 internal fun MealContent(
     uiMeal: UiMeal,
     columns: Int,
-    isNutrientPopupVisible: Boolean,
     onNutrientPopupOpen: () -> Unit,
-    onNutrientPopupClose: () -> Unit,
     modifier: Modifier = Modifier,
     itemPadding: Dp = 16.dp,
 ) {
@@ -279,23 +282,6 @@ internal fun MealContent(
                 val filledMenus = fillMenus(menus, columns)
                 MenuRow(menus = filledMenus)
             }
-        }
-    }
-    if (isNutrientPopupVisible) {
-        val month = uiMeal.month
-        val day = uiMeal.day
-        MainScreenPopup(
-            onClose = onNutrientPopupClose,
-        ) {
-            NutrientPopup(
-                popupTitle = stringResource(
-                    id = R.string.nutrient_popup_title,
-                    "${month}월 ${day}일"
-                ),
-                nutrients = uiMeal.nutrients,
-                onClose = onNutrientPopupClose,
-                modifier = Modifier.padding(popupPadding),
-            )
         }
     }
 }
@@ -529,9 +515,7 @@ private fun MainScreenContentsPreview() {
                 ),
             ),
             mealColumns = 2,
-            isNutrientPopupVisible = false,
             onNutrientPopupOpen = {},
-            onNutrientPopupClose = {},
             onMemoPopupOpen = {},
             modifier = Modifier.height(500.dp),
         )

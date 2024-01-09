@@ -2,6 +2,7 @@ package com.practice.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -10,13 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.practice.designsystem.calendar.core.rememberCalendarState
-import com.practice.main.calendar.HorizontalCalendarMainScreen
-import com.practice.main.calendar.VerticalCalendarMainScreen
+import com.practice.designsystem.components.TitleLarge
+import com.practice.main.calendar.CalendarMainScreen
+import com.practice.main.daily.DailyMainScreen
+import com.practice.main.popup.MainScreenModePopup
 import com.practice.main.popup.MemoPopup
+import com.practice.main.popup.NutrientPopup
 import com.practice.main.popup.popupPadding
+import com.practice.main.state.MainUiMode
 
 @Composable
 fun MainScreen(
@@ -36,55 +40,50 @@ fun MainScreen(
         viewModel.onLaunch()
     }
 
-    val calendarPageCount = 13
-
     val uiState by viewModel.uiState
-    val calendarState = rememberCalendarState(uiState.year, uiState.month, uiState.selectedDate)
 
     val backgroundModifier = modifier.background(MaterialTheme.colorScheme.surface)
-    val mealColumns = if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) 2 else 3
 
-    val context = LocalContext.current
     Scaffold {
         val paddingModifier = backgroundModifier.padding(it)
-        if (windowSize.widthSizeClass == WindowWidthSizeClass.Expanded) {
-            HorizontalCalendarMainScreen(
-                calendarPageCount = calendarPageCount,
-                uiState = uiState,
-                calendarState = calendarState,
-                mealColumns = mealColumns,
-                onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
-                onSettingsIconClick = onNavigateToSettingsScreen,
-                onDateClick = viewModel::onDateClick,
-                onSwiped = viewModel::onSwiped,
-                getContentDescription = viewModel::getContentDescription,
-                getClickLabel = viewModel::getClickLabel,
-                drawUnderlineToScheduleDate = { },
-                onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
-                onNutrientPopupOpen = viewModel::openNutrientPopup,
-                onNutrientPopupClose = viewModel::closeNutrientPopup,
-                onMemoPopupOpen = viewModel::openMemoPopup,
-                modifier = paddingModifier,
-            ) { date -> viewModel.getCustomActions(date) }
-        } else {
-            VerticalCalendarMainScreen(
-                calendarPageCount = calendarPageCount,
-                uiState = uiState,
-                calendarState = calendarState,
-                mealColumns = mealColumns,
-                onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
-                onSettingsIconClick = onNavigateToSettingsScreen,
-                onDateClick = viewModel::onDateClick,
-                onSwiped = viewModel::onSwiped,
-                getContentDescription = viewModel::getContentDescription,
-                getClickLabel = viewModel::getClickLabel,
-                drawUnderlineToScheduleDate = {},
-                onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
-                onNutrientPopupOpen = viewModel::openNutrientPopup,
-                onNutrientPopupClose = viewModel::closeNutrientPopup,
-                onMemoPopupOpen = viewModel::openMemoPopup,
-                modifier = paddingModifier,
-            ) { date -> viewModel.getCustomActions(date) }
+        when (uiState.mainUiMode) {
+            MainUiMode.LOADING -> {
+                TitleLarge(text = "TODO!")
+            }
+
+            MainUiMode.NOT_SET, MainUiMode.CALENDAR -> {
+                CalendarMainScreen(
+                    windowSize = windowSize,
+                    viewModel = viewModel,
+                    onNavigateToSettingsScreen = onNavigateToSettingsScreen,
+                    onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
+                    modifier = paddingModifier,
+                )
+            }
+
+            MainUiMode.DAILY -> {
+                DailyMainScreen(
+                    windowSize = windowSize,
+                    viewModel = viewModel,
+                    onNavigateToSettingsScreen = onNavigateToSettingsScreen,
+                    onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
+                    modifier = paddingModifier,
+                )
+            }
+        }
+    }
+
+    if (uiState.isNutrientPopupVisible) {
+        val uiMeal = uiState.selectedDateDataState.uiMeal
+        MainScreenPopup(
+            onClose = viewModel::closeNutrientPopup,
+        ) {
+            NutrientPopup(
+                uiMeal = uiMeal,
+                nutrients = uiMeal.nutrients,
+                onClose = viewModel::closeNutrientPopup,
+                modifier = Modifier.padding(popupPadding),
+            )
         }
     }
     if (uiState.isMemoPopupVisible) {
@@ -100,4 +99,18 @@ fun MainScreen(
             )
         }
     }
+
+    if (uiState.mainUiMode == MainUiMode.NOT_SET) {
+        MainScreenPopup(onClose = { viewModel.onMainScreenModeSet(MainUiMode.CALENDAR) }) {
+            MainScreenModePopup(
+                onScreenModeSet = viewModel::onMainScreenModeSet,
+                modifier = Modifier
+                    .padding(popupPadding)
+                    .widthIn(max = 600.dp),
+            )
+        }
+    }
 }
+
+val WindowSizeClass.mealColumns: Int
+    get() = if (this.widthSizeClass == WindowWidthSizeClass.Compact) 2 else 3

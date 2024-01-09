@@ -14,6 +14,7 @@ data class MainUiState(
     val selectedSchool: School,
     val isNutrientPopupVisible: Boolean,
     val isMemoPopupVisible: Boolean,
+    val mainUiMode: MainUiMode,
 ) {
     val yearMonth: YearMonth
         get() = YearMonth(year, month)
@@ -70,6 +71,7 @@ data class MainUiState(
             selectedSchool = School.EmptySchool,
             isNutrientPopupVisible = false,
             isMemoPopupVisible = false,
+            mainUiMode = MainUiMode.LOADING,
         )
     }
 }

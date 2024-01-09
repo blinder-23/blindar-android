@@ -10,6 +10,23 @@
     <string name="calendar_back_arrow">한 달 전으로 가기</string>
     <string name="calendar_next_arrow">한 달 후로 가기</string>
 
+    <string name="daily_date_picker_title">입력한 날짜</string>
+    <string name="daily_date_picker_headline_format">%d년 %d월 %d일 (%s)</string>
+    <string name="daily_date_picker_label">날짜 입력</string>
+    <string name="daily_date_picker_placeholder">예시: 20240109</string>
+    <string name="daily_date_picker_error">잘못된 날짜입니다.</string>
+
+    <string name="quick_navigation_minus_7">일주일 전</string>
+    <string name="quick_navigation_minus_1">어제</string>
+    <string name="quick_navigation_today">오늘</string>
+    <string name="quick_navigation_plus_1">내일</string>
+    <string name="quick_navigation_plus_7">일주일 후</string>
+    <string name="quick_navigation_minus_7_description">일주일 전 데이터 보기</string>
+    <string name="quick_navigation_minus_1_description">어제 데이터 보기</string>
+    <string name="quick_navigation_today_description">오늘 데이터 보기</string>
+    <string name="quick_navigation_plus_1_description">내일 데이터 보기</string>
+    <string name="quick_navigation_plus_7_description">일주일 후 데이터 보기</string>
+
     <string name="content_empty">데이터가 없습니다.</string>
     <string name="main_screen_add_memo">메모 추가하기</string>
     <string name="main_screen_add_memo_description">클릭하여 메모 추가 화면을 엽니다.</string>
@@ -33,6 +50,13 @@
     <string name="memo_popup_clear_text">%s 내용 지우기</string>
     <string name="memo_popup_item_delete">%s 삭제하기</string>
     <string name="memo_popup_close">닫기</string>
+
+    <string name="ui_mode_popup_title">하루씩 보기 모드를 켤까요?</string>
+    <string name="ui_mode_popup_body">스크린 리더에 최적화된 하루씩 보기 모드를 사용해 보세요. 달력 대신 날짜를 직접 입력하여 정보를 볼 수 있습니다.\n\n화면 모드는 설정 화면에서도 바꿀 수 있습니다.</string>
+    <string name="ui_mode_popup_use_calendar">사용하지 않기</string>
+    <string name="ui_mode_popup_use_daily">사용하기</string>
+    <string name="ui_mode_popup_calendar_mode_set">달력으로 보기 모드를 사용합니다.</string>
+    <string name="ui_mode_popup_daily_mode_set">하루씩 보기 모드를 사용합니다.</string>
 
     <string name="feedback_popup_title">피드백 보내기</string>
     <string name="feedback_popup_textfield_placeholder">블린더 사용 후기를 알려주세요!</string>
