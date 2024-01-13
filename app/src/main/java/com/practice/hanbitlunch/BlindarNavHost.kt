@@ -184,7 +184,9 @@ fun NavGraphBuilder.blindarMainNavGraph(
             onBackButtonClick = {
                 navController.popBackStack()
             },
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .safeDrawingPadding()
+                .fillMaxSize(),
         )
     }
 }
