@@ -75,7 +75,9 @@ class FetchRemoteScheduleWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchSchedules(schoolCode: Int, year: Int, month: Int): List<Schedule> =
-        remoteRepository.getSchedules(schoolCode, year, month).schedules
+        remoteRepository.getSchedules(schoolCode, year, month).schedules.apply {
+            Log.d(TAG, "$schoolCode schedule $year $month: $size")
+        }
 
     private suspend fun storeSchedules(schedules: List<Schedule>) {
         localRepository.insertSchedules(schedules)
