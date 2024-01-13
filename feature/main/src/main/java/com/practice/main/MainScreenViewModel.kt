@@ -69,6 +69,7 @@ class MainScreenViewModel @Inject constructor(
     private val selectedDateFlow: MutableStateFlow<Date>
 
     private var loadMonthlyDataJob: Job? = null
+    private var initialWorkCount: Int? = null
 
     init {
         val current = Date.now()
@@ -130,7 +131,7 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
-        Log.d("MainViewModel", "clicked date: $clickedDate")
+        Log.d(TAG, "clicked date: $clickedDate")
         updateUiState(
             yearMonth = clickedDate.yearMonth,
             selectedDate = clickedDate,
@@ -197,8 +198,12 @@ class MainScreenViewModel @Inject constructor(
 
     private suspend fun collectPreferences() {
         preferencesRepository.userPreferencesFlow.collectLatest {
+            if (initialWorkCount == null) {
+                initialWorkCount = it.runningWorksCount
+            }
+
             updateUiState(
-                isLoading = (it.runningWorksCount != 0),
+                isLoading = (it.runningWorksCount != initialWorkCount),
                 selectedSchool = School(
                     name = it.schoolName,
                     schoolCode = it.schoolCode,
@@ -335,6 +340,9 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
+    companion object {
+        private const val TAG = "MainScreenViewModel"
+    }
 }
 
 private fun MonthlyData.getMeal(date: Date): UiMeal {
