@@ -28,7 +28,7 @@ fun Meal.toRoomEntity() = MealEntityRoom(
     calorie = calorie,
     nutrient = nutrients.toJson(),
     schoolCode = schoolCode,
-    mealName = "",
+    mealName = mealTime,
 )
 
 fun MealEntityRoom.toMealEntity(): Meal {
@@ -41,6 +41,7 @@ fun MealEntityRoom.toMealEntity(): Meal {
         origins = origin.jsonToList(),
         calorie = calorie,
         nutrients = nutrient.jsonToList(),
+        mealTime = mealName,
     )
 }
 

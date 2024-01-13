@@ -43,7 +43,7 @@ object TestUtil {
                 ),
                 calorie = 10.0,
                 nutrients = listOf(Nutrient("protein", "g", 10.0)),
-                mealName = "test meal",
+                mealTime = "test meal",
             )
         }
 }

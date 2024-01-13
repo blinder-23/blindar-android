@@ -20,7 +20,8 @@ class ConverterTest {
             menus = listOf(Menu("menu", listOf(1))),
             origins = listOf(Origin("ingredient", "korea")),
             calorie = 10.0,
-            nutrients = listOf(Nutrient("protein", "g", 10.0))
+            nutrients = listOf(Nutrient("protein", "g", 10.0)),
+            mealTime = "중식",
         )
         val expected = com.practice.meal.room.MealEntityRoom(
             date = "20000103",
@@ -28,7 +29,8 @@ class ConverterTest {
             origin = """[{"ingredient":"ingredient","origin":"korea"}]""",
             calorie = meal.calorie,
             nutrient = """[{"name":"protein","unit":"g","amount":10.0}]""",
-            schoolCode = meal.schoolCode
+            schoolCode = meal.schoolCode,
+            mealName = meal.mealTime,
         )
         assertThat(meal.toRoomEntity()).isEqualTo(expected)
     }
@@ -41,7 +43,8 @@ class ConverterTest {
             origin = """[{"ingredient":"ingredient","origin":"korea"}]""",
             calorie = 10.0,
             nutrient = """[{"name":"protein","unit":"g","amount":10.0}]""",
-            schoolCode = 1
+            schoolCode = 1,
+            mealName = "중식",
         )
         val expected = Meal(
             schoolCode = roomMealEntity.schoolCode,
@@ -51,7 +54,8 @@ class ConverterTest {
             menus = listOf(Menu("menu", listOf(1))),
             origins = listOf(Origin("ingredient", "korea")),
             calorie = roomMealEntity.calorie,
-            nutrients = listOf(Nutrient("protein", "g", 10.0))
+            nutrients = listOf(Nutrient("protein", "g", 10.0)),
+            mealTime = "중식",
         )
         assertThat(roomMealEntity.toMealEntity()).isEqualTo(expected)
     }
