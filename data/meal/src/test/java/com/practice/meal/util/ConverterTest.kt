@@ -30,7 +30,7 @@ class ConverterTest {
             calorie = meal.calorie,
             nutrient = """[{"name":"protein","unit":"g","amount":10.0}]""",
             schoolCode = meal.schoolCode,
-            mealName = meal.mealTime,
+            mealTime = meal.mealTime,
         )
         assertThat(meal.toRoomEntity()).isEqualTo(expected)
     }
@@ -44,7 +44,7 @@ class ConverterTest {
             calorie = 10.0,
             nutrient = """[{"name":"protein","unit":"g","amount":10.0}]""",
             schoolCode = 1,
-            mealName = "중식",
+            mealTime = "중식",
         )
         val expected = Meal(
             schoolCode = roomMealEntity.schoolCode,

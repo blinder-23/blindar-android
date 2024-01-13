@@ -17,7 +17,7 @@ object TestUtil {
                 calorie = 0.0,
                 nutrient = "nutrient $it",
                 schoolCode = schoolCode,
-                mealName = "meal $it"
+                mealTime = "meal $it"
             )
         }
     }

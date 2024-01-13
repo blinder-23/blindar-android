@@ -24,7 +24,7 @@ fun MealModel.toMealEntity() = Meal(
     origins = origins.map { it.toOriginEntity() },
     nutrients = nutrients.map { it.toNutrientEntity() },
     calorie = calorie,
-    mealTime = "",
+    mealTime = mealTime,
 )
 
 fun MenuModel.toMenuEntity() = Menu(

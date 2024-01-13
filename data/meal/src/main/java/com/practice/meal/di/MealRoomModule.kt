@@ -50,9 +50,9 @@ object MealRoomModule {
                     origin TEXT NOT NULL, 
                     calorie REAL NOT NULL, 
                     nutrient TEXT NOT NULL, 
-                    meal_name TEXT NOT NULL,
+                    meal_time TEXT NOT NULL,
                     school_code INTEGER NOT NULL, 
-                    PRIMARY KEY(school_code, date, meal_name)
+                    PRIMARY KEY(school_code, date, meal_time)
                 )
                 """
                     .trimIndent()
