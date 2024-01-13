@@ -5,6 +5,7 @@ data class Meal(
     val year: Int,
     val month: Int,
     val day: Int,
+    val mealTime: String,
     val menus: List<Menu>,
     val origins: List<Origin>,
     val calorie: Double,

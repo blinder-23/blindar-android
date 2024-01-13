@@ -7,13 +7,14 @@ import com.hsk.ktx.jsonToList
 import com.hsk.ktx.toJson
 import com.practice.domain.meal.Meal
 
-@Entity(tableName = "meal", primaryKeys = ["school_code", "date"])
+@Entity(tableName = "meal", primaryKeys = ["school_code", "date", "meal_time"])
 data class MealEntityRoom(
     val date: String,
     val menu: String,
     val origin: String,
     val calorie: Double,
     val nutrient: String,
+    @ColumnInfo(name = "meal_time") val mealTime: String,
     @ColumnInfo(name = "school_code") val schoolCode: Int,
 )
 
@@ -27,6 +28,7 @@ fun Meal.toRoomEntity() = MealEntityRoom(
     calorie = calorie,
     nutrient = nutrients.toJson(),
     schoolCode = schoolCode,
+    mealTime = mealTime,
 )
 
 fun MealEntityRoom.toMealEntity(): Meal {
@@ -39,6 +41,7 @@ fun MealEntityRoom.toMealEntity(): Meal {
         origins = origin.jsonToList(),
         calorie = calorie,
         nutrients = nutrient.jsonToList(),
+        mealTime = mealTime,
     )
 }
 

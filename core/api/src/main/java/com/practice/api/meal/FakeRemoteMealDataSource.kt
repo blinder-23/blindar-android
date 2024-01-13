@@ -15,7 +15,8 @@ class FakeRemoteMealDataSource : RemoteMealDataSource {
             dishes = listOf(MenuModel(menu = "menu $it", allergies = listOf(it))),
             origins = emptyList(),
             nutrients = emptyList(),
-            calorie = 755.3
+            calorie = 755.3,
+            mealTime = "중식",
         )
     }.toMutableList()
 

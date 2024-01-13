@@ -17,6 +17,7 @@ object TestUtil {
                 calorie = 0.0,
                 nutrient = "nutrient $it",
                 schoolCode = schoolCode,
+                mealTime = "meal $it"
             )
         }
     }
@@ -41,7 +42,8 @@ object TestUtil {
                     )
                 ),
                 calorie = 10.0,
-                nutrients = listOf(Nutrient("protein", "g", 10.0))
+                nutrients = listOf(Nutrient("protein", "g", 10.0)),
+                mealTime = "test meal",
             )
         }
 }

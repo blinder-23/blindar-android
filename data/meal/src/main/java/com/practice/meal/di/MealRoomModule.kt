@@ -26,16 +26,37 @@ object MealRoomModule {
         context,
         MealDatabase::class.java,
         "meal-database"
-    ).addMigrations(MIGRATION12)
+    ).addMigrations(MIGRATION12, MIGRATION23)
         .build()
 
     private val MIGRATION12 = object : Migration(1, 2) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL("CREATE TABLE IF NOT EXISTS meal_migration (date TEXT NOT NULL, menu TEXT NOT NULL, origin TEXT NOT NULL, calorie REAL NOT NULL, nutrient TEXT NOT NULL, school_code INTEGER NOT NULL, PRIMARY KEY(school_code, date))")
-            database.execSQL("INSERT INTO meal_migration (date, menu, origin, calorie, nutrient, school_code) SELECT date, menu, origin, calorie, nutrient, school_code FROM meal")
-            database.execSQL("DROP TABLE meal")
-            database.execSQL("ALTER TABLE meal_migration RENAME TO meal")
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS meal_migration (date TEXT NOT NULL, menu TEXT NOT NULL, origin TEXT NOT NULL, calorie REAL NOT NULL, nutrient TEXT NOT NULL, school_code INTEGER NOT NULL, PRIMARY KEY(school_code, date))")
+            db.execSQL("INSERT INTO meal_migration (date, menu, origin, calorie, nutrient, school_code) SELECT date, menu, origin, calorie, nutrient, school_code FROM meal")
+            db.execSQL("DROP TABLE meal")
+            db.execSQL("ALTER TABLE meal_migration RENAME TO meal")
             Log.d("meal migration", "success!")
+        }
+    }
+
+    private val MIGRATION23 = object : Migration(2, 3) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("DROP TABLE meal")
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS meal (
+                    date TEXT NOT NULL, 
+                    menu TEXT NOT NULL, 
+                    origin TEXT NOT NULL, 
+                    calorie REAL NOT NULL, 
+                    nutrient TEXT NOT NULL, 
+                    meal_time TEXT NOT NULL,
+                    school_code INTEGER NOT NULL, 
+                    PRIMARY KEY(school_code, date, meal_time)
+                )
+                """
+                    .trimIndent()
+            )
         }
     }
 

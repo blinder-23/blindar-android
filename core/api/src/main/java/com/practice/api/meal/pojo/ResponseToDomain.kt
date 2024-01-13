@@ -28,6 +28,7 @@ fun MealModel.toMeal(schoolCode: Int) = Meal(
     origins = origins.toOriginList(),
     nutrients = nutrients.toNutrientList(),
     calorie = calorie,
+    mealTime = mealTime,
 )
 
 fun List<MenuModel>.toMenuList() = map { it.toMenu() }
