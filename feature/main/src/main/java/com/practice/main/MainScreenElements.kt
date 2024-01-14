@@ -496,7 +496,7 @@ private fun MainScreenContentHeaderButtonPreview() {
     }
 }
 
-private val sampleUiMeal = UiMeal(2022, 10, 28, previewMenus, previewNutrients)
+private val sampleUiMeal = UiMeal(2022, 10, 28, "중식", previewMenus, previewNutrients)
 
 @Preview(showBackground = true)
 @Composable
