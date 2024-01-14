@@ -50,18 +50,19 @@ import kotlinx.coroutines.launch
 @Composable
 fun NutrientPopup(
     uiMeal: UiMeal,
-    nutrients: ImmutableList<Nutrient>,
     onClose: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val chipTargetNames = listOf("열량", "탄수화물", "단백질", "지방")
-    val (chipNutrients, listNutrients) = nutrients.partition { nutrient ->
+    val (chipNutrients, listNutrients) = uiMeal.nutrients.partition { nutrient ->
         chipTargetNames.contains(nutrient.name)
     }
 
     val month = uiMeal.month
     val day = uiMeal.day
-    val popupTitle = stringResource(id = R.string.nutrient_popup_title, "${month}월 ${day}일")
+    val mealTime = uiMeal.mealTime
+    val popupTitle =
+        stringResource(id = R.string.nutrient_popup_title, "${month}월 ${day}일 $mealTime")
 
     val shape = RoundedCornerShape(16.dp)
     LazyColumn(
@@ -293,10 +294,10 @@ private fun NutrientPopupPreview() {
                     now.year,
                     now.month,
                     now.dayOfMonth,
+                    "중식",
                     previewMenus,
                     previewNutrients
                 ),
-                nutrients = previewNutrients,
                 onClose = {},
                 modifier = Modifier
                     .fillMaxWidth()

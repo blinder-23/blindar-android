@@ -14,6 +14,7 @@ data class UiMeal(
     val year: Int,
     val month: Int,
     val day: Int,
+    val mealTime: String,
     val menus: ImmutableList<Menu>,
     val nutrients: ImmutableList<Nutrient>,
 ) {
@@ -28,6 +29,7 @@ data class UiMeal(
             year = Date.now().year,
             month = Date.now().month,
             day = Date.now().dayOfMonth,
+            mealTime = "",
             menus = persistentListOf(),
             nutrients = persistentListOf(),
         )
@@ -41,6 +43,7 @@ fun Meal.toMealUiState() = if (this.menus.isEmpty()) {
         year = year,
         month = month,
         day = day,
+        mealTime = mealTime,
         menus = menus.filter { it.name != "급식우유" }.map { Menu(it.name) }.toPersistentList(),
         nutrients = nutrients.map { Nutrient(it.name, it.amount, it.unit) }.toPersistentList()
             .add(0, Nutrient("열량", calorie, "kcal")),
