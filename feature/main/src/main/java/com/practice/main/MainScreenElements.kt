@@ -427,9 +427,9 @@ internal fun MainScreenContent(
     modifier: Modifier = Modifier,
     titleContent: @Composable () -> Unit = {},
     padding: PaddingValues = PaddingValues(
-        start = 25.dp,
+        start = 20.dp,
         top = 10.dp,
-        end = 25.dp,
+        end = 20.dp,
         bottom = 30.dp,
     ),
     contentAlignment: Alignment.Horizontal = Alignment.Start,
