@@ -349,6 +349,7 @@ private fun EmptyScheduleContent(
     modifier: Modifier = Modifier,
 ) {
     MainScreenContent(
+        titleContent = {},
         padding = PaddingValues(0.dp),
         contentAlignment = Alignment.CenterHorizontally,
         modifier = modifier,
@@ -389,6 +390,34 @@ internal fun MainScreenContent(
     contentAlignment: Alignment.Horizontal = Alignment.Start,
     contents: @Composable () -> Unit = {},
 ) {
+    MainScreenContent(
+        modifier = modifier,
+        titleContent = {
+            MainScreenContentHeader(
+                title = title,
+                buttonTitle = buttonTitle,
+                onButtonClick = onButtonClick,
+            )
+        },
+        padding = padding,
+        contentAlignment = contentAlignment,
+        contents = contents,
+    )
+}
+
+@Composable
+internal fun MainScreenContent(
+    modifier: Modifier = Modifier,
+    titleContent: @Composable () -> Unit = {},
+    padding: PaddingValues = PaddingValues(
+        start = 25.dp,
+        top = 10.dp,
+        end = 25.dp,
+        bottom = 30.dp,
+    ),
+    contentAlignment: Alignment.Horizontal = Alignment.Start,
+    contents: @Composable () -> Unit = {},
+) {
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth(),
@@ -402,13 +431,7 @@ internal fun MainScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = contentAlignment,
         ) {
-            if (title.isNotEmpty() || buttonTitle.isNotEmpty()) {
-                MainScreenContentHeader(
-                    title = title,
-                    buttonTitle = buttonTitle,
-                    onButtonClick = onButtonClick,
-                )
-            }
+            titleContent()
             contents()
         }
     }
@@ -421,11 +444,28 @@ private fun MainScreenContentHeader(
     buttonTitle: String = "",
     onButtonClick: () -> Unit = {},
 ) {
+    MainScreenContentHeader(
+        modifier = modifier,
+        titleContent = {
+            MainScreenContentTitle(title = title)
+        },
+        buttonTitle = buttonTitle,
+        onButtonClick = onButtonClick,
+    )
+}
+
+@Composable
+private fun MainScreenContentHeader(
+    modifier: Modifier = Modifier,
+    titleContent: @Composable () -> Unit = {},
+    buttonTitle: String = "",
+    onButtonClick: () -> Unit = {},
+) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        MainScreenContentTitle(title = title)
+        titleContent()
         Spacer(modifier = Modifier.weight(1f))
         if (buttonTitle != "") {
             MainScreenContentHeaderButton(title = buttonTitle, onButtonClick = onButtonClick)
