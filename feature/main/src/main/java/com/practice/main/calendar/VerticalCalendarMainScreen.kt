@@ -38,6 +38,7 @@ import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiMode
 import com.practice.main.state.MainUiState
 import com.practice.main.state.UiMeal
+import com.practice.main.state.UiMeals
 import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedules
 import kotlinx.collections.immutable.ImmutableList
@@ -95,7 +96,7 @@ fun VerticalCalendarMainScreen(
                     .fillMaxWidth(),
             )
             MainScreenContents(
-                uiMeal = uiState.selectedDateDataState.uiMeal,
+                uiMeal = uiState.selectedDateDataState.uiMeals,
                 memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
                 mealColumns = mealColumns,
                 onNutrientPopupOpen = onNutrientPopupOpen,
@@ -127,12 +128,15 @@ private fun VerticalCalendarMainScreenPreview() {
                     DailyData(
                         schoolCode = 1,
                         date = now.plusDays(it),
-                        uiMeal = UiMeal(
-                            year,
-                            month,
-                            now.dayOfMonth,
-                            previewMenus,
-                            previewNutrients
+                        uiMeals = UiMeals(
+                            UiMeal(
+                                year,
+                                month,
+                                now.dayOfMonth,
+                                "중식",
+                                previewMenus,
+                                previewNutrients
+                            )
                         ),
                         uiSchedules = UiSchedules(
                             date = now,

@@ -76,7 +76,7 @@ fun MainScreen(
     }
 
     if (uiState.isNutrientPopupVisible) {
-        val uiMeal = uiState.selectedDateDataState.uiMeal
+        val uiMeal = uiState.selectedDateDataState.uiMeals
         MainScreenPopup(
             onClose = viewModel::closeNutrientPopup,
         ) {

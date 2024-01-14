@@ -26,6 +26,7 @@ import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiMode
 import com.practice.main.state.MainUiState
 import com.practice.main.state.UiMeal
+import com.practice.main.state.UiMeals
 import com.practice.main.state.UiMemo
 import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedules
@@ -175,13 +176,13 @@ class MainScreenViewModel @Inject constructor(
             addAll(monthlyData.memos.map { Date(it.year, it.month, it.day) })
         }
         val newDailyData = allDates.map { date ->
-            val uiMeal = monthlyData.getMeal(date)
+            val uiMeals = monthlyData.getMeals(date)
             val uiSchedules = monthlyData.getSchedule(date)
             val uiMemos = monthlyData.getMemo(date)
             DailyData(
                 schoolCode = monthlyData.schoolCode,
                 date = date,
-                uiMeal = uiMeal,
+                uiMeals = uiMeals,
                 uiSchedules = uiSchedules,
                 uiMemos = uiMemos,
             )
@@ -219,7 +220,7 @@ class MainScreenViewModel @Inject constructor(
         val isSelectedString = if (date == state.selectedDate) "선택됨" else ""
         val isTodayString = if (date == DateUtil.today()) "오늘" else ""
         val dailyStateString = if (dailyState != null) {
-            "식단: ${dailyState.uiMeal.description}\n학사일정:${dailyState.uiSchedules.description}\n메모: ${dailyState.uiMemos.description}"
+            "식단: ${dailyState.uiMeals.description}\n학사일정:${dailyState.uiSchedules.description}\n메모: ${dailyState.uiMemos.description}"
         } else {
             ""
         }
@@ -318,7 +319,7 @@ class MainScreenViewModel @Inject constructor(
         actions.add(createMemoPopupCustomAction(month, day))
 
         this.find { it.date == date }?.let {
-            if (!it.uiMeal.isEmpty) {
+            if (!it.uiMeals.isEmpty) {
                 actions.add(createNutrientPopupCustomAction(month, day))
             }
         }
@@ -345,13 +346,13 @@ class MainScreenViewModel @Inject constructor(
     }
 }
 
-private fun MonthlyData.getMeal(date: Date): UiMeal {
-    return try {
-        meals.first { it.dateEquals(date) }
-            .toMealUiState()
+private fun MonthlyData.getMeals(date: Date): UiMeals {
+    val meals = try {
+        meals.filter { it.dateEquals(date) }.map { it.toMealUiState() }
     } catch (e: NoSuchElementException) {
-        UiMeal.EmptyUiMeal
+        listOf(UiMeal.EmptyUiMeal)
     }
+    return UiMeals(meals)
 }
 
 private fun MonthlyData.getSchedule(date: Date): UiSchedules {

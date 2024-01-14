@@ -37,6 +37,7 @@ import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiMode
 import com.practice.main.state.MainUiState
 import com.practice.main.state.UiMeal
+import com.practice.main.state.UiMeals
 import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedules
 
@@ -93,7 +94,7 @@ private fun HorizontalDailyMainScreenContents(
                 .fillMaxHeight()
         )
         MainScreenContents(
-            uiMeal = uiState.selectedDateDataState.uiMeal,
+            uiMeal = uiState.selectedDateDataState.uiMeals,
             memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
             mealColumns = mealColumns,
             onNutrientPopupOpen = onNutrientPopupOpen,
@@ -145,7 +146,7 @@ private fun HorizontalDailyMainScreenPreview() {
             DailyData(
                 schoolCode = 1,
                 date = Date(2024, 1, 7).plusDays(it),
-                uiMeal = UiMeal(2024, 1, 10, previewMenus, previewNutrients),
+                uiMeals = UiMeals(UiMeal(2024, 1, 10, "중식", previewMenus, previewNutrients)),
                 uiSchedules = UiSchedules(
                     date = selectedDate,
                     uiSchedules = previewSchedules,

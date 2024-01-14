@@ -78,7 +78,7 @@ fun HorizontalCalendarMainScreen(
                 customActions = customActions,
             )
             MainScreenContents(
-                uiMeal = uiState.selectedDateDataState.uiMeal,
+                uiMeal = uiState.selectedDateDataState.uiMeals,
                 memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
                 mealColumns = mealColumns,
                 onNutrientPopupOpen = onNutrientPopupOpen,
