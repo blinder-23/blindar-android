@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -58,7 +59,6 @@ import androidx.compose.ui.window.DialogProperties
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BodyLarge
-import com.practice.designsystem.components.BodyMedium
 import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.components.TitleMedium
@@ -67,6 +67,7 @@ import com.practice.main.state.MemoPopupElement
 import com.practice.main.state.Menu
 import com.practice.main.state.Nutrient
 import com.practice.main.state.UiMeal
+import com.practice.main.state.UiMeals
 import com.practice.main.state.UiMemo
 import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedule
@@ -187,16 +188,18 @@ private fun SettingsIcon(
 
 @Composable
 internal fun MainScreenContents(
-    uiMeal: UiMeal,
+    uiMeals: UiMeals,
     memoPopupElements: ImmutableList<MemoPopupElement>,
     mealColumns: Int,
+    selectedMealIndex: Int,
+    onMealTimeClick: (Int) -> Unit,
     onNutrientPopupOpen: () -> Unit,
     onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
     emptyContentAlignment: Alignment = Alignment.Center,
     header: @Composable (() -> Unit)? = null,
 ) {
-    if (uiMeal.isEmpty && memoPopupElements.isEmpty()) {
+    if (uiMeals.isEmpty && memoPopupElements.isEmpty()) {
         Box(modifier = modifier) {
             Column(
                 modifier = Modifier
@@ -218,10 +221,12 @@ internal fun MainScreenContents(
             item {
                 header?.invoke()
             }
-            if (!uiMeal.isEmpty) {
+            if (!uiMeals.isEmpty) {
                 item {
                     MealContent(
-                        uiMeal = uiMeal,
+                        uiMeals = uiMeals,
+                        selectedIndex = selectedMealIndex,
+                        onMealTimeClick = onMealTimeClick,
                         columns = mealColumns,
                         onNutrientPopupOpen = onNutrientPopupOpen,
                     )
@@ -268,23 +273,35 @@ private fun EmptyContentIndicator(
 
 @Composable
 internal fun MealContent(
-    uiMeal: UiMeal,
+    uiMeals: UiMeals,
+    selectedIndex: Int,
+    onMealTimeClick: (Int) -> Unit,
     columns: Int,
     onNutrientPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
     itemPadding: Dp = 16.dp,
 ) {
     MainScreenContent(
-        title = "식단",
+        titleContent = {
+            MainScreenContentHeader(
+                titleContent = {
+                    MainScreenContentMealTimesTitle(
+                        selectedIndex = selectedIndex,
+                        mealTimes = uiMeals.mealTimes,
+                        onMealTimeClick = onMealTimeClick,
+                    )
+                },
+                buttonTitle = stringResource(id = R.string.open_nutrient_popup_button),
+                onButtonClick = onNutrientPopupOpen,
+            )
+        },
         modifier = modifier,
-        buttonTitle = stringResource(id = R.string.open_nutrient_popup_button),
-        onButtonClick = onNutrientPopupOpen,
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(itemPadding)
         ) {
-            uiMeal.menus.chunked(columns).forEach { menus ->
+            uiMeals[selectedIndex].menus.chunked(columns).forEach { menus ->
                 val filledMenus = fillMenus(menus, columns)
                 MenuRow(menus = filledMenus)
             }
@@ -546,7 +563,7 @@ private fun MealTimesButton(
     endRoundCornerPercent: Int = 0,
 ) {
     val backgroundColor by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
+        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
         label = "background",
     )
     val contentColor by animateColorAsState(
@@ -574,7 +591,7 @@ private fun MealTimesButton(
             )
             .padding(vertical = 10.dp),
     ) {
-        BodyMedium(
+        LabelLarge(
             text = mealTime,
             textColor = contentColor,
         )
@@ -619,14 +636,19 @@ private fun MainScreenContentHeaderButtonPreview() {
     }
 }
 
-private val sampleUiMeal = UiMeal(2022, 10, 28, "중식", previewMenus, previewNutrients)
+private val sampleUiMeals = UiMeals(
+    listOf("조식", "중식", "석식").map {
+        UiMeal(2022, 10, 28, it, previewMenus, previewNutrients)
+    }
+)
 
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenContentsPreview() {
+    var selectedMealIndex by remember { mutableIntStateOf(0) }
     BlindarTheme {
         MainScreenContents(
-            uiMeal = sampleUiMeal,
+            uiMeals = sampleUiMeals,
             memoPopupElements = mergeSchedulesAndMemos(
                 UiSchedules(
                     date = Date.now(),
@@ -637,6 +659,8 @@ private fun MainScreenContentsPreview() {
                     memos = previewMemos,
                 ),
             ),
+            selectedMealIndex = selectedMealIndex,
+            onMealTimeClick = { selectedMealIndex = it },
             mealColumns = 2,
             onNutrientPopupOpen = {},
             onMemoPopupOpen = {},
