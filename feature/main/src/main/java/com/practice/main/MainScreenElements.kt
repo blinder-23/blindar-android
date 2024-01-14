@@ -570,17 +570,20 @@ private fun MealTimesButton(
         targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer,
         label = "content",
     )
-
     val shape = RoundedCornerShape(
         topStartPercent = startRoundCornerPercent,
         topEndPercent = endRoundCornerPercent,
         bottomEndPercent = endRoundCornerPercent,
         bottomStartPercent = startRoundCornerPercent,
     )
+
+    val description =
+        stringResource(id = if (isSelected) R.string.button_selected else R.string.button_not_selected)
     Box(
         modifier = modifier
             .semantics {
                 role = Role.Button
+                contentDescription = description
             }
             .clickable(onClick = onClick)
             .background(backgroundColor, shape = shape)
