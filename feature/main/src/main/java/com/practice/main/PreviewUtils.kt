@@ -34,6 +34,7 @@ internal fun previewMainUiState(): MainUiState {
                 ),
             )
         },
+        selectedMealIndex = 0,
         isLoading = false,
         selectedSchool = School(
             name = "어떤 학교",

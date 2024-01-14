@@ -47,6 +47,7 @@ fun VerticalDailyMainScreen(
     onRefreshIconClick: () -> Unit,
     onSettingsIconClick: () -> Unit,
     onSchoolNameClick: () -> Unit,
+    onMealTimeClick: (Int) -> Unit,
     onNutrientPopupOpen: () -> Unit,
     onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
@@ -67,6 +68,7 @@ fun VerticalDailyMainScreen(
             datePickerState = datePickerState,
             uiState = uiState,
             mealColumns = mealColumns,
+            onMealTimeClick = onMealTimeClick,
             onNutrientPopupOpen = onNutrientPopupOpen,
             onMemoPopupOpen = onMemoPopupOpen
         )
@@ -78,16 +80,19 @@ private fun VerticalDailyMainScreenContents(
     datePickerState: DailyDatePickerState,
     uiState: MainUiState,
     mealColumns: Int,
+    onMealTimeClick: (Int) -> Unit,
     onNutrientPopupOpen: () -> Unit,
-    onMemoPopupOpen: () -> Unit
+    onMemoPopupOpen: () -> Unit,
 ) {
     Column(
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         MainScreenContents(
-            uiMeal = uiState.selectedDateDataState.uiMeals,
+            uiMeals = uiState.selectedDateDataState.uiMeals,
             memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
+            selectedMealIndex = uiState.selectedMealIndex,
+            onMealTimeClick = onMealTimeClick,
             mealColumns = mealColumns,
             onNutrientPopupOpen = onNutrientPopupOpen,
             onMemoPopupOpen = onMemoPopupOpen,
@@ -152,6 +157,7 @@ private fun VerticalDailyMainScreenPreview() {
                 ),
             )
         },
+        selectedMealIndex = 0,
         isLoading = false,
         selectedSchool = School(
             name = "어떤 학교",
@@ -174,6 +180,7 @@ private fun VerticalDailyMainScreenPreview() {
             onRefreshIconClick = {},
             onSettingsIconClick = {},
             onSchoolNameClick = {},
+            onMealTimeClick = {},
             onNutrientPopupOpen = {},
             onMemoPopupOpen = {},
             modifier = Modifier

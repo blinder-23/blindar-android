@@ -68,7 +68,7 @@ data class DailyData(
         val Empty = DailyData(
             schoolCode = EMPTY_SCHOOL_CODE,
             date = DateUtil.today(),
-            uiMeals = UiMeals(UiMeal.EmptyUiMeal),
+            uiMeals = UiMeals(),
             uiSchedules = UiSchedules.EmptyUiSchedules,
             uiMemos = UiMemos.EmptyUiMemos,
         )

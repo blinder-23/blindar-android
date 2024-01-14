@@ -10,6 +10,7 @@ data class MainUiState(
     val month: Int,
     val selectedDate: Date,
     val monthlyDataState: List<DailyData>,
+    val selectedMealIndex: Int,
     val isLoading: Boolean,
     val selectedSchool: School,
     val isNutrientPopupVisible: Boolean,
@@ -42,7 +43,7 @@ data class MainUiState(
             DailyData(
                 schoolCode = selectedSchoolCode,
                 date = date,
-                uiMeals = UiMeals(UiMeal.EmptyUiMeal),
+                uiMeals = UiMeals(),
                 uiSchedules = UiSchedules.EmptyUiSchedules,
                 uiMemos = uiMemos
             )
@@ -67,6 +68,7 @@ data class MainUiState(
             month = Date.now().month,
             selectedDate = Date.now(),
             monthlyDataState = emptyList(),
+            selectedMealIndex = 0,
             isLoading = false,
             selectedSchool = School.EmptySchool,
             isNutrientPopupVisible = false,

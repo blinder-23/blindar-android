@@ -25,7 +25,6 @@ import com.practice.firebase.BlindarUserStatus
 import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiMode
 import com.practice.main.state.MainUiState
-import com.practice.main.state.UiMeal
 import com.practice.main.state.UiMeals
 import com.practice.main.state.UiMemo
 import com.practice.main.state.UiMemos
@@ -104,6 +103,7 @@ class MainScreenViewModel @Inject constructor(
         yearMonth: YearMonth = state.yearMonth,
         selectedDate: Date = state.selectedDate,
         monthlyData: List<DailyData> = state.monthlyDataState,
+        selectedMealIndex: Int = state.selectedMealIndex,
         isLoading: Boolean = state.isLoading,
         selectedSchool: School = state.selectedSchool,
         isNutrientPopupVisible: Boolean = state.isNutrientPopupVisible,
@@ -118,6 +118,7 @@ class MainScreenViewModel @Inject constructor(
                 year = yearMonth.year,
                 month = yearMonth.month,
                 monthlyDataState = monthlyData,
+                selectedMealIndex = selectedMealIndex,
                 selectedDate = selectedDate,
                 isLoading = isLoading,
                 selectedSchool = selectedSchool,
@@ -136,6 +137,7 @@ class MainScreenViewModel @Inject constructor(
         updateUiState(
             yearMonth = clickedDate.yearMonth,
             selectedDate = clickedDate,
+            selectedMealIndex = 0, // TODO: real?
         )
     }
 
@@ -167,6 +169,10 @@ class MainScreenViewModel @Inject constructor(
                 preferencesRepository.updateMainScreenMode(mainScreenMode)
             }
         }
+    }
+
+    fun onMealTimeClick(index: Int) {
+        updateUiState(selectedMealIndex = index)
     }
 
     private fun parseDailyState(monthlyData: MonthlyData): List<DailyData> {
@@ -347,11 +353,8 @@ class MainScreenViewModel @Inject constructor(
 }
 
 private fun MonthlyData.getMeals(date: Date): UiMeals {
-    val meals = try {
-        meals.filter { it.dateEquals(date) }.map { it.toMealUiState() }
-    } catch (e: NoSuchElementException) {
-        listOf(UiMeal.EmptyUiMeal)
-    }
+    val meals = meals.filter { it.dateEquals(date) }.map { it.toMealUiState() }
+    Log.d("MainScreenModel", "$date: $meals")
     return UiMeals(meals)
 }
 

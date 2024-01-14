@@ -58,6 +58,7 @@ fun VerticalCalendarMainScreen(
     getClickLabel: (Date) -> String,
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
+    onMealTimeClick: (Int) -> Unit,
     onNutrientPopupOpen: () -> Unit,
     onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
@@ -96,8 +97,10 @@ fun VerticalCalendarMainScreen(
                     .fillMaxWidth(),
             )
             MainScreenContents(
-                uiMeal = uiState.selectedDateDataState.uiMeals,
+                uiMeals = uiState.selectedDateDataState.uiMeals,
                 memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
+                selectedMealIndex = uiState.selectedMealIndex,
+                onMealTimeClick = onMealTimeClick,
                 mealColumns = mealColumns,
                 onNutrientPopupOpen = onNutrientPopupOpen,
                 onMemoPopupOpen = onMemoPopupOpen,
@@ -148,6 +151,7 @@ private fun VerticalCalendarMainScreenPreview() {
                         ),
                     )
                 },
+                selectedMealIndex = 0,
                 isLoading = false,
                 selectedSchool = School(
                     name = "어떤 학교",
@@ -178,6 +182,7 @@ private fun VerticalCalendarMainScreenPreview() {
             getClickLabel = { "" },
             drawUnderlineToScheduleDate = {},
             onNavigateToSelectSchoolScreen = {},
+            onMealTimeClick = {},
             onNutrientPopupOpen = {},
             onMemoPopupOpen = {},
             modifier = Modifier
