@@ -1,11 +1,13 @@
 package com.practice.main
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,7 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,8 +44,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,6 +58,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BodyLarge
+import com.practice.designsystem.components.BodyMedium
 import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.components.TitleMedium
@@ -68,6 +73,7 @@ import com.practice.main.state.UiSchedule
 import com.practice.main.state.UiSchedules
 import com.practice.main.state.mergeSchedulesAndMemos
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
@@ -458,6 +464,83 @@ private fun MainScreenContentTitle(
     )
 }
 
+@Composable
+private fun MainScreenContentMealTimesTitle(
+    selectedIndex: Int,
+    mealTimes: ImmutableList<String>,
+    onMealTimeClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val shape = RoundedCornerShape(50)
+    Row(
+        modifier = modifier
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.primary,
+                shape = shape
+            )
+            .clip(shape),
+    ) {
+        mealTimes.forEachIndexed { index, s ->
+            val startRound = if (index == 0) 50 else 0
+            val endRound = if (index == mealTimes.lastIndex) 50 else 0
+
+            MealTimesButton(
+                mealTime = s,
+                isSelected = (selectedIndex == index),
+                onClick = { onMealTimeClick(index) },
+                startRoundCornerPercent = startRound,
+                endRoundCornerPercent = endRound,
+            )
+        }
+    }
+}
+
+@Composable
+private fun MealTimesButton(
+    mealTime: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    startRoundCornerPercent: Int = 0,
+    endRoundCornerPercent: Int = 0,
+) {
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
+        label = "background",
+    )
+    val contentColor by animateColorAsState(
+        targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer,
+        label = "content",
+    )
+
+    val shape = RoundedCornerShape(
+        topStartPercent = startRoundCornerPercent,
+        topEndPercent = endRoundCornerPercent,
+        bottomEndPercent = endRoundCornerPercent,
+        bottomStartPercent = startRoundCornerPercent,
+    )
+    Box(
+        modifier = modifier
+            .semantics {
+                role = Role.Button
+            }
+            .clickable(onClick = onClick)
+            .background(backgroundColor, shape = shape)
+            .clip(shape)
+            .padding(
+                start = if (startRoundCornerPercent == 0) 10.dp else 14.dp,
+                end = if (endRoundCornerPercent == 0) 10.dp else 14.dp,
+            )
+            .padding(vertical = 10.dp),
+    ) {
+        BodyMedium(
+            text = mealTime,
+            textColor = contentColor,
+        )
+    }
+}
+
 val previewMenus = listOf("찰보리밥", "망고마들렌", "쇠고기미역국", "콩나물파채무침", "돼지양념구이", "포기김치", "오렌지주스", "기타등등")
     .map { Menu(it) }.toImmutableList()
 val previewNutrients = (0..3).map { Nutrient("탄수화물", 123.0, "g") }.toImmutableList()
@@ -524,17 +607,16 @@ private fun MainScreenContentsPreview() {
 
 @LightAndDarkPreview
 @Composable
-private fun MainScreenTopBarPreview() {
-    var isLoading by remember { mutableStateOf(false) }
+private fun MainScreenContentMealTimesTitlePreview() {
+    var selectedIndex by remember { mutableIntStateOf(0) }
+
     BlindarTheme {
-        MainScreenTopBar(
-            schoolName = "한빛맹학교",
-            isLoading = isLoading,
-            onRefreshIconClick = { isLoading = !isLoading },
-            onSettingsIconClick = {},
+        MainScreenContentMealTimesTitle(
+            selectedIndex = selectedIndex,
+            mealTimes = persistentListOf("조식", "중식", "석식"),
+            onMealTimeClick = { selectedIndex = it },
             modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surface),
+                .padding(16.dp),
         )
     }
 }
