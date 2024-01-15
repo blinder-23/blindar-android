@@ -17,14 +17,14 @@
     <string name="daily_date_picker_error">잘못된 날짜입니다.</string>
 
     <string name="quick_navigation_minus_7">일주일 전</string>
-    <string name="quick_navigation_minus_1">어제</string>
+    <string name="quick_navigation_minus_1">하루 전</string>
     <string name="quick_navigation_today">오늘</string>
-    <string name="quick_navigation_plus_1">내일</string>
+    <string name="quick_navigation_plus_1">다음 날</string>
     <string name="quick_navigation_plus_7">일주일 후</string>
     <string name="quick_navigation_minus_7_description">일주일 전 데이터 보기</string>
-    <string name="quick_navigation_minus_1_description">어제 데이터 보기</string>
+    <string name="quick_navigation_minus_1_description">하루 전 데이터 보기</string>
     <string name="quick_navigation_today_description">오늘 데이터 보기</string>
-    <string name="quick_navigation_plus_1_description">내일 데이터 보기</string>
+    <string name="quick_navigation_plus_1_description">다음 날 데이터 보기</string>
     <string name="quick_navigation_plus_7_description">일주일 후 데이터 보기</string>
 
     <string name="open_meal_popup">식단 빠르게 보기</string>

@@ -8,11 +8,11 @@ enum class DateQuickNavigation(
     @StringRes val nameId: Int,
     @StringRes val descriptionId: Int,
 ) {
-    ONE_WEEK_BEFORE(
-        -7,
-        R.string.quick_navigation_minus_7,
-        R.string.quick_navigation_minus_7_description,
-    ),
+//    ONE_WEEK_BEFORE(
+//        -7,
+//        R.string.quick_navigation_minus_7,
+//        R.string.quick_navigation_minus_7_description,
+//    ),
     YESTERDAY(
         -1,
         R.string.quick_navigation_minus_1,
@@ -28,9 +28,9 @@ enum class DateQuickNavigation(
         R.string.quick_navigation_plus_1,
         R.string.quick_navigation_plus_1_description,
     ),
-    ONE_WEEK_AFTER(
-        7,
-        R.string.quick_navigation_plus_7,
-        R.string.quick_navigation_plus_7_description,
-    ),
+//    ONE_WEEK_AFTER(
+//        7,
+//        R.string.quick_navigation_plus_7,
+//        R.string.quick_navigation_plus_7_description,
+//    ),
 }
