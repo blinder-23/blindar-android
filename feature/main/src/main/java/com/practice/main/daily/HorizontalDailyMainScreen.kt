@@ -25,6 +25,7 @@ import com.practice.main.MainScreenContents
 import com.practice.main.MainScreenTopBar
 import com.practice.main.R
 import com.practice.main.daily.components.DateQuickNavigationButtons
+import com.practice.main.daily.components.ScreenModeOpenPopupButtons
 import com.practice.main.daily.picker.DailyDatePicker
 import com.practice.main.daily.picker.DailyDatePickerState
 import com.practice.main.daily.picker.rememberDailyDatePickerState
@@ -52,6 +53,8 @@ fun HorizontalDailyMainScreen(
     onMealTimeClick: (Int) -> Unit,
     onNutrientPopupOpen: () -> Unit,
     onMemoPopupOpen: () -> Unit,
+    onMealPopupOpen: () -> Unit,
+    onSchedulePopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -72,7 +75,9 @@ fun HorizontalDailyMainScreen(
             mealColumns = mealColumns,
             onMealTimeClick = onMealTimeClick,
             onNutrientPopupOpen = onNutrientPopupOpen,
-            onMemoPopupOpen = onMemoPopupOpen
+            onMemoPopupOpen = onMemoPopupOpen,
+            onMealPopupOpen = onMealPopupOpen,
+            onSchedulePopupOpen = onSchedulePopupOpen,
         )
     }
 }
@@ -84,7 +89,9 @@ private fun HorizontalDailyMainScreenContents(
     mealColumns: Int,
     onMealTimeClick: (Int) -> Unit,
     onNutrientPopupOpen: () -> Unit,
-    onMemoPopupOpen: () -> Unit
+    onMemoPopupOpen: () -> Unit,
+    onMealPopupOpen: () -> Unit,
+    onSchedulePopupOpen: () -> Unit,
 ) {
     Row(
         modifier = Modifier.padding(16.dp),
@@ -95,7 +102,12 @@ private fun HorizontalDailyMainScreenContents(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxHeight()
-        )
+        ) {
+            ScreenModeOpenPopupButtons(
+                onMealPopupOpen = onMealPopupOpen,
+                onSchedulePopupOpen = onSchedulePopupOpen,
+            )
+        }
         MainScreenContents(
             uiMeals = uiState.selectedDateDataState.uiMeals,
             memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
@@ -113,6 +125,7 @@ private fun HorizontalDailyMainScreenContents(
 private fun DatePickerCard(
     datePickerState: DailyDatePickerState,
     modifier: Modifier = Modifier,
+    trailingContents: @Composable (() -> Unit)? = null,
 ) {
     ElevatedCard(
         modifier = modifier,
@@ -133,6 +146,11 @@ private fun DatePickerCard(
                     datePickerState = datePickerState,
                     modifier = Modifier.fillMaxWidth(),
                 )
+            }
+            trailingContents?.let {
+                item {
+                    trailingContents()
+                }
             }
         }
     }
@@ -189,6 +207,8 @@ private fun HorizontalDailyMainScreenPreview() {
             onMealTimeClick = {},
             onNutrientPopupOpen = {},
             onMemoPopupOpen = {},
+            onMealPopupOpen = {},
+            onSchedulePopupOpen = {},
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface),

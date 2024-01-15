@@ -42,6 +42,8 @@ fun DailyMainScreen(
                 onMealTimeClick = viewModel::onMealTimeClick,
                 onNutrientPopupOpen = viewModel::openNutrientPopup,
                 onMemoPopupOpen = viewModel::openMemoPopup,
+                onMealPopupOpen = viewModel::onMealPopupOpen,
+                onSchedulePopupOpen = {/* TODO */ },
                 modifier = modifier,
             )
         }
@@ -57,6 +59,8 @@ fun DailyMainScreen(
                 onMealTimeClick = viewModel::onMealTimeClick,
                 onNutrientPopupOpen = viewModel::openNutrientPopup,
                 onMemoPopupOpen = viewModel::openMemoPopup,
+                onMealPopupOpen = viewModel::onMealPopupOpen,
+                onSchedulePopupOpen = {/* TODO */ },
                 modifier = modifier,
             )
         }
