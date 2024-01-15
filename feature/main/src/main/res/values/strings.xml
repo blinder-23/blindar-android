@@ -29,7 +29,7 @@
 
     <string name="open_meal_popup">식단 빠르게 보기</string>
     <string name="meal_popup_unavailable">식단이 없습니다.</string>
-    <string name="open_schedule_popup">일정 팝업으로 빠르게 보기</string>
+    <string name="open_schedule_popup">일정 빠르게 보기</string>
     <string name="schedule_popup_unavailable">일정이 없습니다.</string>
 
     <string name="button_selected">선택됨</string>
