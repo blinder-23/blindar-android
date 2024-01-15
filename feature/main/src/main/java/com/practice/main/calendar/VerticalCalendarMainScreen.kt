@@ -159,6 +159,7 @@ private fun VerticalCalendarMainScreenPreview() {
                 ),
                 isNutrientPopupVisible = false,
                 isMemoPopupVisible = false,
+                isMealPopupVisible = false,
                 mainUiMode = MainUiMode.CALENDAR,
             )
         )

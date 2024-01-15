@@ -165,6 +165,7 @@ private fun VerticalDailyMainScreenPreview() {
         ),
         isNutrientPopupVisible = false,
         isMemoPopupVisible = false,
+        isMealPopupVisible = false,
         mainUiMode = MainUiMode.DAILY,
     )
     val datePickerState = rememberDailyDatePickerState(

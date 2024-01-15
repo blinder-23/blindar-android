@@ -108,6 +108,7 @@ class MainScreenViewModel @Inject constructor(
         selectedSchool: School = state.selectedSchool,
         isNutrientPopupVisible: Boolean = state.isNutrientPopupVisible,
         isMemoPopupVisible: Boolean = state.isMemoPopupVisible,
+        isMealPopupVisible: Boolean = state.isMealPopupVisible,
         mainUiMode: MainUiMode = state.mainUiMode
     ) {
         val isCollectNeeded =
@@ -124,6 +125,7 @@ class MainScreenViewModel @Inject constructor(
                 selectedSchool = selectedSchool,
                 isNutrientPopupVisible = isNutrientPopupVisible,
                 isMemoPopupVisible = isMemoPopupVisible,
+                isMealPopupVisible = isMealPopupVisible,
                 mainUiMode = mainUiMode,
             )
         }

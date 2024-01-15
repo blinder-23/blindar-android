@@ -42,6 +42,7 @@ internal fun previewMainUiState(): MainUiState {
         ),
         isNutrientPopupVisible = false,
         isMemoPopupVisible = false,
+        isMealPopupVisible = false,
         mainUiMode = MainUiMode.CALENDAR,
     )
 }
