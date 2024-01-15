@@ -109,6 +109,7 @@ class MainScreenViewModel @Inject constructor(
         isNutrientPopupVisible: Boolean = state.isNutrientPopupVisible,
         isMemoPopupVisible: Boolean = state.isMemoPopupVisible,
         isMealPopupVisible: Boolean = state.isMealPopupVisible,
+        isSchedulePopupVisible: Boolean = state.isSchedulePopupVisible,
         mainUiMode: MainUiMode = state.mainUiMode
     ) {
         val isCollectNeeded =
@@ -126,6 +127,7 @@ class MainScreenViewModel @Inject constructor(
                 isNutrientPopupVisible = isNutrientPopupVisible,
                 isMemoPopupVisible = isMemoPopupVisible,
                 isMealPopupVisible = isMealPopupVisible,
+                isSchedulePopupVisible = isSchedulePopupVisible,
                 mainUiMode = mainUiMode,
             )
         }
@@ -304,6 +306,14 @@ class MainScreenViewModel @Inject constructor(
 
     fun onMealPopupClose() {
         updateUiState(isMealPopupVisible = false)
+    }
+
+    fun onSchedulePopupOpen() {
+        updateUiState(isSchedulePopupVisible = true)
+    }
+
+    fun onSchedulePopupClose() {
+        updateUiState(isSchedulePopupVisible = false)
     }
 
     suspend fun sendFeedback(appVersionName: String, contents: String) {

@@ -110,7 +110,9 @@ private fun VerticalDailyMainScreenContents(
             header = {
                 DatePickerCard(datePickerState = datePickerState) {
                     ScreenModeOpenPopupButtons(
+                        isMealPopupEnabled = uiState.isMealExists,
                         onMealPopupOpen = onMealPopupOpen,
+                        isSchedulePopupEnabled = uiState.isScheduleOrMemoExists,
                         onSchedulePopupOpen = onSchedulePopupOpen,
                     )
                 }
@@ -178,6 +180,7 @@ private fun VerticalDailyMainScreenPreview() {
         isNutrientPopupVisible = false,
         isMemoPopupVisible = false,
         isMealPopupVisible = false,
+        isSchedulePopupVisible = false,
         mainUiMode = MainUiMode.DAILY,
     )
     val datePickerState = rememberDailyDatePickerState(

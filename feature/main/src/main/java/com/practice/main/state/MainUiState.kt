@@ -16,6 +16,7 @@ data class MainUiState(
     val isNutrientPopupVisible: Boolean,
     val isMemoPopupVisible: Boolean,
     val isMealPopupVisible: Boolean,
+    val isSchedulePopupVisible: Boolean,
     val mainUiMode: MainUiMode,
 ) {
     val yearMonth: YearMonth
@@ -75,6 +76,7 @@ data class MainUiState(
             isNutrientPopupVisible = false,
             isMemoPopupVisible = false,
             isMealPopupVisible = false,
+            isSchedulePopupVisible = false,
             mainUiMode = MainUiMode.LOADING,
         )
     }
