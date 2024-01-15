@@ -74,6 +74,17 @@ fun MainScreen(
             }
         }
     }
+    MainScreenPopups(viewModel = viewModel)
+}
+
+val WindowSizeClass.mealColumns: Int
+    get() = if (this.widthSizeClass == WindowWidthSizeClass.Compact) 2 else 3
+
+@Composable
+private fun MainScreenPopups(
+    viewModel: MainScreenViewModel,
+) {
+    val uiState by viewModel.uiState
 
     if (uiState.isNutrientPopupVisible) {
         val selectedMealIndex = uiState.selectedMealIndex
@@ -113,6 +124,3 @@ fun MainScreen(
         }
     }
 }
-
-val WindowSizeClass.mealColumns: Int
-    get() = if (this.widthSizeClass == WindowWidthSizeClass.Compact) 2 else 3
