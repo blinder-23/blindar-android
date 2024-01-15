@@ -17,6 +17,7 @@ import com.practice.main.calendar.CalendarMainScreen
 import com.practice.main.daily.DailyMainScreen
 import com.practice.main.loading.LoadingMainScreen
 import com.practice.main.popup.MainScreenModePopup
+import com.practice.main.popup.MealPopup
 import com.practice.main.popup.MemoPopup
 import com.practice.main.popup.NutrientPopup
 import com.practice.main.popup.popupPadding
@@ -74,7 +75,10 @@ fun MainScreen(
             }
         }
     }
-    MainScreenPopups(viewModel = viewModel)
+    MainScreenPopups(
+        viewModel = viewModel,
+        mealColumns = windowSize.mealColumns,
+    )
 }
 
 val WindowSizeClass.mealColumns: Int
@@ -83,6 +87,7 @@ val WindowSizeClass.mealColumns: Int
 @Composable
 private fun MainScreenPopups(
     viewModel: MainScreenViewModel,
+    mealColumns: Int,
 ) {
     val uiState by viewModel.uiState
 
@@ -120,6 +125,20 @@ private fun MainScreenPopups(
                 modifier = Modifier
                     .padding(popupPadding)
                     .widthIn(max = 600.dp),
+            )
+        }
+    }
+
+    if (uiState.isMealPopupVisible) {
+        MainScreenPopup(onClose = viewModel::onMealPopupClose) {
+            MealPopup(
+                uiMeals = uiState.selectedDateDataState.uiMeals,
+                selectedMealIndex = uiState.selectedMealIndex,
+                onMealTimeClick = viewModel::onMealTimeClick,
+                mealColumns = mealColumns,
+                onNutrientPopupOpen = viewModel::openNutrientPopup,
+                onMealPopupClose = viewModel::onMealPopupClose,
+                modifier = Modifier.padding(popupPadding),
             )
         }
     }
