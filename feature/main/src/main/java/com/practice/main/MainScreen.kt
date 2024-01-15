@@ -20,6 +20,7 @@ import com.practice.main.popup.MainScreenModePopup
 import com.practice.main.popup.MealPopup
 import com.practice.main.popup.MemoPopup
 import com.practice.main.popup.NutrientPopup
+import com.practice.main.popup.SchedulePopup
 import com.practice.main.popup.popupPadding
 import com.practice.main.state.MainUiMode
 
@@ -139,6 +140,19 @@ private fun MainScreenPopups(
                 onNutrientPopupOpen = viewModel::openNutrientPopup,
                 onMealPopupClose = viewModel::onMealPopupClose,
                 modifier = Modifier.padding(popupPadding),
+            )
+        }
+    }
+
+    if (uiState.isSchedulePopupVisible) {
+        MainScreenPopup(onClose = viewModel::onSchedulePopupClose) {
+            SchedulePopup(
+                scheduleElements = uiState.selectedDateDataState.memoPopupElements,
+                onMemoPopupOpen = viewModel::openMemoPopup,
+                onSchedulePopupClose = viewModel::onSchedulePopupClose,
+                modifier = Modifier
+                    .padding(popupPadding)
+                    .widthIn(max = 600.dp),
             )
         }
     }
