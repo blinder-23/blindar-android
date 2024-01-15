@@ -119,6 +119,7 @@ private fun ScreenModeOpenPopupButton(
     Box(
         modifier = modifier
             .semantics {
+                role = Role.Button
                 contentDescription = description
             }
             .clickable(enabled = enabled, onClick = onOpenPopup)
