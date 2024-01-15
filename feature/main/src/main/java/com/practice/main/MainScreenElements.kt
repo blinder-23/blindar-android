@@ -639,7 +639,7 @@ private fun MainScreenContentHeaderButtonPreview() {
     }
 }
 
-private val sampleUiMeals = UiMeals(
+internal val sampleUiMeals = UiMeals(
     listOf("조식", "중식", "석식").map {
         UiMeal(2022, 10, 28, it, previewMenus, previewNutrients)
     }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DatePickerFormatter
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,14 +18,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BodySmall
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.main.R
 import com.practice.main.daily.picker.DailyDatePickerState
 import com.practice.main.daily.picker.rememberDailyDatePickerState
 import kotlin.math.absoluteValue
@@ -81,6 +85,47 @@ internal fun DateQuickNavigationButton(
             textColor = contentColorFor(backgroundColor = backgroundColor),
         )
     }
+}
+
+@Composable
+internal fun ScreenModeOpenPopupButtons(
+    isMealPopupEnabled: Boolean,
+    onMealPopupOpen: () -> Unit,
+    isSchedulePopupEnabled: Boolean,
+    onSchedulePopupOpen: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier) {
+        ScreenModeOpenPopupButton(
+            enabled = isMealPopupEnabled,
+            description = stringResource(id = if (isMealPopupEnabled) R.string.open_meal_popup else R.string.meal_popup_unavailable),
+            onOpenPopup = onMealPopupOpen,
+        )
+        ScreenModeOpenPopupButton(
+            enabled = isSchedulePopupEnabled,
+            description = stringResource(id = if (isSchedulePopupEnabled) R.string.open_schedule_popup else R.string.schedule_popup_unavailable),
+            onOpenPopup = onSchedulePopupOpen,
+        )
+    }
+}
+
+@Composable
+private fun ScreenModeOpenPopupButton(
+    enabled: Boolean,
+    description: String,
+    onOpenPopup: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .semantics {
+                role = Role.Button
+                contentDescription = description
+            }
+            .clickable(enabled = enabled, onClick = onOpenPopup)
+            .size(8.dp)
+            .background(Color.Transparent),
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

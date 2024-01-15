@@ -27,6 +27,11 @@
     <string name="quick_navigation_plus_1_description">내일 데이터 보기</string>
     <string name="quick_navigation_plus_7_description">일주일 후 데이터 보기</string>
 
+    <string name="open_meal_popup">식단 빠르게 보기</string>
+    <string name="meal_popup_unavailable">식단이 없습니다.</string>
+    <string name="open_schedule_popup">일정 빠르게 보기</string>
+    <string name="schedule_popup_unavailable">일정이 없습니다.</string>
+
     <string name="button_selected">선택됨</string>
     <string name="button_not_selected">선택되지 않음</string>
 
@@ -60,6 +65,10 @@
     <string name="ui_mode_popup_use_daily">사용하기</string>
     <string name="ui_mode_popup_calendar_mode_set">달력으로 보기 모드를 사용합니다.</string>
     <string name="ui_mode_popup_daily_mode_set">하루씩 보기 모드를 사용합니다.</string>
+
+    <string name="meal_popup_close">닫기</string>
+
+    <string name="schedule_popup_close">닫기</string>
 
     <string name="feedback_popup_title">피드백 보내기</string>
     <string name="feedback_popup_textfield_placeholder">블린더 사용 후기를 알려주세요!</string>
