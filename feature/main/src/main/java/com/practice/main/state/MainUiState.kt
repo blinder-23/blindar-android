@@ -29,6 +29,12 @@ data class MainUiState(
         get() = monthlyDataState.firstOrNull { it.date == selectedDate }
             ?: DailyData.Empty
 
+    val isMealExists: Boolean
+        get() = !selectedDateDataState.uiMeals.isEmpty
+
+    val isScheduleOrMemoExists: Boolean
+        get()=selectedDateDataState.memoPopupElements.isNotEmpty()
+
     fun updateMemoUiState(date: Date, uiMemos: UiMemos): List<DailyData> {
         return if (monthlyDataState.any { it.date == date }) {
             addMemoUiStateOnExistingDate(date, uiMemos)

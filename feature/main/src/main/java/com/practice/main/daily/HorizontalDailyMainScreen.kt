@@ -104,7 +104,9 @@ private fun HorizontalDailyMainScreenContents(
                 .fillMaxHeight()
         ) {
             ScreenModeOpenPopupButtons(
+                isMealPopupEnabled = uiState.isMealExists,
                 onMealPopupOpen = onMealPopupOpen,
+                isSchedulePopupEnabled = uiState.isScheduleOrMemoExists,
                 onSchedulePopupOpen = onSchedulePopupOpen,
             )
         }

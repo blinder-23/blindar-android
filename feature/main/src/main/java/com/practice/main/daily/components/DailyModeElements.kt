@@ -2,7 +2,6 @@ package com.practice.main.daily.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.DatePickerFormatter
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -91,17 +89,21 @@ internal fun DateQuickNavigationButton(
 
 @Composable
 internal fun ScreenModeOpenPopupButtons(
+    isMealPopupEnabled: Boolean,
     onMealPopupOpen: () -> Unit,
+    isSchedulePopupEnabled: Boolean,
     onSchedulePopupOpen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier) {
         ScreenModeOpenPopupButton(
-            description = stringResource(id = R.string.open_meal_popup),
+            enabled = isMealPopupEnabled,
+            description = stringResource(id = if (isMealPopupEnabled) R.string.open_meal_popup else R.string.meal_popup_unavailable),
             onOpenPopup = onMealPopupOpen,
         )
         ScreenModeOpenPopupButton(
-            description = stringResource(id = R.string.open_schedule_popup),
+            enabled = isSchedulePopupEnabled,
+            description = stringResource(id = if (isSchedulePopupEnabled) R.string.open_schedule_popup else R.string.schedule_popup_unavailable),
             onOpenPopup = onSchedulePopupOpen,
         )
     }
@@ -109,22 +111,20 @@ internal fun ScreenModeOpenPopupButtons(
 
 @Composable
 private fun ScreenModeOpenPopupButton(
+    enabled: Boolean,
     description: String,
     onOpenPopup: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Button(
-        onClick = onOpenPopup,
+    Box(
         modifier = modifier
             .semantics {
                 contentDescription = description
             }
-            .size(0.dp)
+            .clickable(enabled = enabled, onClick = onOpenPopup)
+            .size(8.dp)
             .background(Color.Transparent),
-        interactionSource = MutableInteractionSource()
-    ) {
-
-    }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
