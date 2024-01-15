@@ -2,12 +2,15 @@ package com.practice.main.daily.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.DatePickerFormatter
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -17,14 +20,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BodySmall
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.main.R
 import com.practice.main.daily.picker.DailyDatePickerState
 import com.practice.main.daily.picker.rememberDailyDatePickerState
 import kotlin.math.absoluteValue
@@ -80,6 +86,44 @@ internal fun DateQuickNavigationButton(
             modifier = Modifier.align(Alignment.Center),
             textColor = contentColorFor(backgroundColor = backgroundColor),
         )
+    }
+}
+
+@Composable
+internal fun ScreenModeOpenPopupButtons(
+    onMealPopupOpen: () -> Unit,
+    onSchedulePopupOpen: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier) {
+        ScreenModeOpenPopupButton(
+            description = stringResource(id = R.string.open_meal_popup),
+            onOpenPopup = onMealPopupOpen,
+        )
+        ScreenModeOpenPopupButton(
+            description = stringResource(id = R.string.open_schedule_popup),
+            onOpenPopup = onSchedulePopupOpen,
+        )
+    }
+}
+
+@Composable
+private fun ScreenModeOpenPopupButton(
+    description: String,
+    onOpenPopup: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Button(
+        onClick = onOpenPopup,
+        modifier = modifier
+            .semantics {
+                contentDescription = description
+            }
+            .size(0.dp)
+            .background(Color.Transparent),
+        interactionSource = MutableInteractionSource()
+    ) {
+
     }
 }
 

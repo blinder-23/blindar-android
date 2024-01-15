@@ -27,6 +27,9 @@
     <string name="quick_navigation_plus_1_description">내일 데이터 보기</string>
     <string name="quick_navigation_plus_7_description">일주일 후 데이터 보기</string>
 
+    <string name="open_meal_popup">식단 빠르게 보기</string>
+    <string name="open_schedule_popup">일정 팝업으로 빠르게 보기</string>
+
     <string name="button_selected">선택됨</string>
     <string name="button_not_selected">선택되지 않음</string>
 
