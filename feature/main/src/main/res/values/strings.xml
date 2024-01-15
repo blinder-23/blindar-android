@@ -61,6 +61,8 @@
     <string name="ui_mode_popup_calendar_mode_set">달력으로 보기 모드를 사용합니다.</string>
     <string name="ui_mode_popup_daily_mode_set">하루씩 보기 모드를 사용합니다.</string>
 
+    <string name="meal_popup_close">닫기</string>
+
     <string name="feedback_popup_title">피드백 보내기</string>
     <string name="feedback_popup_textfield_placeholder">블린더 사용 후기를 알려주세요!</string>
     <string name="feedback_popup_textfield_error_empty">피드백을 입력해 주세요.</string>
