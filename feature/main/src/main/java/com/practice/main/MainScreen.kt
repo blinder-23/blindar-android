@@ -139,7 +139,9 @@ private fun MainScreenPopups(
                 mealColumns = mealColumns,
                 onNutrientPopupOpen = viewModel::openNutrientPopup,
                 onMealPopupClose = viewModel::onMealPopupClose,
-                modifier = Modifier.padding(popupPadding),
+                modifier = Modifier
+                    .padding(popupPadding)
+                    .widthIn(max = 600.dp),
             )
         }
     }
