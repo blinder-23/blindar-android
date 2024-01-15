@@ -298,6 +298,14 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
+    fun onMealPopupOpen() {
+        updateUiState(isMealPopupVisible = true)
+    }
+
+    fun onMealPopupClose() {
+        updateUiState(isMealPopupVisible = false)
+    }
+
     suspend fun sendFeedback(appVersionName: String, contents: String) {
         /**
          * userId: BlindarFirebase에서 얻으면 됨
