@@ -55,8 +55,8 @@
     <string name="memo_popup_title">%d월 %d일 메모 편집</string>
     <string name="memo_popup_add_memo">+ 메모 추가하기</string>
     <string name="memo_popup_item_label">일정 입력</string>
-    <string name="memo_popup_clear_text">%s 내용 지우기</string>
-    <string name="memo_popup_item_delete">%s 삭제하기</string>
+    <string name="memo_popup_clear_text">내용 지우기 %s</string>
+    <string name="memo_popup_item_delete">삭제하기 %s</string>
     <string name="memo_popup_close">확인</string>
 
     <string name="ui_mode_popup_title">하루씩 보기 모드를 켤까요?</string>
