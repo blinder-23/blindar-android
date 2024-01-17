@@ -11,8 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.practice.designsystem.a11y.isLargeFont
 import com.practice.main.calendar.CalendarMainScreen
 import com.practice.main.daily.DailyMainScreen
 import com.practice.main.loading.LoadingMainScreen
@@ -83,7 +85,11 @@ fun MainScreen(
 }
 
 val WindowSizeClass.mealColumns: Int
-    get() = if (this.widthSizeClass == WindowWidthSizeClass.Compact) 2 else 3
+    @Composable get() = when {
+        LocalDensity.current.isLargeFont -> 1
+        this.widthSizeClass == WindowWidthSizeClass.Compact -> 2
+        else -> 3
+    }
 
 @Composable
 private fun MainScreenPopups(
