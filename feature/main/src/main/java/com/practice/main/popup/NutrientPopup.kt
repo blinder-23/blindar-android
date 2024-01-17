@@ -30,12 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
+import com.practice.designsystem.a11y.isLargeFont
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
 import com.practice.main.previewMenus
@@ -54,7 +56,7 @@ fun NutrientPopup(
     modifier: Modifier = Modifier
 ) {
     val chipTargetNames = listOf("열량", "탄수화물", "단백질", "지방")
-    val (chipNutrients, listNutrients) = uiMeal.nutrients.partition { nutrient ->
+    val (importantNutrients, otherNutrients) = uiMeal.nutrients.partition { nutrient ->
         chipTargetNames.contains(nutrient.name)
     }
 
@@ -82,9 +84,9 @@ fun NutrientPopup(
         }
         item {
             Column(modifier = Modifier.fillMaxWidth()) {
-                NutrientChipGrid(chipNutrients.toImmutableList())
+                ImportantNutrients(importantNutrients.toImmutableList())
                 NutrientList(
-                    nutrients = listNutrients.toImmutableList(),
+                    nutrients = otherNutrients.toImmutableList(),
                     modifier = Modifier.padding(top = 8.dp),
                 )
             }
@@ -95,6 +97,24 @@ fun NutrientPopup(
                 modifier = Modifier.fillMaxWidth(),
             )
         }
+    }
+}
+
+@Composable
+private fun ImportantNutrients(
+    importantNutrients: ImmutableList<Nutrient>,
+    modifier: Modifier = Modifier,
+) {
+    if (LocalDensity.current.isLargeFont) {
+        NutrientList(
+            nutrients = importantNutrients,
+            modifier = modifier,
+        )
+    } else {
+        NutrientChipGrid(
+            nutrients = importantNutrients,
+            modifier = modifier,
+        )
     }
 }
 
