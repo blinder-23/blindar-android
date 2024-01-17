@@ -118,9 +118,10 @@ private fun MainTopBarActions(
     onSettingsIconClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val horizontalSpace = if (LocalDensity.current.isLargeFont) 0.dp else 4.dp
     Row(
         modifier = modifier.padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(horizontalSpace),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ForceRefreshIcon(
