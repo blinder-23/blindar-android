@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -58,6 +59,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
+import com.practice.designsystem.a11y.isLargeFont
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
@@ -116,9 +118,10 @@ private fun MainTopBarActions(
     onSettingsIconClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val horizontalSpace = if (LocalDensity.current.isLargeFont) 0.dp else 4.dp
     Row(
         modifier = modifier.padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(horizontalSpace),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ForceRefreshIcon(
@@ -478,12 +481,39 @@ private fun MainScreenContentHeader(
     buttonTitle: String = "",
     onButtonClick: () -> Unit = {},
 ) {
-    Row(
+    if (LocalDensity.current.isLargeFont) {
+        MainScreenContentHeaderLargeFont(
+            modifier = modifier,
+            titleContent = titleContent,
+            buttonTitle = buttonTitle,
+            onButtonClick = onButtonClick,
+        )
+    } else {
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            titleContent()
+            Spacer(modifier = Modifier.weight(1f))
+            if (buttonTitle != "") {
+                MainScreenContentHeaderButton(title = buttonTitle, onButtonClick = onButtonClick)
+            }
+        }
+    }
+}
+
+@Composable
+private fun MainScreenContentHeaderLargeFont(
+    modifier: Modifier = Modifier,
+    titleContent: @Composable () -> Unit = {},
+    buttonTitle: String = "",
+    onButtonClick: () -> Unit = {},
+) {
+    Column(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         titleContent()
-        Spacer(modifier = Modifier.weight(1f))
         if (buttonTitle != "") {
             MainScreenContentHeaderButton(title = buttonTitle, onButtonClick = onButtonClick)
         }
