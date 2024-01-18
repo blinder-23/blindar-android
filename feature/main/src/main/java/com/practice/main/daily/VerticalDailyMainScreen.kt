@@ -186,7 +186,6 @@ private fun VerticalDailyMainScreenPreview() {
     val datePickerState = rememberDailyDatePickerState(
         initialDate = uiState.selectedDate,
         initialTextFieldValue = uiState.selectedDate.toTextFieldFormat(),
-        onDateInput = { },
     )
     BlindarTheme {
         VerticalDailyMainScreen(

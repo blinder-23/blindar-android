@@ -197,7 +197,6 @@ private fun HorizontalDailyMainScreenPreview() {
     val datePickerState = rememberDailyDatePickerState(
         initialDate = uiState.selectedDate,
         initialTextFieldValue = uiState.selectedDate.toTextFieldFormat(),
-        onDateInput = { },
     )
     BlindarTheme {
         HorizontalDailyMainScreen(

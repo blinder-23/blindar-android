@@ -2,8 +2,9 @@ package com.practice.main.state
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import java.io.Serializable
 
-class UiMeals(meals: List<UiMeal>) {
+class UiMeals(meals: List<UiMeal>): Serializable {
 
     constructor(vararg meals: UiMeal) : this(meals.toList())
 
