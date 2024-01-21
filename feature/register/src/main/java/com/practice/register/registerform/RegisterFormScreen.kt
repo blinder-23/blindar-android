@@ -174,7 +174,7 @@ private fun NameTextField(
                 submitName()
             }
         ),
-        maxLines = 1,
+        singleLine = true,
     )
 }
 
