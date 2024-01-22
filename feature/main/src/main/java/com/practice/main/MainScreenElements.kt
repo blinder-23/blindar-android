@@ -593,13 +593,14 @@ private fun MealTimesButton(
     endRoundCornerPercent: Int = 0,
 ) {
     val backgroundColor by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+        targetValue = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
         label = "background",
     )
-    val contentColor by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer,
-        label = "content",
+    val contentAlpha by animateFloatAsState(
+        targetValue = if (isSelected) 1f else 0.6f,
+        label = "alpha",
     )
+    val contentColor = MaterialTheme.colorScheme.onPrimaryContainer
     val shape = RoundedCornerShape(
         topStartPercent = startRoundCornerPercent,
         topEndPercent = endRoundCornerPercent,
@@ -627,6 +628,7 @@ private fun MealTimesButton(
         LabelLarge(
             text = mealTime,
             textColor = contentColor,
+            modifier = Modifier.alpha(contentAlpha),
         )
     }
 }
