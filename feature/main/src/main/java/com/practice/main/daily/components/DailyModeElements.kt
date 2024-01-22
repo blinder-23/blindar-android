@@ -1,6 +1,7 @@
 package com.practice.main.daily.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -66,10 +67,12 @@ internal fun DateQuickNavigationButton(
     quickNavigation: DateQuickNavigation,
     modifier: Modifier = Modifier,
 ) {
-    val backgroundColor = MaterialTheme.colorScheme.primary
+    val shape = RoundedCornerShape(6.dp)
+    val backgroundColor = MaterialTheme.colorScheme.primaryContainer
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(6.dp))
+            .clip(shape)
+            .border(2.dp, MaterialTheme.colorScheme.primary, shape)
             .background(backgroundColor)
             .clickable(onClickLabel = stringResource(id = quickNavigation.descriptionId)) {
                 if (quickNavigation == DateQuickNavigation.TODAY) {
@@ -151,7 +154,10 @@ private fun DateQuickNavigationButtonsPreview() {
     BlindarTheme {
         DateQuickNavigationButtons(
             datePickerState = datePickerState,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(16.dp)
+                .fillMaxWidth(),
         )
     }
 }
