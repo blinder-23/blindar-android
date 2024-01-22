@@ -3,9 +3,11 @@ package com.practice.main
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -526,11 +529,12 @@ private fun MainScreenContentHeaderButton(
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val backgroundColor = MaterialTheme.colorScheme.primary
+    val backgroundColor = MaterialTheme.colorScheme.primaryContainer
     Button(
         onClick = onButtonClick,
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+        border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.primary),
     ) {
         LabelLarge(
             text = title,
@@ -593,13 +597,14 @@ private fun MealTimesButton(
     endRoundCornerPercent: Int = 0,
 ) {
     val backgroundColor by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+        targetValue = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
         label = "background",
     )
-    val contentColor by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer,
-        label = "content",
+    val contentAlpha by animateFloatAsState(
+        targetValue = if (isSelected) 1f else 0.6f,
+        label = "alpha",
     )
+    val contentColor = MaterialTheme.colorScheme.onPrimaryContainer
     val shape = RoundedCornerShape(
         topStartPercent = startRoundCornerPercent,
         topEndPercent = endRoundCornerPercent,
@@ -627,6 +632,7 @@ private fun MealTimesButton(
         LabelLarge(
             text = mealTime,
             textColor = contentColor,
+            modifier = Modifier.alpha(contentAlpha),
         )
     }
 }
@@ -664,7 +670,9 @@ private fun MainScreenContentHeaderButtonPreview() {
         MainScreenContentHeaderButton(
             title = "영양 정보",
             onButtonClick = {},
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(16.dp),
         )
     }
 }
