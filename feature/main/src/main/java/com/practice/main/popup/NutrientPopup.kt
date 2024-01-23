@@ -1,5 +1,6 @@
 package com.practice.main.popup
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +35,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
@@ -164,19 +166,53 @@ private fun NutrientListItem(
     nutrient: Nutrient,
     modifier: Modifier = Modifier,
 ) {
-    val textColor = contentColorFor(MaterialTheme.colorScheme.surface)
-    Row(modifier = modifier
-        .clearAndSetSemantics {
-            contentDescription = nutrient.description
-        }
-        .padding(16.dp)
-    ) {
+    val itemModifier = modifier.clearAndSetSemantics {
+        contentDescription = nutrient.description
+    }
+    if (LocalDensity.current.isLargeFont) {
+        NutrientListItemLarge(
+            nutrient = nutrient,
+            modifier = itemModifier,
+        )
+    } else {
+        NutrientListItemNormal(
+            nutrient = nutrient,
+            modifier = itemModifier,
+        )
+    }
+}
+
+@Composable
+private fun NutrientListItemNormal(
+    nutrient: Nutrient,
+    modifier: Modifier = Modifier,
+    textColor: Color = contentColorFor(MaterialTheme.colorScheme.surface),
+) {
+    Row(modifier = modifier.padding(16.dp)) {
         PopupBodySmall(
             text = nutrient.name,
             color = textColor
         )
         Spacer(modifier = Modifier.weight(1f))
         PopupBodySmall(
+            text = "${nutrient.amount} ${nutrient.unit}",
+            color = textColor,
+        )
+    }
+}
+
+@Composable
+private fun NutrientListItemLarge(
+    nutrient: Nutrient,
+    modifier: Modifier = Modifier,
+    textColor: Color = contentColorFor(MaterialTheme.colorScheme.surface),
+) {
+    Column(modifier = modifier) {
+        PopupBodyLarge(
+            text = nutrient.name,
+            color = textColor
+        )
+        PopupBodyLarge(
             text = "${nutrient.amount} ${nutrient.unit}",
             color = textColor,
         )
@@ -324,5 +360,19 @@ private fun NutrientPopupPreview() {
                     .align(Alignment.Center),
             )
         }
+    }
+}
+
+@Preview(fontScale = 2f)
+@Preview(fontScale = 2f, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun NutrientListItemLargePreview() {
+    BlindarTheme {
+        NutrientListItemLarge(
+            nutrient = previewNutrients[0],
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(16.dp),
+        )
     }
 }

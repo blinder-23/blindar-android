@@ -41,6 +41,11 @@ val PopupTypography = Typography(
         fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp,
     ),
+    bodyLarge = TextStyle(
+        fontFamily = popupFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp,
+    ),
     bodyMedium = TextStyle(
         fontFamily = popupFontFamily,
         fontWeight = FontWeight.Medium,
