@@ -9,7 +9,6 @@ import kotlinx.collections.immutable.toPersistentList
 /**
  * Ui state of meal
  */
-// TODO: 향후 하루에 여러 개의 식단을 지우너하게 되면 UiMeals 추가하기
 data class UiMeal(
     val year: Int,
     val month: Int,
@@ -23,6 +22,14 @@ data class UiMeal(
 
     val description: String
         get() = if (menus.isEmpty()) "식단이 없습니다." else menus.joinToString(", ") { it.name }
+
+    val sortOrder: Int
+        get() = when (mealTime) {
+            "조식" -> 0
+            "중식" -> 1
+            "석식" -> 2
+            else -> 10
+        }
 
     companion object {
         val EmptyUiMeal = UiMeal(
