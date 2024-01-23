@@ -4,7 +4,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import java.io.Serializable
 
-class UiMeals(meals: List<UiMeal>): Serializable {
+class UiMeals(meals: List<UiMeal>) : Serializable {
 
     constructor(vararg meals: UiMeal) : this(meals.toList())
 
@@ -22,6 +22,6 @@ class UiMeals(meals: List<UiMeal>): Serializable {
     operator fun get(index: Int) = meals[index]
 
     private fun List<UiMeal>.sortMealsInTimeOrder(): ImmutableList<UiMeal> {
-        return this.toImmutableList()
+        return this.sortedBy { it.sortOrder }.toImmutableList()
     }
 }
