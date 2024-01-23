@@ -141,7 +141,7 @@ class MainScreenViewModel @Inject constructor(
         updateUiState(
             yearMonth = clickedDate.yearMonth,
             selectedDate = clickedDate,
-            selectedMealIndex = 0, // TODO: real?
+            selectedMealIndex = 0,
         )
     }
 
