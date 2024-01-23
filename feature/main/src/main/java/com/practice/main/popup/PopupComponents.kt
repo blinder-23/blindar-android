@@ -34,6 +34,20 @@ fun PopupTitleLarge(
 }
 
 @Composable
+fun PopupBodyLarge(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+) {
+    PopupText(
+        text = text,
+        textStyle = PopupTypography.bodyLarge,
+        modifier = modifier,
+        color = color,
+    )
+}
+
+@Composable
 fun PopupBodyMedium(
     text: String,
     modifier: Modifier = Modifier,
