@@ -20,6 +20,7 @@ object TestUtil {
         origins = emptyList(),
         calorie = 100.0,
         nutrients = emptyList(),
+        mealTime = "중식",
     )
 
     fun createScheduleEntity(

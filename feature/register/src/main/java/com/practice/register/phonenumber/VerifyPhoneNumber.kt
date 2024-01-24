@@ -302,7 +302,7 @@ private fun AuthCodeTextField(
                 verifyAuthCode()
             },
         ),
-        maxLines = 1,
+        singleLine = true,
     )
 }
 

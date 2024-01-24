@@ -1,11 +1,15 @@
 package com.practice.main
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,16 +38,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,6 +62,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
+import com.practice.designsystem.a11y.isLargeFont
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
@@ -62,12 +72,14 @@ import com.practice.main.state.MemoPopupElement
 import com.practice.main.state.Menu
 import com.practice.main.state.Nutrient
 import com.practice.main.state.UiMeal
+import com.practice.main.state.UiMeals
 import com.practice.main.state.UiMemo
 import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedule
 import com.practice.main.state.UiSchedules
 import com.practice.main.state.mergeSchedulesAndMemos
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
@@ -109,9 +121,10 @@ private fun MainTopBarActions(
     onSettingsIconClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val horizontalSpace = if (LocalDensity.current.isLargeFont) 0.dp else 4.dp
     Row(
         modifier = modifier.padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(horizontalSpace),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ForceRefreshIcon(
@@ -181,16 +194,18 @@ private fun SettingsIcon(
 
 @Composable
 internal fun MainScreenContents(
-    uiMeal: UiMeal,
+    uiMeals: UiMeals,
     memoPopupElements: ImmutableList<MemoPopupElement>,
     mealColumns: Int,
+    selectedMealIndex: Int,
+    onMealTimeClick: (Int) -> Unit,
     onNutrientPopupOpen: () -> Unit,
     onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
     emptyContentAlignment: Alignment = Alignment.Center,
     header: @Composable (() -> Unit)? = null,
 ) {
-    if (uiMeal.isEmpty && memoPopupElements.isEmpty()) {
+    if (uiMeals.isEmpty && memoPopupElements.isEmpty()) {
         Box(modifier = modifier) {
             Column(
                 modifier = Modifier
@@ -212,10 +227,12 @@ internal fun MainScreenContents(
             item {
                 header?.invoke()
             }
-            if (!uiMeal.isEmpty) {
+            if (!uiMeals.isEmpty) {
                 item {
                     MealContent(
-                        uiMeal = uiMeal,
+                        uiMeals = uiMeals,
+                        selectedIndex = selectedMealIndex,
+                        onMealTimeClick = onMealTimeClick,
                         columns = mealColumns,
                         onNutrientPopupOpen = onNutrientPopupOpen,
                     )
@@ -262,23 +279,35 @@ private fun EmptyContentIndicator(
 
 @Composable
 internal fun MealContent(
-    uiMeal: UiMeal,
+    uiMeals: UiMeals,
+    selectedIndex: Int,
+    onMealTimeClick: (Int) -> Unit,
     columns: Int,
     onNutrientPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
     itemPadding: Dp = 16.dp,
 ) {
     MainScreenContent(
-        title = "식단",
+        titleContent = {
+            MainScreenContentHeader(
+                titleContent = {
+                    MainScreenContentMealTimesTitle(
+                        selectedIndex = selectedIndex,
+                        mealTimes = uiMeals.mealTimes,
+                        onMealTimeClick = onMealTimeClick,
+                    )
+                },
+                buttonTitle = stringResource(id = R.string.open_nutrient_popup_button),
+                onButtonClick = onNutrientPopupOpen,
+            )
+        },
         modifier = modifier,
-        buttonTitle = stringResource(id = R.string.open_nutrient_popup_button),
-        onButtonClick = onNutrientPopupOpen,
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(itemPadding)
         ) {
-            uiMeal.menus.chunked(columns).forEach { menus ->
+            uiMeals[selectedIndex].menus.chunked(columns).forEach { menus ->
                 val filledMenus = fillMenus(menus, columns)
                 MenuRow(menus = filledMenus)
             }
@@ -343,6 +372,7 @@ private fun EmptyScheduleContent(
     modifier: Modifier = Modifier,
 ) {
     MainScreenContent(
+        titleContent = {},
         padding = PaddingValues(0.dp),
         contentAlignment = Alignment.CenterHorizontally,
         modifier = modifier,
@@ -383,6 +413,34 @@ internal fun MainScreenContent(
     contentAlignment: Alignment.Horizontal = Alignment.Start,
     contents: @Composable () -> Unit = {},
 ) {
+    MainScreenContent(
+        modifier = modifier,
+        titleContent = {
+            MainScreenContentHeader(
+                title = title,
+                buttonTitle = buttonTitle,
+                onButtonClick = onButtonClick,
+            )
+        },
+        padding = padding,
+        contentAlignment = contentAlignment,
+        contents = contents,
+    )
+}
+
+@Composable
+internal fun MainScreenContent(
+    modifier: Modifier = Modifier,
+    titleContent: @Composable () -> Unit = {},
+    padding: PaddingValues = PaddingValues(
+        start = 20.dp,
+        top = 10.dp,
+        end = 20.dp,
+        bottom = 30.dp,
+    ),
+    contentAlignment: Alignment.Horizontal = Alignment.Start,
+    contents: @Composable () -> Unit = {},
+) {
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth(),
@@ -396,13 +454,7 @@ internal fun MainScreenContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = contentAlignment,
         ) {
-            if (title.isNotEmpty() || buttonTitle.isNotEmpty()) {
-                MainScreenContentHeader(
-                    title = title,
-                    buttonTitle = buttonTitle,
-                    onButtonClick = onButtonClick,
-                )
-            }
+            titleContent()
             contents()
         }
     }
@@ -415,12 +467,56 @@ private fun MainScreenContentHeader(
     buttonTitle: String = "",
     onButtonClick: () -> Unit = {},
 ) {
-    Row(
+    MainScreenContentHeader(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
+        titleContent = {
+            MainScreenContentTitle(title = title)
+        },
+        buttonTitle = buttonTitle,
+        onButtonClick = onButtonClick,
+    )
+}
+
+@Composable
+private fun MainScreenContentHeader(
+    modifier: Modifier = Modifier,
+    titleContent: @Composable () -> Unit = {},
+    buttonTitle: String = "",
+    onButtonClick: () -> Unit = {},
+) {
+    if (LocalDensity.current.isLargeFont) {
+        MainScreenContentHeaderLargeFont(
+            modifier = modifier,
+            titleContent = titleContent,
+            buttonTitle = buttonTitle,
+            onButtonClick = onButtonClick,
+        )
+    } else {
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            titleContent()
+            Spacer(modifier = Modifier.weight(1f))
+            if (buttonTitle != "") {
+                MainScreenContentHeaderButton(title = buttonTitle, onButtonClick = onButtonClick)
+            }
+        }
+    }
+}
+
+@Composable
+private fun MainScreenContentHeaderLargeFont(
+    modifier: Modifier = Modifier,
+    titleContent: @Composable () -> Unit = {},
+    buttonTitle: String = "",
+    onButtonClick: () -> Unit = {},
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        MainScreenContentTitle(title = title)
-        Spacer(modifier = Modifier.weight(1f))
+        titleContent()
         if (buttonTitle != "") {
             MainScreenContentHeaderButton(title = buttonTitle, onButtonClick = onButtonClick)
         }
@@ -433,11 +529,12 @@ private fun MainScreenContentHeaderButton(
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val backgroundColor = MaterialTheme.colorScheme.primary
+    val backgroundColor = MaterialTheme.colorScheme.primaryContainer
     Button(
         onClick = onButtonClick,
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+        border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.primary),
     ) {
         LabelLarge(
             text = title,
@@ -456,6 +553,88 @@ private fun MainScreenContentTitle(
         modifier = modifier,
         fontWeight = FontWeight.Bold,
     )
+}
+
+@Composable
+private fun MainScreenContentMealTimesTitle(
+    selectedIndex: Int,
+    mealTimes: ImmutableList<String>,
+    onMealTimeClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val shape = RoundedCornerShape(50)
+    Row(
+        modifier = modifier
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.primary,
+                shape = shape
+            )
+            .clip(shape),
+    ) {
+        mealTimes.forEachIndexed { index, s ->
+            val startRound = if (index == 0) 50 else 0
+            val endRound = if (index == mealTimes.lastIndex) 50 else 0
+
+            MealTimesButton(
+                mealTime = s,
+                isSelected = (selectedIndex == index),
+                onClick = { onMealTimeClick(index) },
+                startRoundCornerPercent = startRound,
+                endRoundCornerPercent = endRound,
+            )
+        }
+    }
+}
+
+@Composable
+private fun MealTimesButton(
+    mealTime: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    startRoundCornerPercent: Int = 0,
+    endRoundCornerPercent: Int = 0,
+) {
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+        label = "background",
+    )
+    val contentAlpha by animateFloatAsState(
+        targetValue = if (isSelected) 1f else 0.6f,
+        label = "alpha",
+    )
+    val contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+    val shape = RoundedCornerShape(
+        topStartPercent = startRoundCornerPercent,
+        topEndPercent = endRoundCornerPercent,
+        bottomEndPercent = endRoundCornerPercent,
+        bottomStartPercent = startRoundCornerPercent,
+    )
+
+    val description =
+        stringResource(id = if (isSelected) R.string.button_selected else R.string.button_not_selected)
+    Box(
+        modifier = modifier
+            .semantics {
+                role = Role.Button
+                contentDescription = description
+            }
+            .clickable(onClick = onClick)
+            .background(backgroundColor, shape = shape)
+            .clip(shape)
+            .padding(
+                start = if (startRoundCornerPercent == 0) 10.dp else 14.dp,
+                end = if (endRoundCornerPercent == 0) 10.dp else 14.dp,
+            )
+            .padding(vertical = 10.dp),
+    ) {
+        LabelLarge(
+            text = mealTime,
+            textColor = contentColor,
+            modifier = Modifier.alpha(contentAlpha),
+        )
+    }
 }
 
 val previewMenus = listOf("찰보리밥", "망고마들렌", "쇠고기미역국", "콩나물파채무침", "돼지양념구이", "포기김치", "오렌지주스", "기타등등")
@@ -491,19 +670,26 @@ private fun MainScreenContentHeaderButtonPreview() {
         MainScreenContentHeaderButton(
             title = "영양 정보",
             onButtonClick = {},
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(16.dp),
         )
     }
 }
 
-private val sampleUiMeal = UiMeal(2022, 10, 28, previewMenus, previewNutrients)
+internal val sampleUiMeals = UiMeals(
+    listOf("조식", "중식", "석식").map {
+        UiMeal(2022, 10, 28, it, previewMenus, previewNutrients)
+    }
+)
 
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenContentsPreview() {
+    var selectedMealIndex by remember { mutableIntStateOf(0) }
     BlindarTheme {
         MainScreenContents(
-            uiMeal = sampleUiMeal,
+            uiMeals = sampleUiMeals,
             memoPopupElements = mergeSchedulesAndMemos(
                 UiSchedules(
                     date = Date.now(),
@@ -514,6 +700,8 @@ private fun MainScreenContentsPreview() {
                     memos = previewMemos,
                 ),
             ),
+            selectedMealIndex = selectedMealIndex,
+            onMealTimeClick = { selectedMealIndex = it },
             mealColumns = 2,
             onNutrientPopupOpen = {},
             onMemoPopupOpen = {},
@@ -524,17 +712,16 @@ private fun MainScreenContentsPreview() {
 
 @LightAndDarkPreview
 @Composable
-private fun MainScreenTopBarPreview() {
-    var isLoading by remember { mutableStateOf(false) }
+private fun MainScreenContentMealTimesTitlePreview() {
+    var selectedIndex by remember { mutableIntStateOf(0) }
+
     BlindarTheme {
-        MainScreenTopBar(
-            schoolName = "한빛맹학교",
-            isLoading = isLoading,
-            onRefreshIconClick = { isLoading = !isLoading },
-            onSettingsIconClick = {},
+        MainScreenContentMealTimesTitle(
+            selectedIndex = selectedIndex,
+            mealTimes = persistentListOf("조식", "중식", "석식"),
+            onMealTimeClick = { selectedIndex = it },
             modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surface),
+                .padding(16.dp),
         )
     }
 }

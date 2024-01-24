@@ -18,13 +18,11 @@ fun rememberDailyDatePickerState(
     initialDate: Date = Date.now(),
     initialTextFieldValue: String = Date.now().toTextFieldFormat(),
     isError: Boolean = false,
-    onDateInput: (Date) -> Unit = {}
 ) = rememberSaveable(saver = DailyDatePickerState.Saver) {
     DailyDatePickerState(
         initialDate = initialDate,
         initialTextFieldValue = initialTextFieldValue,
         isError = isError,
-        onDateInput = onDateInput,
     )
 }
 
@@ -32,8 +30,7 @@ class DailyDatePickerState(
     initialDate: Date,
     initialTextFieldValue: String,
     isError: Boolean,
-    private val onDateInput: (Date) -> Unit,
-) {
+) : Serializable {
     var selectedDate by mutableStateOf(initialDate)
         private set
 
@@ -46,6 +43,9 @@ class DailyDatePickerState(
         private set
 
     var isError by mutableStateOf(isError)
+        private set
+
+    var executeDateCallback by mutableStateOf(false)
         private set
 
     private fun setSelected(date: Date) {
@@ -65,7 +65,7 @@ class DailyDatePickerState(
                     if (setDate) {
                         setSelected(it)
                     }
-                    onDateInput(it)
+                    executeDateCallback = true
                 } else {
                     isError = true
                 }
@@ -73,6 +73,10 @@ class DailyDatePickerState(
         } else { // value.length < 8
             isError = false
         }
+    }
+
+    fun afterDateCallback() {
+        executeDateCallback = false
     }
 
     fun plusDays(days: Int) {
@@ -108,7 +112,6 @@ class DailyDatePickerState(
         private const val dayOfMonthKey = "day_of_month"
         private const val textFieldKey = "text"
         private const val isErrorKey = "is_error"
-        private const val lambdaKey = "lambda"
 
         val Saver = mapSaver(
             save = {
@@ -119,7 +122,6 @@ class DailyDatePickerState(
                     dayOfMonthKey to day,
                     textFieldKey to it.textFieldValue.text,
                     isErrorKey to it.isError,
-                    lambdaKey to DateInputHolder(it.onDateInput),
                 )
             },
             restore = {
@@ -130,16 +132,9 @@ class DailyDatePickerState(
                     initialDate = Date(year, month, day),
                     initialTextFieldValue = it[textFieldKey] as String,
                     isError = it[isErrorKey] as Boolean,
-                    onDateInput = (it[lambdaKey] as DateInputHolder).action,
                 )
             },
         )
-    }
-}
-
-private class DateInputHolder(val action: (Date) -> Unit) : Serializable {
-    operator fun invoke(date: Date) {
-        action(date)
     }
 }
 

@@ -38,6 +38,7 @@ import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiMode
 import com.practice.main.state.MainUiState
 import com.practice.main.state.UiMeal
+import com.practice.main.state.UiMeals
 import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedules
 import kotlinx.collections.immutable.ImmutableList
@@ -57,6 +58,7 @@ fun VerticalCalendarMainScreen(
     getClickLabel: (Date) -> String,
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
+    onMealTimeClick: (Int) -> Unit,
     onNutrientPopupOpen: () -> Unit,
     onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
@@ -95,8 +97,10 @@ fun VerticalCalendarMainScreen(
                     .fillMaxWidth(),
             )
             MainScreenContents(
-                uiMeal = uiState.selectedDateDataState.uiMeal,
+                uiMeals = uiState.selectedDateDataState.uiMeals,
                 memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
+                selectedMealIndex = uiState.selectedMealIndex,
+                onMealTimeClick = onMealTimeClick,
                 mealColumns = mealColumns,
                 onNutrientPopupOpen = onNutrientPopupOpen,
                 onMemoPopupOpen = onMemoPopupOpen,
@@ -127,12 +131,15 @@ private fun VerticalCalendarMainScreenPreview() {
                     DailyData(
                         schoolCode = 1,
                         date = now.plusDays(it),
-                        uiMeal = UiMeal(
-                            year,
-                            month,
-                            now.dayOfMonth,
-                            previewMenus,
-                            previewNutrients
+                        uiMeals = UiMeals(
+                            UiMeal(
+                                year,
+                                month,
+                                now.dayOfMonth,
+                                "중식",
+                                previewMenus,
+                                previewNutrients
+                            )
                         ),
                         uiSchedules = UiSchedules(
                             date = now,
@@ -144,6 +151,7 @@ private fun VerticalCalendarMainScreenPreview() {
                         ),
                     )
                 },
+                selectedMealIndex = 0,
                 isLoading = false,
                 selectedSchool = School(
                     name = "어떤 학교",
@@ -151,6 +159,8 @@ private fun VerticalCalendarMainScreenPreview() {
                 ),
                 isNutrientPopupVisible = false,
                 isMemoPopupVisible = false,
+                isMealPopupVisible = false,
+                isSchedulePopupVisible = false,
                 mainUiMode = MainUiMode.CALENDAR,
             )
         )
@@ -174,6 +184,7 @@ private fun VerticalCalendarMainScreenPreview() {
             getClickLabel = { "" },
             drawUnderlineToScheduleDate = {},
             onNavigateToSelectSchoolScreen = {},
+            onMealTimeClick = {},
             onNutrientPopupOpen = {},
             onMemoPopupOpen = {},
             modifier = Modifier

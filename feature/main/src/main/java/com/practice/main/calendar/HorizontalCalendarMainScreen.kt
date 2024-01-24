@@ -43,6 +43,7 @@ fun HorizontalCalendarMainScreen(
     getClickLabel: (Date) -> String,
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
+    onMealTimeClick: (Int) -> Unit,
     onNutrientPopupOpen: () -> Unit,
     onMemoPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
@@ -78,8 +79,10 @@ fun HorizontalCalendarMainScreen(
                 customActions = customActions,
             )
             MainScreenContents(
-                uiMeal = uiState.selectedDateDataState.uiMeal,
+                uiMeals = uiState.selectedDateDataState.uiMeals,
                 memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
+                selectedMealIndex = uiState.selectedMealIndex,
+                onMealTimeClick = onMealTimeClick,
                 mealColumns = mealColumns,
                 onNutrientPopupOpen = onNutrientPopupOpen,
                 onMemoPopupOpen = onMemoPopupOpen,
@@ -117,6 +120,7 @@ private fun HorizontalCalendarMainScreenPreview() {
             getClickLabel = { "" },
             drawUnderlineToScheduleDate = {},
             onNavigateToSelectSchoolScreen = {},
+            onMealTimeClick = {},
             onNutrientPopupOpen = {},
             onMemoPopupOpen = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.surface),

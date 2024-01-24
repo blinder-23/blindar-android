@@ -6,6 +6,7 @@ import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiMode
 import com.practice.main.state.MainUiState
 import com.practice.main.state.UiMeal
+import com.practice.main.state.UiMeals
 import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedules
 
@@ -22,7 +23,7 @@ internal fun previewMainUiState(): MainUiState {
             DailyData(
                 schoolCode = 1,
                 date = now.plusDays(it),
-                uiMeal = UiMeal(year, month, day, previewMenus, previewNutrients),
+                uiMeals = UiMeals(UiMeal(year, month, day, "", previewMenus, previewNutrients)),
                 uiSchedules = UiSchedules(
                     date = now,
                     uiSchedules = previewSchedules,
@@ -33,6 +34,7 @@ internal fun previewMainUiState(): MainUiState {
                 ),
             )
         },
+        selectedMealIndex = 0,
         isLoading = false,
         selectedSchool = School(
             name = "어떤 학교",
@@ -40,6 +42,8 @@ internal fun previewMainUiState(): MainUiState {
         ),
         isNutrientPopupVisible = false,
         isMemoPopupVisible = false,
+        isMealPopupVisible = false,
+        isSchedulePopupVisible = false,
         mainUiMode = MainUiMode.CALENDAR,
     )
 }

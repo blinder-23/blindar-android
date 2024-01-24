@@ -15,6 +15,7 @@ import com.practice.firebase.BlindarUserStatus
 import com.practice.preferences.PreferencesRepository
 import com.practice.register.phonenumber.PhoneNumberValidator
 import com.practice.user.RegisterManager
+import com.practice.util.removeWhitespaces
 import com.practice.util.update
 import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -148,7 +149,7 @@ class RegisterViewModel @Inject constructor(
      */
     fun onNameChange(name: String) {
         registerUiState.update {
-            this.copy(name = name)
+            this.copy(name = name.removeWhitespaces())
         }
     }
 
@@ -188,10 +189,11 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun onSchoolQueryChange(query: String) {
+        val queryWithoutWhitespaces = query.removeWhitespaces()
         registerUiState.update {
-            this.copy(schoolQuery = query)
+            this.copy(schoolQuery = queryWithoutWhitespaces)
         }
-        updateSchoolList(query)
+        updateSchoolList(queryWithoutWhitespaces)
     }
 
     private fun updateSchoolList(query: String) {

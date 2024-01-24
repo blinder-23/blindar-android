@@ -25,7 +25,7 @@ import com.practice.firebase.BlindarUserStatus
 import com.practice.main.state.DailyData
 import com.practice.main.state.MainUiMode
 import com.practice.main.state.MainUiState
-import com.practice.main.state.UiMeal
+import com.practice.main.state.UiMeals
 import com.practice.main.state.UiMemo
 import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedules
@@ -69,6 +69,7 @@ class MainScreenViewModel @Inject constructor(
     private val selectedDateFlow: MutableStateFlow<Date>
 
     private var loadMonthlyDataJob: Job? = null
+    private var initialWorkCount: Int? = null
 
     init {
         val current = Date.now()
@@ -102,10 +103,13 @@ class MainScreenViewModel @Inject constructor(
         yearMonth: YearMonth = state.yearMonth,
         selectedDate: Date = state.selectedDate,
         monthlyData: List<DailyData> = state.monthlyDataState,
+        selectedMealIndex: Int = state.selectedMealIndex,
         isLoading: Boolean = state.isLoading,
         selectedSchool: School = state.selectedSchool,
         isNutrientPopupVisible: Boolean = state.isNutrientPopupVisible,
         isMemoPopupVisible: Boolean = state.isMemoPopupVisible,
+        isMealPopupVisible: Boolean = state.isMealPopupVisible,
+        isSchedulePopupVisible: Boolean = state.isSchedulePopupVisible,
         mainUiMode: MainUiMode = state.mainUiMode
     ) {
         val isCollectNeeded =
@@ -116,11 +120,14 @@ class MainScreenViewModel @Inject constructor(
                 year = yearMonth.year,
                 month = yearMonth.month,
                 monthlyDataState = monthlyData,
+                selectedMealIndex = selectedMealIndex,
                 selectedDate = selectedDate,
                 isLoading = isLoading,
                 selectedSchool = selectedSchool,
                 isNutrientPopupVisible = isNutrientPopupVisible,
                 isMemoPopupVisible = isMemoPopupVisible,
+                isMealPopupVisible = isMealPopupVisible,
+                isSchedulePopupVisible = isSchedulePopupVisible,
                 mainUiMode = mainUiMode,
             )
         }
@@ -130,10 +137,11 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
-        Log.d("MainViewModel", "clicked date: $clickedDate")
+        Log.d(TAG, "clicked date: $clickedDate")
         updateUiState(
             yearMonth = clickedDate.yearMonth,
             selectedDate = clickedDate,
+            selectedMealIndex = 0,
         )
     }
 
@@ -167,6 +175,10 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
+    fun onMealTimeClick(index: Int) {
+        updateUiState(selectedMealIndex = index)
+    }
+
     private fun parseDailyState(monthlyData: MonthlyData): List<DailyData> {
         val allDates = mutableSetOf<Date>().apply {
             addAll(monthlyData.meals.map { Date(it.year, it.month, it.day) })
@@ -174,13 +186,13 @@ class MainScreenViewModel @Inject constructor(
             addAll(monthlyData.memos.map { Date(it.year, it.month, it.day) })
         }
         val newDailyData = allDates.map { date ->
-            val uiMeal = monthlyData.getMeal(date)
+            val uiMeals = monthlyData.getMeals(date)
             val uiSchedules = monthlyData.getSchedule(date)
             val uiMemos = monthlyData.getMemo(date)
             DailyData(
                 schoolCode = monthlyData.schoolCode,
                 date = date,
-                uiMeal = uiMeal,
+                uiMeals = uiMeals,
                 uiSchedules = uiSchedules,
                 uiMemos = uiMemos,
             )
@@ -197,8 +209,12 @@ class MainScreenViewModel @Inject constructor(
 
     private suspend fun collectPreferences() {
         preferencesRepository.userPreferencesFlow.collectLatest {
+            if (initialWorkCount == null) {
+                initialWorkCount = it.runningWorksCount
+            }
+
             updateUiState(
-                isLoading = (it.runningWorksCount != 0),
+                isLoading = (it.runningWorksCount != initialWorkCount),
                 selectedSchool = School(
                     name = it.schoolName,
                     schoolCode = it.schoolCode,
@@ -214,7 +230,7 @@ class MainScreenViewModel @Inject constructor(
         val isSelectedString = if (date == state.selectedDate) "선택됨" else ""
         val isTodayString = if (date == DateUtil.today()) "오늘" else ""
         val dailyStateString = if (dailyState != null) {
-            "식단: ${dailyState.uiMeal.description}\n학사일정:${dailyState.uiSchedules.description}\n메모: ${dailyState.uiMemos.description}"
+            "식단: ${dailyState.uiMeals.description}\n학사일정:${dailyState.uiSchedules.description}\n메모: ${dailyState.uiMemos.description}"
         } else {
             ""
         }
@@ -284,6 +300,22 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
+    fun onMealPopupOpen() {
+        updateUiState(isMealPopupVisible = true)
+    }
+
+    fun onMealPopupClose() {
+        updateUiState(isMealPopupVisible = false)
+    }
+
+    fun onSchedulePopupOpen() {
+        updateUiState(isSchedulePopupVisible = true)
+    }
+
+    fun onSchedulePopupClose() {
+        updateUiState(isSchedulePopupVisible = false)
+    }
+
     suspend fun sendFeedback(appVersionName: String, contents: String) {
         /**
          * userId: BlindarFirebase에서 얻으면 됨
@@ -313,7 +345,7 @@ class MainScreenViewModel @Inject constructor(
         actions.add(createMemoPopupCustomAction(month, day))
 
         this.find { it.date == date }?.let {
-            if (!it.uiMeal.isEmpty) {
+            if (!it.uiMeals.isEmpty) {
                 actions.add(createNutrientPopupCustomAction(month, day))
             }
         }
@@ -335,15 +367,15 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
+    companion object {
+        private const val TAG = "MainScreenViewModel"
+    }
 }
 
-private fun MonthlyData.getMeal(date: Date): UiMeal {
-    return try {
-        meals.first { it.dateEquals(date) }
-            .toMealUiState()
-    } catch (e: NoSuchElementException) {
-        UiMeal.EmptyUiMeal
-    }
+private fun MonthlyData.getMeals(date: Date): UiMeals {
+    val meals = meals.filter { it.dateEquals(date) }.map { it.toMealUiState() }
+    Log.d("MainScreenModel", "$date: $meals")
+    return UiMeals(meals)
 }
 
 private fun MonthlyData.getSchedule(date: Date): UiSchedules {

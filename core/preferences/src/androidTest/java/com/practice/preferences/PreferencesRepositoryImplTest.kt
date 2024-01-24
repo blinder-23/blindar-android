@@ -50,7 +50,7 @@ class PreferencesRepositoryImplTest {
     @Test
     fun repository_fetchInitialPreferences() = runTest {
         val initialPreferences = preferences.fetchInitialPreferences()
-        assertThat(initialPreferences.mainScreenMode).isEqualTo(MainScreenMode.Calendar)
+        assertThat(initialPreferences.mainScreenMode).isEqualTo(MainScreenMode.NOT_SELECTED)
         assertThat(initialPreferences.themeMode).isEqualTo(ThemeMode.SystemDefault)
     }
 

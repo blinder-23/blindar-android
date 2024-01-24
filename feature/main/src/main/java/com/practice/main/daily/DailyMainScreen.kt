@@ -3,6 +3,7 @@ package com.practice.main.daily
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,8 +28,14 @@ fun DailyMainScreen(
     val datePickerState = rememberDailyDatePickerState(
         initialDate = uiState.selectedDate,
         initialTextFieldValue = uiState.selectedDate.toTextFieldFormat(),
-        onDateInput = viewModel::onDateClick,
     )
+
+    LaunchedEffect(datePickerState.executeDateCallback) {
+        if (datePickerState.executeDateCallback) {
+            viewModel.onDateClick(datePickerState.selectedDate)
+            datePickerState.afterDateCallback()
+        }
+    }
 
     when (windowSize.widthSizeClass) {
         WindowWidthSizeClass.Expanded -> {
@@ -39,8 +46,11 @@ fun DailyMainScreen(
                 onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
                 onSettingsIconClick = onNavigateToSettingsScreen,
                 onSchoolNameClick = onNavigateToSelectSchoolScreen,
+                onMealTimeClick = viewModel::onMealTimeClick,
                 onNutrientPopupOpen = viewModel::openNutrientPopup,
                 onMemoPopupOpen = viewModel::openMemoPopup,
+                onMealPopupOpen = viewModel::onMealPopupOpen,
+                onSchedulePopupOpen = viewModel::onSchedulePopupOpen,
                 modifier = modifier,
             )
         }
@@ -53,8 +63,11 @@ fun DailyMainScreen(
                 onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
                 onSettingsIconClick = onNavigateToSettingsScreen,
                 onSchoolNameClick = onNavigateToSelectSchoolScreen,
+                onMealTimeClick = viewModel::onMealTimeClick,
                 onNutrientPopupOpen = viewModel::openNutrientPopup,
                 onMemoPopupOpen = viewModel::openMemoPopup,
+                onMealPopupOpen = viewModel::onMealPopupOpen,
+                onSchedulePopupOpen = viewModel::onSchedulePopupOpen,
                 modifier = modifier,
             )
         }

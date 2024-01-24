@@ -10,10 +10,13 @@ data class MainUiState(
     val month: Int,
     val selectedDate: Date,
     val monthlyDataState: List<DailyData>,
+    val selectedMealIndex: Int,
     val isLoading: Boolean,
     val selectedSchool: School,
     val isNutrientPopupVisible: Boolean,
     val isMemoPopupVisible: Boolean,
+    val isMealPopupVisible: Boolean,
+    val isSchedulePopupVisible: Boolean,
     val mainUiMode: MainUiMode,
 ) {
     val yearMonth: YearMonth
@@ -25,6 +28,12 @@ data class MainUiState(
     val selectedDateDataState: DailyData
         get() = monthlyDataState.firstOrNull { it.date == selectedDate }
             ?: DailyData.Empty
+
+    val isMealExists: Boolean
+        get() = !selectedDateDataState.uiMeals.isEmpty
+
+    val isScheduleOrMemoExists: Boolean
+        get() = selectedDateDataState.memoPopupElements.isNotEmpty()
 
     fun updateMemoUiState(date: Date, uiMemos: UiMemos): List<DailyData> {
         return if (monthlyDataState.any { it.date == date }) {
@@ -42,7 +51,7 @@ data class MainUiState(
             DailyData(
                 schoolCode = selectedSchoolCode,
                 date = date,
-                uiMeal = UiMeal.EmptyUiMeal,
+                uiMeals = UiMeals(),
                 uiSchedules = UiSchedules.EmptyUiSchedules,
                 uiMemos = uiMemos
             )
@@ -67,10 +76,13 @@ data class MainUiState(
             month = Date.now().month,
             selectedDate = Date.now(),
             monthlyDataState = emptyList(),
+            selectedMealIndex = 0,
             isLoading = false,
             selectedSchool = School.EmptySchool,
             isNutrientPopupVisible = false,
             isMemoPopupVisible = false,
+            isMealPopupVisible = false,
+            isSchedulePopupVisible = false,
             mainUiMode = MainUiMode.LOADING,
         )
     }

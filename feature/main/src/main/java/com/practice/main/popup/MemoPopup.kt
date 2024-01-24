@@ -29,6 +29,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
@@ -205,7 +209,10 @@ private fun PopupElementItem(
                     IconButton(onClick = { onTextChange("") }) {
                         Icon(
                             imageVector = Icons.Outlined.Clear,
-                            contentDescription = stringResource(id = R.string.memo_popup_clear_text, text),
+                            contentDescription = stringResource(
+                                id = R.string.memo_popup_clear_text,
+                                text
+                            ),
                         )
                     }
                 }
@@ -222,12 +229,20 @@ private fun AddMemoButton(
     textColor: Color,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier) {
+    val a11yDescription = stringResource(id = R.string.memo_popup_add_memo_description)
+    Box(
+        modifier = modifier.semantics {
+            role = Role.Button
+        }
+    ) {
         LabelLarge(
             text = stringResource(id = R.string.memo_popup_add_memo),
             modifier = Modifier
                 .align(Alignment.Center)
-                .padding(vertical = 16.dp),
+                .padding(vertical = 16.dp)
+                .semantics {
+                    contentDescription = a11yDescription
+                },
             textColor = textColor,
         )
     }
