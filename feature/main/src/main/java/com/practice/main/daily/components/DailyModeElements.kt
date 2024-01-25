@@ -23,13 +23,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightAndDarkPreview
+import com.practice.designsystem.a11y.isLargeFont
 import com.practice.designsystem.components.BodySmall
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
@@ -92,6 +95,7 @@ internal fun DateQuickNavigationButton(
             text = stringResource(id = quickNavigation.nameId),
             modifier = Modifier.align(Alignment.Center),
             textColor = contentColorFor(backgroundColor = backgroundColor),
+            fontWeight = if (LocalDensity.current.isLargeFont) FontWeight.Bold else null,
         )
     }
 }

@@ -236,7 +236,8 @@ fun BodyMedium(
 fun BodySmall(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    fontWeight: FontWeight? = null,
 ) {
     Text(
         text = text,
@@ -244,5 +245,6 @@ fun BodySmall(
         style = MaterialTheme.typography.bodySmall,
         color = textColor,
         fontFamily = NanumSquareRound,
+        fontWeight = fontWeight,
     )
 }
