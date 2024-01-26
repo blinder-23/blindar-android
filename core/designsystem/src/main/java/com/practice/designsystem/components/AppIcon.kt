@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.practice.designsystem.LightPreview
+import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.R
 import com.practice.designsystem.theme.BlindarTheme
 
@@ -29,7 +29,7 @@ fun AppIcon(
         )
         TitleMedium(
             text = "CALENDAR FOR BLIND",
-            textColor = MaterialTheme.colorScheme.outlineVariant,
+            textColor = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(top = 8.dp),
         )
         DisplayMedium(
@@ -39,14 +39,14 @@ fun AppIcon(
     }
 }
 
-@LightPreview
+@LightAndDarkPreview
 @Composable
 private fun AppIconPreview() {
     BlindarTheme {
         AppIcon(
             modifier = Modifier
-                .padding(16.dp)
-                .background(MaterialTheme.colorScheme.surface),
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(16.dp),
         )
     }
 }
