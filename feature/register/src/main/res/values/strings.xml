@@ -6,10 +6,10 @@
     <string name="next_button">다음</string>
 
     <string name="phone_number_title">휴대폰 번호</string>
-    <string name="phone_number_label">휴대폰 번호</string>
+    <string name="phone_number_label">휴대폰 번호 입력</string>
     <string name="invalid_phone_number">올바르지 않은 휴대폰 번호입니다.</string>
     <string name="auth_chip_label">인증 요청</string>
-    <string name="auth_code_field_label">인증 번호</string>
+    <string name="auth_code_field_label">인증 번호 입력</string>
     <string name="auth_code_sent">인증 코드가 발송되었습니다. 2분 안에 입력해 주세요.</string>
     <string name="invalid_code">인증 코드가 올바르지 않습니다.</string>
     <string name="auth_code_fail">코드 발송에 실패했습니다. 잠시 후 다시 시도해 주세요.</string>
