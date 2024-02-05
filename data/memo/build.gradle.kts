@@ -59,7 +59,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:domain"))
+    api(project(":core:domain"))
     implementation(project(":core:util"))
 
     implementation(libs.hsk.ktx)

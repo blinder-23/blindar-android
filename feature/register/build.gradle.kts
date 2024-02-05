@@ -41,11 +41,10 @@ android {
 }
 
 dependencies {
-    api(project(":core:designsystem"))
-    api(project(":core:firebase"))
-    api(project(":core:api"))
-    api(project(":core:preferences"))
-    api(project(":core:domain"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:firebase"))
+    implementation(project(":core:api"))
+    implementation(project(":core:preferences"))
     implementation(project(":core:work"))
     implementation(project(":data:user"))
 
