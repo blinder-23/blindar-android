@@ -44,7 +44,7 @@ dependencies {
     api(project(":core:designsystem"))
     api(project(":core:work"))
     implementation(project(":core:notification"))
-    implementation(project(":core:user"))
+    implementation(project(":core:auth"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)

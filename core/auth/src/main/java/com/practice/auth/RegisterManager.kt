@@ -1,4 +1,4 @@
-package com.practice.user
+package com.practice.auth
 
 import android.app.Activity
 import android.content.Intent

@@ -14,13 +14,13 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.practice.auth.UserRegisterState
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.AppIcon
 import com.practice.designsystem.components.LabelMedium
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.notification.BlindarNotificationManager
 import com.practice.onboarding.R
-import com.practice.user.UserRegisterState
 import com.practice.work.dailyalarm.DailyNotificationAlarmReceiver
 import kotlinx.coroutines.delay
 

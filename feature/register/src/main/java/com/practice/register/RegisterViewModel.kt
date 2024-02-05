@@ -9,12 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.PhoneAuthProvider
 import com.practice.api.school.RemoteSchoolRepository
 import com.practice.api.toSchool
+import com.practice.auth.RegisterManager
 import com.practice.domain.School
 import com.practice.firebase.BlindarFirebase
 import com.practice.firebase.BlindarUserStatus
 import com.practice.preferences.PreferencesRepository
 import com.practice.register.phonenumber.PhoneNumberValidator
-import com.practice.user.RegisterManager
 import com.practice.util.removeWhitespaces
 import com.practice.util.update
 import com.practice.work.BlindarWorkManager

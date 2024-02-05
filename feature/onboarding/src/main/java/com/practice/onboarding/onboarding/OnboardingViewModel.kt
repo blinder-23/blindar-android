@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
-import com.practice.user.RegisterManager
+import com.practice.auth.RegisterManager
 import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
