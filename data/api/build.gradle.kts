@@ -80,7 +80,7 @@ android {
 
 dependencies {
     implementation(project(":core:util"))
-    api(project(":core:domain"))
+    api(project(":data:domain"))
     
     implementation(libs.hsk.ktx)
 

@@ -2,8 +2,8 @@ package com.practice.onboarding.splash
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.practice.user.RegisterManager
-import com.practice.user.UserRegisterState
+import com.practice.auth.RegisterManager
+import com.practice.auth.UserRegisterState
 import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
