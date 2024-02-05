@@ -44,10 +44,7 @@ dependencies {
     implementation(libs.hsk.ktx)
 
     api(project(":core:designsystem"))
-    api(project(":core:combine"))
-    api(project(":core:preferences"))
     implementation(project(":core:work"))
-    implementation(project(":core:firebase"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)

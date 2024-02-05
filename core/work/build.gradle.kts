@@ -72,7 +72,7 @@ android {
 dependencies {
     api(project(":core:combine"))
     api(project(":core:preferences"))
-    implementation(project(":core:firebase"))
+    api(project(":core:firebase"))
     implementation(project(":core:notification"))
     implementation(project(":core:util"))
 

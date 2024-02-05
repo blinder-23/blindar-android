@@ -43,7 +43,6 @@ android {
 dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:work"))
-    implementation(project(":data:api"))
     implementation(project(":data:user"))
 
     // KTX libraries
