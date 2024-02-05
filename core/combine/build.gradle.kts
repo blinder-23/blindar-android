@@ -70,7 +70,7 @@ dependencies {
     api(project(":data:meal"))
     api(project(":data:schedule"))
     api(project(":data:memo"))
-    api(project(":core:api"))
+    api(project(":data:api"))
     implementation(libs.hsk.ktx)
 
     implementation(libs.androidx.core.ktx)
