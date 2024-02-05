@@ -42,7 +42,6 @@ android {
 
 dependencies {
     api(project(":core:designsystem"))
-    api(project(":core:firebase"))
     api(project(":core:work"))
     implementation(project(":core:notification"))
     implementation(project(":data:user"))

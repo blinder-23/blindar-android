@@ -42,8 +42,6 @@ android {
 
 dependencies {
     implementation(project(":core:designsystem"))
-    implementation(project(":core:firebase"))
-    implementation(project(":core:preferences"))
     implementation(project(":core:work"))
     implementation(project(":data:api"))
     implementation(project(":data:user"))
