@@ -37,7 +37,7 @@ android {
 
 dependencies {
     api(project(":core:firebase"))
-    api(project(":core:preferences"))
+    api(project(":data:preferences"))
 
     // Hilt
     implementation(libs.hilt.android)

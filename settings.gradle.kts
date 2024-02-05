@@ -14,7 +14,7 @@ dependencyResolutionManagement {
 rootProject.name = "blindar"
 include(":app")
 include(":benchmark")
-include(":core:preferences")
+include(":data:preferences")
 include(":core:work")
 include(":data:api")
 include(":data:meal")

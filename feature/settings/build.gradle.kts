@@ -42,7 +42,7 @@ android {
 
 dependencies {
     implementation(project(":core:designsystem"))
-    implementation(project(":core:preferences"))
+    implementation(project(":data:preferences"))
     implementation(project(":core:util"))
 
     // Compose
