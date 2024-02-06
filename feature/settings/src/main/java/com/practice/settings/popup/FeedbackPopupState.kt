@@ -1,4 +1,4 @@
-package com.practice.main.popup.state
+package com.practice.settings.popup
 
 import android.content.Context
 import androidx.compose.runtime.Composable
