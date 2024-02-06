@@ -10,15 +10,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightAndDarkPreview
@@ -56,7 +57,12 @@ private fun SendFeedbackItemText(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         TitleMedium(text = stringResource(id = R.string.settings_send_feedback_item_title))
-        LabelMedium(text = stringResource(id = R.string.settings_send_feedback_item_body))
+        LabelMedium(
+            text = stringResource(id = R.string.settings_send_feedback_item_body),
+            modifier = Modifier.clearAndSetSemantics {
+                contentDescription = ""
+            },
+        )
     }
 }
 
@@ -64,18 +70,12 @@ private fun SendFeedbackItemText(
 private fun SendFeedbackItemIcon(
     modifier: Modifier = Modifier,
 ) {
-    IconButton(
-        onClick = {},
-        enabled = false,
-        colors = IconButtonDefaults.iconButtonColors(),
-    ) {
-        Icon(
-            imageVector = Icons.Default.ChevronRight,
-            contentDescription = null,
-            tint = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface),
-            modifier = modifier,
-        )
-    }
+    Icon(
+        imageVector = Icons.Default.ChevronRight,
+        contentDescription = null,
+        tint = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface),
+        modifier = modifier.minimumInteractiveComponentSize(),
+    )
 }
 
 @LightAndDarkPreview
