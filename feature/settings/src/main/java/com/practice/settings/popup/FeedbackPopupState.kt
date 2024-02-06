@@ -38,7 +38,7 @@ class FeedbackPopupState internal constructor(feedbackText: String = "", isError
             onError()
         } else {
             val versionName = context.getAppVersionName()
-            onSend(versionName, feedbackText)
+            onSend(versionName, feedbackText.trim())
         }
     }
 
