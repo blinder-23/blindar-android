@@ -19,10 +19,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,9 +34,13 @@ import com.practice.designsystem.components.BlindarTopAppBar
 import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.preferences.preferences.MainScreenMode
+import com.practice.settings.items.SendFeedbackItem
 import com.practice.settings.items.SetDailyAlarmItem
 import com.practice.settings.items.SetDailyModeItem
+import com.practice.settings.popup.FeedbackPopup
 import com.practice.settings.uistate.SettingsUiState
+import com.practice.util.makeToast
+import kotlinx.coroutines.launch
 
 @Composable
 fun Settings(
@@ -42,11 +49,17 @@ fun Settings(
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var isFeedbackPopupVisible by rememberSaveable { mutableStateOf(false) }
+
     Settings(
         uiState = uiState,
         onBackButtonClick = onBackButtonClick,
         onToggleDailyMode = viewModel::onToggleDailyMode,
         onToggleDailyAlarm = viewModel::onToggleDailyAlarm,
+        isFeedbackPopupVisible = isFeedbackPopupVisible,
+        onFeedbackPopupOpen = { isFeedbackPopupVisible = true },
+        onFeedbackPopupClose = { isFeedbackPopupVisible = false },
+        onSendFeedback = viewModel::sendFeedback,
         modifier = modifier,
     )
 }
@@ -57,8 +70,15 @@ private fun Settings(
     onBackButtonClick: () -> Unit,
     onToggleDailyMode: (Boolean) -> Unit,
     onToggleDailyAlarm: (Boolean) -> Unit,
+    isFeedbackPopupVisible: Boolean,
+    onFeedbackPopupOpen: () -> Unit,
+    onFeedbackPopupClose: () -> Unit,
+    onSendFeedback: suspend (String, String) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+
     when (uiState) {
         is SettingsUiState.Loading -> {
             SettingsScreenLoadingIndicator(modifier = modifier)
@@ -70,9 +90,30 @@ private fun Settings(
                 onBackButtonClick = onBackButtonClick,
                 uiState = uiState,
                 onToggleDailyMode = onToggleDailyMode,
-                onToggleDailyAlarm = onToggleDailyAlarm
+                onToggleDailyAlarm = onToggleDailyAlarm,
+                onFeedbackPopupOpen = onFeedbackPopupOpen,
             )
         }
+    }
+
+    if (isFeedbackPopupVisible) {
+        val successMessage = stringResource(id = R.string.settings_send_feedback_on_success)
+        val failMessage = stringResource(id = R.string.settings_send_feedback_on_error)
+        FeedbackPopup(
+            onSend = { appVersion, feedback ->
+                coroutineScope.launch {
+                    val result = onSendFeedback(appVersion, feedback)
+                    val message = if (result) {
+                        onFeedbackPopupClose()
+                        successMessage
+                    } else {
+                        failMessage
+                    }
+                    context.makeToast(message)
+                }
+            },
+            onDismiss = onFeedbackPopupClose,
+        )
     }
 }
 
@@ -96,6 +137,7 @@ private fun SettingsScreen(
     onBackButtonClick: () -> Unit,
     onToggleDailyMode: (Boolean) -> Unit,
     onToggleDailyAlarm: (Boolean) -> Unit,
+    onFeedbackPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.background(MaterialTheme.colorScheme.surface)) {
@@ -107,6 +149,7 @@ private fun SettingsScreen(
             uiState = uiState,
             onToggleDailyMode = onToggleDailyMode,
             onToggleDailyAlarm = onToggleDailyAlarm,
+            onFeedbackPopupOpen = onFeedbackPopupOpen,
         )
         Spacer(modifier = Modifier.weight(1f))
         CloseSettingsButton(
@@ -135,6 +178,7 @@ private fun SettingsItems(
     uiState: SettingsUiState.SettingsUiStateImpl,
     onToggleDailyMode: (Boolean) -> Unit,
     onToggleDailyAlarm: (Boolean) -> Unit,
+    onFeedbackPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -146,6 +190,7 @@ private fun SettingsItems(
             isDailyAlarmEnabled = uiState.isDailyAlarmEnabled,
             onToggle = onToggleDailyAlarm,
         )
+        SendFeedbackItem(onClick = onFeedbackPopupOpen)
     }
 }
 
@@ -178,6 +223,8 @@ private fun CloseSettingsButton(
 private fun SettingsPreview() {
     var mainScreenMode by remember { mutableStateOf(MainScreenMode.Daily) }
     var isDailyAlarmEnabled by remember { mutableStateOf(false) }
+    var isFeedbackPopupVisible by remember { mutableStateOf(false) }
+
     BlindarTheme {
         Settings(
             uiState = SettingsUiState.SettingsUiStateImpl(
@@ -189,6 +236,10 @@ private fun SettingsPreview() {
                 mainScreenMode = if (it) MainScreenMode.Daily else MainScreenMode.Calendar
             },
             onToggleDailyAlarm = { isDailyAlarmEnabled = it },
+            isFeedbackPopupVisible = isFeedbackPopupVisible,
+            onFeedbackPopupOpen = { isFeedbackPopupVisible = true },
+            onFeedbackPopupClose = { isFeedbackPopupVisible = false },
+            onSendFeedback = { _, _ -> true },
             modifier = Modifier.fillMaxSize(),
         )
     }
@@ -203,6 +254,10 @@ private fun SettingsPreview_Loading() {
             onBackButtonClick = {},
             onToggleDailyMode = {},
             onToggleDailyAlarm = {},
+            isFeedbackPopupVisible = false,
+            onFeedbackPopupOpen = {},
+            onFeedbackPopupClose = {},
+            onSendFeedback = { _, _ -> true },
             modifier = Modifier.fillMaxSize(),
         )
     }
