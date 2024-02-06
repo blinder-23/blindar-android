@@ -38,6 +38,8 @@ import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.LabelLarge
+import com.practice.designsystem.components.PopupBodySmall
+import com.practice.designsystem.components.PopupTitleLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
 import com.practice.main.state.MemoPopupElement
