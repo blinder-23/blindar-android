@@ -1,7 +1,6 @@
 package com.practice.main
 
 import android.content.Context
-import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -10,7 +9,6 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hsk.ktx.date.Date
-import com.practice.api.feedback.RemoteFeedbackRepository
 import com.practice.combine.LoadMonthlyDataUseCase
 import com.practice.combine.MonthlyData
 import com.practice.designsystem.calendar.core.YearMonth
@@ -52,7 +50,6 @@ import javax.inject.Inject
 class MainScreenViewModel @Inject constructor(
     private val loadMonthlyDataUseCase: LoadMonthlyDataUseCase,
     private val preferencesRepository: PreferencesRepository,
-    private val feedbackRepository: RemoteFeedbackRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableState<MainUiState>
@@ -314,25 +311,6 @@ class MainScreenViewModel @Inject constructor(
 
     fun onSchedulePopupClose() {
         updateUiState(isSchedulePopupVisible = false)
-    }
-
-    suspend fun sendFeedback(appVersionName: String, contents: String) {
-        /**
-         * userId: BlindarFirebase에서 얻으면 됨
-         * deviceName: Build.MODEL
-         * osVersion: Build.VERSION.SDK_INT
-         * appVersion: BuildConfig.VERSION_NAME
-         * contents: by user
-         */
-        val user = BlindarFirebase.getBlindarUser()
-        val userId = if (user is BlindarUserStatus.LoginUser) {
-            user.user.uid
-        } else {
-            return
-        }
-        val deviceName = Build.MODEL
-        val osVersion = Build.VERSION.SDK_INT.toString()
-        feedbackRepository.sendFeedback(userId, deviceName, osVersion, appVersionName, contents)
     }
 
     fun getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {

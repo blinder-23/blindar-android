@@ -1,4 +1,4 @@
-package com.practice.main.popup
+package com.practice.settings.popup
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -30,10 +30,9 @@ import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BodySmall
 import com.practice.designsystem.components.LabelMedium
+import com.practice.designsystem.components.PopupTitleLarge
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.main.R
-import com.practice.main.popup.state.FeedbackPopupState
-import com.practice.main.popup.state.rememberFeedbackPopupState
+import com.practice.settings.R
 
 // TODO: Popup 형식 만들기?
 

@@ -1,4 +1,4 @@
-package com.practice.main.popup.state
+package com.practice.settings.popup
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -38,7 +38,7 @@ class FeedbackPopupState internal constructor(feedbackText: String = "", isError
             onError()
         } else {
             val versionName = context.getAppVersionName()
-            onSend(versionName, feedbackText)
+            onSend(versionName, feedbackText.trim())
         }
     }
 

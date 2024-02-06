@@ -21,5 +21,16 @@
     <string name="settings_daily_alarm_disabled">데일리 알림을 끕니다.</string>
     <string name="settings_daily_alarm_permission_error">알림 권한이 허용되지 않으면 데일리 알림을 볼 수 없습니다.</string>
 
+    <string name="settings_send_feedback_item_title">피드백 보내기</string>
+    <string name="settings_send_feedback_item_body">블린더 앱의 사용 후기를 남겨주세요!</string>
+    <string name="settings_send_feedback_on_success">피드백을 전송했습니다.</string>
+    <string name="settings_send_feedback_on_error">피드백 전송에 실패했습니다. 잠시 후에 다시 시도해 주세요.</string>
+
+    <string name="feedback_popup_title">피드백 보내기</string>
+    <string name="feedback_popup_textfield_placeholder">블린더 사용 후기를 알려주세요!</string>
+    <string name="feedback_popup_textfield_error_empty">피드백을 입력해 주세요.</string>
+    <string name="feedback_popup_cancel_button">취소</string>
+    <string name="feedback_popup_send_button">전송</string>
+
     <string name="close">닫기</string>
 </resources>

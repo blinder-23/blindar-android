@@ -40,6 +40,10 @@ import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.a11y.isLargeFont
+import com.practice.designsystem.components.PopupBodyLarge
+import com.practice.designsystem.components.PopupBodyMedium
+import com.practice.designsystem.components.PopupBodySmall
+import com.practice.designsystem.components.PopupTitleLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
 import com.practice.main.previewMenus
