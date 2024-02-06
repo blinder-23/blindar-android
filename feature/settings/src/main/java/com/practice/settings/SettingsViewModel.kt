@@ -1,7 +1,6 @@
 package com.practice.settings
 
 import android.os.Build
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practice.api.feedback.RemoteFeedbackRepository
@@ -46,13 +45,6 @@ class SettingsViewModel @Inject constructor(
     }
 
     suspend fun sendFeedback(appVersionName: String, contents: String): Boolean {
-        /**
-         * userId: BlindarFirebase에서 얻으면 됨
-         * deviceName: Build.MODEL
-         * osVersion: Build.VERSION.SDK_INT
-         * appVersion: BuildConfig.VERSION_NAME
-         * contents: by user
-         */
         val user = BlindarFirebase.getBlindarUser()
         val userId = if (user is BlindarUserStatus.LoginUser) {
             user.user.uid
@@ -61,7 +53,7 @@ class SettingsViewModel @Inject constructor(
         }
         val deviceName = Build.MODEL
         val osVersion = Build.VERSION.SDK_INT.toString()
-        Log.d("Feedback", "$userId, $deviceName, $osVersion, $appVersionName, $contents")
+
         return feedbackRepository.sendFeedback(
             userId = userId,
             deviceName = deviceName,
