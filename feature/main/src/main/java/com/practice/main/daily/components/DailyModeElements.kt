@@ -1,5 +1,6 @@
 package com.practice.main.daily.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -30,6 +31,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.a11y.isLargeFont
@@ -154,6 +156,21 @@ private fun rememberDatePickerFormatter() = remember {
 @LightAndDarkPreview
 @Composable
 private fun DateQuickNavigationButtonsPreview() {
+    val datePickerState = rememberDailyDatePickerState()
+    BlindarTheme {
+        DateQuickNavigationButtons(
+            datePickerState = datePickerState,
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(16.dp)
+                .fillMaxWidth(),
+        )
+    }
+}
+
+@Preview(fontScale = 2f, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun DateQuickNavigationButtonsPreview_Test() {
     val datePickerState = rememberDailyDatePickerState()
     BlindarTheme {
         DateQuickNavigationButtons(
