@@ -139,7 +139,7 @@ private fun MainScreenCalendarModeButton(
             context.makeToast(toastMessage)
         },
         modifier = modifier,
-        background = MaterialTheme.colorScheme.primary,
+        background = MaterialTheme.colorScheme.primaryContainer,
     )
 }
 
