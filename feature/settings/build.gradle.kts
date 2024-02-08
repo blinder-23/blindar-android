@@ -42,8 +42,10 @@ android {
 
 dependencies {
     implementation(project(":core:designsystem"))
-    implementation(project(":core:preferences"))
+    implementation(project(":core:firebase"))
     implementation(project(":core:util"))
+    implementation(project(":data:preferences"))
+    implementation(project(":data:api"))
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))

@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.a11y.isLargeFont
+import com.practice.designsystem.components.popupPadding
 import com.practice.main.calendar.CalendarMainScreen
 import com.practice.main.daily.DailyMainScreen
 import com.practice.main.loading.LoadingMainScreen
@@ -23,7 +24,6 @@ import com.practice.main.popup.MealPopup
 import com.practice.main.popup.MemoPopup
 import com.practice.main.popup.NutrientPopup
 import com.practice.main.popup.SchedulePopup
-import com.practice.main.popup.popupPadding
 import com.practice.main.state.MainUiMode
 
 @Composable

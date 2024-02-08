@@ -1,4 +1,4 @@
-package com.practice.user
+package com.practice.auth
 
 enum class UserRegisterState {
     NOT_LOGGED_IN,
