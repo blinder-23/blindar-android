@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -52,6 +53,7 @@ internal fun SetDailyModeItem(
                     afterToggle()
                 },
                 onClickLabel = onClickLabel,
+                role = Role.Switch,
             )
             .padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
