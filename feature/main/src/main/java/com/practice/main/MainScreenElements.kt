@@ -51,7 +51,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
@@ -263,14 +262,14 @@ private fun EmptyContentIndicator(
     modifier: Modifier = Modifier,
     padding: PaddingValues = PaddingValues(8.dp),
 ) {
-    val description = stringResource(id = R.string.main_screen_add_memo_description)
+    val description = stringResource(id = R.string.main_screen_add_memo)
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
             .clickable { onClick() }
             .padding(padding)
-            .clearAndSetSemantics {
-                contentDescription = description
+            .semantics(mergeDescendants = true) {
+                role = Role.Button
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(
@@ -282,7 +281,7 @@ private fun EmptyContentIndicator(
             imageVector = Icons.Outlined.Add,
             contentDescription = null,
         )
-        TitleMedium(text = stringResource(id = R.string.main_screen_add_memo))
+        TitleMedium(text = description)
     }
 }
 
