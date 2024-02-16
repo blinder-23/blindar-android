@@ -35,6 +35,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -95,14 +96,22 @@ fun MainScreenTopBar(
     Box(
         modifier = modifier,
     ) {
-        TitleLarge(
-            text = schoolName,
-            textColor = MaterialTheme.colorScheme.onSurface,
+        TextButton(
+            onClick = onSchoolNameClick,
             modifier = Modifier
                 .align(Alignment.Center)
-                .clickable(onClickLabel = onClickLabel, onClick = onSchoolNameClick)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-        )
+                .clickable(
+                    onClickLabel = onClickLabel,
+                    onClick = onSchoolNameClick,
+                    role = Role.Button,
+                ),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+        ) {
+            TitleLarge(
+                text = schoolName,
+                textColor = MaterialTheme.colorScheme.onSurface,
+            )
+        }
         MainTopBarActions(
             isLoading = isLoading,
             onRefreshIconClick = onRefreshIconClick,
