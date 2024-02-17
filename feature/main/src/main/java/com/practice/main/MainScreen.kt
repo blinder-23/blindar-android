@@ -19,7 +19,6 @@ import com.practice.designsystem.components.popupPadding
 import com.practice.main.calendar.CalendarMainScreen
 import com.practice.main.daily.DailyMainScreen
 import com.practice.main.loading.LoadingMainScreen
-import com.practice.main.popup.MainScreenModePopup
 import com.practice.main.popup.MealPopup
 import com.practice.main.popup.MemoPopup
 import com.practice.main.popup.NutrientPopup
@@ -57,7 +56,10 @@ fun MainScreen(
                 )
             }
 
-            MainUiMode.NOT_SET, MainUiMode.CALENDAR -> {
+            // TODO: 앱을 처음 켤 때 팝업 보여주지 말기
+            // TODO: 설정 화면에서 달력 모드를 켤 때 팝업 보여주기 (정말 이 모드를 사용하시겠습니까? 스크린 리더에 불편할 수 있습니다...)
+
+            MainUiMode.CALENDAR -> {
                 CalendarMainScreen(
                     windowSize = windowSize,
                     viewModel = viewModel,
@@ -121,17 +123,6 @@ private fun MainScreenPopups(
                 onMemoDelete = viewModel::deleteMemo,
                 onPopupClose = viewModel::closeMemoPopup,
                 modifier = Modifier.padding(popupPadding),
-            )
-        }
-    }
-
-    if (uiState.mainUiMode == MainUiMode.NOT_SET) {
-        MainScreenPopup(onClose = { viewModel.onMainScreenModeSet(MainUiMode.CALENDAR) }) {
-            MainScreenModePopup(
-                onScreenModeSet = viewModel::onMainScreenModeSet,
-                modifier = Modifier
-                    .padding(popupPadding)
-                    .widthIn(max = 600.dp),
             )
         }
     }

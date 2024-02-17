@@ -21,7 +21,7 @@ data class UserPreferences(
 
     companion object {
         val emptyPreferences = UserPreferences(
-            mainScreenMode = MainScreenMode.NOT_SELECTED,
+            mainScreenMode = MainScreenMode.Daily,
             themeMode = ThemeMode.SystemDefault,
             isFirstExecution = true,
             runningWorksCount = 0,
