@@ -35,6 +35,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -50,7 +51,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
@@ -95,14 +95,22 @@ fun MainScreenTopBar(
     Box(
         modifier = modifier,
     ) {
-        TitleLarge(
-            text = schoolName,
-            textColor = MaterialTheme.colorScheme.onSurface,
+        TextButton(
+            onClick = onSchoolNameClick,
             modifier = Modifier
                 .align(Alignment.Center)
-                .clickable(onClickLabel = onClickLabel, onClick = onSchoolNameClick)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-        )
+                .clickable(
+                    onClickLabel = onClickLabel,
+                    onClick = onSchoolNameClick,
+                    role = Role.Button,
+                ),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+        ) {
+            TitleLarge(
+                text = schoolName,
+                textColor = MaterialTheme.colorScheme.onSurface,
+            )
+        }
         MainTopBarActions(
             isLoading = isLoading,
             onRefreshIconClick = onRefreshIconClick,
@@ -254,14 +262,14 @@ private fun EmptyContentIndicator(
     modifier: Modifier = Modifier,
     padding: PaddingValues = PaddingValues(8.dp),
 ) {
-    val description = stringResource(id = R.string.main_screen_add_memo_description)
+    val description = stringResource(id = R.string.main_screen_add_memo)
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
             .clickable { onClick() }
             .padding(padding)
-            .clearAndSetSemantics {
-                contentDescription = description
+            .semantics(mergeDescendants = true) {
+                role = Role.Button
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(
@@ -273,7 +281,7 @@ private fun EmptyContentIndicator(
             imageVector = Icons.Outlined.Add,
             contentDescription = null,
         )
-        TitleMedium(text = stringResource(id = R.string.main_screen_add_memo))
+        TitleMedium(text = description)
     }
 }
 

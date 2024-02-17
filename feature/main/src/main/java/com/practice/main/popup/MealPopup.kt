@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightAndDarkPreview
@@ -38,8 +39,12 @@ fun MealPopup(
     onMealPopupClose: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val shape = RoundedCornerShape(16.dp)
     Column(
-        modifier = modifier.background(MaterialTheme.colorScheme.surface),
+        modifier = modifier
+            .shadow(4.dp, shape = shape)
+            .clip(shape)
+            .background(MaterialTheme.colorScheme.surface),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         MealContent(

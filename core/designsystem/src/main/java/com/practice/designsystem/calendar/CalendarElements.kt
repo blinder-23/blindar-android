@@ -30,9 +30,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
@@ -216,6 +218,7 @@ internal fun CalendarDate(
             .clearAndSetSemantics {
                 contentDescription = "${date.clickLabel}\n${getContentDescription(date)}"
                 this.customActions = customActions(date)
+                role = Role.Button
             },
         textColor = textColor,
         arrangement = dateArrangement,

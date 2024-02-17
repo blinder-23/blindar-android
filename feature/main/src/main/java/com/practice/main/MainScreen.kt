@@ -19,7 +19,6 @@ import com.practice.designsystem.components.popupPadding
 import com.practice.main.calendar.CalendarMainScreen
 import com.practice.main.daily.DailyMainScreen
 import com.practice.main.loading.LoadingMainScreen
-import com.practice.main.popup.MainScreenModePopup
 import com.practice.main.popup.MealPopup
 import com.practice.main.popup.MemoPopup
 import com.practice.main.popup.NutrientPopup
@@ -57,7 +56,7 @@ fun MainScreen(
                 )
             }
 
-            MainUiMode.NOT_SET, MainUiMode.CALENDAR -> {
+            MainUiMode.CALENDAR -> {
                 CalendarMainScreen(
                     windowSize = windowSize,
                     viewModel = viewModel,
@@ -121,17 +120,6 @@ private fun MainScreenPopups(
                 onMemoDelete = viewModel::deleteMemo,
                 onPopupClose = viewModel::closeMemoPopup,
                 modifier = Modifier.padding(popupPadding),
-            )
-        }
-    }
-
-    if (uiState.mainUiMode == MainUiMode.NOT_SET) {
-        MainScreenPopup(onClose = { viewModel.onMainScreenModeSet(MainUiMode.CALENDAR) }) {
-            MainScreenModePopup(
-                onScreenModeSet = viewModel::onMainScreenModeSet,
-                modifier = Modifier
-                    .padding(popupPadding)
-                    .widthIn(max = 600.dp),
             )
         }
     }

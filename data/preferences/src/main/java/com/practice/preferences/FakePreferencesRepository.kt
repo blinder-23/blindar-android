@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class FakePreferencesRepository : PreferencesRepository {
 
     private val initialPreferences = UserPreferences(
-        mainScreenMode = MainScreenMode.NOT_SELECTED,
+        mainScreenMode = MainScreenMode.Daily,
         themeMode = ThemeMode.SystemDefault,
         isFirstExecution = true,
         runningWorksCount = 0,
