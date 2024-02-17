@@ -167,6 +167,11 @@ private fun NameTextField(
         placeholder = {
             LabelSmall(text = stringResource(id = R.string.name_placeholder))
         },
+        supportingText = {
+            if (isError) {
+                LabelSmall(text = stringResource(id = R.string.submit_name_fail))
+            }
+        },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
         keyboardActions = KeyboardActions(
             onSend = {

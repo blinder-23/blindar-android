@@ -40,6 +40,9 @@ class RegisterViewModel @Inject constructor(
     var isAuthCodeInvalid by mutableStateOf(false)
         private set
 
+    var isUsernameInvalid by mutableStateOf(false)
+        private set
+
     private var schoolListJob: Job? = null
 
     private lateinit var storedVerificationId: String
@@ -160,6 +163,7 @@ class RegisterViewModel @Inject constructor(
         registerUiState.update {
             this.copy(name = name.removeWhitespaces())
         }
+        isUsernameInvalid = false
     }
 
     fun submitName(
@@ -178,6 +182,7 @@ class RegisterViewModel @Inject constructor(
             )
         } else {
             onFail()
+            isUsernameInvalid = true
         }
     }
 
