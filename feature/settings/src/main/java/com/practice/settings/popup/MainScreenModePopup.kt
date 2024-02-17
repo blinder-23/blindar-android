@@ -1,4 +1,4 @@
-package com.practice.main.popup
+package com.practice.settings.popup
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
@@ -17,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -28,28 +29,32 @@ import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.PopupBodyMedium
 import com.practice.designsystem.components.PopupTitleLarge
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.main.R
-import com.practice.main.state.MainUiMode
-import com.practice.util.makeToast
+import com.practice.preferences.preferences.MainScreenMode
+import com.practice.settings.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenModePopup(
-    onScreenModeSet: (MainUiMode) -> Unit,
+    onScreenModeSet: (MainScreenMode) -> Unit,
+    onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val shape = RoundedCornerShape(16.dp)
 
-    Column(
+    AlertDialog(
+        onDismissRequest = onDismiss,
         modifier = modifier
             .shadow(4.dp, shape = shape)
             .clip(shape)
             .background(MaterialTheme.colorScheme.surface),
     ) {
-        MainScreenModePopupContents(modifier = Modifier.padding(16.dp))
-        MainScreenModeButtons(
-            onScreenModeSet = onScreenModeSet,
-            modifier = Modifier.fillMaxWidth(),
-        )
+        Column {
+            MainScreenModePopupContents(modifier = Modifier.padding(16.dp))
+            MainScreenModeButtons(
+                onScreenModeSet = onScreenModeSet,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
     }
 }
 
@@ -71,7 +76,7 @@ private fun MainScreenModePopupTitle(
     modifier: Modifier = Modifier,
 ) {
     PopupTitleLarge(
-        text = stringResource(id = R.string.ui_mode_popup_title),
+        text = stringResource(id = R.string.screen_mode_popup_title),
         modifier = modifier,
         color = MaterialTheme.colorScheme.onSurface,
     )
@@ -82,7 +87,7 @@ private fun MainScreenModePopupBody(
     modifier: Modifier = Modifier,
 ) {
     PopupBodyMedium(
-        text = stringResource(id = R.string.ui_mode_popup_body),
+        text = stringResource(id = R.string.screen_mode_popup_body),
         modifier = modifier,
         color = MaterialTheme.colorScheme.onSurface,
     )
@@ -90,16 +95,16 @@ private fun MainScreenModePopupBody(
 
 @Composable
 private fun MainScreenModeButtons(
-    onScreenModeSet: (MainUiMode) -> Unit,
+    onScreenModeSet: (MainScreenMode) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier.fillMaxWidth()) {
         MainScreenDailyModeButton(
-            onDailyModeSet = { onScreenModeSet(MainUiMode.DAILY) },
+            onDailyModeSet = { onScreenModeSet(MainScreenMode.Daily) },
             modifier = Modifier.weight(1f),
         )
         MainScreenCalendarModeButton(
-            onCalendarModeSet = { onScreenModeSet(MainUiMode.CALENDAR) },
+            onCalendarModeSet = { onScreenModeSet(MainScreenMode.Calendar) },
             modifier = Modifier.weight(1f),
         )
     }
@@ -110,15 +115,9 @@ private fun MainScreenDailyModeButton(
     onDailyModeSet: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val toastMessage = stringResource(id = R.string.ui_mode_popup_daily_mode_set)
-
     BaseMainScreenModePopupButton(
-        text = stringResource(id = R.string.ui_mode_popup_use_daily),
-        onClick = {
-            onDailyModeSet()
-            context.makeToast(toastMessage)
-        },
+        text = stringResource(id = R.string.screen_mode_popup_set_daily_mode),
+        onClick = onDailyModeSet,
         modifier = modifier,
         background = MaterialTheme.colorScheme.surface,
     )
@@ -129,17 +128,11 @@ private fun MainScreenCalendarModeButton(
     onCalendarModeSet: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val toastMessage = stringResource(id = R.string.ui_mode_popup_calendar_mode_set)
-
     BaseMainScreenModePopupButton(
-        text = stringResource(id = R.string.ui_mode_popup_use_calendar),
-        onClick = {
-            onCalendarModeSet()
-            context.makeToast(toastMessage)
-        },
+        text = stringResource(id = R.string.screen_mode_popup_set_calendar_mode),
+        onClick = onCalendarModeSet,
         modifier = modifier,
-        background = MaterialTheme.colorScheme.primary,
+        background = MaterialTheme.colorScheme.primaryContainer,
     )
 }
 
@@ -175,6 +168,7 @@ private fun MainScreenModePopupPreview() {
     BlindarTheme {
         MainScreenModePopup(
             onScreenModeSet = {},
+            onDismiss = {},
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),

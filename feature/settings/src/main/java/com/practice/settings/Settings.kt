@@ -1,5 +1,6 @@
 package com.practice.settings
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,6 +40,7 @@ import com.practice.settings.items.SendFeedbackItem
 import com.practice.settings.items.SetDailyAlarmItem
 import com.practice.settings.items.SetDailyModeItem
 import com.practice.settings.popup.FeedbackPopup
+import com.practice.settings.popup.MainScreenModePopup
 import com.practice.settings.uistate.SettingsUiState
 import com.practice.util.makeToast
 import kotlinx.coroutines.launch
@@ -49,11 +52,16 @@ fun Settings(
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var isScreenModePopupVisible by rememberSaveable { mutableStateOf(false) }
     var isFeedbackPopupVisible by rememberSaveable { mutableStateOf(false) }
 
     Settings(
         uiState = uiState,
         onBackButtonClick = onBackButtonClick,
+        isScreenModePopupVisible = isScreenModePopupVisible,
+        onChangeScreenModePopupVisibility = {
+            isScreenModePopupVisible = it
+        },
         onToggleDailyMode = viewModel::onToggleDailyMode,
         onToggleDailyAlarm = viewModel::onToggleDailyAlarm,
         isFeedbackPopupVisible = isFeedbackPopupVisible,
@@ -68,6 +76,8 @@ fun Settings(
 private fun Settings(
     uiState: SettingsUiState,
     onBackButtonClick: () -> Unit,
+    isScreenModePopupVisible: Boolean,
+    onChangeScreenModePopupVisibility: (Boolean) -> Unit,
     onToggleDailyMode: (Boolean) -> Unit,
     onToggleDailyAlarm: (Boolean) -> Unit,
     isFeedbackPopupVisible: Boolean,
@@ -79,6 +89,14 @@ private fun Settings(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
+    val keepDailyModeMessage = stringResource(id = R.string.screen_mode_popup_keep_daily_mode_toast)
+    val setDailyModeMessage = stringResource(id = R.string.screen_mode_popup_set_daily_mode_toast)
+    val setCalendarModeMessage = stringResource(id = R.string.settings_daily_mode_disabled)
+
+    val showToggleToast = { toggleMessage: String ->
+        Toast.makeText(context, toggleMessage, Toast.LENGTH_SHORT).show()
+    }
+
     when (uiState) {
         is SettingsUiState.Loading -> {
             SettingsScreenLoadingIndicator(modifier = modifier)
@@ -89,7 +107,14 @@ private fun Settings(
                 modifier = modifier,
                 onBackButtonClick = onBackButtonClick,
                 uiState = uiState,
-                onToggleDailyMode = onToggleDailyMode,
+                onToggleDailyMode = {
+                    if (uiState.mainScreenMode == MainScreenMode.Calendar) {
+                        onToggleDailyMode(true)
+                        showToggleToast(setDailyModeMessage)
+                    } else {
+                        onChangeScreenModePopupVisibility(true)
+                    }
+                },
                 onToggleDailyAlarm = onToggleDailyAlarm,
                 onFeedbackPopupOpen = onFeedbackPopupOpen,
             )
@@ -113,6 +138,27 @@ private fun Settings(
                 }
             },
             onDismiss = onFeedbackPopupClose,
+        )
+    }
+
+    if (isScreenModePopupVisible) {
+        MainScreenModePopup(
+            onScreenModeSet = { newScreenMode ->
+                val isNewModeDaily = newScreenMode == MainScreenMode.Daily
+                val toastMessage =
+                    if (isNewModeDaily) keepDailyModeMessage else setCalendarModeMessage
+
+                onToggleDailyMode(isNewModeDaily)
+                showToggleToast(toastMessage)
+                onChangeScreenModePopupVisibility(false)
+            },
+            onDismiss = {
+                showToggleToast(keepDailyModeMessage)
+                onChangeScreenModePopupVisibility(false)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .widthIn(max = 600.dp),
         )
     }
 }
@@ -223,6 +269,7 @@ private fun CloseSettingsButton(
 private fun SettingsPreview() {
     var mainScreenMode by remember { mutableStateOf(MainScreenMode.Daily) }
     var isDailyAlarmEnabled by remember { mutableStateOf(false) }
+    var isScreenModePopupVisible by remember { mutableStateOf(false) }
     var isFeedbackPopupVisible by remember { mutableStateOf(false) }
 
     BlindarTheme {
@@ -232,6 +279,10 @@ private fun SettingsPreview() {
                 isDailyAlarmEnabled = isDailyAlarmEnabled,
             ),
             onBackButtonClick = {},
+            isScreenModePopupVisible = isScreenModePopupVisible,
+            onChangeScreenModePopupVisibility = {
+                isScreenModePopupVisible = it
+            },
             onToggleDailyMode = {
                 mainScreenMode = if (it) MainScreenMode.Daily else MainScreenMode.Calendar
             },
@@ -252,6 +303,8 @@ private fun SettingsPreview_Loading() {
         Settings(
             uiState = SettingsUiState.Loading,
             onBackButtonClick = {},
+            isScreenModePopupVisible = false,
+            onChangeScreenModePopupVisibility = {},
             onToggleDailyMode = {},
             onToggleDailyAlarm = {},
             isFeedbackPopupVisible = false,

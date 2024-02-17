@@ -141,7 +141,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
 
     private fun mapUserPreferences(preferences: Preferences): UserPreferences {
         val mainScreenMode = MainScreenMode.valueOf(
-            value = preferences[PreferenceKeys.MAIN_SCREEN_MODE] ?: MainScreenMode.NOT_SELECTED.name
+            value = preferences[PreferenceKeys.MAIN_SCREEN_MODE] ?: MainScreenMode.Daily.name
         )
         val themeMode = ThemeMode.valueOf(
             value = preferences[PreferenceKeys.THEME_MODE] ?: ThemeMode.SystemDefault.name

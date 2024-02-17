@@ -31,8 +31,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -109,23 +111,23 @@ fun OnboardingScreen(
                     translationY = appIconOffset.value.dp
                 }
             )
-            PhoneLoginButton(
-                onPhoneLogin = onPhoneLogin,
-                modifier = Modifier
-                    .constrainAs(phoneLoginButton) {
-                        start.linkTo(parent.start)
-                        bottom.linkTo(googleLoginButton.top, margin = 20.dp)
-                        end.linkTo(parent.end)
-                    }
-                    .fillMaxWidth(fraction = buttonWidthRatio)
-                    .alpha(buttonAlpha.value),
-            )
             GoogleLoginButton(
                 onGoogleLogin = {
                     startForResult.launch(googleSignInClient.signInIntent)
                 },
                 modifier = Modifier
                     .constrainAs(googleLoginButton) {
+                        start.linkTo(parent.start)
+                        bottom.linkTo(phoneLoginButton.top, margin = 20.dp)
+                        end.linkTo(parent.end)
+                    }
+                    .fillMaxWidth(fraction = buttonWidthRatio)
+                    .alpha(buttonAlpha.value),
+            )
+            PhoneLoginButton(
+                onPhoneLogin = onPhoneLogin,
+                modifier = Modifier
+                    .constrainAs(phoneLoginButton) {
                         start.linkTo(parent.start)
                         bottom.linkTo(buttonGuideline)
                         end.linkTo(parent.end)
@@ -160,10 +162,11 @@ private fun PhoneLoginButton(
         onClick = onPhoneLogin,
         modifier = modifier.clearAndSetSemantics {
             contentDescription = phoneLoginText
+            role = Role.Button
         },
         colors = ButtonDefaults.textButtonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
         ),
     ) {
         Box(
@@ -172,7 +175,6 @@ private fun PhoneLoginButton(
         ) {
             TitleLarge(
                 text = phoneLoginText,
-                textColor = MaterialTheme.colorScheme.onPrimary,
             )
         }
     }
@@ -188,10 +190,11 @@ private fun GoogleLoginButton(
         onClick = onGoogleLogin,
         modifier = modifier.clearAndSetSemantics {
             contentDescription = loginText
+            role = Role.Button
         },
         colors = ButtonDefaults.textButtonColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface,
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         ),
     ) {
         Icon(
