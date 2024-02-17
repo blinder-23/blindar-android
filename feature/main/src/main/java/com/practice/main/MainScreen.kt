@@ -56,9 +56,6 @@ fun MainScreen(
                 )
             }
 
-            // TODO: 앱을 처음 켤 때 팝업 보여주지 말기
-            // TODO: 설정 화면에서 달력 모드를 켤 때 팝업 보여주기 (정말 이 모드를 사용하시겠습니까? 스크린 리더에 불편할 수 있습니다...)
-
             MainUiMode.CALENDAR -> {
                 CalendarMainScreen(
                     windowSize = windowSize,
