@@ -9,3 +9,7 @@
 .cxx
 app/src/main/res/xml/network_security_config.xml
 shelved.patch
+!*/google-services.json
+/app/src/debug/google-services.json
+/app/src/release/google-services.json
+/core/firebase/google-services.json

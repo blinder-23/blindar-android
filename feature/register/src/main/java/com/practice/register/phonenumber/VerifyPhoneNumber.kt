@@ -119,6 +119,7 @@ fun VerifyPhoneNumber(
             onAuthCodeChange = viewModel::onAuthCodeChange,
             isAuthCodeFieldEnabled = state.isAuthCodeFieldEnabled,
             verifyAuthCode = hideKeyboardAndVerifyAuthCode,
+            isAuthCodeInvalid = viewModel.isAuthCodeInvalid,
             modifier = Modifier
                 .constrainAs(phoneNumberCard) {
                     top.linkTo(appBar.bottom)
@@ -153,6 +154,7 @@ private fun PhoneNumberCard(
     onAuthChipClick: () -> Unit,
     authCode: String,
     onAuthCodeChange: (String) -> Unit,
+    isAuthCodeInvalid: Boolean,
     isAuthCodeFieldEnabled: Boolean,
     verifyAuthCode: () -> Unit,
     modifier: Modifier = Modifier,
@@ -185,6 +187,7 @@ private fun PhoneNumberCard(
             code = authCode,
             onValueChange = onAuthCodeChange,
             enabled = isAuthCodeFieldEnabled,
+            isError = isAuthCodeInvalid,
             verifyAuthCode = verifyAuthCode,
             modifier = Modifier.constrainAs(authCodeField) {
                 start.linkTo(parent.start)
@@ -280,6 +283,7 @@ private fun AuthCodeTextField(
     code: String,
     onValueChange: (String) -> Unit,
     enabled: Boolean,
+    isError: Boolean,
     verifyAuthCode: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -291,6 +295,12 @@ private fun AuthCodeTextField(
         enabled = enabled,
         label = {
             TitleSmall(text = stringResource(R.string.auth_code_field_label))
+        },
+        isError = isError,
+        supportingText = {
+            if (isError) {
+                LabelSmall(text = stringResource(id = R.string.invalid_code))
+            }
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
@@ -359,6 +369,7 @@ private fun PhoneNumberCardPreview() {
             onAuthChipClick = { isAuthCodeEnabled = true },
             authCode = authCode,
             onAuthCodeChange = { authCode = it },
+            isAuthCodeInvalid = false,
             isAuthCodeFieldEnabled = isAuthCodeEnabled,
             verifyAuthCode = { },
             modifier = Modifier.background(MaterialTheme.colorScheme.surface),
