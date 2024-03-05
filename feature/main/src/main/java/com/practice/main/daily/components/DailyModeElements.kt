@@ -14,12 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DatePickerFormatter
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -140,16 +137,6 @@ private fun ScreenModeOpenPopupButton(
             .clickable(enabled = enabled, onClick = onOpenPopup)
             .size(8.dp)
             .background(Color.Transparent),
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun rememberDatePickerFormatter() = remember {
-    DatePickerFormatter(
-        yearSelectionSkeleton = "yMMMd",                // 2024년 1월 8일
-        selectedDateSkeleton = "yMMMdEEE",              // 2024년 1월 8일 (월)
-        selectedDateDescriptionSkeleton = "yMMMdEEEE",  // 2024년 1월 8일 월요일
     )
 }
 

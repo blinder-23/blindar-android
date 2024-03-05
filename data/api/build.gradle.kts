@@ -7,7 +7,7 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val url: String = gradleLocalProperties(rootDir).getProperty("server.url")
+val url: String = gradleLocalProperties(rootDir, providers).getProperty("server.url")
 
 android {
     namespace = "com.practice.api"
