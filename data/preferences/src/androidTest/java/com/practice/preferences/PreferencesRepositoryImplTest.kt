@@ -9,11 +9,20 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.practice.preferences.preferences.MainScreenMode
 import com.practice.preferences.preferences.ThemeMode
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -50,7 +59,7 @@ class PreferencesRepositoryImplTest {
     @Test
     fun repository_fetchInitialPreferences() = runTest {
         val initialPreferences = preferences.fetchInitialPreferences()
-        assertThat(initialPreferences.mainScreenMode).isEqualTo(MainScreenMode.NOT_SELECTED)
+        assertThat(initialPreferences.mainScreenMode).isEqualTo(MainScreenMode.Calendar)
         assertThat(initialPreferences.themeMode).isEqualTo(ThemeMode.SystemDefault)
     }
 
