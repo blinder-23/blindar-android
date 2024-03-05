@@ -112,18 +112,15 @@ private fun FeedbackTextField(
         value = state.feedbackText,
         onValueChange = state::onFeedbackTextUpdate,
         isError = state.isError,
-        placeholder = {
-            BodySmall(
-                text = stringResource(id = R.string.feedback_popup_textfield_placeholder),
-                textColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-            )
-        },
         supportingText = {
             LabelMedium(
                 text = stringResource(id = R.string.feedback_popup_textfield_error_empty),
                 textColor = MaterialTheme.colorScheme.error,
                 modifier = Modifier.alpha(errorTextAlpha),
             )
+        },
+        label = {
+            LabelMedium(text = stringResource(id = R.string.feedback_popup_textfield_label))
         },
         minLines = 4,
         maxLines = 4,

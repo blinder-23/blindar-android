@@ -35,7 +35,7 @@
     <string name="settings_send_feedback_on_error">피드백 전송에 실패했습니다. 잠시 후에 다시 시도해 주세요.</string>
 
     <string name="feedback_popup_title">피드백 보내기</string>
-    <string name="feedback_popup_textfield_placeholder">블린더 사용 후기를 알려주세요!</string>
+    <string name="feedback_popup_textfield_label">블린더 사용 후기를 알려주세요!</string>
     <string name="feedback_popup_textfield_error_empty">피드백을 입력해 주세요.</string>
     <string name="feedback_popup_cancel_button">취소</string>
     <string name="feedback_popup_send_button">전송</string>
