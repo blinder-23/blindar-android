@@ -73,7 +73,7 @@ private fun CloseSchedulePopupButton(
     ) {
         BodyLarge(
             text = stringResource(id = R.string.schedule_popup_close),
-            textColor = textColor,
+            color = textColor,
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .align(Alignment.Center),

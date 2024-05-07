@@ -92,7 +92,7 @@ private fun SupportText(modifier: Modifier = Modifier) {
         text = stringResource(id = R.string.received_support_text),
         modifier = modifier,
         textAlign = TextAlign.Center,
-        textColor = MaterialTheme.colorScheme.onSurface,
+        color = MaterialTheme.colorScheme.onSurface,
     )
 }
 

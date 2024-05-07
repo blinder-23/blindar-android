@@ -245,7 +245,7 @@ private fun AddMemoButton(
                 .semantics {
                     contentDescription = a11yDescription
                 },
-            textColor = textColor,
+            color = textColor,
         )
     }
 }
@@ -264,7 +264,7 @@ private fun CloseMemoPopupButton(
     ) {
         BodyLarge(
             text = stringResource(id = R.string.memo_popup_close),
-            textColor = textColor,
+            color = textColor,
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .align(Alignment.Center),

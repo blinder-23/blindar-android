@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -31,7 +32,8 @@ import com.practice.settings.rememberNotificationPermissionLauncher
 internal fun SetDailyAlarmItem(
     isDailyAlarmEnabled: Boolean,
     onToggle: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
 ) {
     val permissionLauncher = rememberNotificationPermissionLauncher(isDailyAlarmEnabled, onToggle)
 
@@ -66,11 +68,15 @@ internal fun SetDailyAlarmItem(
         ) {
             TitleMedium(
                 text = stringResource(id = R.string.settings_daily_alarm_title),
+                color = color,
                 modifier = Modifier.clearAndSetSemantics {
                     contentDescription = titleDescription
                 },
             )
-            LabelMedium(text = stringResource(id = R.string.settings_daily_alarm_body))
+            LabelMedium(
+                text = stringResource(id = R.string.settings_daily_alarm_body),
+                color = color,
+            )
         }
         Switch(
             checked = isDailyAlarmEnabled,

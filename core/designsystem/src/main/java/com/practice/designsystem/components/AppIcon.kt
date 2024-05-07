@@ -29,12 +29,12 @@ fun AppIcon(
         )
         TitleMedium(
             text = "CALENDAR FOR BLIND",
-            textColor = MaterialTheme.colorScheme.onSurface,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(top = 8.dp),
         )
         DisplayMedium(
             text = "BLINDAR",
-            textColor = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colorScheme.primary,
         )
     }
 }

@@ -77,7 +77,7 @@ private fun CloseMealPopupButton(
     ) {
         BodyLarge(
             text = stringResource(id = R.string.meal_popup_close),
-            textColor = textColor,
+            color = textColor,
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .align(Alignment.Center),

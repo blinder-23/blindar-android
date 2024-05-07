@@ -108,7 +108,7 @@ fun MainScreenTopBar(
         ) {
             TitleLarge(
                 text = schoolName,
-                textColor = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
         MainTopBarActions(
@@ -546,7 +546,7 @@ private fun MainScreenContentHeaderButton(
     ) {
         LabelLarge(
             text = title,
-            textColor = contentColorFor(backgroundColor)
+            color = contentColorFor(backgroundColor)
         )
     }
 }
@@ -639,7 +639,7 @@ private fun MealTimesButton(
     ) {
         LabelLarge(
             text = mealTime,
-            textColor = contentColor,
+            color = contentColor,
             modifier = Modifier.alpha(contentAlpha),
         )
     }

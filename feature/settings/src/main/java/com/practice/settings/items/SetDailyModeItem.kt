@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -28,7 +29,8 @@ import com.practice.settings.R
 internal fun SetDailyModeItem(
     isDailyModeEnabled: Boolean,
     onToggle: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
 ) {
     val titleDescription =
         stringResource(id = if (isDailyModeEnabled) R.string.settings_daily_mode_title_description_enabled else R.string.settings_daily_mode_title_description_disabled)
@@ -56,11 +58,15 @@ internal fun SetDailyModeItem(
         ) {
             TitleMedium(
                 text = stringResource(id = R.string.settings_daily_mode_title),
+                color = color,
                 modifier = Modifier.clearAndSetSemantics {
                     contentDescription = titleDescription
                 },
             )
-            LabelMedium(text = stringResource(id = R.string.settings_daily_mode_body))
+            LabelMedium(
+                text = stringResource(id = R.string.settings_daily_mode_body),
+                color = color,
+            )
         }
         Switch(
             checked = isDailyModeEnabled,

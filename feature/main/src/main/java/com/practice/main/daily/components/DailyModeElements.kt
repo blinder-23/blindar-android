@@ -93,7 +93,7 @@ internal fun DateQuickNavigationButton(
         BodySmall(
             text = stringResource(id = quickNavigation.nameId),
             modifier = Modifier.align(Alignment.Center),
-            textColor = contentColorFor(backgroundColor = backgroundColor),
+            color = contentColorFor(backgroundColor = backgroundColor),
             fontWeight = if (LocalDensity.current.isLargeFont) FontWeight.Bold else null,
         )
     }

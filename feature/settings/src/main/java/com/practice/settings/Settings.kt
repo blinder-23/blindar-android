@@ -27,6 +27,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -226,17 +228,26 @@ private fun SettingsItems(
     onToggleDailyAlarm: (Boolean) -> Unit,
     onFeedbackPopupOpen: () -> Unit,
     modifier: Modifier = Modifier,
+    contentColor: Color = Color.Unspecified,
 ) {
+    val textColor = contentColor.takeOrElse {
+        MaterialTheme.colorScheme.onSurface
+    }
     Column(modifier = modifier) {
         SetDailyModeItem(
             isDailyModeEnabled = uiState.mainScreenMode == MainScreenMode.Daily,
             onToggle = onToggleDailyMode,
+            color = textColor,
         )
         SetDailyAlarmItem(
             isDailyAlarmEnabled = uiState.isDailyAlarmEnabled,
             onToggle = onToggleDailyAlarm,
+            color = textColor,
         )
-        SendFeedbackItem(onClick = onFeedbackPopupOpen)
+        SendFeedbackItem(
+            onClick = onFeedbackPopupOpen,
+            color = textColor,
+        )
     }
 }
 
@@ -259,7 +270,7 @@ private fun CloseSettingsButton(
     ) {
         TitleMedium(
             text = stringResource(id = R.string.close),
-            textColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
         )
     }
 }

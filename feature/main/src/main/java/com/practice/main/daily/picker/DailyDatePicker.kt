@@ -1,5 +1,6 @@
 package com.practice.main.daily.picker
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -102,7 +103,7 @@ private fun DailyDatePickerSupportingText(
         if (isError) MaterialTheme.colorScheme.error else Color.Transparent
     LabelMedium(
         text = errorText,
-        textColor = errorTextColor,
+        color = errorTextColor,
         modifier = modifier.clearAndSetSemantics {
             contentDescription = if (isError) errorText else ""
         },
@@ -121,6 +122,11 @@ private fun Date.toHeadlineFormat(): String {
 }
 
 @Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=480")
+@Preview(
+    showBackground = true,
+    device = "spec:width=1280dp,height=800dp,dpi=480",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
 @Composable
 private fun DailyDatePickerPreview() {
     val dailyDatePickerState = rememberDailyDatePickerState()

@@ -205,7 +205,7 @@ private fun GoogleLoginButton(
         )
         TitleLarge(
             text = loginText,
-            textColor = MaterialTheme.colorScheme.onSurface,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }

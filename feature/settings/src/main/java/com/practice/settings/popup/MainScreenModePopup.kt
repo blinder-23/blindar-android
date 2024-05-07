@@ -154,7 +154,7 @@ private fun BaseMainScreenModePopupButton(
     ) {
         BodyLarge(
             text = text,
-            textColor = textColor,
+            color = textColor,
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .align(Alignment.Center),

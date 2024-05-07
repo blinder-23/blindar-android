@@ -11,11 +11,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -32,6 +32,7 @@ import com.practice.settings.R
 internal fun SendFeedbackItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
 ) {
     Row(
         modifier = modifier
@@ -43,22 +44,28 @@ internal fun SendFeedbackItem(
             modifier = Modifier
                 .weight(1f)
                 .padding(16.dp),
+            color = color,
         )
-        SendFeedbackItemIcon()
+        SendFeedbackItemIcon(color = color)
     }
 }
 
 @Composable
 private fun SendFeedbackItemText(
     modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        TitleMedium(text = stringResource(id = R.string.settings_send_feedback_item_title))
+        TitleMedium(
+            text = stringResource(id = R.string.settings_send_feedback_item_title),
+            color = color,
+        )
         LabelMedium(
             text = stringResource(id = R.string.settings_send_feedback_item_body),
+            color = color,
             modifier = Modifier.clearAndSetSemantics {
                 contentDescription = ""
             },
@@ -69,11 +76,12 @@ private fun SendFeedbackItemText(
 @Composable
 private fun SendFeedbackItemIcon(
     modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
 ) {
     Icon(
         imageVector = Icons.Default.ChevronRight,
         contentDescription = null,
-        tint = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface),
+        tint = color,
         modifier = modifier.minimumInteractiveComponentSize(),
     )
 }

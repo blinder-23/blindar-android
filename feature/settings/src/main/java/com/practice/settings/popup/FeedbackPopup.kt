@@ -115,7 +115,7 @@ private fun FeedbackTextField(
         supportingText = {
             LabelMedium(
                 text = stringResource(id = R.string.feedback_popup_textfield_error_empty),
-                textColor = MaterialTheme.colorScheme.error,
+                color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.alpha(errorTextAlpha),
             )
         },
