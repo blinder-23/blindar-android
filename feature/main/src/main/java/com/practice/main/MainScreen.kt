@@ -13,16 +13,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.a11y.isLargeFont
+import com.practice.designsystem.components.BlindarDialog
 import com.practice.designsystem.components.popupPadding
 import com.practice.main.calendar.CalendarMainScreen
 import com.practice.main.daily.DailyMainScreen
 import com.practice.main.loading.LoadingMainScreen
-import com.practice.main.popup.MealPopup
-import com.practice.main.popup.MemoPopup
-import com.practice.main.popup.NutrientPopup
-import com.practice.main.popup.SchedulePopup
+import com.practice.main.popup.MealPopupContents
+import com.practice.main.popup.MemoPopupContents
+import com.practice.main.popup.NutrientPopupContents
+import com.practice.main.popup.SchedulePopupContents
 import com.practice.main.state.MainUiMode
 
 @Composable
@@ -100,10 +102,11 @@ private fun MainScreenPopups(
     if (uiState.isNutrientPopupVisible) {
         val selectedMealIndex = uiState.selectedMealIndex
         val selectedMeal = uiState.selectedDateDataState.uiMeals[selectedMealIndex]
-        MainScreenPopup(
-            onClose = viewModel::closeNutrientPopup,
+        BlindarDialog(
+            onDismissRequest = viewModel::closeNutrientPopup,
+            properties = DialogProperties(usePlatformDefaultWidth = false),
         ) {
-            NutrientPopup(
+            NutrientPopupContents(
                 uiMeal = selectedMeal,
                 onClose = viewModel::closeNutrientPopup,
                 modifier = Modifier.padding(popupPadding),
@@ -111,8 +114,11 @@ private fun MainScreenPopups(
         }
     }
     if (uiState.isMemoPopupVisible) {
-        MainScreenPopup(onClose = viewModel::closeMemoPopup) {
-            MemoPopup(
+        BlindarDialog(
+            onDismissRequest = viewModel::closeMemoPopup,
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+        ) {
+            MemoPopupContents(
                 date = uiState.selectedDateDataState.uiMemos.date,
                 memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
                 onAddMemo = viewModel::addMemo,
@@ -125,8 +131,11 @@ private fun MainScreenPopups(
     }
 
     if (uiState.isMealPopupVisible) {
-        MainScreenPopup(onClose = viewModel::onMealPopupClose) {
-            MealPopup(
+        BlindarDialog(
+            onDismissRequest = viewModel::onMealPopupClose,
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+        ) {
+            MealPopupContents(
                 uiMeals = uiState.selectedDateDataState.uiMeals,
                 selectedMealIndex = uiState.selectedMealIndex,
                 onMealTimeClick = viewModel::onMealTimeClick,
@@ -141,8 +150,11 @@ private fun MainScreenPopups(
     }
 
     if (uiState.isSchedulePopupVisible) {
-        MainScreenPopup(onClose = viewModel::onSchedulePopupClose) {
-            SchedulePopup(
+        BlindarDialog(
+            onDismissRequest = viewModel::onSchedulePopupClose,
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+        ) {
+            SchedulePopupContents(
                 scheduleElements = uiState.selectedDateDataState.memoPopupElements,
                 onMemoPopupOpen = viewModel::openMemoPopup,
                 onSchedulePopupClose = viewModel::onSchedulePopupClose,

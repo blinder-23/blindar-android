@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
@@ -25,6 +23,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightAndDarkPreview
+import com.practice.designsystem.components.BlindarDialog
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.PopupBodyMedium
 import com.practice.designsystem.components.PopupTitleLarge
@@ -32,7 +31,6 @@ import com.practice.designsystem.theme.BlindarTheme
 import com.practice.preferences.preferences.MainScreenMode
 import com.practice.settings.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenModePopup(
     onScreenModeSet: (MainScreenMode) -> Unit,
@@ -41,7 +39,7 @@ fun MainScreenModePopup(
 ) {
     val shape = RoundedCornerShape(16.dp)
 
-    AlertDialog(
+    BlindarDialog(
         onDismissRequest = onDismiss,
         modifier = modifier
             .shadow(4.dp, shape = shape)

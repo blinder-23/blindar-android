@@ -9,8 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -28,15 +26,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.LightPreview
+import com.practice.designsystem.components.BlindarDialog
 import com.practice.designsystem.components.BodySmall
 import com.practice.designsystem.components.LabelMedium
 import com.practice.designsystem.components.PopupTitleLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.settings.R
 
-// TODO: Popup 형식 만들기?
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeedbackPopup(
     onSend: (String, String) -> Unit, // app version name, feedback contents
@@ -50,7 +46,7 @@ fun FeedbackPopup(
     }
 
     val shape = RoundedCornerShape(16.dp)
-    AlertDialog(
+    BlindarDialog(
         onDismissRequest = onDismissWithState,
         modifier = modifier
             .wrapContentHeight()

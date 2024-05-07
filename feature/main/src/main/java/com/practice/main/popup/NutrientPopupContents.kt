@@ -56,7 +56,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun NutrientPopup(
+fun NutrientPopupContents(
     uiMeal: UiMeal,
     onClose: () -> Unit,
     modifier: Modifier = Modifier
@@ -340,7 +340,7 @@ private fun NutrientPopupCloseButtonPreview() {
 
 @LightAndDarkPreview
 @Composable
-private fun NutrientPopupPreview() {
+private fun NutrientPopupContentsPreview() {
     BlindarTheme {
         val now = Date.now()
         Box(
@@ -349,7 +349,7 @@ private fun NutrientPopupPreview() {
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
-            NutrientPopup(
+            NutrientPopupContents(
                 uiMeal = UiMeal(
                     now.year,
                     now.month,

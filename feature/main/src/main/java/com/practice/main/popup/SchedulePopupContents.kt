@@ -11,33 +11,32 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.main.MealContent
 import com.practice.main.R
-import com.practice.main.sampleUiMeals
-import com.practice.main.state.UiMeals
+import com.practice.main.ScheduleContent
+import com.practice.main.previewMemos
+import com.practice.main.previewSchedules
+import com.practice.main.state.MemoPopupElement
+import com.practice.main.state.UiMemos
+import com.practice.main.state.UiSchedules
+import com.practice.main.state.mergeSchedulesAndMemos
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-fun MealPopup(
-    uiMeals: UiMeals,
-    selectedMealIndex: Int,
-    onMealTimeClick: (Int) -> Unit,
-    mealColumns: Int,
-    onNutrientPopupOpen: () -> Unit,
-    onMealPopupClose: () -> Unit,
-    modifier: Modifier = Modifier
+fun SchedulePopupContents(
+    scheduleElements: ImmutableList<MemoPopupElement>,
+    onMemoPopupOpen: () -> Unit,
+    onSchedulePopupClose: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val shape = RoundedCornerShape(16.dp)
     Column(
@@ -47,24 +46,21 @@ fun MealPopup(
             .background(MaterialTheme.colorScheme.surface),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        MealContent(
-            uiMeals = uiMeals,
-            selectedIndex = selectedMealIndex,
-            onMealTimeClick = onMealTimeClick,
-            columns = mealColumns,
-            onNutrientPopupOpen = onNutrientPopupOpen,
+        ScheduleContent(
+            scheduleElements = scheduleElements,
+            onMemoPopupOpen = onMemoPopupOpen,
         )
-        CloseMealPopupButton(
-            onClose = onMealPopupClose,
+        CloseSchedulePopupButton(
+            onClose = onSchedulePopupClose,
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp)),
+                .clip(RoundedCornerShape(8.dp))
         )
     }
 }
 
 @Composable
-private fun CloseMealPopupButton(
+private fun CloseSchedulePopupButton(
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -76,7 +72,7 @@ private fun CloseMealPopupButton(
             .background(background),
     ) {
         BodyLarge(
-            text = stringResource(id = R.string.meal_popup_close),
+            text = stringResource(id = R.string.schedule_popup_close),
             color = textColor,
             modifier = Modifier
                 .padding(vertical = 16.dp)
@@ -87,16 +83,21 @@ private fun CloseMealPopupButton(
 
 @LightAndDarkPreview
 @Composable
-private fun MealPopupPreview() {
-    var selectedMealIndex by remember { mutableIntStateOf(0) }
+private fun SchedulePopupContentsPreview() {
     BlindarTheme {
-        MealPopup(
-            uiMeals = sampleUiMeals,
-            selectedMealIndex = selectedMealIndex,
-            onMealTimeClick = { selectedMealIndex = it },
-            mealColumns = 2,
-            onNutrientPopupOpen = {},
-            onMealPopupClose = {},
+        SchedulePopupContents(
+            scheduleElements = mergeSchedulesAndMemos(
+                UiSchedules(
+                    date = Date.now(),
+                    uiSchedules = previewSchedules,
+                ),
+                UiMemos(
+                    date = Date.now(),
+                    memos = previewMemos,
+                ),
+            ),
+            onMemoPopupOpen = {},
+            onSchedulePopupClose = {},
             modifier = Modifier.padding(16.dp),
         )
     }

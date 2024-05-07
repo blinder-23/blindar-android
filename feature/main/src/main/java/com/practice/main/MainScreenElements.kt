@@ -58,8 +58,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.a11y.isLargeFont
@@ -390,19 +388,6 @@ private fun EmptyScheduleContent(
             modifier = Modifier.fillMaxWidth(),
             padding = PaddingValues(vertical = 12.dp),
         )
-    }
-}
-
-@Composable
-fun MainScreenPopup(
-    onClose: () -> Unit,
-    content: @Composable () -> Unit = {},
-) {
-    Dialog(
-        onDismissRequest = onClose,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        content()
     }
 }
 

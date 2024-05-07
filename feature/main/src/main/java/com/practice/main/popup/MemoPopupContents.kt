@@ -49,7 +49,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-fun MemoPopup(
+fun MemoPopupContents(
     date: Date,
     memoPopupElements: ImmutableList<MemoPopupElement>,
     onAddMemo: () -> Unit,
@@ -313,9 +313,9 @@ private fun MemoItemsPreview() {
 
 @LightAndDarkPreview
 @Composable
-private fun MemoPopupPreview() {
+private fun MemoPopupContentsPreview() {
     BlindarTheme {
-        MemoPopup(
+        MemoPopupContents(
             date = Date.now(),
             memoPopupElements = previewMemoPopupElements,
             onContentsChange = {},
