@@ -1,4 +1,4 @@
-package com.practice.main.popup
+package com.practice.main.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,13 +30,13 @@ import com.practice.main.sampleUiMeals
 import com.practice.main.state.UiMeals
 
 @Composable
-fun MealPopupContents(
+fun MealDialogContents(
     uiMeals: UiMeals,
     selectedMealIndex: Int,
     onMealTimeClick: (Int) -> Unit,
     mealColumns: Int,
-    onNutrientPopupOpen: () -> Unit,
-    onMealPopupClose: () -> Unit,
+    onNutrientDialogOpen: () -> Unit,
+    onMealDialogClose: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val shape = RoundedCornerShape(16.dp)
@@ -52,10 +52,10 @@ fun MealPopupContents(
             selectedIndex = selectedMealIndex,
             onMealTimeClick = onMealTimeClick,
             columns = mealColumns,
-            onNutrientPopupOpen = onNutrientPopupOpen,
+            onNutrientDialogOpen = onNutrientDialogOpen,
         )
-        CloseMealPopupButton(
-            onClose = onMealPopupClose,
+        CloseMealDialogButton(
+            onClose = onMealDialogClose,
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp)),
@@ -64,7 +64,7 @@ fun MealPopupContents(
 }
 
 @Composable
-private fun CloseMealPopupButton(
+private fun CloseMealDialogButton(
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -76,7 +76,7 @@ private fun CloseMealPopupButton(
             .background(background),
     ) {
         BodyLarge(
-            text = stringResource(id = R.string.meal_popup_close),
+            text = stringResource(id = R.string.meal_dialog_close),
             color = textColor,
             modifier = Modifier
                 .padding(vertical = 16.dp)
@@ -87,16 +87,16 @@ private fun CloseMealPopupButton(
 
 @LightAndDarkPreview
 @Composable
-private fun MealPopupContentsPreview() {
+private fun MealDialogContentsPreview() {
     var selectedMealIndex by remember { mutableIntStateOf(0) }
     BlindarTheme {
-        MealPopupContents(
+        MealDialogContents(
             uiMeals = sampleUiMeals,
             selectedMealIndex = selectedMealIndex,
             onMealTimeClick = { selectedMealIndex = it },
             mealColumns = 2,
-            onNutrientPopupOpen = {},
-            onMealPopupClose = {},
+            onNutrientDialogOpen = {},
+            onMealDialogClose = {},
             modifier = Modifier.padding(16.dp),
         )
     }

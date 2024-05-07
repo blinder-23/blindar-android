@@ -1,4 +1,4 @@
-package com.practice.main.popup
+package com.practice.main.dialog
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -37,25 +37,25 @@ import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BodyLarge
+import com.practice.designsystem.components.DialogBodySmall
+import com.practice.designsystem.components.DialogTitleLarge
 import com.practice.designsystem.components.LabelLarge
-import com.practice.designsystem.components.PopupBodySmall
-import com.practice.designsystem.components.PopupTitleLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
-import com.practice.main.state.MemoPopupElement
+import com.practice.main.state.MemoDialogElement
 import com.practice.main.state.UiMemo
 import com.practice.main.state.UiSchedule
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-fun MemoPopupContents(
+fun MemoDialogContents(
     date: Date,
-    memoPopupElements: ImmutableList<MemoPopupElement>,
+    memoDialogElements: ImmutableList<MemoDialogElement>,
     onAddMemo: () -> Unit,
     onContentsChange: (UiMemo) -> Unit,
     onMemoDelete: (UiMemo) -> Unit,
-    onPopupClose: () -> Unit,
+    onDialogClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val textColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface)
@@ -70,8 +70,8 @@ fun MemoPopupContents(
     ) {
         item {
             val (_, month, day) = date
-            PopupTitleLarge(
-                text = stringResource(id = R.string.memo_popup_title, month, day),
+            DialogTitleLarge(
+                text = stringResource(id = R.string.memo_dialog_title, month, day),
                 color = textColor,
                 modifier = Modifier
                     .padding(16.dp)
@@ -80,7 +80,7 @@ fun MemoPopupContents(
         }
         item {
             MemoItems(
-                memoPopupElements = memoPopupElements,
+                memoDialogElements = memoDialogElements,
                 onContentsChange = onContentsChange,
                 onMemoDelete = onMemoDelete,
                 modifier = Modifier
@@ -98,8 +98,8 @@ fun MemoPopupContents(
             )
         }
         item {
-            CloseMemoPopupButton(
-                onClose = onPopupClose,
+            CloseMemoDialogButton(
+                onClose = onDialogClose,
                 modifier = Modifier
                     .fillMaxWidth(),
             )
@@ -109,7 +109,7 @@ fun MemoPopupContents(
 
 @Composable
 private fun MemoItems(
-    memoPopupElements: ImmutableList<MemoPopupElement>,
+    memoDialogElements: ImmutableList<MemoDialogElement>,
     onContentsChange: (UiMemo) -> Unit,
     onMemoDelete: (UiMemo) -> Unit,
     modifier: Modifier = Modifier,
@@ -118,7 +118,7 @@ private fun MemoItems(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        memoPopupElements.forEach { element ->
+        memoDialogElements.forEach { element ->
             when (element) {
                 is UiMemo -> MemoItem(
                     memo = element,
@@ -141,7 +141,7 @@ private fun ScheduleItem(
     uiSchedule: UiSchedule,
     modifier: Modifier = Modifier,
 ) {
-    PopupElementItem(
+    DialogElementItem(
         readOnly = true,
         text = uiSchedule.displayText,
         onTextChange = {},
@@ -159,13 +159,13 @@ private fun MemoItem(
     modifier: Modifier = Modifier,
 ) {
     Log.d("UI_MEMO", "contents: ${memo.contents}")
-    PopupElementItem(
+    DialogElementItem(
         readOnly = false,
         text = memo.contents,
         onTextChange = { onContentsChange(memo.copy(contents = it)) },
         label = {
-            PopupBodySmall(
-                text = stringResource(id = R.string.memo_popup_item_label),
+            DialogBodySmall(
+                text = stringResource(id = R.string.memo_dialog_item_label),
                 modifier = Modifier.background(MaterialTheme.colorScheme.surface),
             )
         },
@@ -174,7 +174,7 @@ private fun MemoItem(
                 Icon(
                     imageVector = Icons.Outlined.Delete,
                     contentDescription = stringResource(
-                        id = R.string.memo_popup_item_delete,
+                        id = R.string.memo_dialog_item_delete,
                         memo.contents,
                     ),
                     tint = contentColorFor(MaterialTheme.colorScheme.surface),
@@ -186,7 +186,7 @@ private fun MemoItem(
 }
 
 @Composable
-private fun PopupElementItem(
+private fun DialogElementItem(
     readOnly: Boolean,
     text: String,
     onTextChange: (String) -> Unit,
@@ -212,7 +212,7 @@ private fun PopupElementItem(
                         Icon(
                             imageVector = Icons.Outlined.Clear,
                             contentDescription = stringResource(
-                                id = R.string.memo_popup_clear_text,
+                                id = R.string.memo_dialog_clear_text,
                                 text
                             ),
                         )
@@ -231,14 +231,14 @@ private fun AddMemoButton(
     textColor: Color,
     modifier: Modifier = Modifier
 ) {
-    val a11yDescription = stringResource(id = R.string.memo_popup_add_memo_description)
+    val a11yDescription = stringResource(id = R.string.memo_dialog_add_memo_description)
     Box(
         modifier = modifier.semantics {
             role = Role.Button
         }
     ) {
         LabelLarge(
-            text = stringResource(id = R.string.memo_popup_add_memo),
+            text = stringResource(id = R.string.memo_dialog_add_memo),
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(vertical = 16.dp)
@@ -251,7 +251,7 @@ private fun AddMemoButton(
 }
 
 @Composable
-private fun CloseMemoPopupButton(
+private fun CloseMemoDialogButton(
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -263,7 +263,7 @@ private fun CloseMemoPopupButton(
             .background(background),
     ) {
         BodyLarge(
-            text = stringResource(id = R.string.memo_popup_close),
+            text = stringResource(id = R.string.memo_dialog_close),
             color = textColor,
             modifier = Modifier
                 .padding(vertical = 16.dp)
@@ -272,7 +272,7 @@ private fun CloseMemoPopupButton(
     }
 }
 
-private val previewMemoPopupElements: ImmutableList<MemoPopupElement> = (1..4).map {
+private val previewMemoDialogElements: ImmutableList<MemoDialogElement> = (1..4).map {
     if (it <= 2) {
         UiSchedule(
             schoolCode = 1,
@@ -301,7 +301,7 @@ private val previewMemoPopupElements: ImmutableList<MemoPopupElement> = (1..4).m
 private fun MemoItemsPreview() {
     BlindarTheme {
         MemoItems(
-            memoPopupElements = previewMemoPopupElements,
+            memoDialogElements = previewMemoDialogElements,
             onContentsChange = {},
             onMemoDelete = {},
             modifier = Modifier
@@ -313,14 +313,14 @@ private fun MemoItemsPreview() {
 
 @LightAndDarkPreview
 @Composable
-private fun MemoPopupContentsPreview() {
+private fun MemoDialogContentsPreview() {
     BlindarTheme {
-        MemoPopupContents(
+        MemoDialogContents(
             date = Date.now(),
-            memoPopupElements = previewMemoPopupElements,
+            memoDialogElements = previewMemoDialogElements,
             onContentsChange = {},
             onMemoDelete = {},
-            onPopupClose = {},
+            onDialogClose = {},
             onAddMemo = {},
             modifier = Modifier
                 .width(350.dp)

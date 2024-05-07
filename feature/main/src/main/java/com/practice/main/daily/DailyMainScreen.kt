@@ -47,10 +47,10 @@ fun DailyMainScreen(
                 onSettingsIconClick = onNavigateToSettingsScreen,
                 onSchoolNameClick = onNavigateToSelectSchoolScreen,
                 onMealTimeClick = viewModel::onMealTimeClick,
-                onNutrientPopupOpen = viewModel::openNutrientPopup,
-                onMemoPopupOpen = viewModel::openMemoPopup,
-                onMealPopupOpen = viewModel::onMealPopupOpen,
-                onSchedulePopupOpen = viewModel::onSchedulePopupOpen,
+                onNutrientDialogOpen = viewModel::openNutrientDialog,
+                onMemoDialogOpen = viewModel::openMemoDialog,
+                onMealDialogOpen = viewModel::onMealDialog,
+                onScheduleDialogOpen = viewModel::onScheduleDialogOpen,
                 modifier = modifier,
             )
         }
@@ -64,10 +64,10 @@ fun DailyMainScreen(
                 onSettingsIconClick = onNavigateToSettingsScreen,
                 onSchoolNameClick = onNavigateToSelectSchoolScreen,
                 onMealTimeClick = viewModel::onMealTimeClick,
-                onNutrientPopupOpen = viewModel::openNutrientPopup,
-                onMemoPopupOpen = viewModel::openMemoPopup,
-                onMealPopupOpen = viewModel::onMealPopupOpen,
-                onSchedulePopupOpen = viewModel::onSchedulePopupOpen,
+                onNutrientDialogOpen = viewModel::openNutrientDialog,
+                onMemoDialogOpen = viewModel::openMemoDialog,
+                onMealDialogOpen = viewModel::onMealDialog,
+                onScheduleDialogOpen = viewModel::onScheduleDialogOpen,
                 modifier = modifier,
             )
         }

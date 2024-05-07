@@ -1,4 +1,4 @@
-package com.practice.main.popup
+package com.practice.main.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,17 +25,17 @@ import com.practice.main.R
 import com.practice.main.ScheduleContent
 import com.practice.main.previewMemos
 import com.practice.main.previewSchedules
-import com.practice.main.state.MemoPopupElement
+import com.practice.main.state.MemoDialogElement
 import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedules
 import com.practice.main.state.mergeSchedulesAndMemos
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-fun SchedulePopupContents(
-    scheduleElements: ImmutableList<MemoPopupElement>,
-    onMemoPopupOpen: () -> Unit,
-    onSchedulePopupClose: () -> Unit,
+fun ScheduleDialogContents(
+    scheduleElements: ImmutableList<MemoDialogElement>,
+    onMemoDialogOpen: () -> Unit,
+    onScheduleDialogClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val shape = RoundedCornerShape(16.dp)
@@ -48,10 +48,10 @@ fun SchedulePopupContents(
     ) {
         ScheduleContent(
             scheduleElements = scheduleElements,
-            onMemoPopupOpen = onMemoPopupOpen,
+            onMemoDialogOpen = onMemoDialogOpen,
         )
-        CloseSchedulePopupButton(
-            onClose = onSchedulePopupClose,
+        CloseScheduleDialogButton(
+            onClose = onScheduleDialogClose,
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
@@ -60,7 +60,7 @@ fun SchedulePopupContents(
 }
 
 @Composable
-private fun CloseSchedulePopupButton(
+private fun CloseScheduleDialogButton(
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -72,7 +72,7 @@ private fun CloseSchedulePopupButton(
             .background(background),
     ) {
         BodyLarge(
-            text = stringResource(id = R.string.schedule_popup_close),
+            text = stringResource(id = R.string.schedule_dialog_close),
             color = textColor,
             modifier = Modifier
                 .padding(vertical = 16.dp)
@@ -83,9 +83,9 @@ private fun CloseSchedulePopupButton(
 
 @LightAndDarkPreview
 @Composable
-private fun SchedulePopupContentsPreview() {
+private fun ScheduleDialogContentsPreview() {
     BlindarTheme {
-        SchedulePopupContents(
+        ScheduleDialogContents(
             scheduleElements = mergeSchedulesAndMemos(
                 UiSchedules(
                     date = Date.now(),
@@ -96,8 +96,8 @@ private fun SchedulePopupContentsPreview() {
                     memos = previewMemos,
                 ),
             ),
-            onMemoPopupOpen = {},
-            onSchedulePopupClose = {},
+            onMemoDialogOpen = {},
+            onScheduleDialogClose = {},
             modifier = Modifier.padding(16.dp),
         )
     }

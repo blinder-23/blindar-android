@@ -103,10 +103,10 @@ class MainScreenViewModel @Inject constructor(
         selectedMealIndex: Int = state.selectedMealIndex,
         isLoading: Boolean = state.isLoading,
         selectedSchool: School = state.selectedSchool,
-        isNutrientPopupVisible: Boolean = state.isNutrientPopupVisible,
-        isMemoPopupVisible: Boolean = state.isMemoPopupVisible,
-        isMealPopupVisible: Boolean = state.isMealPopupVisible,
-        isSchedulePopupVisible: Boolean = state.isSchedulePopupVisible,
+        isNutrientDialogVisible: Boolean = state.isNutrientDialogVisible,
+        isMemoDialogVisible: Boolean = state.isMemoDialogVisible,
+        isMealDialogVisible: Boolean = state.isMealDialogVisible,
+        isScheduleDialogVisible: Boolean = state.isScheduleDialogVisible,
         mainUiMode: MainUiMode = state.mainUiMode
     ) {
         val isCollectNeeded =
@@ -121,10 +121,10 @@ class MainScreenViewModel @Inject constructor(
                 selectedDate = selectedDate,
                 isLoading = isLoading,
                 selectedSchool = selectedSchool,
-                isNutrientPopupVisible = isNutrientPopupVisible,
-                isMemoPopupVisible = isMemoPopupVisible,
-                isMealPopupVisible = isMealPopupVisible,
-                isSchedulePopupVisible = isSchedulePopupVisible,
+                isNutrientDialogVisible = isNutrientDialogVisible,
+                isMemoDialogVisible = isMemoDialogVisible,
+                isMealDialogVisible = isMealDialogVisible,
+                isScheduleDialogVisible = isScheduleDialogVisible,
                 mainUiMode = mainUiMode,
             )
         }
@@ -157,7 +157,7 @@ class MainScreenViewModel @Inject constructor(
         loadMonthlyDataJob = viewModelScope.launch(Dispatchers.Main) {
             loadMonthlyDataUseCase.loadData(userId, schoolCode, queryYear, queryMonth)
                 .collectLatest {
-                    if (!state.isMemoPopupVisible) {
+                    if (!state.isMemoDialogVisible) {
                         updateUiState(monthlyData = parseDailyState(it))
                     }
                 }
@@ -240,21 +240,21 @@ class MainScreenViewModel @Inject constructor(
     fun getClickLabel(date: Date): String =
         if (date == state.selectedDate) "" else "식단 및 학사일정 보기"
 
-    fun openNutrientPopup() {
-        updateUiState(isNutrientPopupVisible = true)
+    fun openNutrientDialog() {
+        updateUiState(isNutrientDialogVisible = true)
     }
 
-    fun closeNutrientPopup() {
-        updateUiState(isNutrientPopupVisible = false)
+    fun closeNutrientDialog() {
+        updateUiState(isNutrientDialogVisible = false)
     }
 
-    fun openMemoPopup() {
-        updateUiState(isMemoPopupVisible = true)
+    fun openMemoDialog() {
+        updateUiState(isMemoDialogVisible = true)
     }
 
-    fun closeMemoPopup() {
+    fun closeMemoDialog() {
         updateMemoOnRemote()
-        updateUiState(isMemoPopupVisible = false)
+        updateUiState(isMemoDialogVisible = false)
     }
 
     fun addMemo() {
@@ -297,20 +297,20 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    fun onMealPopupOpen() {
-        updateUiState(isMealPopupVisible = true)
+    fun onMealDialog() {
+        updateUiState(isMealDialogVisible = true)
     }
 
-    fun onMealPopupClose() {
-        updateUiState(isMealPopupVisible = false)
+    fun onMealDialogClose() {
+        updateUiState(isMealDialogVisible = false)
     }
 
-    fun onSchedulePopupOpen() {
-        updateUiState(isSchedulePopupVisible = true)
+    fun onScheduleDialogOpen() {
+        updateUiState(isScheduleDialogVisible = true)
     }
 
-    fun onSchedulePopupClose() {
-        updateUiState(isSchedulePopupVisible = false)
+    fun onScheduleDialogClose() {
+        updateUiState(isScheduleDialogVisible = false)
     }
 
     fun getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
@@ -320,27 +320,27 @@ class MainScreenViewModel @Inject constructor(
     private fun List<DailyData>.getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
         val (_, month, day) = date
         val actions = mutableListOf<CustomAccessibilityAction>()
-        actions.add(createMemoPopupCustomAction(month, day))
+        actions.add(createMemoDialogCustomAction(month, day))
 
         this.find { it.date == date }?.let {
             if (!it.uiMeals.isEmpty) {
-                actions.add(createNutrientPopupCustomAction(month, day))
+                actions.add(createNutrientDialogCustomAction(month, day))
             }
         }
 
         return actions.toImmutableList()
     }
 
-    private fun createNutrientPopupCustomAction(month: Int, day: Int): CustomAccessibilityAction {
+    private fun createNutrientDialogCustomAction(month: Int, day: Int): CustomAccessibilityAction {
         return CustomAccessibilityAction("${month}월 ${day}일 영양 보기") {
-            openNutrientPopup()
+            openNutrientDialog()
             true
         }
     }
 
-    private fun createMemoPopupCustomAction(month: Int, day: Int): CustomAccessibilityAction {
+    private fun createMemoDialogCustomAction(month: Int, day: Int): CustomAccessibilityAction {
         return CustomAccessibilityAction("${month}월 ${day}일 메모 보기") {
-            openMemoPopup()
+            openMemoDialog()
             true
         }
     }

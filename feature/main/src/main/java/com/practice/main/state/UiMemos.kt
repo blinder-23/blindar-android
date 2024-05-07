@@ -69,7 +69,7 @@ data class UiMemo(
     val day: Int,
     val contents: String,
     val isSavedOnRemote: Boolean,
-) : MemoPopupElement {
+) : MemoDialogElement {
     override val sortOrder: Int
         get() = 2
     override val displayText: String

@@ -59,8 +59,8 @@ fun VerticalCalendarMainScreen(
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
     onMealTimeClick: (Int) -> Unit,
-    onNutrientPopupOpen: () -> Unit,
-    onMemoPopupOpen: () -> Unit,
+    onNutrientDialogOpen: () -> Unit,
+    onMemoDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
@@ -98,12 +98,12 @@ fun VerticalCalendarMainScreen(
             )
             MainScreenContents(
                 uiMeals = uiState.selectedDateDataState.uiMeals,
-                memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
+                memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
                 selectedMealIndex = uiState.selectedMealIndex,
                 onMealTimeClick = onMealTimeClick,
                 mealColumns = mealColumns,
-                onNutrientPopupOpen = onNutrientPopupOpen,
-                onMemoPopupOpen = onMemoPopupOpen,
+                onNutrientDialogOpen = onNutrientDialogOpen,
+                onMemoDialogOpen = onMemoDialogOpen,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
@@ -157,10 +157,10 @@ private fun VerticalCalendarMainScreenPreview() {
                     name = "어떤 학교",
                     schoolCode = -1,
                 ),
-                isNutrientPopupVisible = false,
-                isMemoPopupVisible = false,
-                isMealPopupVisible = false,
-                isSchedulePopupVisible = false,
+                isNutrientDialogVisible = false,
+                isMemoDialogVisible = false,
+                isMealDialogVisible = false,
+                isScheduleDialogVisible = false,
                 mainUiMode = MainUiMode.CALENDAR,
             )
         )
@@ -185,8 +185,8 @@ private fun VerticalCalendarMainScreenPreview() {
             drawUnderlineToScheduleDate = {},
             onNavigateToSelectSchoolScreen = {},
             onMealTimeClick = {},
-            onNutrientPopupOpen = {},
-            onMemoPopupOpen = {},
+            onNutrientDialogOpen = {},
+            onMemoDialogOpen = {},
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.surface)
                 .fillMaxSize(),

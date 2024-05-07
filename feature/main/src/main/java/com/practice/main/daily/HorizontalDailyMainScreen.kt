@@ -25,7 +25,7 @@ import com.practice.main.MainScreenContents
 import com.practice.main.MainScreenTopBar
 import com.practice.main.R
 import com.practice.main.daily.components.DateQuickNavigationButtons
-import com.practice.main.daily.components.ScreenModeOpenPopupButtons
+import com.practice.main.daily.components.QuickViewDialogButtons
 import com.practice.main.daily.picker.DailyDatePicker
 import com.practice.main.daily.picker.DailyDatePickerState
 import com.practice.main.daily.picker.rememberDailyDatePickerState
@@ -51,10 +51,10 @@ fun HorizontalDailyMainScreen(
     onSettingsIconClick: () -> Unit,
     onSchoolNameClick: () -> Unit,
     onMealTimeClick: (Int) -> Unit,
-    onNutrientPopupOpen: () -> Unit,
-    onMemoPopupOpen: () -> Unit,
-    onMealPopupOpen: () -> Unit,
-    onSchedulePopupOpen: () -> Unit,
+    onNutrientDialogOpen: () -> Unit,
+    onMemoDialogOpen: () -> Unit,
+    onMealDialogOpen: () -> Unit,
+    onScheduleDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -74,10 +74,10 @@ fun HorizontalDailyMainScreen(
             uiState = uiState,
             mealColumns = mealColumns,
             onMealTimeClick = onMealTimeClick,
-            onNutrientPopupOpen = onNutrientPopupOpen,
-            onMemoPopupOpen = onMemoPopupOpen,
-            onMealPopupOpen = onMealPopupOpen,
-            onSchedulePopupOpen = onSchedulePopupOpen,
+            onNutrientDialogOpen = onNutrientDialogOpen,
+            onMemoDialogOpen = onMemoDialogOpen,
+            onMealDialogOpen = onMealDialogOpen,
+            onScheduleDialogOpen = onScheduleDialogOpen,
         )
     }
 }
@@ -88,10 +88,10 @@ private fun HorizontalDailyMainScreenContents(
     uiState: MainUiState,
     mealColumns: Int,
     onMealTimeClick: (Int) -> Unit,
-    onNutrientPopupOpen: () -> Unit,
-    onMemoPopupOpen: () -> Unit,
-    onMealPopupOpen: () -> Unit,
-    onSchedulePopupOpen: () -> Unit,
+    onNutrientDialogOpen: () -> Unit,
+    onMemoDialogOpen: () -> Unit,
+    onMealDialogOpen: () -> Unit,
+    onScheduleDialogOpen: () -> Unit,
 ) {
     Row(
         modifier = Modifier.padding(16.dp),
@@ -103,21 +103,21 @@ private fun HorizontalDailyMainScreenContents(
                 .weight(1f)
                 .fillMaxHeight()
         ) {
-            ScreenModeOpenPopupButtons(
-                isMealPopupEnabled = uiState.isMealExists,
-                onMealPopupOpen = onMealPopupOpen,
-                isSchedulePopupEnabled = uiState.isScheduleOrMemoExists,
-                onSchedulePopupOpen = onSchedulePopupOpen,
+            QuickViewDialogButtons(
+                isMealDialogEnabled = uiState.isMealExists,
+                onMealDialogOpen = onMealDialogOpen,
+                isScheduleDialogEnabled = uiState.isScheduleOrMemoExists,
+                onScheduleDialogOpen = onScheduleDialogOpen,
             )
         }
         MainScreenContents(
             uiMeals = uiState.selectedDateDataState.uiMeals,
-            memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
+            memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
             selectedMealIndex = uiState.selectedMealIndex,
             onMealTimeClick = onMealTimeClick,
             mealColumns = mealColumns,
-            onNutrientPopupOpen = onNutrientPopupOpen,
-            onMemoPopupOpen = onMemoPopupOpen,
+            onNutrientDialogOpen = onNutrientDialogOpen,
+            onMemoDialogOpen = onMemoDialogOpen,
             modifier = Modifier.weight(1f),
         )
     }
@@ -188,10 +188,10 @@ private fun HorizontalDailyMainScreenPreview() {
             name = "어떤 학교",
             schoolCode = -1,
         ),
-        isNutrientPopupVisible = false,
-        isMemoPopupVisible = false,
-        isMealPopupVisible = false,
-        isSchedulePopupVisible = false,
+        isNutrientDialogVisible = false,
+        isMemoDialogVisible = false,
+        isMealDialogVisible = false,
+        isScheduleDialogVisible = false,
         mainUiMode = MainUiMode.DAILY,
     )
     val datePickerState = rememberDailyDatePickerState(
@@ -207,10 +207,10 @@ private fun HorizontalDailyMainScreenPreview() {
             onSettingsIconClick = {},
             onSchoolNameClick = {},
             onMealTimeClick = {},
-            onNutrientPopupOpen = {},
-            onMemoPopupOpen = {},
-            onMealPopupOpen = {},
-            onSchedulePopupOpen = {},
+            onNutrientDialogOpen = {},
+            onMemoDialogOpen = {},
+            onMealDialogOpen = {},
+            onScheduleDialogOpen = {},
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface),

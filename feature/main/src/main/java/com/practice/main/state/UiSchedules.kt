@@ -35,7 +35,7 @@ data class UiSchedule(
     val day: Int,
     val eventName: String,
     val eventContent: String
-) : MemoPopupElement {
+) : MemoDialogElement {
     override val sortOrder: Int
         get() = 1
 

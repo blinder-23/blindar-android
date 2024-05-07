@@ -1,4 +1,4 @@
-package com.practice.settings.popup
+package com.practice.settings.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -28,17 +28,17 @@ import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BlindarDialog
 import com.practice.designsystem.components.BodySmall
+import com.practice.designsystem.components.DialogTitleLarge
 import com.practice.designsystem.components.LabelMedium
-import com.practice.designsystem.components.PopupTitleLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.settings.R
 
 @Composable
-fun FeedbackPopup(
-    onSend: (String, String) -> Unit, // app version name, feedback contents
+fun FeedbackDialog(
+    onSend: (String, String) -> Unit, // app version name, feedback contents TODO: 매개변수 클래스 생성
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
-    state: FeedbackPopupState = rememberFeedbackPopupState(),
+    state: FeedbackDialogState = rememberFeedbackDialogState(),
 ) {
     val onDismissWithState = {
         onDismiss()
@@ -54,7 +54,7 @@ fun FeedbackPopup(
             .clip(shape)
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        FeedbackPopupContent(
+        FeedbackDialogContent(
             onSend = onSend,
             onDismiss = onDismissWithState,
             state = state,
@@ -63,10 +63,10 @@ fun FeedbackPopup(
 }
 
 @Composable
-private fun FeedbackPopupContent(
+private fun FeedbackDialogContent(
     onSend: (String, String) -> Unit,
     onDismiss: () -> Unit,
-    state: FeedbackPopupState,
+    state: FeedbackDialogState,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -76,8 +76,8 @@ private fun FeedbackPopupContent(
         modifier = modifier,
     ) {
         item {
-            PopupTitleLarge(
-                text = stringResource(id = R.string.feedback_popup_title),
+            DialogTitleLarge(
+                text = stringResource(id = R.string.feedback_dialog_title),
                 color = textColor,
                 modifier = Modifier.padding(16.dp)
             )
@@ -89,7 +89,7 @@ private fun FeedbackPopupContent(
             )
         }
         item {
-            FeedbackPopupButtons(
+            FeedbackDialogButtons(
                 onSend = { state.sendOnlyWhenTextIsNotEmpty(context, onSend) },
                 onDismiss = onDismiss,
             )
@@ -99,7 +99,7 @@ private fun FeedbackPopupContent(
 
 @Composable
 private fun FeedbackTextField(
-    state: FeedbackPopupState,
+    state: FeedbackDialogState,
     modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
@@ -110,13 +110,13 @@ private fun FeedbackTextField(
         isError = state.isError,
         supportingText = {
             LabelMedium(
-                text = stringResource(id = R.string.feedback_popup_textfield_error_empty),
+                text = stringResource(id = R.string.feedback_dialog_textfield_error_empty),
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.alpha(errorTextAlpha),
             )
         },
         label = {
-            LabelMedium(text = stringResource(id = R.string.feedback_popup_textfield_label))
+            LabelMedium(text = stringResource(id = R.string.feedback_dialog_textfield_label))
         },
         minLines = 4,
         maxLines = 4,
@@ -130,19 +130,19 @@ private fun FeedbackTextField(
 }
 
 @Composable
-private fun FeedbackPopupButtons(
+private fun FeedbackDialogButtons(
     onSend: () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier.wrapContentHeight()) {
-        FeedbackPopupButton(
-            text = stringResource(id = R.string.feedback_popup_cancel_button),
+        FeedbackDialogButton(
+            text = stringResource(id = R.string.feedback_dialog_cancel_button),
             onClick = onDismiss,
             modifier = Modifier.weight(1f),
         )
-        FeedbackPopupButton(
-            text = stringResource(id = R.string.feedback_popup_send_button),
+        FeedbackDialogButton(
+            text = stringResource(id = R.string.feedback_dialog_send_button),
             onClick = onSend,
             modifier = Modifier
                 .weight(1f)
@@ -152,7 +152,7 @@ private fun FeedbackPopupButtons(
 }
 
 @Composable
-private fun FeedbackPopupButton(
+private fun FeedbackDialogButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -168,9 +168,9 @@ private fun FeedbackPopupButton(
 
 @LightAndDarkPreview
 @Composable
-private fun FeedbackPopupPreview() {
+private fun FeedbackDialogPreview() {
     BlindarTheme {
-        FeedbackPopup(
+        FeedbackDialog(
             onSend = { _, _ ->
 
             },
@@ -184,9 +184,9 @@ private fun FeedbackPopupPreview() {
 
 @LightPreview
 @Composable
-private fun FeedbackPopupErrorPreview() {
+private fun FeedbackDialogErrorPreview() {
     BlindarTheme {
-        FeedbackPopup(
+        FeedbackDialog(
             onSend = { _, _ ->
 
             },
@@ -194,7 +194,7 @@ private fun FeedbackPopupErrorPreview() {
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
-            state = rememberFeedbackPopupState(isError = true),
+            state = rememberFeedbackDialogState(isError = true),
         )
     }
 }

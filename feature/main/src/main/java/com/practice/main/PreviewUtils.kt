@@ -40,10 +40,10 @@ internal fun previewMainUiState(): MainUiState {
             name = "어떤 학교",
             schoolCode = -1,
         ),
-        isNutrientPopupVisible = false,
-        isMemoPopupVisible = false,
-        isMealPopupVisible = false,
-        isSchedulePopupVisible = false,
+        isNutrientDialogVisible = false,
+        isMemoDialogVisible = false,
+        isMealDialogVisible = false,
+        isScheduleDialogVisible = false,
         mainUiMode = MainUiMode.CALENDAR,
     )
 }
