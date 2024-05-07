@@ -1,26 +1,26 @@
 [versions]
-accompanist = '0.30.1'
-compose-bom = "2024.02.01"
-compose-compiler = '1.5.5'
+accompanist = '0.32.0'
+compose-bom = "2024.05.00"
+compose-compiler = '1.5.13'
 coroutines = "1.7.3"
-firebase-bom = "32.7.3"
+firebase-bom = "33.0.0"
 hilt = "2.49"
 hsk-ktx = '1.0-beta17'
 junit5 = "5.9.3"
-kotlin = '1.9.20'
+kotlin = '1.9.23'
 lifecycle = '2.7.0'
-retrofit = '2.9.0'
+retrofit = '2.11.0'
 room = "2.6.1"
 violet-dreams = '0.1.2'
 navigation = '2.7.7'
 work = "2.9.0"
 
 [libraries]
-android-gradle = "com.android.tools.build:gradle:8.3.0"
+android-gradle = "com.android.tools.build:gradle:8.4.0"
 hilt-android-gradle-plugin = { module = 'com.google.dagger:hilt-android-gradle-plugin', version.ref = 'hilt' }
 kotlin-gradle-plugin = { module = 'org.jetbrains.kotlin:kotlin-gradle-plugin', version.ref = 'kotlin' }
 
-firebase-crashlytics-gradle = 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
+firebase-crashlytics-gradle = 'com.google.firebase:firebase-crashlytics-gradle:2.9.9' # 3.0.0은 순환 참조 문제가 있음
 google-services = 'com.google.gms:google-services:4.4.1'
 
 hsk-ktx = { module = 'com.github.mwy3055:hsk-ktx', version.ref = 'hsk-ktx' }
@@ -33,7 +33,7 @@ accompanist-systemuicontroller = { module = 'com.google.accompanist:accompanist-
 accompanist-permission = { module = 'com.google.accompanist:accompanist-permissions', version.ref = 'accompanist' }
 
 androidx-collection-ktx = 'androidx.collection:collection-ktx:1.4.0'
-androidx-core-ktx = 'androidx.core:core-ktx:1.12.0'
+androidx-core-ktx = 'androidx.core:core-ktx:1.13.1'
 androidx-palette-ktx = 'androidx.palette:palette-ktx:1.0.0'
 
 androidx-lifecycle-extensions = 'androidx.lifecycle:lifecycle-extensions:2.2.0'
@@ -56,7 +56,7 @@ room-runtime = { module = 'androidx.room:room-runtime', version.ref = 'room' }
 room-testing = { module = 'androidx.room:room-testing', version.ref = 'room' }
 
 androidx-core-splashscreen = 'androidx.core:core-splashscreen:1.0.1'
-androidx-datastore-preferences = 'androidx.datastore:datastore-preferences:1.0.0'
+androidx-datastore-preferences = 'androidx.datastore:datastore-preferences:1.1.1'
 androidx-profileinstaller = 'androidx.profileinstaller:profileinstaller:1.3.1'
 androidx-startup-runtime = 'androidx.startup:startup-runtime:1.1.1'
 
@@ -104,7 +104,7 @@ retrofit-coroutines-adapter = 'com.jakewharton.retrofit:retrofit2-kotlin-corouti
 junit-jupiter = { module = 'org.junit.jupiter:junit-jupiter', version.ref = 'junit5' }
 junit-vintage-engine = { module = 'org.junit.vintage:junit-vintage-engine', version.ref = 'junit5' }
 
-androidx-benchmark-macro-junit4 = 'androidx.benchmark:benchmark-macro-junit4:1.2.3'
+androidx-benchmark-macro-junit4 = 'androidx.benchmark:benchmark-macro-junit4:1.2.4'
 androidx-test-uiautomaker = 'androidx.test.uiautomator:uiautomator:2.3.0'
 
 androidx-test-orchestrator = 'androidx.test:orchestrator:1.4.2'
@@ -115,7 +115,7 @@ androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.0" # 절
 
 vanniktech-dependency-graph-generator = 'com.vanniktech:gradle-dependency-graph-generator-plugin:0.7.0'
 
-google-play-auth = 'com.google.android.gms:play-services-auth:21.0.0'
+google-play-auth = 'com.google.android.gms:play-services-auth:21.1.1'
 
 [bundles]
 accompanist = [
