@@ -1,4 +1,4 @@
-package com.practice.main.popup
+package com.practice.main.dialog
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -40,10 +40,10 @@ import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.a11y.isLargeFont
-import com.practice.designsystem.components.PopupBodyLarge
-import com.practice.designsystem.components.PopupBodyMedium
-import com.practice.designsystem.components.PopupBodySmall
-import com.practice.designsystem.components.PopupTitleLarge
+import com.practice.designsystem.components.DialogBodyLarge
+import com.practice.designsystem.components.DialogBodyMedium
+import com.practice.designsystem.components.DialogBodySmall
+import com.practice.designsystem.components.DialogTitleLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
 import com.practice.main.previewMenus
@@ -56,7 +56,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun NutrientPopup(
+fun NutrientDialogContents(
     uiMeal: UiMeal,
     onClose: () -> Unit,
     modifier: Modifier = Modifier
@@ -69,8 +69,8 @@ fun NutrientPopup(
     val month = uiMeal.month
     val day = uiMeal.day
     val mealTime = uiMeal.mealTime
-    val popupTitle =
-        stringResource(id = R.string.nutrient_popup_title, "${month}월 ${day}일 $mealTime")
+    val dialogTitle =
+        stringResource(id = R.string.nutrient_dialog_title, "${month}월 ${day}일 $mealTime")
 
     val shape = RoundedCornerShape(16.dp)
     LazyColumn(
@@ -83,8 +83,8 @@ fun NutrientPopup(
         contentPadding = PaddingValues(16.dp),
     ) {
         item {
-            PopupTitleLarge(
-                text = popupTitle,
+            DialogTitleLarge(
+                text = dialogTitle,
                 color = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface),
             )
         }
@@ -98,7 +98,7 @@ fun NutrientPopup(
             }
         }
         item {
-            NutrientPopupCloseButton(
+            NutrientDialogCloseButton(
                 onClick = onClose,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -193,12 +193,12 @@ private fun NutrientListItemNormal(
     textColor: Color = contentColorFor(MaterialTheme.colorScheme.surface),
 ) {
     Row(modifier = modifier.padding(16.dp)) {
-        PopupBodySmall(
+        DialogBodySmall(
             text = nutrient.name,
             color = textColor
         )
         Spacer(modifier = Modifier.weight(1f))
-        PopupBodySmall(
+        DialogBodySmall(
             text = "${nutrient.amount} ${nutrient.unit}",
             color = textColor,
         )
@@ -212,11 +212,11 @@ private fun NutrientListItemLarge(
     textColor: Color = contentColorFor(MaterialTheme.colorScheme.surface),
 ) {
     Column(modifier = modifier) {
-        PopupBodyLarge(
+        DialogBodyLarge(
             text = nutrient.name,
             color = textColor
         )
-        PopupBodyLarge(
+        DialogBodyLarge(
             text = "${nutrient.amount} ${nutrient.unit}",
             color = textColor,
         )
@@ -243,11 +243,11 @@ private fun NutrientChip(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            PopupTitleLarge(
+            DialogTitleLarge(
                 text = "${nutrient.amount}${nutrient.unit}",
                 color = textColor,
             )
-            PopupBodyMedium(
+            DialogBodyMedium(
                 text = nutrient.name,
                 color = textColor,
             )
@@ -256,7 +256,7 @@ private fun NutrientChip(
 }
 
 @Composable
-private fun NutrientPopupCloseButton(
+private fun NutrientDialogCloseButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -267,8 +267,8 @@ private fun NutrientPopupCloseButton(
             .clickable { onClick() }
             .padding(12.dp)
     ) {
-        PopupBodySmall(
-            text = stringResource(id = R.string.nutrient_popup_close),
+        DialogBodySmall(
+            text = stringResource(id = R.string.nutrient_dialog_close),
             modifier = Modifier.align(Alignment.Center),
             color = contentColorFor(backgroundColor = MaterialTheme.colorScheme.primaryContainer)
         )
@@ -316,11 +316,11 @@ private fun NutrientListPreview() {
 
 @LightAndDarkPreview
 @Composable
-private fun NutrientPopupCloseButtonPreview() {
+private fun NutrientDialogCloseButtonPreview() {
     val coroutineScope = rememberCoroutineScope()
     var isVisible by remember { mutableStateOf(false) }
     BlindarTheme {
-        NutrientPopupCloseButton(
+        NutrientDialogCloseButton(
             onClick = {
                 coroutineScope.launch {
                     isVisible = true
@@ -340,7 +340,7 @@ private fun NutrientPopupCloseButtonPreview() {
 
 @LightAndDarkPreview
 @Composable
-private fun NutrientPopupPreview() {
+private fun NutrientDialogContentsPreview() {
     BlindarTheme {
         val now = Date.now()
         Box(
@@ -349,7 +349,7 @@ private fun NutrientPopupPreview() {
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
-            NutrientPopup(
+            NutrientDialogContents(
                 uiMeal = UiMeal(
                     now.year,
                     now.month,

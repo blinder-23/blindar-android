@@ -17,7 +17,7 @@ data class DailyData(
         return date.compareTo(other.date)
     }
 
-    val memoPopupElements: ImmutableList<MemoPopupElement>
+    val memoDialogElements: ImmutableList<MemoDialogElement>
         get() = mergeSchedulesAndMemos(uiSchedules, uiMemos)
 
     companion object {

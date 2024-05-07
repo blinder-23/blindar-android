@@ -145,6 +145,7 @@ private fun RegisterNameTitle(
     TitleLarge(
         text = stringResource(id = R.string.name_title),
         modifier = modifier,
+        color = MaterialTheme.colorScheme.onSurface,
     )
 }
 

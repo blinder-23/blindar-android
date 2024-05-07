@@ -27,10 +27,10 @@
     <string name="quick_navigation_plus_1_description">다음 날 데이터 보기</string>
     <string name="quick_navigation_plus_7_description">일주일 후 데이터 보기</string>
 
-    <string name="open_meal_popup">식단 빠르게 보기</string>
-    <string name="meal_popup_unavailable">식단이 없습니다.</string>
-    <string name="open_schedule_popup">일정 빠르게 보기</string>
-    <string name="schedule_popup_unavailable">일정이 없습니다.</string>
+    <string name="open_meal_dialog">식단 빠르게 보기</string>
+    <string name="meal_dialog_unavailable">식단이 없습니다.</string>
+    <string name="open_schedule_dialog">일정 빠르게 보기</string>
+    <string name="schedule_dialog_unavailable">일정이 없습니다.</string>
 
     <string name="button_selected">선택됨</string>
     <string name="button_not_selected">선택되지 않음</string>
@@ -44,23 +44,23 @@
 
     <string name="navigate_to_school_select">학교 선택 화면으로 가기</string>
 
-    <string name="open_nutrient_popup_button">영양 정보</string>
-    <string name="open_memo_popup_button">메모 추가</string>
+    <string name="open_nutrient_dialog_button">영양 정보</string>
+    <string name="open_memo_dialog_button">메모 추가</string>
 
     <string name="schedule_content_title">일정</string>
 
-    <string name="nutrient_popup_title">%s 영양 정보</string>
-    <string name="nutrient_popup_close">닫기</string>
+    <string name="nutrient_dialog_title">%s 영양 정보</string>
+    <string name="nutrient_dialog_close">닫기</string>
 
-    <string name="memo_popup_title">%d월 %d일 메모 편집</string>
-    <string name="memo_popup_add_memo">+ 메모 추가하기</string>
-    <string name="memo_popup_add_memo_description">메모 추가하기. 현재 날짜에 메모 추가</string>
-    <string name="memo_popup_item_label">일정 입력</string>
-    <string name="memo_popup_clear_text">내용 지우기 %s</string>
-    <string name="memo_popup_item_delete">삭제하기 %s</string>
-    <string name="memo_popup_close">확인</string>
+    <string name="memo_dialog_title">%d월 %d일 메모 편집</string>
+    <string name="memo_dialog_add_memo">+ 메모 추가하기</string>
+    <string name="memo_dialog_add_memo_description">메모 추가하기. 현재 날짜에 메모 추가</string>
+    <string name="memo_dialog_item_label">일정 입력</string>
+    <string name="memo_dialog_clear_text">내용 지우기 %s</string>
+    <string name="memo_dialog_item_delete">삭제하기 %s</string>
+    <string name="memo_dialog_close">확인</string>
 
-    <string name="meal_popup_close">닫기</string>
+    <string name="meal_dialog_close">닫기</string>
 
-    <string name="schedule_popup_close">닫기</string>
+    <string name="schedule_dialog_close">닫기</string>
 </resources>

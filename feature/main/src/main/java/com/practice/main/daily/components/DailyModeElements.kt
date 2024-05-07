@@ -93,39 +93,39 @@ internal fun DateQuickNavigationButton(
         BodySmall(
             text = stringResource(id = quickNavigation.nameId),
             modifier = Modifier.align(Alignment.Center),
-            textColor = contentColorFor(backgroundColor = backgroundColor),
+            color = contentColorFor(backgroundColor = backgroundColor),
             fontWeight = if (LocalDensity.current.isLargeFont) FontWeight.Bold else null,
         )
     }
 }
 
 @Composable
-internal fun ScreenModeOpenPopupButtons(
-    isMealPopupEnabled: Boolean,
-    onMealPopupOpen: () -> Unit,
-    isSchedulePopupEnabled: Boolean,
-    onSchedulePopupOpen: () -> Unit,
+internal fun QuickViewDialogButtons(
+    isMealDialogEnabled: Boolean,
+    onMealDialogOpen: () -> Unit,
+    isScheduleDialogEnabled: Boolean,
+    onScheduleDialogOpen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier) {
-        ScreenModeOpenPopupButton(
-            enabled = isMealPopupEnabled,
-            description = stringResource(id = if (isMealPopupEnabled) R.string.open_meal_popup else R.string.meal_popup_unavailable),
-            onOpenPopup = onMealPopupOpen,
+        QuickViewDialogButton(
+            enabled = isMealDialogEnabled,
+            description = stringResource(id = if (isMealDialogEnabled) R.string.open_meal_dialog else R.string.meal_dialog_unavailable),
+            onOpenDialog = onMealDialogOpen,
         )
-        ScreenModeOpenPopupButton(
-            enabled = isSchedulePopupEnabled,
-            description = stringResource(id = if (isSchedulePopupEnabled) R.string.open_schedule_popup else R.string.schedule_popup_unavailable),
-            onOpenPopup = onSchedulePopupOpen,
+        QuickViewDialogButton(
+            enabled = isScheduleDialogEnabled,
+            description = stringResource(id = if (isScheduleDialogEnabled) R.string.open_schedule_dialog else R.string.schedule_dialog_unavailable),
+            onOpenDialog = onScheduleDialogOpen,
         )
     }
 }
 
 @Composable
-private fun ScreenModeOpenPopupButton(
+private fun QuickViewDialogButton(
     enabled: Boolean,
     description: String,
-    onOpenPopup: () -> Unit,
+    onOpenDialog: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -134,7 +134,7 @@ private fun ScreenModeOpenPopupButton(
                 role = Role.Button
                 contentDescription = description
             }
-            .clickable(enabled = enabled, onClick = onOpenPopup)
+            .clickable(enabled = enabled, onClick = onOpenDialog)
             .size(8.dp)
             .background(Color.Transparent),
     )

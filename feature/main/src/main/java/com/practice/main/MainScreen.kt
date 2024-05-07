@@ -13,16 +13,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.a11y.isLargeFont
-import com.practice.designsystem.components.popupPadding
+import com.practice.designsystem.components.BlindarDialog
+import com.practice.designsystem.components.dialogContentPadding
 import com.practice.main.calendar.CalendarMainScreen
 import com.practice.main.daily.DailyMainScreen
+import com.practice.main.dialog.MealDialogContents
+import com.practice.main.dialog.MemoDialogContents
+import com.practice.main.dialog.NutrientDialogContents
+import com.practice.main.dialog.ScheduleDialogContents
 import com.practice.main.loading.LoadingMainScreen
-import com.practice.main.popup.MealPopup
-import com.practice.main.popup.MemoPopup
-import com.practice.main.popup.NutrientPopup
-import com.practice.main.popup.SchedulePopup
 import com.practice.main.state.MainUiMode
 
 @Composable
@@ -77,7 +79,7 @@ fun MainScreen(
             }
         }
     }
-    MainScreenPopups(
+    MainScreenDialogs(
         viewModel = viewModel,
         mealColumns = windowSize.mealColumns,
     )
@@ -91,63 +93,73 @@ val WindowSizeClass.mealColumns: Int
     }
 
 @Composable
-private fun MainScreenPopups(
+private fun MainScreenDialogs(
     viewModel: MainScreenViewModel,
     mealColumns: Int,
 ) {
     val uiState by viewModel.uiState
 
-    if (uiState.isNutrientPopupVisible) {
+    if (uiState.isNutrientDialogVisible) {
         val selectedMealIndex = uiState.selectedMealIndex
         val selectedMeal = uiState.selectedDateDataState.uiMeals[selectedMealIndex]
-        MainScreenPopup(
-            onClose = viewModel::closeNutrientPopup,
+        BlindarDialog(
+            onDismissRequest = viewModel::closeNutrientDialog,
+            properties = DialogProperties(usePlatformDefaultWidth = false),
         ) {
-            NutrientPopup(
+            NutrientDialogContents(
                 uiMeal = selectedMeal,
-                onClose = viewModel::closeNutrientPopup,
-                modifier = Modifier.padding(popupPadding),
+                onClose = viewModel::closeNutrientDialog,
+                modifier = Modifier.padding(dialogContentPadding),
             )
         }
     }
-    if (uiState.isMemoPopupVisible) {
-        MainScreenPopup(onClose = viewModel::closeMemoPopup) {
-            MemoPopup(
+    if (uiState.isMemoDialogVisible) {
+        BlindarDialog(
+            onDismissRequest = viewModel::closeMemoDialog,
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+        ) {
+            MemoDialogContents(
                 date = uiState.selectedDateDataState.uiMemos.date,
-                memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
+                memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
                 onAddMemo = viewModel::addMemo,
                 onContentsChange = viewModel::updateMemoOnLocal,
                 onMemoDelete = viewModel::deleteMemo,
-                onPopupClose = viewModel::closeMemoPopup,
-                modifier = Modifier.padding(popupPadding),
+                onDialogClose = viewModel::closeMemoDialog,
+                modifier = Modifier.padding(dialogContentPadding),
             )
         }
     }
 
-    if (uiState.isMealPopupVisible) {
-        MainScreenPopup(onClose = viewModel::onMealPopupClose) {
-            MealPopup(
+    if (uiState.isMealDialogVisible) {
+        BlindarDialog(
+            onDismissRequest = viewModel::onMealDialogClose,
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+        ) {
+            MealDialogContents(
                 uiMeals = uiState.selectedDateDataState.uiMeals,
                 selectedMealIndex = uiState.selectedMealIndex,
                 onMealTimeClick = viewModel::onMealTimeClick,
                 mealColumns = mealColumns,
-                onNutrientPopupOpen = viewModel::openNutrientPopup,
-                onMealPopupClose = viewModel::onMealPopupClose,
+                onNutrientDialogOpen = viewModel::openNutrientDialog,
+                onMealDialogClose = viewModel::onMealDialogClose,
                 modifier = Modifier
-                    .padding(popupPadding)
+                    .padding(dialogContentPadding)
                     .widthIn(max = 600.dp),
             )
         }
     }
 
-    if (uiState.isSchedulePopupVisible) {
-        MainScreenPopup(onClose = viewModel::onSchedulePopupClose) {
-            SchedulePopup(
-                scheduleElements = uiState.selectedDateDataState.memoPopupElements,
-                onMemoPopupOpen = viewModel::openMemoPopup,
-                onSchedulePopupClose = viewModel::onSchedulePopupClose,
+    if (uiState.isScheduleDialogVisible) {
+        BlindarDialog(
+            onDismissRequest = viewModel::onScheduleDialogClose,
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+        ) {
+            ScheduleDialogContents(
+                scheduleElements = uiState.selectedDateDataState.memoDialogElements,
+                onMemoDialogOpen = viewModel::openMemoDialog,
+                onScheduleDialogClose = viewModel::onScheduleDialogClose,
                 modifier = Modifier
-                    .padding(popupPadding)
+                    .padding(dialogContentPadding)
                     .widthIn(max = 600.dp),
             )
         }

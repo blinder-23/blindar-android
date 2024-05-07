@@ -11,13 +11,13 @@
     <string name="settings_daily_mode_enabled">하루씩 보기 모드를 사용합니다.</string>
     <string name="settings_daily_mode_disabled">하루씩 보기 모드를 사용하지 않습니다.</string>
 
-    <string name="screen_mode_popup_title">하루씩 보기 모드를 그만 사용할까요?</string>
-    <string name="screen_mode_popup_body">스크린 리더에 최적화된 하루씩 보기 모드를 계속 사용해 보세요.</string>
-    <string name="screen_mode_popup_set_daily_mode">계속 사용</string>
-    <string name="screen_mode_popup_set_daily_mode_toast">하루씩 보기 모드를 사용합니다.</string>
-    <string name="screen_mode_popup_keep_daily_mode_toast">하루씩 보기 모드를 계속 사용합니다.</string>
-    <string name="screen_mode_popup_set_calendar_mode">그만 사용</string>
-    <string name="screen_mode_popup_set_calendar_mode_toast">달력 모드를 사용합니다.</string>
+    <string name="screen_mode_dialog_title">하루씩 보기 모드를 그만 사용할까요?</string>
+    <string name="screen_mode_dialog_body">스크린 리더에 최적화된 하루씩 보기 모드를 계속 사용해 보세요.</string>
+    <string name="screen_mode_dialog_set_daily_mode">계속 사용</string>
+    <string name="screen_mode_dialog_set_daily_mode_toast">하루씩 보기 모드를 사용합니다.</string>
+    <string name="screen_mode_dialog_keep_daily_mode_toast">하루씩 보기 모드를 계속 사용합니다.</string>
+    <string name="screen_mode_dialog_set_calendar_mode">그만 사용</string>
+    <string name="screen_mode_dialog_set_calendar_mode_toast">달력 모드를 사용합니다.</string>
 
     <string name="settings_daily_alarm_title">데일리 알림</string>
     <string name="settings_daily_alarm_title_description_enabled">데일리 알림 켜짐</string>
@@ -34,11 +34,11 @@
     <string name="settings_send_feedback_on_success">피드백을 전송했습니다.</string>
     <string name="settings_send_feedback_on_error">피드백 전송에 실패했습니다. 잠시 후에 다시 시도해 주세요.</string>
 
-    <string name="feedback_popup_title">피드백 보내기</string>
-    <string name="feedback_popup_textfield_label">블린더 사용 후기를 알려주세요!</string>
-    <string name="feedback_popup_textfield_error_empty">피드백을 입력해 주세요.</string>
-    <string name="feedback_popup_cancel_button">취소</string>
-    <string name="feedback_popup_send_button">전송</string>
+    <string name="feedback_dialog_title">피드백 보내기</string>
+    <string name="feedback_dialog_textfield_label">블린더 사용 후기를 알려주세요!</string>
+    <string name="feedback_dialog_textfield_error_empty">피드백을 입력해 주세요.</string>
+    <string name="feedback_dialog_cancel_button">취소</string>
+    <string name="feedback_dialog_send_button">전송</string>
 
     <string name="close">닫기</string>
 </resources>

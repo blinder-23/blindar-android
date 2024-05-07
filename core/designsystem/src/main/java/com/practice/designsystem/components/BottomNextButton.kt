@@ -33,7 +33,7 @@ fun BottomNextButton(
         TitleLarge(
             text = text,
             modifier = Modifier.align(Alignment.CenterVertically),
-            textColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }

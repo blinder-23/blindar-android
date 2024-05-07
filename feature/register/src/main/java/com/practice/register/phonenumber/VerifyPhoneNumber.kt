@@ -205,6 +205,7 @@ private fun PhoneNumberTitle(
     TitleLarge(
         text = stringResource(id = R.string.phone_number_title),
         modifier = modifier,
+        color = MaterialTheme.colorScheme.onSurface,
     )
 }
 
@@ -265,7 +266,7 @@ private fun PhoneNumberAuthChip(
         label = {
             LabelMedium(
                 text = stringResource(R.string.auth_chip_label),
-                textColor = textColor.copy(alpha = if (enabled) 1f else disabledAlpha),
+                color = textColor.copy(alpha = if (enabled) 1f else disabledAlpha),
             )
         },
         enabled = enabled,

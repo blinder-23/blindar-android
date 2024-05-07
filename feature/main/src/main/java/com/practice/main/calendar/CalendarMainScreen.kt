@@ -42,8 +42,8 @@ fun CalendarMainScreen(
                 drawUnderlineToScheduleDate = { },
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
                 onMealTimeClick = viewModel::onMealTimeClick,
-                onNutrientPopupOpen = viewModel::openNutrientPopup,
-                onMemoPopupOpen = viewModel::openMemoPopup,
+                onNutrientDialogOpen = viewModel::openNutrientDialog,
+                onMemoDialogOpen = viewModel::openMemoDialog,
                 modifier = modifier,
             ) { date -> viewModel.getCustomActions(date) }
         }
@@ -63,8 +63,8 @@ fun CalendarMainScreen(
                 drawUnderlineToScheduleDate = {},
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
                 onMealTimeClick = viewModel::onMealTimeClick,
-                onNutrientPopupOpen = viewModel::openNutrientPopup,
-                onMemoPopupOpen = viewModel::openMemoPopup,
+                onNutrientDialogOpen = viewModel::openNutrientDialog,
+                onMemoDialogOpen = viewModel::openMemoDialog,
                 modifier = modifier,
             ) { date -> viewModel.getCustomActions(date) }
         }

@@ -1,4 +1,4 @@
-package com.practice.settings.popup
+package com.practice.settings.dialog
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -12,7 +12,10 @@ import com.practice.util.getAppVersionName
 import kotlin.math.min
 
 @Stable
-class FeedbackPopupState internal constructor(feedbackText: String = "", isError: Boolean = false) {
+class FeedbackDialogState internal constructor(
+    feedbackText: String = "",
+    isError: Boolean = false
+) {
     var feedbackText by mutableStateOf(feedbackText)
         private set
 
@@ -45,15 +48,15 @@ class FeedbackPopupState internal constructor(feedbackText: String = "", isError
     companion object {
         internal val Saver = listSaver(
             save = { listOf(it.feedbackText, it.isError) },
-            restore = { FeedbackPopupState(it[0] as String, it[1] as Boolean) }
+            restore = { FeedbackDialogState(it[0] as String, it[1] as Boolean) }
         )
     }
 }
 
 @Composable
-fun rememberFeedbackPopupState(
+fun rememberFeedbackDialogState(
     feedbackText: String = "",
     isError: Boolean = false,
-) = rememberSaveable(saver = FeedbackPopupState.Saver) {
-    FeedbackPopupState(feedbackText, isError)
+) = rememberSaveable(saver = FeedbackDialogState.Saver) {
+    FeedbackDialogState(feedbackText, isError)
 }

@@ -22,7 +22,7 @@ import com.practice.main.MainScreenTopBar
 import com.practice.main.R
 import com.practice.main.daily.components.DateQuickNavigation
 import com.practice.main.daily.components.DateQuickNavigationButtons
-import com.practice.main.daily.components.ScreenModeOpenPopupButtons
+import com.practice.main.daily.components.QuickViewDialogButtons
 import com.practice.main.daily.picker.DailyDatePicker
 import com.practice.main.daily.picker.DailyDatePickerState
 import com.practice.main.daily.picker.rememberDailyDatePickerState
@@ -49,10 +49,10 @@ fun VerticalDailyMainScreen(
     onSettingsIconClick: () -> Unit,
     onSchoolNameClick: () -> Unit,
     onMealTimeClick: (Int) -> Unit,
-    onNutrientPopupOpen: () -> Unit,
-    onMemoPopupOpen: () -> Unit,
-    onMealPopupOpen: () -> Unit,
-    onSchedulePopupOpen: () -> Unit,
+    onNutrientDialogOpen: () -> Unit,
+    onMemoDialogOpen: () -> Unit,
+    onMealDialogOpen: () -> Unit,
+    onScheduleDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -72,10 +72,10 @@ fun VerticalDailyMainScreen(
             uiState = uiState,
             mealColumns = mealColumns,
             onMealTimeClick = onMealTimeClick,
-            onNutrientPopupOpen = onNutrientPopupOpen,
-            onMemoPopupOpen = onMemoPopupOpen,
-            onMealPopupOpen = onMealPopupOpen,
-            onSchedulePopupOpen = onSchedulePopupOpen,
+            onNutrientDialogOpen = onNutrientDialogOpen,
+            onMemoDialogOpen = onMemoDialogOpen,
+            onMealDialogOpen = onMealDialogOpen,
+            onScheduleDialogOpen = onScheduleDialogOpen,
         )
     }
 }
@@ -86,10 +86,10 @@ private fun VerticalDailyMainScreenContents(
     uiState: MainUiState,
     mealColumns: Int,
     onMealTimeClick: (Int) -> Unit,
-    onNutrientPopupOpen: () -> Unit,
-    onMemoPopupOpen: () -> Unit,
-    onMealPopupOpen: () -> Unit,
-    onSchedulePopupOpen: () -> Unit,
+    onNutrientDialogOpen: () -> Unit,
+    onMemoDialogOpen: () -> Unit,
+    onMealDialogOpen: () -> Unit,
+    onScheduleDialogOpen: () -> Unit,
 ) {
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
@@ -97,23 +97,23 @@ private fun VerticalDailyMainScreenContents(
     ) {
         MainScreenContents(
             uiMeals = uiState.selectedDateDataState.uiMeals,
-            memoPopupElements = uiState.selectedDateDataState.memoPopupElements,
+            memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
             selectedMealIndex = uiState.selectedMealIndex,
             onMealTimeClick = onMealTimeClick,
             mealColumns = mealColumns,
-            onNutrientPopupOpen = onNutrientPopupOpen,
-            onMemoPopupOpen = onMemoPopupOpen,
+            onNutrientDialogOpen = onNutrientDialogOpen,
+            onMemoDialogOpen = onMemoDialogOpen,
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth(),
             emptyContentAlignment = Alignment.TopCenter,
             header = {
                 DatePickerCard(datePickerState = datePickerState) {
-                    ScreenModeOpenPopupButtons(
-                        isMealPopupEnabled = uiState.isMealExists,
-                        onMealPopupOpen = onMealPopupOpen,
-                        isSchedulePopupEnabled = uiState.isScheduleOrMemoExists,
-                        onSchedulePopupOpen = onSchedulePopupOpen,
+                    QuickViewDialogButtons(
+                        isMealDialogEnabled = uiState.isMealExists,
+                        onMealDialogOpen = onMealDialogOpen,
+                        isScheduleDialogEnabled = uiState.isScheduleOrMemoExists,
+                        onScheduleDialogOpen = onScheduleDialogOpen,
                     )
                 }
             }
@@ -177,10 +177,10 @@ private fun VerticalDailyMainScreenPreview() {
             name = "어떤 학교",
             schoolCode = -1,
         ),
-        isNutrientPopupVisible = false,
-        isMemoPopupVisible = false,
-        isMealPopupVisible = false,
-        isSchedulePopupVisible = false,
+        isNutrientDialogVisible = false,
+        isMemoDialogVisible = false,
+        isMealDialogVisible = false,
+        isScheduleDialogVisible = false,
         mainUiMode = MainUiMode.DAILY,
     )
     val datePickerState = rememberDailyDatePickerState(
@@ -196,10 +196,10 @@ private fun VerticalDailyMainScreenPreview() {
             onSettingsIconClick = {},
             onSchoolNameClick = {},
             onMealTimeClick = {},
-            onNutrientPopupOpen = {},
-            onMemoPopupOpen = {},
-            onMealPopupOpen = {},
-            onSchedulePopupOpen = {},
+            onNutrientDialogOpen = {},
+            onMemoDialogOpen = {},
+            onMealDialogOpen = {},
+            onScheduleDialogOpen = {},
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface),

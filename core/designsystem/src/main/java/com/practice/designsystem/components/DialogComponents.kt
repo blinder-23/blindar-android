@@ -15,62 +15,62 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.designsystem.theme.PopupTypography
+import com.practice.designsystem.theme.DialogTypography
 
-val popupPadding = 24.dp
+val dialogContentPadding = 24.dp
 
 @Composable
-fun PopupTitleLarge(
+fun DialogTitleLarge(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
 ) {
-    PopupText(
+    DialogText(
         text = text,
-        textStyle = PopupTypography.titleLarge,
+        textStyle = DialogTypography.titleLarge,
         modifier = modifier,
         color = color,
     )
 }
 
 @Composable
-fun PopupBodyLarge(
+fun DialogBodyLarge(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
 ) {
-    PopupText(
+    DialogText(
         text = text,
-        textStyle = PopupTypography.bodyLarge,
+        textStyle = DialogTypography.bodyLarge,
         modifier = modifier,
         color = color,
     )
 }
 
 @Composable
-fun PopupBodyMedium(
+fun DialogBodyMedium(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
 ) {
-    PopupText(
+    DialogText(
         text = text,
-        textStyle = PopupTypography.bodyMedium,
+        textStyle = DialogTypography.bodyMedium,
         modifier = modifier,
         color = color,
     )
 }
 
 @Composable
-fun PopupBodySmall(
+fun DialogBodySmall(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
     fontStyle: FontStyle? = null,
 ) {
-    PopupText(
+    DialogText(
         text = text,
-        textStyle = PopupTypography.bodySmall,
+        textStyle = DialogTypography.bodySmall,
         modifier = modifier,
         color = color,
         fontStyle = fontStyle,
@@ -78,7 +78,7 @@ fun PopupBodySmall(
 }
 
 @Composable
-private fun PopupText(
+private fun DialogText(
     text: String,
     textStyle: TextStyle,
     modifier: Modifier = Modifier,
@@ -97,9 +97,9 @@ private fun PopupText(
 
 @LightAndDarkPreview
 @Composable
-private fun PopupTitleLargePreview() {
+private fun DialogTitleLargePreview() {
     BlindarTheme {
-        PopupTitleLarge(
+        DialogTitleLarge(
             text = "영양 정보",
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.surface)

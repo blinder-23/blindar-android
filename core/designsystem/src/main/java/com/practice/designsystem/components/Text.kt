@@ -1,23 +1,27 @@
 package com.practice.designsystem.components
 
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import com.practice.designsystem.theme.NanumSquareRound
 
-// TODO: 색깔 기본값 말고 대안 찾기 (CompositionLocal을 쓰던가..)
 @Composable
 fun DisplayLarge(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface
+    color: Color = Color.Unspecified,
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,
@@ -31,8 +35,11 @@ fun DisplayLarge(
 fun DisplayMedium(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface
+    color: Color = Color.Unspecified,
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,
@@ -46,8 +53,11 @@ fun DisplayMedium(
 fun DisplaySmall(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = Color.Unspecified,
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,
@@ -61,8 +71,11 @@ fun DisplaySmall(
 fun HeadlineLarge(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = Color.Unspecified,
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,
@@ -76,8 +89,11 @@ fun HeadlineLarge(
 fun HeadlineMedium(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = Color.Unspecified,
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,
@@ -91,8 +107,11 @@ fun HeadlineMedium(
 fun HeadlineSmall(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = Color.Unspecified,
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,
@@ -106,9 +125,12 @@ fun HeadlineSmall(
 fun TitleLarge(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = Color.Unspecified,
     fontWeight: FontWeight = FontWeight.Normal,
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,
@@ -123,8 +145,11 @@ fun TitleLarge(
 fun TitleMedium(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = Color.Unspecified,
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,
@@ -138,8 +163,11 @@ fun TitleMedium(
 fun TitleSmall(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = Color.Unspecified,
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,
@@ -153,8 +181,11 @@ fun TitleSmall(
 fun LabelLarge(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = Color.Unspecified,
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,
@@ -168,9 +199,12 @@ fun LabelLarge(
 fun LabelMedium(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = Color.Unspecified,
     textAlign: TextAlign? = null,
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,
@@ -185,8 +219,11 @@ fun LabelMedium(
 fun LabelSmall(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = Color.Unspecified,
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,
@@ -200,9 +237,12 @@ fun LabelSmall(
 fun BodyLarge(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = Color.Unspecified,
     textAlign: TextAlign? = null,
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,
@@ -217,10 +257,13 @@ fun BodyLarge(
 fun BodyMedium(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
     onTextLayout: (TextLayoutResult) -> Unit = {},
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,
@@ -236,9 +279,12 @@ fun BodyMedium(
 fun BodySmall(
     text: String,
     modifier: Modifier = Modifier,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = Color.Unspecified,
     fontWeight: FontWeight? = null,
 ) {
+    val textColor = color.takeOrElse {
+        LocalContentColor.current
+    }
     Text(
         text = text,
         modifier = modifier,

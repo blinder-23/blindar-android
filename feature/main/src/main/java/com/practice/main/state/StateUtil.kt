@@ -6,8 +6,8 @@ import kotlinx.collections.immutable.toImmutableList
 fun mergeSchedulesAndMemos(
     uiSchedules: UiSchedules,
     uiMemos: UiMemos,
-): ImmutableList<MemoPopupElement> {
-    return mutableListOf<MemoPopupElement>().apply {
+): ImmutableList<MemoDialogElement> {
+    return mutableListOf<MemoDialogElement>().apply {
         addAll(uiSchedules.uiSchedules)
         addAll(uiMemos.memos)
         sortBy { it.sortOrder }

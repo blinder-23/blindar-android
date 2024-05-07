@@ -12,47 +12,47 @@ import com.practice.designsystem.R
 private val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
     providerPackage = "com.google.android.gms",
-    certificates = R.array.com_google_android_gms_fonts_certs
+    certificates = R.array.com_google_android_gms_fonts_certs,
 )
 
-private val popupFontName = GoogleFont("Poppins")
+private val dialogFontName = GoogleFont("Poppins")
 
-private val popupFontFamily = FontFamily(
+private val dialogFontFamily = FontFamily(
     Font(
-        googleFont = popupFontName,
+        googleFont = dialogFontName,
         fontProvider = provider,
         weight = FontWeight.SemiBold,
     ),
     Font(
-        googleFont = popupFontName,
+        googleFont = dialogFontName,
         fontProvider = provider,
         weight = FontWeight.Medium,
     )
 )
 
-val PopupTypography = Typography(
+val DialogTypography = Typography(
     titleLarge = TextStyle(
-        fontFamily = popupFontFamily,
+        fontFamily = dialogFontFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 26.sp,
     ),
     titleMedium = TextStyle(
-        fontFamily = popupFontFamily,
+        fontFamily = dialogFontFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp,
     ),
     bodyLarge = TextStyle(
-        fontFamily = popupFontFamily,
+        fontFamily = dialogFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 24.sp,
     ),
     bodyMedium = TextStyle(
-        fontFamily = popupFontFamily,
+        fontFamily = dialogFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 20.sp,
     ),
     bodySmall = TextStyle(
-        fontFamily = popupFontFamily,
+        fontFamily = dialogFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
     )

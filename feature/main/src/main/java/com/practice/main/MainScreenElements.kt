@@ -58,8 +58,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.a11y.isLargeFont
@@ -68,7 +66,7 @@ import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.main.state.MemoPopupElement
+import com.practice.main.state.MemoDialogElement
 import com.practice.main.state.Menu
 import com.practice.main.state.Nutrient
 import com.practice.main.state.UiMeal
@@ -108,7 +106,7 @@ fun MainScreenTopBar(
         ) {
             TitleLarge(
                 text = schoolName,
-                textColor = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
         MainTopBarActions(
@@ -203,17 +201,17 @@ private fun SettingsIcon(
 @Composable
 internal fun MainScreenContents(
     uiMeals: UiMeals,
-    memoPopupElements: ImmutableList<MemoPopupElement>,
+    memoDialogElements: ImmutableList<MemoDialogElement>,
     mealColumns: Int,
     selectedMealIndex: Int,
     onMealTimeClick: (Int) -> Unit,
-    onNutrientPopupOpen: () -> Unit,
-    onMemoPopupOpen: () -> Unit,
+    onNutrientDialogOpen: () -> Unit,
+    onMemoDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
     emptyContentAlignment: Alignment = Alignment.Center,
     header: @Composable (() -> Unit)? = null,
 ) {
-    if (uiMeals.isEmpty && memoPopupElements.isEmpty()) {
+    if (uiMeals.isEmpty && memoDialogElements.isEmpty()) {
         Box(modifier = modifier) {
             Column(
                 modifier = Modifier
@@ -223,7 +221,7 @@ internal fun MainScreenContents(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 header?.invoke()
-                EmptyContentIndicator(onClick = onMemoPopupOpen)
+                EmptyContentIndicator(onClick = onMemoDialogOpen)
             }
         }
     } else {
@@ -242,14 +240,14 @@ internal fun MainScreenContents(
                         selectedIndex = selectedMealIndex,
                         onMealTimeClick = onMealTimeClick,
                         columns = mealColumns,
-                        onNutrientPopupOpen = onNutrientPopupOpen,
+                        onNutrientDialogOpen = onNutrientDialogOpen,
                     )
                 }
             }
             item {
                 ScheduleContent(
-                    scheduleElements = memoPopupElements,
-                    onMemoPopupOpen = onMemoPopupOpen,
+                    scheduleElements = memoDialogElements,
+                    onMemoDialogOpen = onMemoDialogOpen,
                 )
             }
         }
@@ -291,7 +289,7 @@ internal fun MealContent(
     selectedIndex: Int,
     onMealTimeClick: (Int) -> Unit,
     columns: Int,
-    onNutrientPopupOpen: () -> Unit,
+    onNutrientDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
     itemPadding: Dp = 16.dp,
 ) {
@@ -305,8 +303,8 @@ internal fun MealContent(
                         onMealTimeClick = onMealTimeClick,
                     )
                 },
-                buttonTitle = stringResource(id = R.string.open_nutrient_popup_button),
-                onButtonClick = onNutrientPopupOpen,
+                buttonTitle = stringResource(id = R.string.open_nutrient_dialog_button),
+                onButtonClick = onNutrientDialogOpen,
             )
         },
         modifier = modifier,
@@ -352,18 +350,18 @@ internal fun MenuRow(
 
 @Composable
 internal fun ScheduleContent(
-    scheduleElements: ImmutableList<MemoPopupElement>,
-    onMemoPopupOpen: () -> Unit,
+    scheduleElements: ImmutableList<MemoDialogElement>,
+    onMemoDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (scheduleElements.isEmpty()) {
-        EmptyScheduleContent(onMemoPopupOpen = onMemoPopupOpen)
+        EmptyScheduleContent(onMemoDialogOpen = onMemoDialogOpen)
     } else {
         MainScreenContent(
             title = stringResource(id = R.string.schedule_content_title),
             modifier = modifier,
-            buttonTitle = stringResource(id = R.string.open_memo_popup_button),
-            onButtonClick = onMemoPopupOpen,
+            buttonTitle = stringResource(id = R.string.open_memo_dialog_button),
+            onButtonClick = onMemoDialogOpen,
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 scheduleElements.forEach { uiSchedule ->
@@ -376,7 +374,7 @@ internal fun ScheduleContent(
 
 @Composable
 private fun EmptyScheduleContent(
-    onMemoPopupOpen: () -> Unit,
+    onMemoDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     MainScreenContent(
@@ -386,23 +384,10 @@ private fun EmptyScheduleContent(
         modifier = modifier,
     ) {
         EmptyContentIndicator(
-            onClick = onMemoPopupOpen,
+            onClick = onMemoDialogOpen,
             modifier = Modifier.fillMaxWidth(),
             padding = PaddingValues(vertical = 12.dp),
         )
-    }
-}
-
-@Composable
-fun MainScreenPopup(
-    onClose: () -> Unit,
-    content: @Composable () -> Unit = {},
-) {
-    Dialog(
-        onDismissRequest = onClose,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        content()
     }
 }
 
@@ -546,7 +531,7 @@ private fun MainScreenContentHeaderButton(
     ) {
         LabelLarge(
             text = title,
-            textColor = contentColorFor(backgroundColor)
+            color = contentColorFor(backgroundColor)
         )
     }
 }
@@ -639,7 +624,7 @@ private fun MealTimesButton(
     ) {
         LabelLarge(
             text = mealTime,
-            textColor = contentColor,
+            color = contentColor,
             modifier = Modifier.alpha(contentAlpha),
         )
     }
@@ -698,7 +683,7 @@ private fun MainScreenContentsPreview() {
     BlindarTheme {
         MainScreenContents(
             uiMeals = sampleUiMeals,
-            memoPopupElements = mergeSchedulesAndMemos(
+            memoDialogElements = mergeSchedulesAndMemos(
                 UiSchedules(
                     date = Date.now(),
                     uiSchedules = previewSchedules,
@@ -711,8 +696,8 @@ private fun MainScreenContentsPreview() {
             selectedMealIndex = selectedMealIndex,
             onMealTimeClick = { selectedMealIndex = it },
             mealColumns = 2,
-            onNutrientPopupOpen = {},
-            onMemoPopupOpen = {},
+            onNutrientDialogOpen = {},
+            onMemoDialogOpen = {},
             modifier = Modifier.height(500.dp),
         )
     }
