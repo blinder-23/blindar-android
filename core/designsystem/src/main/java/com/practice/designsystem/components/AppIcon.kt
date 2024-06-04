@@ -9,10 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.R
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.designsystem.theme.NanumSquareRound
 
 @Composable
 fun AppIcon(
@@ -31,10 +33,14 @@ fun AppIcon(
             text = "CALENDAR FOR BLIND",
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(top = 8.dp),
+            fontFamily = NanumSquareRound,
+            fontWeight = FontWeight.Bold,
         )
         DisplayMedium(
             text = "BLINDAR",
             color = MaterialTheme.colorScheme.primary,
+            fontFamily = NanumSquareRound,
+            fontWeight = FontWeight.ExtraBold,
         )
     }
 }

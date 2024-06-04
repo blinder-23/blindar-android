@@ -8,26 +8,52 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
-import com.practice.designsystem.theme.NanumSquareRound
 
 @Composable
 fun DisplayLarge(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
-    val textColor = color.takeOrElse {
-        LocalContentColor.current
-    }
-    Text(
+    BlindarBaseText(
         text = text,
         modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
         style = MaterialTheme.typography.displayLarge,
-        color = textColor,
-        fontFamily = NanumSquareRound,
     )
 }
 
@@ -36,16 +62,38 @@ fun DisplayMedium(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
-    val textColor = color.takeOrElse {
-        LocalContentColor.current
-    }
-    Text(
+    BlindarBaseText(
         text = text,
         modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
         style = MaterialTheme.typography.displayMedium,
-        color = textColor,
-        fontFamily = NanumSquareRound,
     )
 }
 
@@ -54,16 +102,38 @@ fun DisplaySmall(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
-    val textColor = color.takeOrElse {
-        LocalContentColor.current
-    }
-    Text(
+    BlindarBaseText(
         text = text,
         modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
         style = MaterialTheme.typography.displaySmall,
-        color = textColor,
-        fontFamily = NanumSquareRound,
     )
 }
 
@@ -72,16 +142,38 @@ fun HeadlineLarge(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
-    val textColor = color.takeOrElse {
-        LocalContentColor.current
-    }
-    Text(
+    BlindarBaseText(
         text = text,
         modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
         style = MaterialTheme.typography.headlineLarge,
-        color = textColor,
-        fontFamily = NanumSquareRound,
     )
 }
 
@@ -90,16 +182,38 @@ fun HeadlineMedium(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
-    val textColor = color.takeOrElse {
-        LocalContentColor.current
-    }
-    Text(
+    BlindarBaseText(
         text = text,
         modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
         style = MaterialTheme.typography.headlineMedium,
-        color = textColor,
-        fontFamily = NanumSquareRound,
     )
 }
 
@@ -108,16 +222,38 @@ fun HeadlineSmall(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
-    val textColor = color.takeOrElse {
-        LocalContentColor.current
-    }
-    Text(
+    BlindarBaseText(
         text = text,
         modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
         style = MaterialTheme.typography.headlineSmall,
-        color = textColor,
-        fontFamily = NanumSquareRound,
     )
 }
 
@@ -126,18 +262,38 @@ fun TitleLarge(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
-    fontWeight: FontWeight = FontWeight.Normal,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
-    val textColor = color.takeOrElse {
-        LocalContentColor.current
-    }
-    Text(
+    BlindarBaseText(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.titleLarge,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
         fontWeight = fontWeight,
-        color = textColor,
-        fontFamily = NanumSquareRound,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
+        style = MaterialTheme.typography.titleLarge,
     )
 }
 
@@ -146,16 +302,38 @@ fun TitleMedium(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
-    val textColor = color.takeOrElse {
-        LocalContentColor.current
-    }
-    Text(
+    BlindarBaseText(
         text = text,
         modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
         style = MaterialTheme.typography.titleMedium,
-        color = textColor,
-        fontFamily = NanumSquareRound,
     )
 }
 
@@ -164,72 +342,38 @@ fun TitleSmall(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
-) {
-    val textColor = color.takeOrElse {
-        LocalContentColor.current
-    }
-    Text(
-        text = text,
-        modifier = modifier,
-        style = MaterialTheme.typography.titleSmall,
-        color = textColor,
-        fontFamily = NanumSquareRound,
-    )
-}
-
-@Composable
-fun LabelLarge(
-    text: String,
-    modifier: Modifier = Modifier,
-    color: Color = Color.Unspecified,
-) {
-    val textColor = color.takeOrElse {
-        LocalContentColor.current
-    }
-    Text(
-        text = text,
-        modifier = modifier,
-        style = MaterialTheme.typography.labelLarge,
-        color = textColor,
-        fontFamily = NanumSquareRound,
-    )
-}
-
-@Composable
-fun LabelMedium(
-    text: String,
-    modifier: Modifier = Modifier,
-    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
-    val textColor = color.takeOrElse {
-        LocalContentColor.current
-    }
-    Text(
+    BlindarBaseText(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.labelMedium,
-        color = textColor,
-        fontFamily = NanumSquareRound,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
         textAlign = textAlign,
-    )
-}
-
-@Composable
-fun LabelSmall(
-    text: String,
-    modifier: Modifier = Modifier,
-    color: Color = Color.Unspecified,
-) {
-    val textColor = color.takeOrElse {
-        LocalContentColor.current
-    }
-    Text(
-        text = text,
-        modifier = modifier,
-        style = MaterialTheme.typography.labelSmall,
-        color = textColor,
-        fontFamily = NanumSquareRound,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
+        style = MaterialTheme.typography.titleSmall,
     )
 }
 
@@ -238,18 +382,38 @@ fun BodyLarge(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
-    val textColor = color.takeOrElse {
-        LocalContentColor.current
-    }
-    Text(
+    BlindarBaseText(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.bodyLarge,
-        color = textColor,
-        fontFamily = NanumSquareRound,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
         textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
+        style = MaterialTheme.typography.bodyLarge,
     )
 }
 
@@ -259,19 +423,37 @@ fun BodyMedium(
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
-    onTextLayout: (TextLayoutResult) -> Unit = {},
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
-    val textColor = color.takeOrElse {
-        LocalContentColor.current
-    }
-    Text(
+    BlindarBaseText(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.bodyMedium,
-        color = textColor,
-        fontFamily = NanumSquareRound,
+        color = color,
         fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
         onTextLayout = onTextLayout,
+        style = MaterialTheme.typography.bodyMedium,
     )
 }
 
@@ -280,7 +462,181 @@ fun BodySmall(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
     fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+) {
+    BlindarBaseText(
+        text = text,
+        modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
+        style = MaterialTheme.typography.bodySmall,
+    )
+}
+
+@Composable
+fun LabelLarge(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+) {
+    BlindarBaseText(
+        text = text,
+        modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
+        style = MaterialTheme.typography.labelLarge,
+    )
+}
+
+@Composable
+fun LabelMedium(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+) {
+    BlindarBaseText(
+        text = text,
+        modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
+        style = MaterialTheme.typography.labelMedium,
+    )
+}
+
+@Composable
+fun LabelSmall(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
+) {
+    BlindarBaseText(
+        text = text,
+        modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
+        style = MaterialTheme.typography.labelSmall,
+    )
+}
+
+// Inspired by Material3 Text.
+@Composable
+private fun BlindarBaseText(
+    text: String,
+    modifier: Modifier,
+    color: Color,
+    fontSize: TextUnit,
+    fontStyle: FontStyle?,
+    fontWeight: FontWeight?,
+    fontFamily: FontFamily?,
+    letterSpacing: TextUnit,
+    textDecoration: TextDecoration?,
+    textAlign: TextAlign?,
+    lineHeight: TextUnit,
+    overflow: TextOverflow,
+    softWrap: Boolean,
+    maxLines: Int,
+    minLines: Int,
+    onTextLayout: ((TextLayoutResult) -> Unit)?,
+    style: TextStyle,
 ) {
     val textColor = color.takeOrElse {
         LocalContentColor.current
@@ -288,9 +644,20 @@ fun BodySmall(
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.bodySmall,
         color = textColor,
-        fontFamily = NanumSquareRound,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
         fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
+        style = style,
     )
 }
