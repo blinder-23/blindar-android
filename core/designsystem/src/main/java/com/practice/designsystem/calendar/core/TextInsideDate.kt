@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.practice.designsystem.theme.NanumSquareRound
+import com.practice.designsystem.theme.Pretendard
 
 @Composable
 fun TextsInsideDate(
@@ -54,6 +54,6 @@ fun TextInsideDate(
         style = style,
         maxLines = maxLines,
         overflow = overflow,
-        fontFamily = NanumSquareRound,
+        fontFamily = Pretendard,
     )
 }
