@@ -1,13 +1,12 @@
 [versions]
 accompanist = '0.32.0'
 compose-bom = "2024.05.00"
-compose-compiler = '1.5.13'
 coroutines = "1.7.3"
 firebase-bom = "33.0.0"
 hilt = "2.49"
 hsk-ktx = '1.0-beta17'
 junit5 = "5.9.3"
-kotlin = '1.9.23'
+kotlin = '2.0.0'
 lifecycle = '2.7.0'
 retrofit = '2.11.0'
 room = "2.6.1"
@@ -157,3 +156,4 @@ lifecycle = [
 retrofit = ['retrofit', 'retrofit-converter-gson', 'retrofit-coroutines-adapter']
 
 [plugins]
+compose-compiler = { id = 'org.jetbrains.kotlin.plugin.compose', version.ref = 'kotlin' }

@@ -21,6 +21,10 @@ buildscript {
     }
 }
 
+plugins {
+    alias(libs.plugins.compose.compiler) apply false
+}
+
 apply(plugin = "com.vanniktech.dependency.graph.generator")
 
 allprojects {
@@ -38,7 +42,7 @@ subprojects {
 }
 
 task(name = "clean", type = Delete::class) {
-    delete(rootProject.buildDir)
+    delete(layout.buildDirectory)
 }
 
 plugins.apply(DependencyGraphGeneratorPlugin::class.java)
