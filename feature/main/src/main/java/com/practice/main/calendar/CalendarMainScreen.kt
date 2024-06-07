@@ -6,8 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.main.MainScreenViewModel
+import com.practice.main.R
 import com.practice.main.mealColumns
 
 @Composable
@@ -35,6 +38,8 @@ fun CalendarMainScreen(
                 mealColumns = mealColumns,
                 onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
                 onSettingsIconClick = onNavigateToSettingsScreen,
+                onCalendarHeaderClick = { viewModel.onDateClick(Date.now()) },
+                calendarHeaderClickLabel = stringResource(id = R.string.calendar_header_click),
                 onDateClick = viewModel::onDateClick,
                 onSwiped = viewModel::onSwiped,
                 getContentDescription = viewModel::getContentDescription,
@@ -56,6 +61,8 @@ fun CalendarMainScreen(
                 mealColumns = mealColumns,
                 onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
                 onSettingsIconClick = onNavigateToSettingsScreen,
+                onCalendarHeaderClick = { viewModel.onDateClick(Date.now()) },
+                calendarHeaderClickLabel = stringResource(id = R.string.calendar_header_click),
                 onDateClick = viewModel::onDateClick,
                 onSwiped = viewModel::onSwiped,
                 getContentDescription = viewModel::getContentDescription,
