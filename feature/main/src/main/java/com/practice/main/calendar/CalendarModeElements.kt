@@ -3,7 +3,7 @@ package com.practice.main.calendar
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,14 +17,13 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -48,6 +47,9 @@ import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.offset
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.core.yearMonth
+import com.practice.designsystem.components.DisplayMedium
+import com.practice.designsystem.components.HeadlineLarge
+import com.practice.designsystem.components.HeadlineSmall
 import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
@@ -61,6 +63,8 @@ import kotlinx.coroutines.launch
 fun CalendarCard(
     calendarPageCount: Int,
     calendarState: CalendarState,
+    onCalendarHeaderClick: () -> Unit,
+    calendarHeaderClickLabel: String,
     onDateClick: (Date) -> Unit,
     onSwiped: (YearMonth) -> Unit,
     getContentDescription: (Date) -> String,
@@ -68,8 +72,8 @@ fun CalendarCard(
     getClickLabel: (Date) -> String,
     drawBehindElement: DrawScope.(Date) -> Unit,
     modifier: Modifier = Modifier,
-    dateArrangement: Arrangement.Vertical = Arrangement.Center,
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
+    isLarge: Boolean = false,
 ) {
     val currentYearMonth = YearMonth.now()
     val middlePage = calendarPageCount / 2
@@ -95,13 +99,16 @@ fun CalendarCard(
             ) {
                 CalendarCardHeader(
                     calendarState = calendarState,
+                    onCalendarHeaderClick = onCalendarHeaderClick,
+                    calendarHeaderClickLabel = calendarHeaderClickLabel,
                     pagerState = pagerState,
                     modifier = Modifier.fillMaxWidth(),
+                    isLarge = isLarge,
                 )
                 SwipeableCalendar(
                     itemCount = calendarPageCount,
-                    calendarState = calendarState,
                     pagerState = pagerState,
+                    calendarState = calendarState,
                     onDateClick = onDateClick,
                     onPageChange = { pageIndex ->
                         val offset = pageIndex - middlePage
@@ -116,12 +123,12 @@ fun CalendarCard(
                         Log.d("CalendarCard", "Scroll from ${pagerState.currentPage} to $newPage")
                         pagerState.animateScrollToPage(newPage)
                     },
-                    getContentDescription = getContentDescription,
                     dateShape = dateShape,
+                    getContentDescription = getContentDescription,
                     getClickLabel = getClickLabel,
-                    dateArrangement = dateArrangement,
                     drawBehindElement = drawBehindElement,
                     customActions = customActions,
+                    isLarge = isLarge,
                 )
             }
         }
@@ -132,22 +139,42 @@ fun CalendarCard(
 @Composable
 private fun CalendarCardHeader(
     calendarState: CalendarState,
+    onCalendarHeaderClick: () -> Unit,
+    calendarHeaderClickLabel: String,
     pagerState: PagerState,
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    isLarge: Boolean = false,
 ) {
     val scope = rememberCoroutineScope()
-    val iconTint = contentColorFor(backgroundColor = backgroundColor)
 
     Box(
         modifier = modifier
             .background(backgroundColor)
             .padding(horizontal = 16.dp, vertical = 4.dp),
     ) {
-        LabelLarge(
-            text = calendarState.yearMonth.toString(),
-            modifier = Modifier.align(Alignment.CenterStart),
-        )
+        Column(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .clickable(
+                    role = Role.Button,
+                    onClick = onCalendarHeaderClick,
+                    onClickLabel = calendarHeaderClickLabel,
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            if (isLarge) {
+                CalendarCardHeaderTitleLarge(
+                    year = calendarState.yearMonth.year.toString(),
+                    month = calendarState.yearMonth.month.toString(),
+                )
+            } else {
+                CalendarCardHeaderTitle(
+                    year = calendarState.yearMonth.year.toString(),
+                    month = calendarState.yearMonth.month.toString(),
+                )
+            }
+        }
         CalendarArrow(
             onLeftClick = {
                 scope.launch {
@@ -159,10 +186,40 @@ private fun CalendarCardHeader(
                     pagerState.animateScrollToPage(pagerState.currentPage + 1)
                 }
             },
-            iconTint = iconTint,
+            iconTint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.align(Alignment.CenterEnd),
         )
     }
+}
+
+@Composable
+private fun CalendarCardHeaderTitle(
+    year: String,
+    month: String,
+) {
+    LabelLarge(
+        text = year,
+        color = MaterialTheme.colorScheme.onSurface,
+    )
+    HeadlineSmall(
+        text = month,
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+    )
+}
+
+@Composable
+private fun CalendarCardHeaderTitleLarge(
+    year: String,
+    month: String,
+) {
+    HeadlineLarge(
+        text = year,
+        color = MaterialTheme.colorScheme.onSurface,
+    )
+    DisplayMedium(
+        text = month,
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+    )
 }
 
 @Composable
@@ -197,7 +254,7 @@ private fun CalendarArrow(
             }
         ) {
             Icon(
-                imageVector = Icons.Filled.ArrowForwardIos,
+                imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                 contentDescription = null,
                 tint = iconTint,
                 modifier = Modifier.clearAndSetSemantics { },
@@ -214,6 +271,8 @@ private fun CalendarCardPreview() {
         CalendarCard(
             calendarPageCount = 13,
             calendarState = calendarState,
+            onCalendarHeaderClick = {},
+            calendarHeaderClickLabel = "",
             onDateClick = {},
             onSwiped = {},
             getContentDescription = { "" },

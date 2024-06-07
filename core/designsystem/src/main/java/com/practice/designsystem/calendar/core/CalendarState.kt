@@ -2,6 +2,7 @@ package com.practice.designsystem.calendar.core
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -66,14 +67,14 @@ class CalendarStateImpl(
     month: Int,
     selectedDate: Date
 ) : CalendarState {
-    private var _year by mutableStateOf(year)
+    private var _year by mutableIntStateOf(year)
     override var year: Int
         get() = _year
         set(value) {
             _year = value
         }
 
-    private var _month by mutableStateOf(month)
+    private var _month by mutableIntStateOf(month)
     override var month: Int
         get() = _month
         set(value) {

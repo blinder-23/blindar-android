@@ -52,6 +52,8 @@ fun VerticalCalendarMainScreen(
     mealColumns: Int,
     onRefreshIconClick: () -> Unit,
     onSettingsIconClick: () -> Unit,
+    onCalendarHeaderClick: () -> Unit,
+    calendarHeaderClickLabel: String,
     onDateClick: (Date) -> Unit,
     onSwiped: (YearMonth) -> Unit,
     getContentDescription: (Date) -> String,
@@ -85,16 +87,18 @@ fun VerticalCalendarMainScreen(
             CalendarCard(
                 calendarPageCount = calendarPageCount,
                 calendarState = calendarState,
+                calendarHeaderClickLabel = calendarHeaderClickLabel,
+                onCalendarHeaderClick = onCalendarHeaderClick,
                 onDateClick = onDateClick,
                 onSwiped = onSwiped,
                 getContentDescription = getContentDescription,
                 dateShape = calendarDateShape,
                 getClickLabel = getClickLabel,
                 drawBehindElement = drawUnderlineToScheduleDate,
-                customActions = customActions,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
+                customActions = customActions,
             )
             MainScreenContents(
                 uiMeals = uiState.selectedDateDataState.uiMeals,
@@ -178,6 +182,8 @@ private fun VerticalCalendarMainScreenPreview() {
             mealColumns = 2,
             onRefreshIconClick = {},
             onSettingsIconClick = {},
+            onCalendarHeaderClick = {},
+            calendarHeaderClickLabel = "",
             onDateClick = { selectedDate = it },
             onSwiped = {},
             getContentDescription = { "" },
