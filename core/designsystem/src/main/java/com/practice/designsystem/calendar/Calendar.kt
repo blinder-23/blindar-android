@@ -61,9 +61,7 @@ fun Calendar(
                 onDateClick(it)
             },
             dateShape = dateShape,
-            dateArrangement = dateArrangement,
             drawBehindElement = drawBehindElement,
-            dateBelowContent = dateBelowContent,
             customActions = customActions,
         )
     }

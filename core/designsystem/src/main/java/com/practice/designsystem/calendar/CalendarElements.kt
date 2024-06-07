@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,9 +42,8 @@ import com.hsk.ktx.date.DayOfWeek
 import com.practice.designsystem.calendar.core.CalendarPage
 import com.practice.designsystem.calendar.core.Week
 import com.practice.designsystem.calendar.core.clickLabel
-import com.practice.designsystem.calendar.core.drawUnderline
+import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.util.date.DateUtil
 import com.practice.util.date.daytype.DayType
 import com.practice.util.date.daytype.calculateDayType
 import com.practice.util.date.daytype.toKor
@@ -79,11 +78,12 @@ private fun CalendarDay(
     day: DayOfWeek,
     modifier: Modifier = Modifier,
 ) {
-    CalendarElement(
-        text = day.toKor(),
-        modifier = modifier,
-        textColor = day.color(),
-    )
+    CalendarElement(modifier = modifier) {
+        BodyLarge(
+            text = day.toKor(),
+            color = day.color(),
+        )
+    }
 }
 
 private val Transparent = Color(0x00000000)
@@ -107,8 +107,6 @@ internal fun CalendarDates(
     onDateClick: (Date) -> Unit = {},
     dateShape: Shape = CircleShape,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
-    dateArrangement: Arrangement.Vertical = Arrangement.Center,
-    dateBelowContent: @Composable (Date) -> Unit = {},
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
     Column(
@@ -117,17 +115,15 @@ internal fun CalendarDates(
     ) {
         page.forEachWeeks { week ->
             CalendarWeek(
-                modifier = Modifier.weight(1f),
                 week = week,
                 selectedDate = selectedDate,
                 getContentDescription = getContentDescription,
                 getClickLabel = getClickLabel,
                 currentMonth = page.month,
+                modifier = Modifier.weight(1f),
                 onDateClick = onDateClick,
                 dateShape = dateShape,
-                dateArrangement = dateArrangement,
                 drawBehindElement = drawBehindElement,
-                dateBelowContent = dateBelowContent,
                 customActions = customActions
             )
         }
@@ -144,9 +140,7 @@ internal fun CalendarWeek(
     modifier: Modifier = Modifier,
     onDateClick: (Date) -> Unit = {},
     dateShape: Shape = CircleShape,
-    dateArrangement: Arrangement.Vertical = Arrangement.Center,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
-    dateBelowContent: @Composable (Date) -> Unit = {},
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
     Row(
@@ -167,8 +161,6 @@ internal fun CalendarWeek(
                 isSelected = dayOfWeek == selectedDate,
                 dateShape = dateShape,
                 drawBehindElement = drawBehindElement,
-                dateArrangement = dateArrangement,
-                dateBelowContent = dateBelowContent,
                 customActions = customActions,
             )
         }
@@ -189,8 +181,6 @@ internal fun CalendarDate(
     isSelected: Boolean = false,
     dateShape: Shape = CircleShape,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
-    dateArrangement: Arrangement.Vertical = Arrangement.Center,
-    dateBelowContent: @Composable (Date) -> Unit = {},
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
     val borderColor by animateColorAsState(
@@ -200,17 +190,12 @@ internal fun CalendarDate(
             easing = FastOutSlowInEasing,
         )
     )
-    val backgroundColor =
-        if (date == DateUtil.today()) MaterialTheme.colorScheme.primary else Transparent
-    val textColor =
-        if (date == DateUtil.today()) contentColorFor(backgroundColor) else date.color(currentMonth)
+    val textColor = date.color(currentMonth)
     val text = if (date == Date.MAX) "" else date.dayOfMonth.toString()
 
     CalendarElement(
-        text = text,
         modifier = modifier
             .clip(shape = dateShape)
-            .background(backgroundColor)
             .clickable(onClickLabel = getClickLabel(date)) { onClick(date) }
             .border(width = 2.dp, color = borderColor, shape = dateShape)
             .aspectRatio(1f, matchHeightConstraintsFirst = true)
@@ -219,14 +204,30 @@ internal fun CalendarDate(
                 contentDescription = "${date.clickLabel}\n${getContentDescription(date)}"
                 this.customActions = customActions(date)
                 role = Role.Button
-            },
-        textColor = textColor,
-        arrangement = dateArrangement,
-        drawBehindElement = {
-            drawBehindElement(date)
-        },
-        belowContent = { dateBelowContent(date) },
-    )
+            }
+            .drawBehind {
+                drawBehindElement(date)
+            }
+    ) {
+        BodyLarge(
+            text = text,
+            color = textColor,
+        )
+    }
+}
+
+@Composable
+internal fun CalendarElement(
+    modifier: Modifier = Modifier,
+    contentAlignment: Alignment = Alignment.Center,
+    content: @Composable () -> Unit = {},
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = contentAlignment,
+    ) {
+        content()
+    }
 }
 
 @Composable
@@ -298,7 +299,9 @@ private fun CalendarDatePreview() {
             onClick = {},
             getContentDescription = { "" },
             getClickLabel = { null },
-            modifier = Modifier.size(50.dp),
+            modifier = Modifier
+                .size(50.dp)
+                .background(MaterialTheme.colorScheme.surface),
         )
     }
 }
@@ -312,28 +315,10 @@ private fun CalendarDatePreview_Selected() {
             onClick = {},
             getContentDescription = { "" },
             getClickLabel = { null },
-            modifier = Modifier.size(50.dp),
+            modifier = Modifier
+                .size(50.dp)
+                .background(MaterialTheme.colorScheme.surface),
             isSelected = true,
-        )
-    }
-}
-
-@Preview(showBackground = true, widthDp = 48, heightDp = 48)
-@Composable
-private fun UnderlinedCalendarDatePreview() {
-    BlindarTheme {
-        val lineColor = MaterialTheme.colorScheme.onSurface
-        CalendarDate(
-            date = Date(2022, 11, 14),
-            onClick = {},
-            getContentDescription = { "" },
-            getClickLabel = { null },
-            drawBehindElement = {
-                drawUnderline(
-                    color = lineColor,
-                    strokeWidth = 2f,
-                )
-            },
         )
     }
 }
