@@ -43,6 +43,7 @@ import com.practice.designsystem.calendar.core.CalendarPage
 import com.practice.designsystem.calendar.core.Week
 import com.practice.designsystem.calendar.core.clickLabel
 import com.practice.designsystem.components.BodyLarge
+import com.practice.designsystem.components.HeadlineLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.util.date.daytype.DayType
 import com.practice.util.date.daytype.calculateDayType
@@ -51,12 +52,13 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 
-internal fun calendarDays(): List<DayOfWeek> = DayOfWeek.values().toList()
+internal fun calendarDays(): List<DayOfWeek> = DayOfWeek.entries
 
 @Composable
 internal fun CalendarDays(
     days: List<DayOfWeek>,
     modifier: Modifier = Modifier,
+    isLarge: Boolean = false,
 ) {
     Row(modifier = modifier) {
         days.forEach { day ->
@@ -64,7 +66,8 @@ internal fun CalendarDays(
                 day = day,
                 modifier = Modifier
                     .padding(5.dp)
-                    .weight(1f)
+                    .weight(1f),
+                isLarge = isLarge,
             )
         }
     }
@@ -77,12 +80,20 @@ internal fun CalendarDays(
 private fun CalendarDay(
     day: DayOfWeek,
     modifier: Modifier = Modifier,
+    isLarge: Boolean = false,
 ) {
     CalendarElement(modifier = modifier) {
-        BodyLarge(
-            text = day.toKor(),
-            color = day.color(),
-        )
+        if (isLarge) {
+            HeadlineLarge(
+                text = day.toKor(),
+                color = day.color(),
+            )
+        } else {
+            BodyLarge(
+                text = day.toKor(),
+                color = day.color(),
+            )
+        }
     }
 }
 
@@ -108,6 +119,7 @@ internal fun CalendarDates(
     dateShape: Shape = CircleShape,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
+    isLarge: Boolean = false,
 ) {
     Column(
         modifier = modifier,
@@ -124,7 +136,8 @@ internal fun CalendarDates(
                 onDateClick = onDateClick,
                 dateShape = dateShape,
                 drawBehindElement = drawBehindElement,
-                customActions = customActions
+                customActions = customActions,
+                isLarge = isLarge,
             )
         }
     }
@@ -142,6 +155,7 @@ internal fun CalendarWeek(
     dateShape: Shape = CircleShape,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
+    isLarge: Boolean = false,
 ) {
     Row(
         modifier = modifier,
@@ -162,6 +176,7 @@ internal fun CalendarWeek(
                 dateShape = dateShape,
                 drawBehindElement = drawBehindElement,
                 customActions = customActions,
+                isLarge = isLarge,
             )
         }
     }
@@ -182,6 +197,7 @@ internal fun CalendarDate(
     dateShape: Shape = CircleShape,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
+    isLarge: Boolean = false,
 ) {
     val borderColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Transparent,
@@ -209,10 +225,17 @@ internal fun CalendarDate(
                 drawBehindElement(date)
             }
     ) {
-        BodyLarge(
-            text = text,
-            color = textColor,
-        )
+        if (isLarge) {
+            HeadlineLarge(
+                text = text,
+                color = textColor,
+            )
+        } else {
+            BodyLarge(
+                text = text,
+                color = textColor,
+            )
+        }
     }
 }
 

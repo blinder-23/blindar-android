@@ -1,9 +1,7 @@
 package com.practice.designsystem.calendar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.CalendarPage
 import com.practice.designsystem.calendar.core.CalendarState
-import com.practice.designsystem.calendar.core.TextsInsideDate
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.designsystem.theme.BlindarTheme
@@ -26,7 +23,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 val calendarDateShape = CircleShape
-val largeCalendarDateShape = CircleShape.copy(all = CornerSize(15.dp))
+val largeCalendarDateShape = calendarDateShape
 
 @Composable
 fun Calendar(
@@ -36,11 +33,10 @@ fun Calendar(
     getContentDescription: (Date) -> String = { "" },
     getClickLabel: (Date) -> String? = { null },
     onDateClick: (Date) -> Unit = {},
-    dateArrangement: Arrangement.Vertical = Arrangement.Center,
     dateShape: Shape = calendarDateShape,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
-    dateBelowContent: @Composable (Date) -> Unit = {},
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
+    isLarge: Boolean = false,
 ) {
     Column(
         modifier = modifier
@@ -48,8 +44,8 @@ fun Calendar(
     ) {
         CalendarDays(
             days = calendarDays(),
-            modifier = Modifier
-                .clearAndSetSemantics {}
+            modifier = Modifier.clearAndSetSemantics {},
+            isLarge = isLarge,
         )
         CalendarDates(
             page = calendarPage,
@@ -63,6 +59,7 @@ fun Calendar(
             dateShape = dateShape,
             drawBehindElement = drawBehindElement,
             customActions = customActions,
+            isLarge = isLarge,
         )
     }
 }
@@ -75,10 +72,8 @@ fun LargeCalendar(
     getContentDescription: (Date) -> String = { "" },
     getClickLabel: (Date) -> String? = { null },
     onDateClick: (Date) -> Unit = {},
-    dateArrangement: Arrangement.Vertical = Arrangement.spacedBy(5.dp),
     dateShape: Shape = largeCalendarDateShape,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
-    dateBelowContent: @Composable (Date) -> Unit = {},
 ) {
     Calendar(
         modifier = modifier,
@@ -87,10 +82,9 @@ fun LargeCalendar(
         getContentDescription = getContentDescription,
         getClickLabel = getClickLabel,
         onDateClick = onDateClick,
-        dateArrangement = dateArrangement,
         dateShape = dateShape,
         drawBehindElement = drawBehindElement,
-        dateBelowContent = dateBelowContent
+        isLarge = true,
     )
 }
 
@@ -122,13 +116,6 @@ private fun LargeCalendarPreview() {
         selectedDate = date
     )
     BlindarTheme(darkTheme = true) {
-        LargeCalendar(calendarState = calendarState) {
-            if (it == date) {
-                TextsInsideDate(
-                    texts = (1..5).map { i -> "학사일정 ${i}번" },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        }
+        LargeCalendar(calendarState = calendarState)
     }
 }

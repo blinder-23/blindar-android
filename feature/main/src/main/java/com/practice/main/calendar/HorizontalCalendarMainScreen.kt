@@ -77,6 +77,7 @@ fun HorizontalCalendarMainScreen(
                 dateShape = largeCalendarDateShape,
                 dateArrangement = Arrangement.Top,
                 customActions = customActions,
+                isLarge = true,
             )
             MainScreenContents(
                 uiMeals = uiState.selectedDateDataState.uiMeals,

@@ -70,6 +70,7 @@ fun CalendarCard(
     modifier: Modifier = Modifier,
     dateArrangement: Arrangement.Vertical = Arrangement.Center,
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
+    isLarge: Boolean = false,
 ) {
     val currentYearMonth = YearMonth.now()
     val middlePage = calendarPageCount / 2
@@ -100,8 +101,8 @@ fun CalendarCard(
                 )
                 SwipeableCalendar(
                     itemCount = calendarPageCount,
-                    calendarState = calendarState,
                     pagerState = pagerState,
+                    calendarState = calendarState,
                     onDateClick = onDateClick,
                     onPageChange = { pageIndex ->
                         val offset = pageIndex - middlePage
@@ -116,12 +117,12 @@ fun CalendarCard(
                         Log.d("CalendarCard", "Scroll from ${pagerState.currentPage} to $newPage")
                         pagerState.animateScrollToPage(newPage)
                     },
-                    getContentDescription = getContentDescription,
                     dateShape = dateShape,
+                    getContentDescription = getContentDescription,
                     getClickLabel = getClickLabel,
-                    dateArrangement = dateArrangement,
                     drawBehindElement = drawBehindElement,
                     customActions = customActions,
+                    isLarge = isLarge,
                 )
             }
         }

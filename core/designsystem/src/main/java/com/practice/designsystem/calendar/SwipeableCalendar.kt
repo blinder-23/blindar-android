@@ -2,7 +2,6 @@ package com.practice.designsystem.calendar
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -38,9 +37,9 @@ fun SwipeableCalendar(
     dateShape: Shape = CircleShape,
     getContentDescription: (Date) -> String = { "" },
     getClickLabel: (Date) -> String? = { null },
-    dateArrangement: Arrangement.Vertical = Arrangement.Center,
     drawBehindElement: DrawScope.(Date) -> Unit = {},
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
+    isLarge: Boolean = false,
 ) {
     val currentYearMonth = YearMonth.now()
     val middlePage = itemCount / 2
@@ -66,15 +65,15 @@ fun SwipeableCalendar(
         val shownYearMonth = currentYearMonth.offset(index - middlePage)
         val calendarPage = CalendarPage.getInstance(shownYearMonth)
         Calendar(
-            calendarPage = calendarPage,
             calendarState = calendarState,
+            calendarPage = calendarPage,
             getContentDescription = getContentDescription,
             getClickLabel = getClickLabel,
             onDateClick = onDateClick,
-            dateArrangement = dateArrangement,
             dateShape = dateShape,
             drawBehindElement = drawBehindElement,
             customActions = customActions,
+            isLarge = isLarge,
         )
     }
 }
