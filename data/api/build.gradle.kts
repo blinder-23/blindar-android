@@ -4,8 +4,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    alias(libs.plugins.ksp)
 }
 
 val url: String = gradleLocalProperties(rootDir, providers).getProperty("server.url")
@@ -99,9 +99,9 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    kapt(libs.hilt.compiler.androidx)
-    kaptAndroidTest(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
+    ksp(libs.hilt.compiler.androidx)
+    kspAndroidTest(libs.hilt.compiler)
     androidTestImplementation(libs.hilt.android.testing)
 
     // Unit test
