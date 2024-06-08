@@ -23,6 +23,7 @@ buildscript {
 
 plugins {
     alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.ksp) apply false
 }
 
 apply(plugin = "com.vanniktech.dependency.graph.generator")
