@@ -225,7 +225,7 @@ internal fun MainScreenContents(
             }
             if (!uiMeals.isEmpty) {
                 item {
-                    MealContent(
+                    MealContents(
                         uiMeals = uiMeals,
                         selectedIndex = selectedMealIndex,
                         onMealTimeClick = onMealTimeClick,
@@ -273,13 +273,13 @@ private fun EmptyContentIndicator(
 }
 
 @Composable
-internal fun MealContent(
+internal fun MealContents(
     uiMeals: UiMeals,
     selectedIndex: Int,
     onMealTimeClick: (Int) -> Unit,
     onNutrientDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
-    itemPadding: Dp = 8.dp,
+    itemPadding: Dp = 16.dp,
 ) {
     MainScreenContent(
         titleContent = {
@@ -300,9 +300,7 @@ internal fun MealContent(
             verticalArrangement = Arrangement.spacedBy(itemPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            uiMeals[selectedIndex].menus.forEach { menu ->
-                BodyLarge(text = menu.name)
-            }
+            MainScreenContentItems(items = uiMeals[selectedIndex].menus) { it.name }
             MainScreenContentBottomButton(
                 title = stringResource(id = R.string.open_nutrient_dialog_button),
                 onButtonClick = onNutrientDialogOpen,
@@ -316,6 +314,7 @@ internal fun ScheduleContents(
     scheduleElements: ImmutableList<MemoDialogElement>,
     onMemoDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
+    itemPadding: Dp = 16.dp,
 ) {
     if (scheduleElements.isEmpty()) {
         EmptyScheduleContent(onMemoDialogOpen = onMemoDialogOpen)
@@ -326,13 +325,10 @@ internal fun ScheduleContents(
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(itemPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                // TODO: 얘들은 8dp, 버튼과는 16dp
-                scheduleElements.forEach { uiSchedule ->
-                    BodyLarge(text = uiSchedule.displayText)
-                }
+                MainScreenContentItems(items = scheduleElements) { it.displayText }
                 MainScreenContentBottomButton(
                     title = stringResource(id = R.string.open_memo_dialog_button),
                     onButtonClick = onMemoDialogOpen,
@@ -358,6 +354,23 @@ private fun EmptyScheduleContent(
             modifier = Modifier.fillMaxWidth(),
             padding = PaddingValues(vertical = 12.dp),
         )
+    }
+}
+
+@Composable
+private fun <T> MainScreenContentItems(
+    items: ImmutableList<T>,
+    modifier: Modifier = Modifier,
+    itemToString: (T) -> String,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        items.forEach { item ->
+            BodyLarge(text = itemToString(item))
+        }
     }
 }
 
@@ -579,7 +592,7 @@ internal val sampleUiMeals = UiMeals(
 private fun MealContentPreview() {
     var selectedMealIndex by remember { mutableIntStateOf(0) }
     BlindarTheme {
-        MealContent(
+        MealContents(
             uiMeals = sampleUiMeals,
             selectedIndex = selectedMealIndex,
             onMealTimeClick = { selectedMealIndex = it },

@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.main.MealContent
+import com.practice.main.MealContents
 import com.practice.main.R
 import com.practice.main.sampleUiMeals
 import com.practice.main.state.UiMeals
@@ -46,7 +46,7 @@ fun MealDialogContents(
             .background(MaterialTheme.colorScheme.surface),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        MealContent(
+        MealContents(
             uiMeals = uiMeals,
             selectedIndex = selectedMealIndex,
             onMealTimeClick = onMealTimeClick,
