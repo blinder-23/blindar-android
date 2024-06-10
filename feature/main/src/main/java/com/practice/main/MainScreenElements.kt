@@ -1,6 +1,5 @@
 package com.practice.main
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
@@ -9,7 +8,6 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,13 +42,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
@@ -61,7 +60,9 @@ import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.a11y.isLargeFont
+import com.practice.designsystem.components.BlindarScrollableTabRow
 import com.practice.designsystem.components.BodyLarge
+import com.practice.designsystem.components.HeadlineSmall
 import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.components.TitleMedium
@@ -297,7 +298,7 @@ internal fun MealContent(
         titleContent = {
             MainScreenContentHeader(
                 titleContent = {
-                    MainScreenContentMealTimesTitle(
+                    MealTimeButtons(
                         selectedIndex = selectedIndex,
                         mealTimes = uiMeals.mealTimes,
                         onMealTimeClick = onMealTimeClick,
@@ -549,85 +550,66 @@ private fun MainScreenContentTitle(
 }
 
 @Composable
-private fun MainScreenContentMealTimesTitle(
+private fun MealTimeButtons(
     selectedIndex: Int,
     mealTimes: ImmutableList<String>,
     onMealTimeClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val shape = RoundedCornerShape(50)
-    Row(
-        modifier = modifier
-            .border(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.primary,
-                shape = shape
+    val bottomBorderColor = MaterialTheme.colorScheme.onSurface
+    BlindarScrollableTabRow(
+        selectedTabIndex = selectedIndex,
+        modifier = modifier.drawBehind {
+            drawLine(
+                color = bottomBorderColor,
+                start = Offset(0f, size.height),
+                end = Offset(size.width, size.height),
             )
-            .clip(shape),
+        },
+        edgePadding = 0.dp,
+        tabItemSpacing = 16.dp,
     ) {
-        mealTimes.forEachIndexed { index, s ->
-            val startRound = if (index == 0) 50 else 0
-            val endRound = if (index == mealTimes.lastIndex) 50 else 0
-
-            MealTimesButton(
-                mealTime = s,
-                isSelected = (selectedIndex == index),
+        mealTimes.forEachIndexed { index, mealTime ->
+            MealTimeButton(
+                mealTime = mealTime,
+                isSelected = index == selectedIndex,
                 onClick = { onMealTimeClick(index) },
-                startRoundCornerPercent = startRound,
-                endRoundCornerPercent = endRound,
             )
         }
     }
 }
 
 @Composable
-private fun MealTimesButton(
+private fun MealTimeButton(
     mealTime: String,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    startRoundCornerPercent: Int = 0,
-    endRoundCornerPercent: Int = 0,
 ) {
-    val backgroundColor by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
-        label = "background",
+    val alpha by animateFloatAsState(
+        targetValue = if (isSelected) 1.0f else 0.6f,
+        label = "alpha $mealTime",
     )
-    val contentAlpha by animateFloatAsState(
-        targetValue = if (isSelected) 1f else 0.6f,
-        label = "alpha",
+    val description = stringResource(
+        id = if (isSelected) R.string.meal_time_button_description_selected else R.string.meal_time_button_description,
+        mealTime
     )
-    val contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-    val shape = RoundedCornerShape(
-        topStartPercent = startRoundCornerPercent,
-        topEndPercent = endRoundCornerPercent,
-        bottomEndPercent = endRoundCornerPercent,
-        bottomStartPercent = startRoundCornerPercent,
-    )
+    val clickLabel = stringResource(id = R.string.meal_time_button_label, mealTime)
 
-    val description =
-        stringResource(id = if (isSelected) R.string.button_selected else R.string.button_not_selected)
-    Box(
+    HeadlineSmall(
+        text = mealTime,
+        color = MaterialTheme.colorScheme.onBackground.copy(alpha = alpha),
         modifier = modifier
-            .semantics {
+            .clickable(
+                onClickLabel = clickLabel,
+                onClick = onClick,
+            )
+            .clearAndSetSemantics {
                 role = Role.Button
                 contentDescription = description
             }
-            .clickable(onClick = onClick)
-            .background(backgroundColor, shape = shape)
-            .clip(shape)
-            .padding(
-                start = if (startRoundCornerPercent == 0) 10.dp else 14.dp,
-                end = if (endRoundCornerPercent == 0) 10.dp else 14.dp,
-            )
-            .padding(vertical = 10.dp),
-    ) {
-        LabelLarge(
-            text = mealTime,
-            color = contentColor,
-            modifier = Modifier.alpha(contentAlpha),
-        )
-    }
+            .padding(bottom = 4.dp),
+    )
 }
 
 val previewMenus = listOf("찰보리밥", "망고마들렌", "쇠고기미역국", "콩나물파채무침", "돼지양념구이", "포기김치", "오렌지주스", "기타등등")
@@ -709,7 +691,7 @@ private fun MainScreenContentMealTimesTitlePreview() {
     var selectedIndex by remember { mutableIntStateOf(0) }
 
     BlindarTheme {
-        MainScreenContentMealTimesTitle(
+        MealTimeButtons(
             selectedIndex = selectedIndex,
             mealTimes = persistentListOf("조식", "중식", "석식"),
             onMealTimeClick = { selectedIndex = it },
