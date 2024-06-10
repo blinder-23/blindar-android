@@ -65,6 +65,7 @@ import com.practice.designsystem.components.HeadlineSmall
 import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.components.TitleMedium
+import com.practice.designsystem.modifier.drawBottomLine
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.state.MemoDialogElement
 import com.practice.main.state.Menu
@@ -480,16 +481,9 @@ private fun MealTimeButtons(
     onMealTimeClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val bottomBorderColor = MaterialTheme.colorScheme.onSurface
     BlindarScrollableTabRow(
         selectedTabIndex = selectedIndex,
-        modifier = modifier.drawBehind {
-            drawLine(
-                color = bottomBorderColor,
-                start = Offset(0f, size.height),
-                end = Offset(size.width, size.height),
-            )
-        },
+        modifier = modifier.drawBottomLine(color = MaterialTheme.colorScheme.onSurface),
         edgePadding = 0.dp,
         tabItemSpacing = 16.dp,
     ) {
