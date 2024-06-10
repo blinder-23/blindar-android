@@ -34,7 +34,6 @@ fun MealDialogContents(
     uiMeals: UiMeals,
     selectedMealIndex: Int,
     onMealTimeClick: (Int) -> Unit,
-    mealColumns: Int,
     onNutrientDialogOpen: () -> Unit,
     onMealDialogClose: () -> Unit,
     modifier: Modifier = Modifier
@@ -51,7 +50,6 @@ fun MealDialogContents(
             uiMeals = uiMeals,
             selectedIndex = selectedMealIndex,
             onMealTimeClick = onMealTimeClick,
-            columns = mealColumns,
             onNutrientDialogOpen = onNutrientDialogOpen,
         )
         CloseMealDialogButton(
@@ -94,7 +92,6 @@ private fun MealDialogContentsPreview() {
             uiMeals = sampleUiMeals,
             selectedMealIndex = selectedMealIndex,
             onMealTimeClick = { selectedMealIndex = it },
-            mealColumns = 2,
             onNutrientDialogOpen = {},
             onMealDialogClose = {},
             modifier = Modifier.padding(16.dp),

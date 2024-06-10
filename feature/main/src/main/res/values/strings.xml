@@ -49,7 +49,7 @@
     <string name="meal_time_button_description_selected">선택됨. %s</string>
     <string name="meal_time_button_label">%s 보기</string>
 
-    <string name="open_nutrient_dialog_button">영양 정보</string>
+    <string name="open_nutrient_dialog_button">영양 정보 확인하기</string>
     <string name="open_memo_dialog_button">메모 추가</string>
 
     <string name="schedule_content_title">일정</string>

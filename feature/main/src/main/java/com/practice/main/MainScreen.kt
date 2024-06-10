@@ -81,7 +81,6 @@ fun MainScreen(
     }
     MainScreenDialogs(
         viewModel = viewModel,
-        mealColumns = windowSize.mealColumns,
     )
 }
 
@@ -95,7 +94,6 @@ val WindowSizeClass.mealColumns: Int
 @Composable
 private fun MainScreenDialogs(
     viewModel: MainScreenViewModel,
-    mealColumns: Int,
 ) {
     val uiState by viewModel.uiState
 
@@ -139,7 +137,6 @@ private fun MainScreenDialogs(
                 uiMeals = uiState.selectedDateDataState.uiMeals,
                 selectedMealIndex = uiState.selectedMealIndex,
                 onMealTimeClick = viewModel::onMealTimeClick,
-                mealColumns = mealColumns,
                 onNutrientDialogOpen = viewModel::openNutrientDialog,
                 onMealDialogClose = viewModel::onMealDialogClose,
                 modifier = Modifier

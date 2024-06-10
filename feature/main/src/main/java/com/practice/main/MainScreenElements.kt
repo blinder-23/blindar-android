@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -240,7 +239,6 @@ internal fun MainScreenContents(
                         uiMeals = uiMeals,
                         selectedIndex = selectedMealIndex,
                         onMealTimeClick = onMealTimeClick,
-                        columns = mealColumns,
                         onNutrientDialogOpen = onNutrientDialogOpen,
                     )
                 }
@@ -289,10 +287,9 @@ internal fun MealContent(
     uiMeals: UiMeals,
     selectedIndex: Int,
     onMealTimeClick: (Int) -> Unit,
-    columns: Int,
     onNutrientDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
-    itemPadding: Dp = 16.dp,
+    itemPadding: Dp = 8.dp,
 ) {
     MainScreenContent(
         titleContent = {
@@ -304,46 +301,21 @@ internal fun MealContent(
                         onMealTimeClick = onMealTimeClick,
                     )
                 },
-                buttonTitle = stringResource(id = R.string.open_nutrient_dialog_button),
-                onButtonClick = onNutrientDialogOpen,
             )
         },
         modifier = modifier,
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(itemPadding)
+            verticalArrangement = Arrangement.spacedBy(itemPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            uiMeals[selectedIndex].menus.chunked(columns).forEach { menus ->
-                val filledMenus = fillMenus(menus, columns)
-                MenuRow(menus = filledMenus)
+            uiMeals[selectedIndex].menus.forEach { menu ->
+                BodyLarge(text = menu.name)
             }
-        }
-    }
-}
-
-private fun fillMenus(menus: List<Menu>, targetCount: Int): ImmutableList<Menu> {
-    return if (menus.size == targetCount) {
-        menus
-    } else {
-        val mutableMenus = menus.toMutableList()
-        repeat(targetCount - menus.size) {
-            mutableMenus.add(Menu(""))
-        }
-        mutableMenus
-    }.toImmutableList()
-}
-
-@Composable
-internal fun MenuRow(
-    menus: ImmutableList<Menu>,
-    modifier: Modifier = Modifier
-) {
-    Row(modifier = modifier, horizontalArrangement = Arrangement.Start) {
-        menus.forEach {
-            BodyLarge(
-                text = it.name,
-                modifier = Modifier.weight(1f)
+            MainScreenContentBottomButton(
+                title = stringResource(id = R.string.open_nutrient_dialog_button),
+                onButtonClick = onNutrientDialogOpen,
             )
         }
     }
@@ -359,10 +331,8 @@ internal fun ScheduleContent(
         EmptyScheduleContent(onMemoDialogOpen = onMemoDialogOpen)
     } else {
         MainScreenContent(
-            title = stringResource(id = R.string.schedule_content_title),
             modifier = modifier,
-            buttonTitle = stringResource(id = R.string.open_memo_dialog_button),
-            onButtonClick = onMemoDialogOpen,
+            title = stringResource(id = R.string.schedule_content_title),
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 scheduleElements.forEach { uiSchedule ->
@@ -396,8 +366,6 @@ private fun EmptyScheduleContent(
 internal fun MainScreenContent(
     modifier: Modifier = Modifier,
     title: String = "",
-    buttonTitle: String = "",
-    onButtonClick: () -> Unit = {},
     padding: PaddingValues = PaddingValues(
         start = 25.dp,
         top = 10.dp,
@@ -410,11 +378,7 @@ internal fun MainScreenContent(
     MainScreenContent(
         modifier = modifier,
         titleContent = {
-            MainScreenContentHeader(
-                title = title,
-                buttonTitle = buttonTitle,
-                onButtonClick = onButtonClick,
-            )
+            MainScreenContentHeader(title = title)
         },
         padding = padding,
         contentAlignment = contentAlignment,
@@ -430,7 +394,7 @@ internal fun MainScreenContent(
         start = 20.dp,
         top = 10.dp,
         end = 20.dp,
-        bottom = 30.dp,
+        bottom = 20.dp,
     ),
     contentAlignment: Alignment.Horizontal = Alignment.Start,
     contents: @Composable () -> Unit = {},
@@ -458,67 +422,27 @@ internal fun MainScreenContent(
 private fun MainScreenContentHeader(
     title: String,
     modifier: Modifier = Modifier,
-    buttonTitle: String = "",
-    onButtonClick: () -> Unit = {},
 ) {
-    MainScreenContentHeader(
-        modifier = modifier,
-        titleContent = {
-            MainScreenContentTitle(title = title)
-        },
-        buttonTitle = buttonTitle,
-        onButtonClick = onButtonClick,
-    )
+    MainScreenContentHeader(modifier = modifier) {
+        MainScreenContentTitle(title = title)
+    }
 }
 
 @Composable
 private fun MainScreenContentHeader(
     modifier: Modifier = Modifier,
     titleContent: @Composable () -> Unit = {},
-    buttonTitle: String = "",
-    onButtonClick: () -> Unit = {},
 ) {
-    if (LocalDensity.current.isLargeFont) {
-        MainScreenContentHeaderLargeFont(
-            modifier = modifier,
-            titleContent = titleContent,
-            buttonTitle = buttonTitle,
-            onButtonClick = onButtonClick,
-        )
-    } else {
-        Row(
-            modifier = modifier,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            titleContent()
-            Spacer(modifier = Modifier.weight(1f))
-            if (buttonTitle != "") {
-                MainScreenContentHeaderButton(title = buttonTitle, onButtonClick = onButtonClick)
-            }
-        }
-    }
-}
-
-@Composable
-private fun MainScreenContentHeaderLargeFont(
-    modifier: Modifier = Modifier,
-    titleContent: @Composable () -> Unit = {},
-    buttonTitle: String = "",
-    onButtonClick: () -> Unit = {},
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center,
     ) {
         titleContent()
-        if (buttonTitle != "") {
-            MainScreenContentHeaderButton(title = buttonTitle, onButtonClick = onButtonClick)
-        }
     }
 }
 
 @Composable
-private fun MainScreenContentHeaderButton(
+private fun MainScreenContentBottomButton(
     title: String,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -642,7 +566,7 @@ val previewMemos = (1..3).map {
 @Composable
 private fun MainScreenContentHeaderButtonPreview() {
     BlindarTheme {
-        MainScreenContentHeaderButton(
+        MainScreenContentBottomButton(
             title = "영양 정보",
             onButtonClick = {},
             modifier = Modifier
