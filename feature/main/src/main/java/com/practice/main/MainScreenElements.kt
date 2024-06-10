@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
@@ -42,9 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -52,17 +49,13 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.hsk.ktx.date.Date
-import com.practice.designsystem.LightAndDarkPreview
+import com.practice.designsystem.DarkPreview
 import com.practice.designsystem.a11y.isLargeFont
 import com.practice.designsystem.components.BlindarScrollableTabRow
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.HeadlineSmall
-import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.modifier.drawBottomLine
@@ -73,10 +66,7 @@ import com.practice.main.state.Nutrient
 import com.practice.main.state.UiMeal
 import com.practice.main.state.UiMeals
 import com.practice.main.state.UiMemo
-import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedule
-import com.practice.main.state.UiSchedules
-import com.practice.main.state.mergeSchedulesAndMemos
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -245,7 +235,7 @@ internal fun MainScreenContents(
                 }
             }
             item {
-                ScheduleContent(
+                ScheduleContents(
                     scheduleElements = memoDialogElements,
                     onMemoDialogOpen = onMemoDialogOpen,
                 )
@@ -323,7 +313,7 @@ internal fun MealContent(
 }
 
 @Composable
-internal fun ScheduleContent(
+internal fun ScheduleContents(
     scheduleElements: ImmutableList<MemoDialogElement>,
     onMemoDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
@@ -335,10 +325,19 @@ internal fun ScheduleContent(
             modifier = modifier,
             title = stringResource(id = R.string.schedule_content_title),
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                // TODO: 얘들은 8dp, 버튼과는 16dp
                 scheduleElements.forEach { uiSchedule ->
                     BodyLarge(text = uiSchedule.displayText)
                 }
+                MainScreenContentBottomButton(
+                    title = stringResource(id = R.string.open_memo_dialog_button),
+                    onButtonClick = onMemoDialogOpen,
+                )
             }
         }
     }
@@ -363,16 +362,18 @@ private fun EmptyScheduleContent(
     }
 }
 
+val mainScreenDefaultPadding = PaddingValues(
+    start = 20.dp,
+    top = 10.dp,
+    end = 20.dp,
+    bottom = 20.dp,
+)
+
 @Composable
 internal fun MainScreenContent(
     modifier: Modifier = Modifier,
     title: String = "",
-    padding: PaddingValues = PaddingValues(
-        start = 25.dp,
-        top = 10.dp,
-        end = 25.dp,
-        bottom = 30.dp,
-    ),
+    padding: PaddingValues = mainScreenDefaultPadding,
     contentAlignment: Alignment.Horizontal = Alignment.Start,
     contents: @Composable () -> Unit = {},
 ) {
@@ -391,12 +392,7 @@ internal fun MainScreenContent(
 internal fun MainScreenContent(
     modifier: Modifier = Modifier,
     titleContent: @Composable () -> Unit = {},
-    padding: PaddingValues = PaddingValues(
-        start = 20.dp,
-        top = 10.dp,
-        end = 20.dp,
-        bottom = 20.dp,
-    ),
+    padding: PaddingValues = mainScreenDefaultPadding,
     contentAlignment: Alignment.Horizontal = Alignment.Start,
     contents: @Composable () -> Unit = {},
 ) {
@@ -455,9 +451,10 @@ private fun MainScreenContentBottomButton(
         colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
         border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.primary),
     ) {
-        LabelLarge(
+        BodyLarge(
             text = title,
-            color = contentColorFor(backgroundColor)
+            color = contentColorFor(backgroundColor),
+            modifier = Modifier.padding(vertical = 4.dp)
         )
     }
 }
@@ -467,10 +464,12 @@ private fun MainScreenContentTitle(
     title: String,
     modifier: Modifier = Modifier
 ) {
-    TitleLarge(
+    HeadlineSmall(
         text = title,
-        modifier = modifier,
-        fontWeight = FontWeight.Bold,
+        modifier = modifier
+            .drawBottomLine(color = MaterialTheme.colorScheme.onSurface, width = 2.dp)
+            .padding(start = 60.dp, end = 60.dp, bottom = 4.dp),
+        color = MaterialTheme.colorScheme.onBackground,
     )
 }
 
@@ -556,7 +555,7 @@ val previewMemos = (1..3).map {
     )
 }.toImmutableList()
 
-@LightAndDarkPreview
+@DarkPreview
 @Composable
 private fun MainScreenContentHeaderButtonPreview() {
     BlindarTheme {
@@ -576,34 +575,32 @@ internal val sampleUiMeals = UiMeals(
     }
 )
 
-@Preview(showBackground = true)
+@DarkPreview
 @Composable
-private fun MainScreenContentsPreview() {
+private fun MealContentPreview() {
     var selectedMealIndex by remember { mutableIntStateOf(0) }
     BlindarTheme {
-        MainScreenContents(
+        MealContent(
             uiMeals = sampleUiMeals,
-            memoDialogElements = mergeSchedulesAndMemos(
-                UiSchedules(
-                    date = Date.now(),
-                    uiSchedules = previewSchedules,
-                ),
-                UiMemos(
-                    date = Date.now(),
-                    memos = previewMemos,
-                ),
-            ),
-            selectedMealIndex = selectedMealIndex,
+            selectedIndex = selectedMealIndex,
             onMealTimeClick = { selectedMealIndex = it },
-            mealColumns = 2,
             onNutrientDialogOpen = {},
-            onMemoDialogOpen = {},
-            modifier = Modifier.height(500.dp),
         )
     }
 }
 
-@LightAndDarkPreview
+@DarkPreview
+@Composable
+private fun ScheduleContentPreview() {
+    BlindarTheme {
+        ScheduleContents(
+            scheduleElements = previewSchedules,
+            onMemoDialogOpen = {},
+        )
+    }
+}
+
+@DarkPreview
 @Composable
 private fun MainScreenContentMealTimesTitlePreview() {
     var selectedIndex by remember { mutableIntStateOf(0) }
@@ -614,6 +611,19 @@ private fun MainScreenContentMealTimesTitlePreview() {
             mealTimes = persistentListOf("조식", "중식", "석식"),
             onMealTimeClick = { selectedIndex = it },
             modifier = Modifier
+                .padding(16.dp),
+        )
+    }
+}
+
+@DarkPreview
+@Composable
+private fun MainScreenContentTitlePreview() {
+    BlindarTheme {
+        MainScreenContentTitle(
+            title = "일정",
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp),
         )
     }
