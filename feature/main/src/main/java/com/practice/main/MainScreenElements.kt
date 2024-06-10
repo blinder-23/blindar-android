@@ -193,7 +193,6 @@ private fun SettingsIcon(
 internal fun MainScreenContents(
     uiMeals: UiMeals,
     memoDialogElements: ImmutableList<MemoDialogElement>,
-    mealColumns: Int,
     selectedMealIndex: Int,
     onMealTimeClick: (Int) -> Unit,
     onNutrientDialogOpen: () -> Unit,

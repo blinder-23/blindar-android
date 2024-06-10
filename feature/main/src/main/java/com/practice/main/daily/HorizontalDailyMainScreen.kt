@@ -115,7 +115,6 @@ private fun HorizontalDailyMainScreenContents(
             memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
             selectedMealIndex = uiState.selectedMealIndex,
             onMealTimeClick = onMealTimeClick,
-            mealColumns = mealColumns,
             onNutrientDialogOpen = onNutrientDialogOpen,
             onMemoDialogOpen = onMemoDialogOpen,
             modifier = Modifier.weight(1f),
