@@ -6,7 +6,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,8 +23,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -42,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -53,6 +51,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.DarkPreview
 import com.practice.designsystem.a11y.isLargeFont
+import com.practice.designsystem.components.BlindarButton
 import com.practice.designsystem.components.BlindarScrollableTabRow
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.HeadlineSmall
@@ -455,18 +454,16 @@ private fun MainScreenContentBottomButton(
     title: String,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
+    shape: Shape = RoundedCornerShape(16.dp),
 ) {
-    val backgroundColor = MaterialTheme.colorScheme.primaryContainer
-    Button(
+    BlindarButton(
         onClick = onButtonClick,
         modifier = modifier,
-        colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
-        border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.primary),
+        shape = shape,
     ) {
         BodyLarge(
             text = title,
-            color = contentColorFor(backgroundColor),
-            modifier = Modifier.padding(vertical = 4.dp)
+            modifier = Modifier.padding(vertical = 4.dp),
         )
     }
 }
