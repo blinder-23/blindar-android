@@ -145,7 +145,7 @@ private fun BlindarBottomSheetPreview() {
                             BlindarButton(
                                 onClick = { },
                                 modifier = Modifier.weight(1f),
-                                enabled = false,
+                                isPrimary = false,
                             ) {
                                 BodyLarge(
                                     "취소",

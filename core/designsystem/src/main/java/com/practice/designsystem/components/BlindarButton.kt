@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -33,11 +34,11 @@ fun BlindarButton(
         width = 2.dp,
         color = MaterialTheme.colorScheme.primaryContainer,
     ),
-    enabled: Boolean = true,
-    content: @Composable () -> Unit = {},
+    isPrimary: Boolean = true,
+    content: @Composable RowScope.() -> Unit = {},
 ) {
-    val backgroundColor by animateColorAsState(
-        targetValue = if (enabled) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+    val containerColor by animateColorAsState(
+        targetValue = if (isPrimary) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
         animationSpec = tween(durationMillis = 500),
         label = "BlindarButton background",
     )
@@ -45,7 +46,7 @@ fun BlindarButton(
     Button(
         onClick = onClick,
         modifier = modifier,
-        colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+        colors = ButtonDefaults.buttonColors(containerColor = containerColor),
         border = border,
         shape = shape,
     ) {
@@ -67,7 +68,7 @@ private fun BlindarButtonPreview() {
         ) {
             BlindarButton(
                 onClick = { enabled = !enabled },
-                enabled = enabled,
+                isPrimary = enabled,
             ) {
                 BodyLarge(text = "메모 편집하기")
             }
