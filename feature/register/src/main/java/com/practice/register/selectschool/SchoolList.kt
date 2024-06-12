@@ -1,19 +1,28 @@
 package com.practice.register.selectschool
 
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.practice.designsystem.LightPreview
+import com.practice.designsystem.DarkPreview
 import com.practice.designsystem.components.BodyLarge
+import com.practice.designsystem.modifier.drawBottomBorder
+import com.practice.designsystem.modifier.drawTopBorder
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.School
 import kotlinx.collections.immutable.ImmutableList
@@ -65,7 +74,9 @@ private fun SchoolItem(
                 )
             }
         },
-        modifier = modifier,
+        modifier = modifier
+            .drawBottomBorder(MaterialTheme.colorScheme.surfaceVariant, 2.dp)
+            .drawTopBorder(MaterialTheme.colorScheme.surfaceVariant, 2.dp),
         colors = ListItemDefaults.colors(
             containerColor = MaterialTheme.colorScheme.surface,
             headlineColor = MaterialTheme.colorScheme.onSurface,
@@ -82,19 +93,25 @@ internal val exampleSchools =
         )
     }.toImmutableList()
 
-@LightPreview
+@DarkPreview
 @Composable
 private fun SchoolItemPreview() {
     BlindarTheme {
-        SchoolItem(
-            school = exampleSchool,
-            onClick = {},
-            modifier = Modifier.fillMaxWidth(),
-        )
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(vertical = 8.dp),
+        ) {
+            SchoolItem(
+                school = exampleSchool,
+                onClick = {},
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
     }
 }
 
-@LightPreview
+@DarkPreview
 @Composable
 private fun SchoolListPreview() {
     BlindarTheme {
