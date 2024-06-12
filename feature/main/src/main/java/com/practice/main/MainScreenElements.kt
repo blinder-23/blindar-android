@@ -253,9 +253,11 @@ private fun EmptyContentIndicator(
     padding: PaddingValues = PaddingValues(8.dp),
 ) {
     val description = stringResource(id = R.string.main_screen_add_memo)
+    val background = MaterialTheme.colorScheme.surface
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
+            .background(background)
             .clickable { onClick() }
             .padding(padding)
             .semantics(mergeDescendants = true) {
@@ -263,15 +265,19 @@ private fun EmptyContentIndicator(
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(
-            8.dp,
+            space = 8.dp,
             alignment = Alignment.CenterHorizontally
         ),
     ) {
         Icon(
             imageVector = Icons.Outlined.Add,
             contentDescription = null,
+            tint = contentColorFor(backgroundColor = background),
         )
-        TitleMedium(text = description)
+        TitleMedium(
+            text = description,
+            color = contentColorFor(backgroundColor = background),
+        )
     }
 }
 
@@ -590,6 +596,17 @@ private fun MainScreenContentHeaderButtonPreview() {
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(16.dp),
+        )
+    }
+}
+
+@DarkPreview
+@Composable
+private fun EmptyContentIndicatorPreview() {
+    BlindarTheme {
+        EmptyContentIndicator(
+            onClick = { },
+            modifier = Modifier.padding(4.dp),
         )
     }
 }
