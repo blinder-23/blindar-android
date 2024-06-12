@@ -59,7 +59,7 @@ import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.HeadlineSmall
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.components.TitleMedium
-import com.practice.designsystem.modifier.drawBottomLine
+import com.practice.designsystem.modifier.drawBottomBorder
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.state.MemoDialogElement
 import com.practice.main.state.Menu
@@ -491,7 +491,7 @@ private fun MainScreenContentTitle(
     HeadlineSmall(
         text = title,
         modifier = modifier
-            .drawBottomLine(color = MaterialTheme.colorScheme.onSurface, width = 2.dp)
+            .drawBottomBorder(color = MaterialTheme.colorScheme.onSurface, width = 2.dp)
             .padding(start = 60.dp, end = 60.dp, bottom = 4.dp),
         color = MaterialTheme.colorScheme.onBackground,
     )
@@ -507,7 +507,7 @@ private fun MealTimeButtons(
 ) {
     BlindarScrollableTabRow(
         selectedTabIndex = pagerState.currentPage,
-        modifier = modifier.drawBottomLine(color = MaterialTheme.colorScheme.onSurface),
+        modifier = modifier.drawBottomBorder(color = MaterialTheme.colorScheme.onSurface),
         edgePadding = 0.dp,
         tabItemSpacing = 16.dp,
     ) {

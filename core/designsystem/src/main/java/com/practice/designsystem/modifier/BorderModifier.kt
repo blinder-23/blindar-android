@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.Dp
  * @param color 선의 색상
  * @param width 선의 두께
  */
-fun Modifier.drawBottomLine(
+fun Modifier.drawBottomBorder(
     color: Color,
     width: Dp = Dp.Hairline,
 ) = this.drawBehind {
@@ -20,6 +20,24 @@ fun Modifier.drawBottomLine(
         color = color,
         start = Offset(0f, size.height),
         end = Offset(size.width, size.height),
+        strokeWidth = width.toPx(),
+    )
+}
+
+/**
+ * Composable의 윗변에만 선을 그린다.
+ *
+ * @param color 선의 색상
+ * @param width 선의 두께
+ */
+fun Modifier.drawTopBorder(
+    color: Color,
+    width: Dp = Dp.Hairline,
+) = this.drawBehind {
+    drawLine(
+        color = color,
+        start = Offset(0f, 0f),
+        end = Offset(size.width, 0f),
         strokeWidth = width.toPx(),
     )
 }
