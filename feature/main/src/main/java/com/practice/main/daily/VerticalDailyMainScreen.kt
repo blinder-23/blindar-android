@@ -1,10 +1,13 @@
 package com.practice.main.daily
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -40,11 +43,12 @@ import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedules
 import kotlin.math.absoluteValue
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun VerticalDailyMainScreen(
     uiState: MainUiState,
+    mealPagerState: PagerState,
     datePickerState: DailyDatePickerState,
-    mealColumns: Int,
     onRefreshIconClick: () -> Unit,
     onSettingsIconClick: () -> Unit,
     onSchoolNameClick: () -> Unit,
@@ -69,8 +73,8 @@ fun VerticalDailyMainScreen(
         )
         VerticalDailyMainScreenContents(
             datePickerState = datePickerState,
+            mealPagerState = mealPagerState,
             uiState = uiState,
-            mealColumns = mealColumns,
             onMealTimeClick = onMealTimeClick,
             onNutrientDialogOpen = onNutrientDialogOpen,
             onMemoDialogOpen = onMemoDialogOpen,
@@ -80,11 +84,12 @@ fun VerticalDailyMainScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun VerticalDailyMainScreenContents(
     datePickerState: DailyDatePickerState,
     uiState: MainUiState,
-    mealColumns: Int,
+    mealPagerState: PagerState,
     onMealTimeClick: (Int) -> Unit,
     onNutrientDialogOpen: () -> Unit,
     onMemoDialogOpen: () -> Unit,
@@ -97,8 +102,8 @@ private fun VerticalDailyMainScreenContents(
     ) {
         MainScreenContents(
             uiMeals = uiState.selectedDateDataState.uiMeals,
+            mealPagerState = mealPagerState,
             memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
-            selectedMealIndex = uiState.selectedMealIndex,
             onMealTimeClick = onMealTimeClick,
             onNutrientDialogOpen = onNutrientDialogOpen,
             onMemoDialogOpen = onMemoDialogOpen,
@@ -146,6 +151,7 @@ private fun DatePickerCard(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @LightPreview
 @Composable
 private fun VerticalDailyMainScreenPreview() {
@@ -186,11 +192,12 @@ private fun VerticalDailyMainScreenPreview() {
         initialDate = uiState.selectedDate,
         initialTextFieldValue = uiState.selectedDate.toTextFieldFormat(),
     )
+    val mealPagerState = rememberPagerState { 3 }
     BlindarTheme {
         VerticalDailyMainScreen(
             uiState = uiState,
+            mealPagerState = mealPagerState,
             datePickerState = datePickerState,
-            mealColumns = 2,
             onRefreshIconClick = {},
             onSettingsIconClick = {},
             onSchoolNameClick = {},

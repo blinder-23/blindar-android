@@ -1,11 +1,14 @@
 package com.practice.main.calendar
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,12 +32,13 @@ import com.practice.main.state.MainUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HorizontalCalendarMainScreen(
     calendarPageCount: Int,
     uiState: MainUiState,
     calendarState: CalendarState,
-    mealColumns: Int,
+    mealPagerState: PagerState,
     onRefreshIconClick: () -> Unit,
     onSettingsIconClick: () -> Unit,
     onCalendarHeaderClick: () -> Unit,
@@ -84,8 +88,8 @@ fun HorizontalCalendarMainScreen(
             )
             MainScreenContents(
                 uiMeals = uiState.selectedDateDataState.uiMeals,
+                mealPagerState = mealPagerState,
                 memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
-                selectedMealIndex = uiState.selectedMealIndex,
                 onMealTimeClick = onMealTimeClick,
                 onNutrientDialogOpen = onNutrientDialogOpen,
                 onMemoDialogOpen = onMemoDialogOpen,
@@ -97,6 +101,7 @@ fun HorizontalCalendarMainScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=480")
 @Composable
 private fun HorizontalCalendarMainScreenPreview() {
@@ -109,16 +114,17 @@ private fun HorizontalCalendarMainScreenPreview() {
         month = month,
         selectedDate = selectedDate,
     )
+    val mealPagerState = rememberPagerState { 3 }
     BlindarTheme {
         HorizontalCalendarMainScreen(
             calendarPageCount = 13,
             uiState = uiState,
+            mealPagerState = mealPagerState,
             calendarState = calendarState,
-            onCalendarHeaderClick = {},
-            calendarHeaderClickLabel = "",
-            mealColumns = 3,
             onRefreshIconClick = {},
             onSettingsIconClick = {},
+            onCalendarHeaderClick = {},
+            calendarHeaderClickLabel = "",
             onDateClick = {},
             onSwiped = { },
             getContentDescription = { "" },

@@ -1,5 +1,6 @@
 package com.practice.main.dialog
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,14 +8,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,15 +28,17 @@ import com.practice.main.MealContents
 import com.practice.main.R
 import com.practice.main.sampleUiMeals
 import com.practice.main.state.UiMeals
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MealDialogContents(
     uiMeals: UiMeals,
-    selectedMealIndex: Int,
+    mealPagerState: PagerState,
     onMealTimeClick: (Int) -> Unit,
     onNutrientDialogOpen: () -> Unit,
     onMealDialogClose: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val shape = RoundedCornerShape(16.dp)
     Column(
@@ -48,7 +50,7 @@ fun MealDialogContents(
     ) {
         MealContents(
             uiMeals = uiMeals,
-            selectedIndex = selectedMealIndex,
+            pagerState = mealPagerState,
             onMealTimeClick = onMealTimeClick,
             onNutrientDialogOpen = onNutrientDialogOpen,
         )
@@ -83,15 +85,17 @@ private fun CloseMealDialogButton(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @LightAndDarkPreview
 @Composable
 private fun MealDialogContentsPreview() {
-    var selectedMealIndex by remember { mutableIntStateOf(0) }
+    val pagerState = rememberPagerState { sampleUiMeals.mealTimes.size }
+    val scope = rememberCoroutineScope()
     BlindarTheme {
         MealDialogContents(
             uiMeals = sampleUiMeals,
-            selectedMealIndex = selectedMealIndex,
-            onMealTimeClick = { selectedMealIndex = it },
+            mealPagerState = pagerState,
+            onMealTimeClick = { scope.launch { pagerState.animateScrollToPage(it) } },
             onNutrientDialogOpen = {},
             onMealDialogClose = {},
             modifier = Modifier.padding(16.dp),

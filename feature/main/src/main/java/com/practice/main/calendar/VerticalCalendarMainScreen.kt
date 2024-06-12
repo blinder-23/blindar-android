@@ -1,11 +1,14 @@
 package com.practice.main.calendar
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,12 +47,13 @@ import com.practice.main.state.UiSchedules
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun VerticalCalendarMainScreen(
     calendarPageCount: Int,
     uiState: MainUiState,
     calendarState: CalendarState,
-    mealColumns: Int,
+    mealPagerState: PagerState,
     onRefreshIconClick: () -> Unit,
     onSettingsIconClick: () -> Unit,
     onCalendarHeaderClick: () -> Unit,
@@ -102,8 +106,8 @@ fun VerticalCalendarMainScreen(
             )
             MainScreenContents(
                 uiMeals = uiState.selectedDateDataState.uiMeals,
+                mealPagerState = mealPagerState,
                 memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
-                selectedMealIndex = uiState.selectedMealIndex,
                 onMealTimeClick = onMealTimeClick,
                 onNutrientDialogOpen = onNutrientDialogOpen,
                 onMemoDialogOpen = onMemoDialogOpen,
@@ -115,6 +119,7 @@ fun VerticalCalendarMainScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Preview(name = "Phone", device = "spec:width=411dp,height=891dp")
 @Preview(name = "Foldable", device = "spec:width=673.5dp,height=841dp,dpi=480")
 @Composable
@@ -173,12 +178,13 @@ private fun VerticalCalendarMainScreenPreview() {
         month = month,
         selectedDate = selectedDate,
     )
+    val mealPagerState = rememberPagerState { 1 }
     BlindarTheme {
         VerticalCalendarMainScreen(
             calendarPageCount = 13,
             uiState = uiState,
+            mealPagerState = mealPagerState,
             calendarState = calendarState,
-            mealColumns = 2,
             onRefreshIconClick = {},
             onSettingsIconClick = {},
             onCalendarHeaderClick = {},

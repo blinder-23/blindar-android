@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +19,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
@@ -32,9 +36,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -69,6 +71,7 @@ import com.practice.main.state.UiSchedule
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreenTopBar(
@@ -188,11 +191,12 @@ private fun SettingsIcon(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun MainScreenContents(
     uiMeals: UiMeals,
+    mealPagerState: PagerState,
     memoDialogElements: ImmutableList<MemoDialogElement>,
-    selectedMealIndex: Int,
     onMealTimeClick: (Int) -> Unit,
     onNutrientDialogOpen: () -> Unit,
     onMemoDialogOpen: () -> Unit,
@@ -226,7 +230,7 @@ internal fun MainScreenContents(
                 item {
                     MealContents(
                         uiMeals = uiMeals,
-                        selectedIndex = selectedMealIndex,
+                        pagerState = mealPagerState,
                         onMealTimeClick = onMealTimeClick,
                         onNutrientDialogOpen = onNutrientDialogOpen,
                     )
@@ -271,21 +275,22 @@ private fun EmptyContentIndicator(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun MealContents(
     uiMeals: UiMeals,
-    selectedIndex: Int,
     onMealTimeClick: (Int) -> Unit,
     onNutrientDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
     itemPadding: Dp = 16.dp,
+    pagerState: PagerState = rememberPagerState { uiMeals.mealTimes.size },
 ) {
     MainScreenContent(
         titleContent = {
             MainScreenContentHeader(
                 titleContent = {
                     MealTimeButtons(
-                        selectedIndex = selectedIndex,
+                        pagerState = pagerState,
                         mealTimes = uiMeals.mealTimes,
                         onMealTimeClick = onMealTimeClick,
                     )
@@ -299,7 +304,17 @@ internal fun MealContents(
             verticalArrangement = Arrangement.spacedBy(itemPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            MainScreenContentItems(items = uiMeals[selectedIndex].menus) { it.name }
+            HorizontalPager(
+                state = pagerState,
+                key = { uiMeals[it].mealTime },
+                beyondBoundsPageCount = 2,
+            ) { currentPage ->
+                MainScreenContentItems(
+                    items = uiMeals[currentPage].menus,
+                    modifier = Modifier.fillMaxWidth(),
+                    itemToString = { it.name },
+                )
+            }
             MainScreenContentBottomButton(
                 title = stringResource(id = R.string.open_nutrient_dialog_button),
                 onButtonClick = onNutrientDialogOpen,
@@ -482,15 +497,16 @@ private fun MainScreenContentTitle(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MealTimeButtons(
-    selectedIndex: Int,
+    pagerState: PagerState,
     mealTimes: ImmutableList<String>,
     onMealTimeClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     BlindarScrollableTabRow(
-        selectedTabIndex = selectedIndex,
+        selectedTabIndex = pagerState.currentPage,
         modifier = modifier.drawBottomLine(color = MaterialTheme.colorScheme.onSurface),
         edgePadding = 0.dp,
         tabItemSpacing = 16.dp,
@@ -498,7 +514,7 @@ private fun MealTimeButtons(
         mealTimes.forEachIndexed { index, mealTime ->
             MealTimeButton(
                 mealTime = mealTime,
-                isSelected = index == selectedIndex,
+                isSelected = index == pagerState.currentPage,
                 onClick = { onMealTimeClick(index) },
             )
         }
@@ -584,15 +600,20 @@ internal val sampleUiMeals = UiMeals(
     }
 )
 
+@OptIn(ExperimentalFoundationApi::class)
 @DarkPreview
 @Composable
 private fun MealContentPreview() {
-    var selectedMealIndex by remember { mutableIntStateOf(0) }
+    val pagerState = rememberPagerState { sampleUiMeals.mealTimes.size }
+    val coroutineScope = rememberCoroutineScope()
+
     BlindarTheme {
         MealContents(
+            pagerState = pagerState,
             uiMeals = sampleUiMeals,
-            selectedIndex = selectedMealIndex,
-            onMealTimeClick = { selectedMealIndex = it },
+            onMealTimeClick = {
+                coroutineScope.launch { pagerState.animateScrollToPage(it) }
+            },
             onNutrientDialogOpen = {},
         )
     }
@@ -609,16 +630,23 @@ private fun ScheduleContentPreview() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @DarkPreview
 @Composable
 private fun MainScreenContentMealTimesTitlePreview() {
-    var selectedIndex by remember { mutableIntStateOf(0) }
+    val mealTimes = persistentListOf("조식", "중식", "석식")
+    val pagerState = rememberPagerState { mealTimes.size }
+    val coroutineScope = rememberCoroutineScope()
 
     BlindarTheme {
         MealTimeButtons(
-            selectedIndex = selectedIndex,
-            mealTimes = persistentListOf("조식", "중식", "석식"),
-            onMealTimeClick = { selectedIndex = it },
+            pagerState = pagerState,
+            mealTimes = mealTimes,
+            onMealTimeClick = {
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(it)
+                }
+            },
             modifier = Modifier
                 .padding(16.dp),
         )
