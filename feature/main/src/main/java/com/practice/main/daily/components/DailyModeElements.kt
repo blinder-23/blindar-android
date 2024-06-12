@@ -19,7 +19,6 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -30,7 +29,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.practice.designsystem.LightAndDarkPreview
+import com.practice.designsystem.DarkPreview
 import com.practice.designsystem.a11y.isLargeFont
 import com.practice.designsystem.components.BodySmall
 import com.practice.designsystem.theme.BlindarTheme
@@ -70,12 +69,11 @@ internal fun DateQuickNavigationButton(
     modifier: Modifier = Modifier,
 ) {
     val shape = RoundedCornerShape(6.dp)
-    val backgroundColor = MaterialTheme.colorScheme.primaryContainer
+    val backgroundColor = MaterialTheme.colorScheme.surface
     Box(
         modifier = modifier
-            .clip(shape)
-            .border(2.dp, MaterialTheme.colorScheme.primary, shape)
-            .background(backgroundColor)
+            .border(2.dp, MaterialTheme.colorScheme.onPrimaryContainer, shape)
+            .background(backgroundColor, shape)
             .clickable(onClickLabel = stringResource(id = quickNavigation.descriptionId)) {
                 if (quickNavigation == DateQuickNavigation.TODAY) {
                     datePickerState.setToday()
@@ -140,7 +138,7 @@ private fun QuickViewDialogButton(
     )
 }
 
-@LightAndDarkPreview
+@DarkPreview
 @Composable
 private fun DateQuickNavigationButtonsPreview() {
     val datePickerState = rememberDailyDatePickerState()

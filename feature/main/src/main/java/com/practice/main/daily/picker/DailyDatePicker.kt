@@ -1,20 +1,13 @@
 package com.practice.main.daily.picker
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -24,9 +17,9 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hsk.ktx.date.Date
+import com.practice.designsystem.DarkPreview
 import com.practice.designsystem.components.BodySmall
 import com.practice.designsystem.components.HeadlineLarge
 import com.practice.designsystem.components.LabelLarge
@@ -53,13 +46,19 @@ private fun DailyDatePickerHeader(
     selectedDate: Date,
     modifier: Modifier = Modifier
 ) {
+    val textColor = MaterialTheme.colorScheme.onSurface
     Column(
         modifier = modifier.semantics(mergeDescendants = true) {},
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        LabelLarge(text = stringResource(id = R.string.daily_date_picker_title))
-        Spacer(modifier = Modifier.height(4.dp))
-        HeadlineLarge(text = selectedDate.toHeadlineFormat())
+        LabelLarge(
+            text = stringResource(id = R.string.daily_date_picker_title),
+            color = textColor,
+        )
+        HeadlineLarge(
+            text = selectedDate.toHeadlineFormat(),
+            color = textColor,
+        )
     }
 }
 
@@ -121,43 +120,26 @@ private fun Date.toHeadlineFormat(): String {
     )
 }
 
-@Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=480")
-@Preview(
-    showBackground = true,
-    device = "spec:width=1280dp,height=800dp,dpi=480",
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-)
+@DarkPreview
 @Composable
 private fun DailyDatePickerPreview() {
     val dailyDatePickerState = rememberDailyDatePickerState()
     BlindarTheme {
-        Column(
-            modifier = Modifier
-                .width(700.dp)
-                .background(MaterialTheme.colorScheme.surface),
-        ) {
-            DailyDatePicker(
-                dailyDatePickerState = dailyDatePickerState,
-            )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Button(onClick = { dailyDatePickerState.minusDays(7) }) {
-                    Text("일주일 전")
-                }
-                Button(onClick = { dailyDatePickerState.minusDays(1) }) {
-                    Text("어제")
-                }
-                Button(onClick = { dailyDatePickerState.setToday() }) {
-                    Text("오늘")
-                }
-                Button(onClick = { dailyDatePickerState.plusDays(1) }) {
-                    Text("내일")
-                }
-                Button(onClick = { dailyDatePickerState.plusDays(7) }) {
-                    Text("일주일 뒤")
-                }
-            }
-        }
+        DailyDatePicker(
+            dailyDatePickerState = dailyDatePickerState,
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+        )
+    }
+}
+
+@DarkPreview
+@Composable
+private fun DailyDatePickerPreview_error() {
+    val dailyDatePickerState = rememberDailyDatePickerState(isError = true)
+    BlindarTheme {
+        DailyDatePicker(
+            dailyDatePickerState = dailyDatePickerState,
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+        )
     }
 }
