@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BlindarTopAppBar
+import com.practice.designsystem.components.BlindarTopAppBarDefaults
 import com.practice.designsystem.components.TitleSmall
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.School
@@ -80,7 +81,7 @@ private fun SelectSchoolScreen(
     Column(modifier = modifier) {
         BlindarTopAppBar(
             title = stringResource(id = R.string.select_school_screen),
-            onBackButtonClick = onBackButtonClick,
+            navigationIcon = { BlindarTopAppBarDefaults.NavigationIcon(onClick = onBackButtonClick) },
         )
         SearchSchoolTextField(
             query = query,
