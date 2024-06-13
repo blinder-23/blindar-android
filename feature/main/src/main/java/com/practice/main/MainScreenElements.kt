@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -32,6 +31,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
@@ -55,6 +55,7 @@ import com.practice.designsystem.DarkPreview
 import com.practice.designsystem.a11y.isLargeFont
 import com.practice.designsystem.components.BlindarButton
 import com.practice.designsystem.components.BlindarScrollableTabRow
+import com.practice.designsystem.components.BlindarTopAppBar
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.HeadlineSmall
 import com.practice.designsystem.components.TitleLarge
@@ -83,34 +84,33 @@ fun MainScreenTopBar(
     onSchoolNameClick: () -> Unit = {},
     onClickLabel: String = "",
 ) {
-    Box(
+    BlindarTopAppBar(
+        title = {
+            TextButton(
+                onClick = onSchoolNameClick,
+                modifier = Modifier
+                    .clickable(
+                        onClickLabel = onClickLabel,
+                        onClick = onSchoolNameClick,
+                        role = Role.Button,
+                    ),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+            ) {
+                TitleLarge(
+                    text = schoolName,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+            }
+        },
         modifier = modifier,
-    ) {
-        TextButton(
-            onClick = onSchoolNameClick,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .clickable(
-                    onClickLabel = onClickLabel,
-                    onClick = onSchoolNameClick,
-                    role = Role.Button,
-                ),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
-        ) {
-            TitleLarge(
-                text = schoolName,
-                color = MaterialTheme.colorScheme.onSurface,
+        actions = {
+            MainTopBarActions(
+                isLoading = isLoading,
+                onRefreshIconClick = onRefreshIconClick,
+                onSettingsIconClick = onSettingsIconClick,
             )
         }
-        MainTopBarActions(
-            isLoading = isLoading,
-            onRefreshIconClick = onRefreshIconClick,
-            onSettingsIconClick = onSettingsIconClick,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .wrapContentSize(),
-        )
-    }
+    )
 }
 
 @Composable
@@ -153,6 +153,10 @@ private fun ForceRefreshIcon(
         label = "loading-angle",
     )
     val iconDescription = stringResource(id = R.string.main_screen_refresh_icon_description)
+    val iconAlpha by animateFloatAsState(
+        targetValue = if (isLoading) 0.4f else 1f,
+        label = "loading icon alpha",
+    )
 
     IconButton(
         onClick = onClick,
@@ -161,11 +165,12 @@ private fun ForceRefreshIcon(
                 contentDescription = iconDescription
             }
             .rotate(angle),
+        enabled = !isLoading,
     ) {
         Icon(
             imageVector = Icons.Filled.Refresh,
             contentDescription = null,
-            tint = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface),
+            tint = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface).copy(alpha = iconAlpha),
         )
     }
 }
@@ -585,6 +590,22 @@ val previewMemos = (1..3).map {
         isSavedOnRemote = false,
     )
 }.toImmutableList()
+
+@DarkPreview
+@Composable
+private fun MainScreenTopBarPreview() {
+    BlindarTheme {
+        Surface {
+            MainScreenTopBar(
+                schoolName = "한빛맹학교",
+                isLoading = true,
+                onRefreshIconClick = {},
+                onSettingsIconClick = {},
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
 
 @DarkPreview
 @Composable
