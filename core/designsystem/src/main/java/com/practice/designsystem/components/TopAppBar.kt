@@ -1,5 +1,6 @@
 package com.practice.designsystem.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -7,6 +8,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.practice.designsystem.LightAndDarkPreview
+import com.practice.designsystem.DarkPreview
 import com.practice.designsystem.R
 import com.practice.designsystem.theme.BlindarTheme
 
@@ -78,6 +80,37 @@ fun BlindarTopAppBar(
     )
 }
 
+/**
+ * Large Top App Bar for Blindar. Inspired by material3 [LargeTopAppBar].
+ *
+ * [navigationIcon] and [actions] are aligned at the start and the end of the first row of the app bar, respectively.
+ *
+ * [title] is aligned at the start side of the second row.
+ *
+ * @param title The title of the app bar.
+ * @param modifier The modifier to be applied to the app bar.
+ * @param navigationIcon The navigation icon to be displayed at the first row of the app bar.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BlindarLargeTopAppBar(
+    title: String,
+    modifier: Modifier = Modifier,
+    navigationIcon: @Composable () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {},
+) {
+    LargeTopAppBar(
+        title = {
+            Column {
+                DisplayMedium(text = title)
+            }
+        },
+        modifier = modifier,
+        navigationIcon = navigationIcon,
+        actions = actions,
+    )
+}
+
 object BlindarTopAppBarDefaults {
     @Composable
     fun NavigationIcon(onClick: () -> Unit) {
@@ -91,11 +124,25 @@ object BlindarTopAppBarDefaults {
     }
 }
 
-@LightAndDarkPreview
+@DarkPreview
 @Composable
 private fun TopAppBarPreview() {
     BlindarTheme {
         BlindarTopAppBar(
+            title = "휴대폰 인증",
+            modifier = Modifier.fillMaxWidth(),
+            navigationIcon = {
+                BlindarTopAppBarDefaults.NavigationIcon { }
+            },
+        )
+    }
+}
+
+@DarkPreview
+@Composable
+private fun LargeTopAppBarPreview() {
+    BlindarTheme {
+        BlindarLargeTopAppBar(
             title = "휴대폰 인증",
             modifier = Modifier.fillMaxWidth(),
             navigationIcon = {
