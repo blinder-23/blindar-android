@@ -22,7 +22,7 @@ import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
-import com.practice.main.ScheduleContent
+import com.practice.main.ScheduleContents
 import com.practice.main.previewMemos
 import com.practice.main.previewSchedules
 import com.practice.main.state.MemoDialogElement
@@ -46,7 +46,7 @@ fun ScheduleDialogContents(
             .background(MaterialTheme.colorScheme.surface),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        ScheduleContent(
+        ScheduleContents(
             scheduleElements = scheduleElements,
             onMemoDialogOpen = onMemoDialogOpen,
         )

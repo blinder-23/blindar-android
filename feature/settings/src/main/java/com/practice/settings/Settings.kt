@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BlindarTopAppBar
+import com.practice.designsystem.components.BlindarTopAppBarDefaults
 import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.preferences.preferences.MainScreenMode
@@ -217,8 +218,10 @@ private fun SettingsTopAppBar(
 ) {
     BlindarTopAppBar(
         title = stringResource(id = R.string.top_bar_title),
-        onBackButtonClick = onBackButtonClick,
         modifier = modifier,
+        navigationIcon = {
+            BlindarTopAppBarDefaults.NavigationIcon(onClick = onBackButtonClick)
+        },
     )
 }
 

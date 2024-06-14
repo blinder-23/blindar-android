@@ -30,6 +30,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BlindarTopAppBar
+import com.practice.designsystem.components.BlindarTopAppBarDefaults
 import com.practice.designsystem.components.BottomNextButton
 import com.practice.designsystem.components.LabelSmall
 import com.practice.designsystem.components.TitleLarge
@@ -65,12 +66,14 @@ fun RegisterFormScreen(
         }
         BlindarTopAppBar(
             title = stringResource(id = R.string.register_form_screen),
-            onBackButtonClick = onBackButtonClick,
             modifier = Modifier.constrainAs(appBar) {
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
-            }
+            },
+            navigationIcon = {
+                BlindarTopAppBarDefaults.NavigationIcon(onClick = onBackButtonClick)
+            },
         )
         RegisterNameCard(
             name = state.name,

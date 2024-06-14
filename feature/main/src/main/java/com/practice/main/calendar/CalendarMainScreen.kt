@@ -1,9 +1,12 @@
 package com.practice.main.calendar
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -11,12 +14,14 @@ import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.main.MainScreenViewModel
 import com.practice.main.R
-import com.practice.main.mealColumns
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarMainScreen(
     windowSize: WindowSizeClass,
     viewModel: MainScreenViewModel,
+    mealPagerState: PagerState,
     onNavigateToSettingsScreen: () -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
     modifier: Modifier = Modifier,
@@ -27,7 +32,11 @@ fun CalendarMainScreen(
     val calendarState = rememberCalendarState(uiState.year, uiState.month, uiState.selectedDate)
     val calendarPageCount = 13
 
-    val mealColumns = windowSize.mealColumns
+    val coroutineScope = rememberCoroutineScope()
+    val onMealTimeClick: (Int) -> Unit = { index ->
+        viewModel.onMealTimeClick(index)
+        coroutineScope.launch { mealPagerState.animateScrollToPage(index) }
+    }
 
     when (windowSize.widthSizeClass) {
         WindowWidthSizeClass.Expanded -> {
@@ -35,7 +44,7 @@ fun CalendarMainScreen(
                 calendarPageCount = calendarPageCount,
                 uiState = uiState,
                 calendarState = calendarState,
-                mealColumns = mealColumns,
+                mealPagerState = mealPagerState,
                 onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
                 onSettingsIconClick = onNavigateToSettingsScreen,
                 onCalendarHeaderClick = { viewModel.onDateClick(Date.now()) },
@@ -46,7 +55,7 @@ fun CalendarMainScreen(
                 getClickLabel = viewModel::getClickLabel,
                 drawUnderlineToScheduleDate = { },
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
-                onMealTimeClick = viewModel::onMealTimeClick,
+                onMealTimeClick = onMealTimeClick,
                 onNutrientDialogOpen = viewModel::openNutrientDialog,
                 onMemoDialogOpen = viewModel::openMemoDialog,
                 modifier = modifier,
@@ -58,7 +67,7 @@ fun CalendarMainScreen(
                 calendarPageCount = calendarPageCount,
                 uiState = uiState,
                 calendarState = calendarState,
-                mealColumns = mealColumns,
+                mealPagerState = mealPagerState,
                 onRefreshIconClick = { viewModel.onRefreshIconClick(context) },
                 onSettingsIconClick = onNavigateToSettingsScreen,
                 onCalendarHeaderClick = { viewModel.onDateClick(Date.now()) },
@@ -69,7 +78,7 @@ fun CalendarMainScreen(
                 getClickLabel = viewModel::getClickLabel,
                 drawUnderlineToScheduleDate = {},
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
-                onMealTimeClick = viewModel::onMealTimeClick,
+                onMealTimeClick = onMealTimeClick,
                 onNutrientDialogOpen = viewModel::openNutrientDialog,
                 onMemoDialogOpen = viewModel::openMemoDialog,
                 modifier = modifier,

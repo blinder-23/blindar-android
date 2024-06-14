@@ -1,8 +1,11 @@
 package com.practice.main
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -10,6 +13,7 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -26,7 +30,9 @@ import com.practice.main.dialog.NutrientDialogContents
 import com.practice.main.dialog.ScheduleDialogContents
 import com.practice.main.loading.LoadingMainScreen
 import com.practice.main.state.MainUiMode
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen(
     windowSize: WindowSizeClass,
@@ -49,6 +55,8 @@ fun MainScreen(
 
     val backgroundModifier = modifier.background(MaterialTheme.colorScheme.surface)
 
+    val mealPagerState = rememberPagerState { uiState.selectedDateDataState.uiMeals.mealTimes.size }
+
     Scaffold {
         val paddingModifier = backgroundModifier.padding(it)
         when (uiState.mainUiMode) {
@@ -62,6 +70,7 @@ fun MainScreen(
                 CalendarMainScreen(
                     windowSize = windowSize,
                     viewModel = viewModel,
+                    mealPagerState = mealPagerState,
                     onNavigateToSettingsScreen = onNavigateToSettingsScreen,
                     onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
                     modifier = paddingModifier,
@@ -72,6 +81,7 @@ fun MainScreen(
                 DailyMainScreen(
                     windowSize = windowSize,
                     viewModel = viewModel,
+                    mealPagerState = mealPagerState,
                     onNavigateToSettingsScreen = onNavigateToSettingsScreen,
                     onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
                     modifier = paddingModifier,
@@ -81,7 +91,7 @@ fun MainScreen(
     }
     MainScreenDialogs(
         viewModel = viewModel,
-        mealColumns = windowSize.mealColumns,
+        mealPagerState = mealPagerState,
     )
 }
 
@@ -92,10 +102,11 @@ val WindowSizeClass.mealColumns: Int
         else -> 3
     }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun MainScreenDialogs(
     viewModel: MainScreenViewModel,
-    mealColumns: Int,
+    mealPagerState: PagerState,
 ) {
     val uiState by viewModel.uiState
 
@@ -131,15 +142,18 @@ private fun MainScreenDialogs(
     }
 
     if (uiState.isMealDialogVisible) {
+        val scope = rememberCoroutineScope()
         BlindarDialog(
             onDismissRequest = viewModel::onMealDialogClose,
             properties = DialogProperties(usePlatformDefaultWidth = false),
         ) {
             MealDialogContents(
                 uiMeals = uiState.selectedDateDataState.uiMeals,
-                selectedMealIndex = uiState.selectedMealIndex,
-                onMealTimeClick = viewModel::onMealTimeClick,
-                mealColumns = mealColumns,
+                mealPagerState = mealPagerState,
+                onMealTimeClick = {
+                    viewModel.onMealTimeClick(it)
+                    scope.launch { mealPagerState.animateScrollToPage(it) }
+                },
                 onNutrientDialogOpen = viewModel::openNutrientDialog,
                 onMealDialogClose = viewModel::onMealDialogClose,
                 modifier = Modifier

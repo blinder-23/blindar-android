@@ -33,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BlindarTopAppBar
+import com.practice.designsystem.components.BlindarTopAppBarDefaults
 import com.practice.designsystem.components.BottomNextButton
 import com.practice.designsystem.components.LabelMedium
 import com.practice.designsystem.components.LabelSmall
@@ -90,12 +91,14 @@ fun VerifyPhoneNumber(
         val (appBar, phoneNumberCard, phoneNextButton) = createRefs()
         BlindarTopAppBar(
             title = stringResource(id = R.string.verify_phone_screen),
-            onBackButtonClick = onBackButtonClick,
             modifier = Modifier.constrainAs(appBar) {
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
-            }
+            },
+            navigationIcon = {
+                BlindarTopAppBarDefaults.NavigationIcon(onClick = onBackButtonClick)
+            },
         )
         PhoneNumberCard(
             phoneNumber = state.phoneNumber,

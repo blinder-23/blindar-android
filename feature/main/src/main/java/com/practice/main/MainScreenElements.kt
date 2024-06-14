@@ -1,70 +1,66 @@
 package com.practice.main
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.hsk.ktx.date.Date
-import com.practice.designsystem.LightAndDarkPreview
+import com.practice.designsystem.DarkPreview
 import com.practice.designsystem.a11y.isLargeFont
+import com.practice.designsystem.components.BlindarButton
+import com.practice.designsystem.components.BlindarScrollableTabRow
+import com.practice.designsystem.components.BlindarTopAppBar
 import com.practice.designsystem.components.BodyLarge
-import com.practice.designsystem.components.LabelLarge
+import com.practice.designsystem.components.HeadlineSmall
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.components.TitleMedium
+import com.practice.designsystem.modifier.drawBottomBorder
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.state.MemoDialogElement
 import com.practice.main.state.Menu
@@ -72,13 +68,11 @@ import com.practice.main.state.Nutrient
 import com.practice.main.state.UiMeal
 import com.practice.main.state.UiMeals
 import com.practice.main.state.UiMemo
-import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedule
-import com.practice.main.state.UiSchedules
-import com.practice.main.state.mergeSchedulesAndMemos
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreenTopBar(
@@ -90,34 +84,33 @@ fun MainScreenTopBar(
     onSchoolNameClick: () -> Unit = {},
     onClickLabel: String = "",
 ) {
-    Box(
+    BlindarTopAppBar(
+        title = {
+            TextButton(
+                onClick = onSchoolNameClick,
+                modifier = Modifier
+                    .clickable(
+                        onClickLabel = onClickLabel,
+                        onClick = onSchoolNameClick,
+                        role = Role.Button,
+                    ),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+            ) {
+                TitleLarge(
+                    text = schoolName,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+            }
+        },
         modifier = modifier,
-    ) {
-        TextButton(
-            onClick = onSchoolNameClick,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .clickable(
-                    onClickLabel = onClickLabel,
-                    onClick = onSchoolNameClick,
-                    role = Role.Button,
-                ),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
-        ) {
-            TitleLarge(
-                text = schoolName,
-                color = MaterialTheme.colorScheme.onSurface,
+        actions = {
+            MainTopBarActions(
+                isLoading = isLoading,
+                onRefreshIconClick = onRefreshIconClick,
+                onSettingsIconClick = onSettingsIconClick,
             )
         }
-        MainTopBarActions(
-            isLoading = isLoading,
-            onRefreshIconClick = onRefreshIconClick,
-            onSettingsIconClick = onSettingsIconClick,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .wrapContentSize(),
-        )
-    }
+    )
 }
 
 @Composable
@@ -160,6 +153,10 @@ private fun ForceRefreshIcon(
         label = "loading-angle",
     )
     val iconDescription = stringResource(id = R.string.main_screen_refresh_icon_description)
+    val iconAlpha by animateFloatAsState(
+        targetValue = if (isLoading) 0.4f else 1f,
+        label = "loading icon alpha",
+    )
 
     IconButton(
         onClick = onClick,
@@ -168,11 +165,12 @@ private fun ForceRefreshIcon(
                 contentDescription = iconDescription
             }
             .rotate(angle),
+        enabled = !isLoading,
     ) {
         Icon(
             imageVector = Icons.Filled.Refresh,
             contentDescription = null,
-            tint = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface),
+            tint = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface).copy(alpha = iconAlpha),
         )
     }
 }
@@ -198,12 +196,12 @@ private fun SettingsIcon(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun MainScreenContents(
     uiMeals: UiMeals,
+    mealPagerState: PagerState,
     memoDialogElements: ImmutableList<MemoDialogElement>,
-    mealColumns: Int,
-    selectedMealIndex: Int,
     onMealTimeClick: (Int) -> Unit,
     onNutrientDialogOpen: () -> Unit,
     onMemoDialogOpen: () -> Unit,
@@ -235,17 +233,16 @@ internal fun MainScreenContents(
             }
             if (!uiMeals.isEmpty) {
                 item {
-                    MealContent(
+                    MealContents(
                         uiMeals = uiMeals,
-                        selectedIndex = selectedMealIndex,
+                        pagerState = mealPagerState,
                         onMealTimeClick = onMealTimeClick,
-                        columns = mealColumns,
                         onNutrientDialogOpen = onNutrientDialogOpen,
                     )
                 }
             }
             item {
-                ScheduleContent(
+                ScheduleContents(
                     scheduleElements = memoDialogElements,
                     onMemoDialogOpen = onMemoDialogOpen,
                 )
@@ -261,9 +258,11 @@ private fun EmptyContentIndicator(
     padding: PaddingValues = PaddingValues(8.dp),
 ) {
     val description = stringResource(id = R.string.main_screen_add_memo)
+    val background = MaterialTheme.colorScheme.surface
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
+            .background(background)
             .clickable { onClick() }
             .padding(padding)
             .semantics(mergeDescendants = true) {
@@ -271,102 +270,94 @@ private fun EmptyContentIndicator(
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(
-            8.dp,
+            space = 8.dp,
             alignment = Alignment.CenterHorizontally
         ),
     ) {
         Icon(
             imageVector = Icons.Outlined.Add,
             contentDescription = null,
+            tint = contentColorFor(backgroundColor = background),
         )
-        TitleMedium(text = description)
+        TitleMedium(
+            text = description,
+            color = contentColorFor(backgroundColor = background),
+        )
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun MealContent(
+internal fun MealContents(
     uiMeals: UiMeals,
-    selectedIndex: Int,
     onMealTimeClick: (Int) -> Unit,
-    columns: Int,
     onNutrientDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
     itemPadding: Dp = 16.dp,
+    pagerState: PagerState = rememberPagerState { uiMeals.mealTimes.size },
 ) {
     MainScreenContent(
         titleContent = {
             MainScreenContentHeader(
                 titleContent = {
-                    MainScreenContentMealTimesTitle(
-                        selectedIndex = selectedIndex,
+                    MealTimeButtons(
+                        pagerState = pagerState,
                         mealTimes = uiMeals.mealTimes,
                         onMealTimeClick = onMealTimeClick,
                     )
                 },
-                buttonTitle = stringResource(id = R.string.open_nutrient_dialog_button),
-                onButtonClick = onNutrientDialogOpen,
             )
         },
         modifier = modifier,
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(itemPadding)
+            verticalArrangement = Arrangement.spacedBy(itemPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            uiMeals[selectedIndex].menus.chunked(columns).forEach { menus ->
-                val filledMenus = fillMenus(menus, columns)
-                MenuRow(menus = filledMenus)
+            HorizontalPager(
+                state = pagerState,
+                key = { uiMeals[it].mealTime },
+                beyondBoundsPageCount = 2,
+            ) { currentPage ->
+                MainScreenContentItems(
+                    items = uiMeals[currentPage].menus,
+                    modifier = Modifier.fillMaxWidth(),
+                    itemToString = { it.name },
+                )
             }
-        }
-    }
-}
-
-private fun fillMenus(menus: List<Menu>, targetCount: Int): ImmutableList<Menu> {
-    return if (menus.size == targetCount) {
-        menus
-    } else {
-        val mutableMenus = menus.toMutableList()
-        repeat(targetCount - menus.size) {
-            mutableMenus.add(Menu(""))
-        }
-        mutableMenus
-    }.toImmutableList()
-}
-
-@Composable
-internal fun MenuRow(
-    menus: ImmutableList<Menu>,
-    modifier: Modifier = Modifier
-) {
-    Row(modifier = modifier, horizontalArrangement = Arrangement.Start) {
-        menus.forEach {
-            BodyLarge(
-                text = it.name,
-                modifier = Modifier.weight(1f)
+            MainScreenContentBottomButton(
+                title = stringResource(id = R.string.open_nutrient_dialog_button),
+                onButtonClick = onNutrientDialogOpen,
             )
         }
     }
 }
 
 @Composable
-internal fun ScheduleContent(
+internal fun ScheduleContents(
     scheduleElements: ImmutableList<MemoDialogElement>,
     onMemoDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
+    itemPadding: Dp = 16.dp,
 ) {
     if (scheduleElements.isEmpty()) {
         EmptyScheduleContent(onMemoDialogOpen = onMemoDialogOpen)
     } else {
         MainScreenContent(
-            title = stringResource(id = R.string.schedule_content_title),
             modifier = modifier,
-            buttonTitle = stringResource(id = R.string.open_memo_dialog_button),
-            onButtonClick = onMemoDialogOpen,
+            title = stringResource(id = R.string.schedule_content_title),
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                scheduleElements.forEach { uiSchedule ->
-                    BodyLarge(text = uiSchedule.displayText)
-                }
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(itemPadding),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                MainScreenContentItems(items = scheduleElements) { it.displayText }
+                MainScreenContentBottomButton(
+                    title = stringResource(id = R.string.open_memo_dialog_button),
+                    onButtonClick = onMemoDialogOpen,
+                )
             }
         }
     }
@@ -392,28 +383,41 @@ private fun EmptyScheduleContent(
 }
 
 @Composable
+private fun <T> MainScreenContentItems(
+    items: ImmutableList<T>,
+    modifier: Modifier = Modifier,
+    itemToString: (T) -> String,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        items.forEach { item ->
+            BodyLarge(text = itemToString(item))
+        }
+    }
+}
+
+val mainScreenDefaultPadding = PaddingValues(
+    start = 20.dp,
+    top = 10.dp,
+    end = 20.dp,
+    bottom = 20.dp,
+)
+
+@Composable
 internal fun MainScreenContent(
     modifier: Modifier = Modifier,
     title: String = "",
-    buttonTitle: String = "",
-    onButtonClick: () -> Unit = {},
-    padding: PaddingValues = PaddingValues(
-        start = 25.dp,
-        top = 10.dp,
-        end = 25.dp,
-        bottom = 30.dp,
-    ),
+    padding: PaddingValues = mainScreenDefaultPadding,
     contentAlignment: Alignment.Horizontal = Alignment.Start,
     contents: @Composable () -> Unit = {},
 ) {
     MainScreenContent(
         modifier = modifier,
         titleContent = {
-            MainScreenContentHeader(
-                title = title,
-                buttonTitle = buttonTitle,
-                onButtonClick = onButtonClick,
-            )
+            MainScreenContentHeader(title = title)
         },
         padding = padding,
         contentAlignment = contentAlignment,
@@ -425,12 +429,7 @@ internal fun MainScreenContent(
 internal fun MainScreenContent(
     modifier: Modifier = Modifier,
     titleContent: @Composable () -> Unit = {},
-    padding: PaddingValues = PaddingValues(
-        start = 20.dp,
-        top = 10.dp,
-        end = 20.dp,
-        bottom = 30.dp,
-    ),
+    padding: PaddingValues = mainScreenDefaultPadding,
     contentAlignment: Alignment.Horizontal = Alignment.Start,
     contents: @Composable () -> Unit = {},
 ) {
@@ -457,81 +456,40 @@ internal fun MainScreenContent(
 private fun MainScreenContentHeader(
     title: String,
     modifier: Modifier = Modifier,
-    buttonTitle: String = "",
-    onButtonClick: () -> Unit = {},
 ) {
-    MainScreenContentHeader(
-        modifier = modifier,
-        titleContent = {
-            MainScreenContentTitle(title = title)
-        },
-        buttonTitle = buttonTitle,
-        onButtonClick = onButtonClick,
-    )
+    MainScreenContentHeader(modifier = modifier) {
+        MainScreenContentTitle(title = title)
+    }
 }
 
 @Composable
 private fun MainScreenContentHeader(
     modifier: Modifier = Modifier,
     titleContent: @Composable () -> Unit = {},
-    buttonTitle: String = "",
-    onButtonClick: () -> Unit = {},
 ) {
-    if (LocalDensity.current.isLargeFont) {
-        MainScreenContentHeaderLargeFont(
-            modifier = modifier,
-            titleContent = titleContent,
-            buttonTitle = buttonTitle,
-            onButtonClick = onButtonClick,
-        )
-    } else {
-        Row(
-            modifier = modifier,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            titleContent()
-            Spacer(modifier = Modifier.weight(1f))
-            if (buttonTitle != "") {
-                MainScreenContentHeaderButton(title = buttonTitle, onButtonClick = onButtonClick)
-            }
-        }
-    }
-}
-
-@Composable
-private fun MainScreenContentHeaderLargeFont(
-    modifier: Modifier = Modifier,
-    titleContent: @Composable () -> Unit = {},
-    buttonTitle: String = "",
-    onButtonClick: () -> Unit = {},
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center,
     ) {
         titleContent()
-        if (buttonTitle != "") {
-            MainScreenContentHeaderButton(title = buttonTitle, onButtonClick = onButtonClick)
-        }
     }
 }
 
 @Composable
-private fun MainScreenContentHeaderButton(
+private fun MainScreenContentBottomButton(
     title: String,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
+    shape: Shape = RoundedCornerShape(16.dp),
 ) {
-    val backgroundColor = MaterialTheme.colorScheme.primaryContainer
-    Button(
+    BlindarButton(
         onClick = onButtonClick,
         modifier = modifier,
-        colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
-        border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.primary),
+        shape = shape,
     ) {
-        LabelLarge(
+        BodyLarge(
             text = title,
-            color = contentColorFor(backgroundColor)
+            modifier = Modifier.padding(vertical = 4.dp),
         )
     }
 }
@@ -541,93 +499,70 @@ private fun MainScreenContentTitle(
     title: String,
     modifier: Modifier = Modifier
 ) {
-    TitleLarge(
+    HeadlineSmall(
         text = title,
-        modifier = modifier,
-        fontWeight = FontWeight.Bold,
+        modifier = modifier
+            .drawBottomBorder(color = MaterialTheme.colorScheme.onSurface, width = 2.dp)
+            .padding(start = 60.dp, end = 60.dp, bottom = 4.dp),
+        color = MaterialTheme.colorScheme.onBackground,
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun MainScreenContentMealTimesTitle(
-    selectedIndex: Int,
+private fun MealTimeButtons(
+    pagerState: PagerState,
     mealTimes: ImmutableList<String>,
     onMealTimeClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val shape = RoundedCornerShape(50)
-    Row(
-        modifier = modifier
-            .border(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.primary,
-                shape = shape
-            )
-            .clip(shape),
+    BlindarScrollableTabRow(
+        selectedTabIndex = pagerState.currentPage,
+        modifier = modifier.drawBottomBorder(color = MaterialTheme.colorScheme.onSurface),
+        edgePadding = 0.dp,
+        tabItemSpacing = 16.dp,
     ) {
-        mealTimes.forEachIndexed { index, s ->
-            val startRound = if (index == 0) 50 else 0
-            val endRound = if (index == mealTimes.lastIndex) 50 else 0
-
-            MealTimesButton(
-                mealTime = s,
-                isSelected = (selectedIndex == index),
+        mealTimes.forEachIndexed { index, mealTime ->
+            MealTimeButton(
+                mealTime = mealTime,
+                isSelected = index == pagerState.currentPage,
                 onClick = { onMealTimeClick(index) },
-                startRoundCornerPercent = startRound,
-                endRoundCornerPercent = endRound,
             )
         }
     }
 }
 
 @Composable
-private fun MealTimesButton(
+private fun MealTimeButton(
     mealTime: String,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    startRoundCornerPercent: Int = 0,
-    endRoundCornerPercent: Int = 0,
 ) {
-    val backgroundColor by animateColorAsState(
-        targetValue = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
-        label = "background",
+    val alpha by animateFloatAsState(
+        targetValue = if (isSelected) 1.0f else 0.6f,
+        label = "alpha $mealTime",
     )
-    val contentAlpha by animateFloatAsState(
-        targetValue = if (isSelected) 1f else 0.6f,
-        label = "alpha",
+    val description = stringResource(
+        id = if (isSelected) R.string.meal_time_button_description_selected else R.string.meal_time_button_description,
+        mealTime
     )
-    val contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-    val shape = RoundedCornerShape(
-        topStartPercent = startRoundCornerPercent,
-        topEndPercent = endRoundCornerPercent,
-        bottomEndPercent = endRoundCornerPercent,
-        bottomStartPercent = startRoundCornerPercent,
-    )
+    val clickLabel = stringResource(id = R.string.meal_time_button_label, mealTime)
 
-    val description =
-        stringResource(id = if (isSelected) R.string.button_selected else R.string.button_not_selected)
-    Box(
+    HeadlineSmall(
+        text = mealTime,
+        color = MaterialTheme.colorScheme.onBackground.copy(alpha = alpha),
         modifier = modifier
-            .semantics {
+            .clickable(
+                onClickLabel = clickLabel,
+                onClick = onClick,
+            )
+            .clearAndSetSemantics {
                 role = Role.Button
                 contentDescription = description
             }
-            .clickable(onClick = onClick)
-            .background(backgroundColor, shape = shape)
-            .clip(shape)
-            .padding(
-                start = if (startRoundCornerPercent == 0) 10.dp else 14.dp,
-                end = if (endRoundCornerPercent == 0) 10.dp else 14.dp,
-            )
-            .padding(vertical = 10.dp),
-    ) {
-        LabelLarge(
-            text = mealTime,
-            color = contentColor,
-            modifier = Modifier.alpha(contentAlpha),
-        )
-    }
+            .padding(bottom = 4.dp),
+    )
 }
 
 val previewMenus = listOf("찰보리밥", "망고마들렌", "쇠고기미역국", "콩나물파채무침", "돼지양념구이", "포기김치", "오렌지주스", "기타등등")
@@ -656,16 +591,43 @@ val previewMemos = (1..3).map {
     )
 }.toImmutableList()
 
-@LightAndDarkPreview
+@DarkPreview
+@Composable
+private fun MainScreenTopBarPreview() {
+    BlindarTheme {
+        Surface {
+            MainScreenTopBar(
+                schoolName = "한빛맹학교",
+                isLoading = true,
+                onRefreshIconClick = {},
+                onSettingsIconClick = {},
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
+
+@DarkPreview
 @Composable
 private fun MainScreenContentHeaderButtonPreview() {
     BlindarTheme {
-        MainScreenContentHeaderButton(
+        MainScreenContentBottomButton(
             title = "영양 정보",
             onButtonClick = {},
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(16.dp),
+        )
+    }
+}
+
+@DarkPreview
+@Composable
+private fun EmptyContentIndicatorPreview() {
+    BlindarTheme {
+        EmptyContentIndicator(
+            onClick = { },
+            modifier = Modifier.padding(4.dp),
         )
     }
 }
@@ -676,44 +638,67 @@ internal val sampleUiMeals = UiMeals(
     }
 )
 
-@Preview(showBackground = true)
+@OptIn(ExperimentalFoundationApi::class)
+@DarkPreview
 @Composable
-private fun MainScreenContentsPreview() {
-    var selectedMealIndex by remember { mutableIntStateOf(0) }
+private fun MealContentPreview() {
+    val pagerState = rememberPagerState { sampleUiMeals.mealTimes.size }
+    val coroutineScope = rememberCoroutineScope()
+
     BlindarTheme {
-        MainScreenContents(
+        MealContents(
+            pagerState = pagerState,
             uiMeals = sampleUiMeals,
-            memoDialogElements = mergeSchedulesAndMemos(
-                UiSchedules(
-                    date = Date.now(),
-                    uiSchedules = previewSchedules,
-                ),
-                UiMemos(
-                    date = Date.now(),
-                    memos = previewMemos,
-                ),
-            ),
-            selectedMealIndex = selectedMealIndex,
-            onMealTimeClick = { selectedMealIndex = it },
-            mealColumns = 2,
+            onMealTimeClick = {
+                coroutineScope.launch { pagerState.animateScrollToPage(it) }
+            },
             onNutrientDialogOpen = {},
-            onMemoDialogOpen = {},
-            modifier = Modifier.height(500.dp),
         )
     }
 }
 
-@LightAndDarkPreview
+@DarkPreview
+@Composable
+private fun ScheduleContentPreview() {
+    BlindarTheme {
+        ScheduleContents(
+            scheduleElements = previewSchedules,
+            onMemoDialogOpen = {},
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@DarkPreview
 @Composable
 private fun MainScreenContentMealTimesTitlePreview() {
-    var selectedIndex by remember { mutableIntStateOf(0) }
+    val mealTimes = persistentListOf("조식", "중식", "석식")
+    val pagerState = rememberPagerState { mealTimes.size }
+    val coroutineScope = rememberCoroutineScope()
 
     BlindarTheme {
-        MainScreenContentMealTimesTitle(
-            selectedIndex = selectedIndex,
-            mealTimes = persistentListOf("조식", "중식", "석식"),
-            onMealTimeClick = { selectedIndex = it },
+        MealTimeButtons(
+            pagerState = pagerState,
+            mealTimes = mealTimes,
+            onMealTimeClick = {
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(it)
+                }
+            },
             modifier = Modifier
+                .padding(16.dp),
+        )
+    }
+}
+
+@DarkPreview
+@Composable
+private fun MainScreenContentTitlePreview() {
+    BlindarTheme {
+        MainScreenContentTitle(
+            title = "일정",
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp),
         )
     }
