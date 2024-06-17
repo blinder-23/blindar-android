@@ -1,8 +1,13 @@
 package com.practice.register.phonenumber
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,6 +15,7 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,9 +24,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -28,24 +34,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.practice.designsystem.DarkPreview
 import com.practice.designsystem.LightPreview
-import com.practice.designsystem.components.BlindarTopAppBar
+import com.practice.designsystem.components.BlindarLargeTopAppBar
 import com.practice.designsystem.components.BlindarTopAppBarDefaults
 import com.practice.designsystem.components.BottomNextButton
 import com.practice.designsystem.components.LabelMedium
 import com.practice.designsystem.components.LabelSmall
-import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.components.TitleSmall
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.register.R
+import com.practice.register.RegisterUiState
 import com.practice.register.RegisterViewModel
 import com.practice.util.LocalActivity
 import com.practice.util.makeToast
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun VerifyPhoneNumber(
     onBackButtonClick: () -> Unit,
@@ -81,70 +86,86 @@ fun VerifyPhoneNumber(
         )
     }
 
+    VerifyPhoneNumber(
+        state = state,
+        onBackButtonClick = onBackButtonClick,
+        onPhoneNumberChange = viewModel::onPhoneNumberChange,
+        onAuthChipClick = {
+            viewModel.onAuthChipClick(
+                activity = activity,
+                onCodeSent = { context.makeToast(codeSentMessage) },
+                onNewUserSignUp = onNewUserSignUp,
+                onExistingUserLogin = onExistingUserLogin,
+                onUsernameNotSet = onUsernameNotSet,
+                onSchoolNotSelected = onSchoolNotSelected,
+                onCodeInvalid = onCodeInvalid,
+                onFail = { context.makeToast(authFailMessage) },
+            )
+        },
+        onAuthCodeChange = viewModel::onAuthCodeChange,
+        onVerifyAuthCode = verifyAuthCode,
+        isAuthCodeInvalid = viewModel.isAuthCodeInvalid,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun VerifyPhoneNumber(
+    state: RegisterUiState,
+    onBackButtonClick: () -> Unit,
+    onPhoneNumberChange: (String) -> Unit,
+    onAuthChipClick: () -> Unit,
+    onAuthCodeChange: (String) -> Unit,
+    onVerifyAuthCode: () -> Unit,
+    isAuthCodeInvalid: Boolean,
+    modifier: Modifier = Modifier,
+) {
     val focusManager = LocalFocusManager.current
     val hideKeyboardAndVerifyAuthCode = {
         focusManager.clearFocus()
-        verifyAuthCode()
+        onVerifyAuthCode()
     }
 
-    ConstraintLayout(modifier = modifier) {
-        val (appBar, phoneNumberCard, phoneNextButton) = createRefs()
-        BlindarTopAppBar(
-            title = stringResource(id = R.string.verify_phone_screen),
-            modifier = Modifier.constrainAs(appBar) {
-                top.linkTo(parent.top)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            },
-            navigationIcon = {
-                BlindarTopAppBarDefaults.NavigationIcon(onClick = onBackButtonClick)
-            },
-        )
+    Scaffold(
+        topBar = {
+            BlindarLargeTopAppBar(
+                title = stringResource(id = R.string.verify_phone_screen),
+                navigationIcon = {
+                    BlindarTopAppBarDefaults.NavigationIcon(onClick = onBackButtonClick)
+                },
+                modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+            )
+        },
+        bottomBar = {
+            BottomNextButton(
+                text = stringResource(R.string.next_button),
+                enabled = state.isVerifyCodeButtonEnabled,
+                onClick = hideKeyboardAndVerifyAuthCode,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        },
+        modifier = modifier.background(MaterialTheme.colorScheme.surface),
+    ) {
         PhoneNumberCard(
             phoneNumber = state.phoneNumber,
-            onPhoneNumberChange = viewModel::onPhoneNumberChange,
+            onPhoneNumberChange = onPhoneNumberChange,
             isPhoneNumberValid = state.isPhoneNumberValid,
             onAuthChipClick = {
                 if (state.isPhoneNumberValid) {
-                    viewModel.onAuthChipClick(
-                        activity = activity,
-                        onCodeSent = { context.makeToast(codeSentMessage) },
-                        onNewUserSignUp = onNewUserSignUp,
-                        onExistingUserLogin = onExistingUserLogin,
-                        onUsernameNotSet = onUsernameNotSet,
-                        onSchoolNotSelected = onSchoolNotSelected,
-                        onCodeInvalid = onCodeInvalid,
-                        onFail = { context.makeToast(authFailMessage) },
-                    )
+                    onAuthChipClick()
                 }
             },
             authCode = state.authCode,
-            onAuthCodeChange = viewModel::onAuthCodeChange,
+            onAuthCodeChange = onAuthCodeChange,
             isAuthCodeFieldEnabled = state.isAuthCodeFieldEnabled,
             verifyAuthCode = hideKeyboardAndVerifyAuthCode,
-            isAuthCodeInvalid = viewModel.isAuthCodeInvalid,
+            isAuthCodeInvalid = isAuthCodeInvalid,
             modifier = Modifier
-                .constrainAs(phoneNumberCard) {
-                    top.linkTo(appBar.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(phoneNextButton.top)
-                }
-                .fillMaxWidth(fraction = .8f)
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surface),
-        )
-        BottomNextButton(
-            text = stringResource(R.string.next_button),
-            enabled = state.isVerifyCodeButtonEnabled,
-            onClick = hideKeyboardAndVerifyAuthCode,
-            modifier = Modifier
-                .constrainAs(phoneNextButton) {
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
+                .padding(it)
                 .fillMaxWidth()
+                .widthIn(600.dp)
+                .clip(RoundedCornerShape(16.dp)),
         )
     }
 }
@@ -162,29 +183,17 @@ private fun PhoneNumberCard(
     verifyAuthCode: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ConstraintLayout(
+    Column(
         modifier = modifier
-            .padding(16.dp),
+            .padding(16.dp)
+            .fillMaxWidth(),
     ) {
-        val (title, phoneNumberField, authCodeField) = createRefs()
-        PhoneNumberTitle(
-            modifier = Modifier.constrainAs(title) {
-                top.linkTo(parent.top)
-                start.linkTo(parent.start)
-            }
-        )
         PhoneNumberTextField(
             phoneNumber = phoneNumber,
             onPhoneNumberChange = onPhoneNumberChange,
             isValid = isPhoneNumberValid,
             onAuthChipClick = onAuthChipClick,
-            modifier = Modifier
-                .constrainAs(phoneNumberField) {
-                    start.linkTo(parent.start)
-                    top.linkTo(title.bottom, margin = 20.dp)
-                    end.linkTo(parent.end)
-                }
-                .background(MaterialTheme.colorScheme.surface)
+            modifier = Modifier.fillMaxWidth(),
         )
         AuthCodeTextField(
             code = authCode,
@@ -192,24 +201,9 @@ private fun PhoneNumberCard(
             enabled = isAuthCodeFieldEnabled,
             isError = isAuthCodeInvalid,
             verifyAuthCode = verifyAuthCode,
-            modifier = Modifier.constrainAs(authCodeField) {
-                start.linkTo(parent.start)
-                top.linkTo(phoneNumberField.bottom, margin = 10.dp)
-                end.linkTo(parent.end)
-            }
+            modifier = Modifier.fillMaxWidth(),
         )
     }
-}
-
-@Composable
-private fun PhoneNumberTitle(
-    modifier: Modifier = Modifier,
-) {
-    TitleLarge(
-        text = stringResource(id = R.string.phone_number_title),
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.onSurface,
-    )
 }
 
 @Composable
@@ -261,27 +255,35 @@ private fun PhoneNumberAuthChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val chipColor = MaterialTheme.colorScheme.primary
+    val chipColor = MaterialTheme.colorScheme.primaryContainer
     val textColor = contentColorFor(backgroundColor = chipColor)
-    val disabledAlpha = 0.7f
+    val alpha by animateFloatAsState(
+        targetValue = if (enabled) 1f else 0.7f,
+        label = "PhoneNumberAuthChip alpha",
+    )
     AssistChip(
         onClick = onClick,
         label = {
             LabelMedium(
                 text = stringResource(R.string.auth_chip_label),
-                color = textColor.copy(alpha = if (enabled) 1f else disabledAlpha),
+                color = textColor,
+                modifier = Modifier.graphicsLayer {
+                    this.alpha = alpha
+                },
             )
         },
         enabled = enabled,
-        modifier = modifier,
+        modifier = modifier.graphicsLayer {
+            this.alpha = alpha
+        },
         colors = AssistChipDefaults.assistChipColors(
             containerColor = chipColor,
-            disabledContainerColor = chipColor.copy(alpha = disabledAlpha),
+            disabledContainerColor = chipColor,
         ),
+        border = BorderStroke(width = 1.dp, color = chipColor),
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun AuthCodeTextField(
     code: String,
@@ -320,37 +322,35 @@ private fun AuthCodeTextField(
     )
 }
 
-@LightPreview
+@DarkPreview
 @Composable
-private fun PhoneNumberTextFieldPreview() {
-    var phoneNumber by remember { mutableStateOf("") }
-    val isPhoneNumberValid by remember {
-        derivedStateOf {
-            PhoneNumberValidator.validate(phoneNumber)
-        }
-    }
+private fun VerifyPhoneNumberPreview() {
+    var registerState by remember { mutableStateOf(RegisterUiState.Empty) }
     BlindarTheme {
-        PhoneNumberTextField(
-            phoneNumber = phoneNumber,
-            onPhoneNumberChange = { phoneNumber = it },
-            isValid = isPhoneNumberValid,
-            onAuthChipClick = {},
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background),
+        VerifyPhoneNumber(
+            state = registerState,
+            onBackButtonClick = { },
+            onPhoneNumberChange = { registerState = registerState.copy(phoneNumber = it) },
+            onAuthChipClick = { registerState = registerState.copy(isAuthCodeFieldEnabled = true) },
+            onAuthCodeChange = { registerState = registerState.copy(authCode = it) },
+            onVerifyAuthCode = { },
+            isAuthCodeInvalid = registerState.authCode.let { it.isNotEmpty() && it.length != 6 },
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }
 
-@LightPreview
+@DarkPreview
 @Composable
 private fun PhoneNumberAuthChipPreview() {
+    var enabled by remember { mutableStateOf(true) }
     BlindarTheme {
-        PhoneNumberAuthChip(
-            enabled = true,
-            onClick = {},
-        )
+        Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
+            PhoneNumberAuthChip(
+                enabled = enabled,
+                onClick = { enabled = !enabled },
+            )
+        }
     }
 }
 
@@ -373,7 +373,7 @@ private fun PhoneNumberCardPreview() {
             onAuthChipClick = { isAuthCodeEnabled = true },
             authCode = authCode,
             onAuthCodeChange = { authCode = it },
-            isAuthCodeInvalid = false,
+            isAuthCodeInvalid = authCode.length != 6,
             isAuthCodeFieldEnabled = isAuthCodeEnabled,
             verifyAuthCode = { },
             modifier = Modifier.background(MaterialTheme.colorScheme.surface),
