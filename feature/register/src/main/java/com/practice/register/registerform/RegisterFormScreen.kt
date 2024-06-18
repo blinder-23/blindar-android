@@ -4,21 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
@@ -26,16 +23,15 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.practice.designsystem.LightAndDarkPreview
-import com.practice.designsystem.components.BlindarTopAppBar
+import com.practice.designsystem.DarkPreview
+import com.practice.designsystem.components.BlindarLargeTopAppBar
 import com.practice.designsystem.components.BlindarTopAppBarDefaults
 import com.practice.designsystem.components.BottomNextButton
 import com.practice.designsystem.components.LabelSmall
-import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.register.R
+import com.practice.register.RegisterUiState
 import com.practice.register.RegisterViewModel
 import com.practice.util.makeToast
 
@@ -49,61 +45,61 @@ fun RegisterFormScreen(
     val state by viewModel.registerUiState
     val context = LocalContext.current
     val submitNameFailMessage = stringResource(R.string.submit_name_fail)
-    val onSubmitName = {
-        viewModel.submitName(
-            onSuccess = onNameUpdated,
-            onFail = {
-                context.makeToast(submitNameFailMessage)
-            }
-        )
-    }
 
+    RegisterFormScreen(
+        state = state,
+        onBackButtonClick = onBackButtonClick,
+        onSubmitName = {
+            viewModel.submitName(
+                onSuccess = onNameUpdated,
+                onFail = { context.makeToast(submitNameFailMessage) },
+            )
+        },
+        onNameChange = viewModel::onNameChange,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun RegisterFormScreen(
+    state: RegisterUiState,
+    onBackButtonClick: () -> Unit,
+    onSubmitName: () -> Unit,
+    onNameChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val textFieldFocusRequester = remember { FocusRequester() }
-    ConstraintLayout(modifier = modifier) {
-        val (appBar, nameCard, formNextButton) = createRefs()
-        LaunchedEffect(true) {
-            textFieldFocusRequester.requestFocus()
-        }
-        BlindarTopAppBar(
-            title = stringResource(id = R.string.register_form_screen),
-            modifier = Modifier.constrainAs(appBar) {
-                top.linkTo(parent.top)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            },
-            navigationIcon = {
-                BlindarTopAppBarDefaults.NavigationIcon(onClick = onBackButtonClick)
-            },
-        )
+    Scaffold(
+        topBar = {
+            BlindarLargeTopAppBar(
+                title = stringResource(id = R.string.register_form_screen),
+                navigationIcon = {
+                    BlindarTopAppBarDefaults.NavigationIcon(onClick = onBackButtonClick)
+                },
+            )
+        },
+        bottomBar = {
+            BottomNextButton(
+                text = stringResource(R.string.next_button),
+                enabled = true,
+                onClick = onSubmitName,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        },
+        modifier = modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.surface,
+    ) {
         RegisterNameCard(
             name = state.name,
-            onNameChange = viewModel::onNameChange,
+            onNameChange = onNameChange,
             isValid = state.isNameValid,
             submitName = onSubmitName,
             focusRequester = textFieldFocusRequester,
             modifier = Modifier
-                .constrainAs(nameCard) {
-                    start.linkTo(parent.start)
-                    top.linkTo(appBar.bottom)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(formNextButton.top)
-                }
-                .fillMaxWidth(0.8f)
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(16.dp),
-        )
-        BottomNextButton(
-            text = stringResource(R.string.next_button),
-            enabled = true,
-            onClick = onSubmitName,
-            modifier = Modifier
-                .constrainAs(formNextButton) {
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
+                .padding(it)
                 .fillMaxWidth()
+                .widthIn(600.dp)
+                .background(MaterialTheme.colorScheme.surface),
         )
     }
 }
@@ -117,42 +113,17 @@ private fun RegisterNameCard(
     focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
 ) {
-    ConstraintLayout(modifier = modifier) {
-        val (title, nameField) = createRefs()
-        RegisterNameTitle(
-            modifier = Modifier.constrainAs(title) {
-                top.linkTo(parent.top)
-                start.linkTo(parent.start)
-            }
-        )
-        NameTextField(
-            name = name,
-            onNameChange = onNameChange,
-            isValid = isValid,
-            submitName = submitName,
-            modifier = Modifier
-                .constrainAs(nameField) {
-                    top.linkTo(title.bottom, margin = 16.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .focusRequester(focusRequester),
-        )
-    }
-}
-
-@Composable
-private fun RegisterNameTitle(
-    modifier: Modifier = Modifier
-) {
-    TitleLarge(
-        text = stringResource(id = R.string.name_title),
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.onSurface,
+    NameTextField(
+        name = name,
+        onNameChange = onNameChange,
+        isValid = isValid,
+        submitName = submitName,
+        modifier = modifier
+            .padding(16.dp)
+            .focusRequester(focusRequester),
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun NameTextField(
     name: String,
@@ -187,33 +158,16 @@ private fun NameTextField(
     )
 }
 
-@LightAndDarkPreview
-@Composable
-private fun RegisterNameCardPreview() {
-    var name by remember { mutableStateOf("") }
-    val isNameValid by remember { derivedStateOf { NameValidator.validate(name) } }
-    val focusRequester = remember { FocusRequester() }
-    BlindarTheme {
-        RegisterNameCard(
-            name = name,
-            onNameChange = { name = it },
-            isValid = isNameValid,
-            submitName = {},
-            focusRequester = focusRequester,
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(16.dp),
-        )
-    }
-}
-
-@LightAndDarkPreview
+@DarkPreview
 @Composable
 private fun RegisterFormScreenPreview() {
+    var state by remember { mutableStateOf(RegisterUiState.Empty) }
     BlindarTheme {
         RegisterFormScreen(
+            state = state,
             onBackButtonClick = {},
-            onNameUpdated = { },
+            onNameChange = { state = state.copy(name = it) },
+            onSubmitName = {},
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primary),
