@@ -9,6 +9,7 @@ plugins {
     id("com.google.firebase.crashlytics")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
+    kotlin("plugin.serialization")
 }
 
 tasks.withType<Test> {
@@ -194,4 +195,7 @@ dependencies {
 
     // Kotlin immutable collections
     implementation(libs.kotlinx.collections.immutable)
+
+    // Kotlin serialization
+    implementation(libs.kotlinx.serialization.json)
 }
