@@ -318,7 +318,7 @@ internal fun MealContents(
             HorizontalPager(
                 state = pagerState,
                 key = { uiMeals[it].mealTime },
-                beyondBoundsPageCount = 2,
+                beyondViewportPageCount = 2,
             ) { currentPage ->
                 MainScreenContentItems(
                     items = uiMeals[currentPage].menus,
