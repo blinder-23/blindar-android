@@ -2,7 +2,6 @@ package com.practice.hanbitlunch
 
 import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -23,8 +22,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.practice.hanbitlunch.BlindarRoute.Companion.toBlindarRoute
 import com.practice.main.MainScreen
 import com.practice.onboarding.onboarding.OnboardingScreen
 import com.practice.onboarding.splash.SplashScreen
@@ -34,7 +33,7 @@ import com.practice.register.selectschool.SelectSchoolScreen
 import com.practice.settings.Settings
 import com.practice.util.makeToast
 
-private val TAG = "BlindarNavHost"
+private const val TAG = "BlindarNavHost"
 
 @Composable
 fun BlindarNavHost(
@@ -45,19 +44,16 @@ fun BlindarNavHost(
     onNavigateToMainScreen: () -> Unit = {},
 ) {
     val tweenSpec = tween<IntOffset>(
-        durationMillis = 200,
+        durationMillis = 250,
     )
 
     NavHost(
         navController = navController,
-        startDestination = SPLASH,
+        startDestination = BlindarRoute.Splash,
         modifier = modifier,
         enterTransition = {
-            if ((initialState.route == SPLASH && targetState.route == ONBOARDING) ||
-                targetState.route == MAIN ||
-                (initialState.route == MAIN && targetState.route == SELECT_SCHOOL)
-            ) {
-                fadeIn()
+            if ((initialState.toBlindarRoute() is BlindarRoute.Splash && targetState.toBlindarRoute() is BlindarRoute.Onboarding)) {
+                fadeIn(initialAlpha = 1f)
             } else {
                 val direction = animationDirection(initialState, targetState)
                 slideIntoContainer(
@@ -67,8 +63,8 @@ fun BlindarNavHost(
             }
         },
         exitTransition = {
-            if (initialState.route == SPLASH || targetState.route == MAIN ||
-                (initialState.route == MAIN && targetState.route == SELECT_SCHOOL)
+            if ((initialState.toBlindarRoute() is BlindarRoute.Splash && targetState.toBlindarRoute() !is BlindarRoute.Main) ||
+                (initialState.toBlindarRoute() !is BlindarRoute.SelectSchool && targetState.toBlindarRoute() is BlindarRoute.Main)
             ) {
                 fadeOut()
             } else {
@@ -89,7 +85,6 @@ fun BlindarNavHost(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.blindarMainNavGraph(
     navController: NavHostController,
     windowSizeClass: WindowSizeClass,
@@ -97,26 +92,27 @@ fun NavGraphBuilder.blindarMainNavGraph(
     onNavigateToMainScreen: () -> Unit,
 ) {
     val onLoginSuccess = {
-        navController.navigate(MAIN) {
-            popUpTo(SPLASH) { inclusive = true }
+        navController.navigate(BlindarRoute.Main) {
+            popUpTo(BlindarRoute.Splash) { inclusive = true }
         }
     }
     val onUsernameNotSet = {
-        navController.navigate(REGISTER_FORM) {
-            popUpTo(SPLASH) { inclusive = true }
+        navController.navigate(BlindarRoute.VerifyUsername) {
+            popUpTo(BlindarRoute.Splash) { inclusive = true }
         }
     }
     val onSchoolNotSelected = {
-        navController.navigate(SELECT_SCHOOL) {
-            popUpTo(SPLASH) { inclusive = true }
+        navController.navigate(BlindarRoute.SelectSchool) {
+            popUpTo(BlindarRoute.Splash) { inclusive = true }
         }
     }
     val onAutoLoginFail = {
-        navController.navigate(ONBOARDING) {
-            popUpTo(SPLASH) { inclusive = true }
+        navController.navigate(BlindarRoute.Onboarding) {
+            popUpTo(BlindarRoute.Splash) { inclusive = true }
         }
     }
-    composable(SPLASH) {
+    val onBackButtonClick: () -> Unit = { navController.popBackStack() }
+    composable<BlindarRoute.Splash> {
         SplashScreen(
             onAutoLoginSuccess = {
                 Log.d(TAG, "auto login success")
@@ -135,19 +131,20 @@ fun NavGraphBuilder.blindarMainNavGraph(
                 .background(MaterialTheme.colorScheme.surface),
         )
     }
-    composable(ONBOARDING) {
+    composable<BlindarRoute.Onboarding> {
+        // TODO: Splash에서 올 때만 애니메이션 적용하도록 수정
         val context = LocalContext.current
         val failMessage = stringResource(id = R.string.google_login_fail_message)
         OnboardingScreen(
-            onPhoneLogin = { navController.navigate(REGISTER) },
+            onPhoneLogin = { navController.navigate(BlindarRoute.VerifyPhone) },
             onNewUserSignUp = { user ->
                 Log.d(TAG, "new user with google: ${user.uid}")
-                navController.navigate(SELECT_SCHOOL)
+                navController.navigate(BlindarRoute.SelectSchool)
             },
             onExistingUserLogin = { user ->
                 Log.d(TAG, "existing user with google: ${user.uid}")
-                navController.navigate(MAIN) {
-                    popUpTo(ONBOARDING) { inclusive = true }
+                navController.navigate(BlindarRoute.Main) {
+                    popUpTo(BlindarRoute.Onboarding) { inclusive = true }
                 }
             },
             onFail = {
@@ -160,26 +157,67 @@ fun NavGraphBuilder.blindarMainNavGraph(
                 .background(MaterialTheme.colorScheme.surface),
         )
     }
-    registerGraph(
-        navController = navController,
-        onUsernameNotSet = onUsernameNotSet,
-        onSchoolNotSelected = onSchoolNotSelected,
-        onNavigateToMainScreen = onNavigateToMainScreen,
-    )
-    composable(MAIN) {
+    composable<BlindarRoute.VerifyPhone> {
+        VerifyPhoneNumber(
+            onBackButtonClick = onBackButtonClick,
+            onExistingUserLogin = {
+                onNavigateToMainScreen()
+                navController.navigate(BlindarRoute.Main) {
+                    popUpTo(BlindarRoute.Onboarding) { inclusive = true }
+                }
+            },
+            onNewUserSignUp = { navController.navigate(BlindarRoute.VerifyUsername) },
+            onUsernameNotSet = onUsernameNotSet,
+            onSchoolNotSelected = onSchoolNotSelected,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primary)
+                .safeDrawingPadding(),
+        )
+    }
+    composable<BlindarRoute.VerifyUsername> {
+        // RegisterForm과 SelectSchool은 같은 ViewModel을 공유
+        RegisterFormScreen(
+            onBackButtonClick = onBackButtonClick,
+            onNameUpdated = {
+                navController.navigate(BlindarRoute.SelectSchool)
+            },
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primary)
+                .safeDrawingPadding(),
+        )
+    }
+    composable<BlindarRoute.SelectSchool> {
+        SelectSchoolScreen(
+            onBackButtonClick = onBackButtonClick,
+            onNavigateToMain = {
+                onNavigateToMainScreen()
+                navController.navigate(BlindarRoute.Main) {
+                    popUpTo(BlindarRoute.Onboarding) { inclusive = true }
+                    popUpTo(BlindarRoute.Main) { inclusive = true }
+                }
+            },
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface)
+                .safeDrawingPadding(),
+        )
+    }
+    composable<BlindarRoute.Main> {
         MainScreen(
             windowSize = windowSizeClass,
             viewModel = hiltViewModel(),
             modifier = Modifier.fillMaxSize(),
             onNavigateToSelectSchoolScreen = {
-                navController.navigate(SELECT_SCHOOL)
+                navController.navigate(BlindarRoute.SelectSchool)
             },
             onNavigateToSettingsScreen = {
-                navController.navigate(SETTINGS)
+                navController.navigate(BlindarRoute.Settings)
             },
         )
     }
-    composable(SETTINGS) {
+    composable<BlindarRoute.Settings> {
         Settings(
             onBackButtonClick = {
                 navController.popBackStack()
@@ -191,89 +229,17 @@ fun NavGraphBuilder.blindarMainNavGraph(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.registerGraph(
     navController: NavHostController,
     onUsernameNotSet: () -> Unit,
     onSchoolNotSelected: () -> Unit,
     onNavigateToMainScreen: () -> Unit,
 ) {
-    val onBackButtonClick: () -> Unit = { navController.popBackStack() }
-    navigation(startDestination = VERIFY_PHONE, route = REGISTER) {
-        composable(VERIFY_PHONE) {
-            VerifyPhoneNumber(
-                onBackButtonClick = onBackButtonClick,
-                onExistingUserLogin = {
-                    onNavigateToMainScreen()
-                    navController.navigate(MAIN) {
-                        popUpTo(ONBOARDING) { inclusive = true }
-                    }
-                },
-                onNewUserSignUp = { navController.navigate(REGISTER_FORM) },
-                onUsernameNotSet = onUsernameNotSet,
-                onSchoolNotSelected = onSchoolNotSelected,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.primary)
-                    .safeDrawingPadding(),
-            )
-        }
-        composable(REGISTER_FORM) {
-            // RegisterForm과 SelectSchool은 같은 ViewModel을 공유
-            RegisterFormScreen(
-                onBackButtonClick = onBackButtonClick,
-                onNameUpdated = {
-                    navController.navigate(SELECT_SCHOOL)
-                },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.primary)
-                    .safeDrawingPadding(),
-            )
-        }
-        composable(SELECT_SCHOOL) {
-            SelectSchoolScreen(
-                onBackButtonClick = onBackButtonClick,
-                onNavigateToMain = {
-                    onNavigateToMainScreen()
-                    navController.navigate(MAIN) {
-                        popUpTo(ONBOARDING) { inclusive = true }
-                        popUpTo(MAIN) { inclusive = true }
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface)
-                    .safeDrawingPadding(),
-            )
-        }
-    }
-}
 
-private const val SPLASH = "splash"
-private const val ONBOARDING = "onboarding"
-private const val REGISTER = "register"
-private const val VERIFY_PHONE = "verify_phone"
-private const val REGISTER_FORM = "register_form"
-private const val SELECT_SCHOOL = "select_school"
-private const val MAIN = "main_screen"
-private const val SETTINGS = "settings"
-
-private val NavBackStackEntry.route: String?
-    get() = this.destination.route
-
-private fun priority(state: NavBackStackEntry) = when (state.route) {
-    SPLASH -> 0
-    ONBOARDING -> 1
-    VERIFY_PHONE -> 2
-    REGISTER_FORM -> 3
-    SELECT_SCHOOL -> 4
-    MAIN -> 6
-    else -> 7
 }
 
 private fun animationDirection(initialState: NavBackStackEntry, targetState: NavBackStackEntry) =
-    if (priority(initialState) > priority(targetState)) {
+    if (initialState.toBlindarRoute() > targetState.toBlindarRoute()) {
         AnimatedContentTransitionScope.SlideDirection.Right
     } else {
         AnimatedContentTransitionScope.SlideDirection.Left
