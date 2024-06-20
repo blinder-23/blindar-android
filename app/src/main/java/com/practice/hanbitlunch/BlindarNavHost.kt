@@ -24,7 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.practice.hanbitlunch.BlindarRoute.Companion.toBlindarRoute
-import com.practice.main.MainScreen
+import com.practice.main.main.MainScreen
 import com.practice.onboarding.onboarding.OnboardingScreen
 import com.practice.onboarding.splash.SplashScreen
 import com.practice.register.phonenumber.VerifyPhoneNumber
