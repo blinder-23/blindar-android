@@ -1,4 +1,4 @@
-package com.practice.main.state
+package com.practice.main.main.state
 
 import android.util.Log
 import com.hsk.ktx.date.Date

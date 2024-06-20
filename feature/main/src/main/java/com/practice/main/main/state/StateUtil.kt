@@ -1,4 +1,4 @@
-package com.practice.main.state
+package com.practice.main.main.state
 
 import com.practice.domain.meal.Nutrient
 import com.practice.main.main.state.MemoDialogElement
