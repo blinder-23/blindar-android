@@ -46,7 +46,7 @@ import com.practice.designsystem.components.DialogBodySmall
 import com.practice.designsystem.components.DialogTitleLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
-import com.practice.main.main.previewMenus
+import com.practice.main.main.previewUiMenus
 import com.practice.main.main.state.UiMeal
 import com.practice.main.main.state.UiNutrient
 import kotlinx.collections.immutable.ImmutableList
@@ -355,7 +355,7 @@ private fun NutrientDialogContentsPreview() {
                     now.month,
                     now.dayOfMonth,
                     "중식",
-                    previewMenus,
+                    previewUiMenus,
                     previewUiNutrients
                 ),
                 onClose = {},

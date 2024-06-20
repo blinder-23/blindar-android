@@ -34,8 +34,8 @@ import com.practice.main.main.daily.picker.DailyDatePickerState
 import com.practice.main.main.daily.picker.rememberDailyDatePickerState
 import com.practice.main.main.daily.picker.toTextFieldFormat
 import com.practice.main.main.previewMemos
-import com.practice.main.main.previewMenus
 import com.practice.main.main.previewSchedules
+import com.practice.main.main.previewUiMenus
 import com.practice.main.main.previewUiNutrients
 import com.practice.main.main.state.DailyData
 import com.practice.main.main.state.MainUiMode
@@ -177,7 +177,7 @@ private fun HorizontalDailyMainScreenPreview() {
             DailyData(
                 schoolCode = 1,
                 date = Date(2024, 1, 7).plusDays(it),
-                uiMeals = UiMeals(UiMeal(2024, 1, 10, "중식", previewMenus, previewUiNutrients)),
+                uiMeals = UiMeals(UiMeal(2024, 1, 10, "중식", previewUiMenus, previewUiNutrients)),
                 uiSchedules = UiSchedules(
                     date = selectedDate,
                     uiSchedules = previewSchedules,

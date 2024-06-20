@@ -34,8 +34,8 @@ import com.practice.main.R
 import com.practice.main.main.MainScreenContents
 import com.practice.main.main.MainScreenTopBar
 import com.practice.main.main.previewMemos
-import com.practice.main.main.previewMenus
 import com.practice.main.main.previewSchedules
+import com.practice.main.main.previewUiMenus
 import com.practice.main.main.previewUiNutrients
 import com.practice.main.main.state.DailyData
 import com.practice.main.main.state.MainUiMode
@@ -145,7 +145,7 @@ private fun VerticalCalendarMainScreenPreview() {
                                 month,
                                 now.dayOfMonth,
                                 "중식",
-                                previewMenus,
+                                previewUiMenus,
                                 previewUiNutrients,
                             )
                         ),
