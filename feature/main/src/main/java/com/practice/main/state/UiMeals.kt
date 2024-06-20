@@ -1,4 +1,4 @@
-package com.practice.main.main.state
+package com.practice.main.state
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
