@@ -47,8 +47,8 @@ import com.practice.designsystem.components.DialogTitleLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
 import com.practice.main.main.previewUiMenus
-import com.practice.main.main.state.UiMeal
-import com.practice.main.main.state.UiNutrient
+import com.practice.main.state.UiMeal
+import com.practice.main.state.UiNutrient
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList

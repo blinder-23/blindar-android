@@ -1,4 +1,4 @@
-package com.practice.main.main.state
+package com.practice.main.state
 
 import kotlinx.serialization.Serializable
 

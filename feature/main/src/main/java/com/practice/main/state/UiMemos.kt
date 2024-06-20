@@ -1,8 +1,9 @@
-package com.practice.main.main.state
+package com.practice.main.state
 
 import android.util.Log
 import com.hsk.ktx.date.Date
 import com.practice.domain.Memo
+import com.practice.main.main.state.MemoDialogElement
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList

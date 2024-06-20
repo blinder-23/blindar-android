@@ -26,9 +26,9 @@ import com.practice.main.main.ScheduleContents
 import com.practice.main.main.previewMemos
 import com.practice.main.main.previewSchedules
 import com.practice.main.main.state.MemoDialogElement
-import com.practice.main.main.state.UiMemos
-import com.practice.main.main.state.UiSchedules
-import com.practice.main.main.state.mergeSchedulesAndMemos
+import com.practice.main.state.UiMemos
+import com.practice.main.state.UiSchedules
+import com.practice.main.state.mergeSchedulesAndMemos
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable

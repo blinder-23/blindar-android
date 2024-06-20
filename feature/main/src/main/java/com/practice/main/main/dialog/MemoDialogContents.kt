@@ -43,8 +43,8 @@ import com.practice.designsystem.components.LabelLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
 import com.practice.main.main.state.MemoDialogElement
-import com.practice.main.main.state.UiMemo
-import com.practice.main.main.state.UiSchedule
+import com.practice.main.state.UiMemo
+import com.practice.main.state.UiSchedule
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 

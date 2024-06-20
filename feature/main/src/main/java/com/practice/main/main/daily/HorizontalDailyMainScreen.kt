@@ -40,10 +40,10 @@ import com.practice.main.main.previewUiNutrients
 import com.practice.main.main.state.DailyData
 import com.practice.main.main.state.MainUiMode
 import com.practice.main.main.state.MainUiState
-import com.practice.main.main.state.UiMeal
-import com.practice.main.main.state.UiMeals
-import com.practice.main.main.state.UiMemos
-import com.practice.main.main.state.UiSchedules
+import com.practice.main.state.UiMeal
+import com.practice.main.state.UiMeals
+import com.practice.main.state.UiMemos
+import com.practice.main.state.UiSchedules
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

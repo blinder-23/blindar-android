@@ -24,10 +24,10 @@ import androidx.compose.ui.unit.dp
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.main.main.MealContents
 import com.practice.main.R
+import com.practice.main.main.MealContents
 import com.practice.main.main.sampleUiMeals
-import com.practice.main.main.state.UiMeals
+import com.practice.main.state.UiMeals
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)

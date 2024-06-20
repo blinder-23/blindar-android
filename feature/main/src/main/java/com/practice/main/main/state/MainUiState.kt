@@ -3,6 +3,9 @@ package com.practice.main.main.state
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.domain.School
+import com.practice.main.state.UiMeals
+import com.practice.main.state.UiMemos
+import com.practice.main.state.UiSchedules
 
 data class MainUiState(
     val userId: String,

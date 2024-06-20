@@ -1,7 +1,8 @@
-package com.practice.main.main.state
+package com.practice.main.state
 
 import com.hsk.ktx.date.Date
 import com.practice.domain.schedule.Schedule
+import com.practice.main.main.state.MemoDialogElement
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 

@@ -5,10 +5,10 @@ import com.practice.domain.School
 import com.practice.main.main.state.DailyData
 import com.practice.main.main.state.MainUiMode
 import com.practice.main.main.state.MainUiState
-import com.practice.main.main.state.UiMeal
-import com.practice.main.main.state.UiMeals
-import com.practice.main.main.state.UiMemos
-import com.practice.main.main.state.UiSchedules
+import com.practice.main.state.UiMeal
+import com.practice.main.state.UiMeals
+import com.practice.main.state.UiMemos
+import com.practice.main.state.UiSchedules
 
 internal fun previewMainUiState(): MainUiState {
     val now = Date.now()
