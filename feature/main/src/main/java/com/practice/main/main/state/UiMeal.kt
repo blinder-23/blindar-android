@@ -15,7 +15,7 @@ data class UiMeal(
     val day: Int,
     val mealTime: String,
     val menus: ImmutableList<Menu>,
-    val nutrients: ImmutableList<Nutrient>,
+    val nutrients: ImmutableList<UiNutrient>,
 ) {
     val isEmpty: Boolean
         get() = menus.isEmpty()
@@ -52,20 +52,11 @@ fun Meal.toMealUiState() = if (this.menus.isEmpty()) {
         day = day,
         mealTime = mealTime,
         menus = menus.filter { it.name != "급식우유" }.map { Menu(it.name) }.toPersistentList(),
-        nutrients = nutrients.map { Nutrient(it.name, it.amount, it.unit) }.toPersistentList()
-            .add(0, Nutrient("열량", calorie, "kcal")),
+        nutrients = nutrients.map { UiNutrient(it.name, it.amount, it.unit) }.toPersistentList()
+            .add(0, UiNutrient("열량", calorie, "kcal")),
     )
 }
 
 data class Menu(
     val name: String,
 )
-
-data class Nutrient(
-    val name: String,
-    val amount: Double,
-    val unit: String,
-) {
-    val description: String
-        get() = "$name $amount $unit"
-}

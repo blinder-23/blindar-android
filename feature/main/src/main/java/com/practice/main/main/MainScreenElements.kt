@@ -65,10 +65,10 @@ import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
 import com.practice.main.main.state.MemoDialogElement
 import com.practice.main.main.state.Menu
-import com.practice.main.main.state.Nutrient
 import com.practice.main.main.state.UiMeal
 import com.practice.main.main.state.UiMeals
 import com.practice.main.main.state.UiMemo
+import com.practice.main.main.state.UiNutrient
 import com.practice.main.main.state.UiSchedule
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -568,7 +568,7 @@ private fun MealTimeButton(
 
 val previewMenus = listOf("찰보리밥", "망고마들렌", "쇠고기미역국", "콩나물파채무침", "돼지양념구이", "포기김치", "오렌지주스", "기타등등")
     .map { Menu(it) }.toImmutableList()
-val previewNutrients = (0..3).map { Nutrient("탄수화물", 123.0, "g") }.toImmutableList()
+val previewUiNutrients = (0..3).map { UiNutrient("탄수화물", 123.0, "g") }.toImmutableList()
 val previewSchedules = (0..6).map {
     UiSchedule(
         schoolCode = 1,
@@ -635,7 +635,7 @@ private fun EmptyContentIndicatorPreview() {
 
 internal val sampleUiMeals = UiMeals(
     listOf("조식", "중식", "석식").map {
-        UiMeal(2022, 10, 28, it, previewMenus, previewNutrients)
+        UiMeal(2022, 10, 28, it, previewMenus, previewUiNutrients)
     }
 )
 

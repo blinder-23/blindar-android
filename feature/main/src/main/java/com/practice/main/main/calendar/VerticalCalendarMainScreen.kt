@@ -30,13 +30,13 @@ import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.core.yearMonth
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.School
+import com.practice.main.R
 import com.practice.main.main.MainScreenContents
 import com.practice.main.main.MainScreenTopBar
-import com.practice.main.R
 import com.practice.main.main.previewMemos
 import com.practice.main.main.previewMenus
-import com.practice.main.main.previewNutrients
 import com.practice.main.main.previewSchedules
+import com.practice.main.main.previewUiNutrients
 import com.practice.main.main.state.DailyData
 import com.practice.main.main.state.MainUiMode
 import com.practice.main.main.state.MainUiState
@@ -146,7 +146,7 @@ private fun VerticalCalendarMainScreenPreview() {
                                 now.dayOfMonth,
                                 "중식",
                                 previewMenus,
-                                previewNutrients
+                                previewUiNutrients,
                             )
                         ),
                         uiSchedules = UiSchedules(

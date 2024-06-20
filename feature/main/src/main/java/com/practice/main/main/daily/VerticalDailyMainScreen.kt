@@ -20,9 +20,9 @@ import com.hsk.ktx.date.Date
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.School
+import com.practice.main.R
 import com.practice.main.main.MainScreenContents
 import com.practice.main.main.MainScreenTopBar
-import com.practice.main.R
 import com.practice.main.main.daily.components.DateQuickNavigation
 import com.practice.main.main.daily.components.DateQuickNavigationButtons
 import com.practice.main.main.daily.components.QuickViewDialogButtons
@@ -32,8 +32,8 @@ import com.practice.main.main.daily.picker.rememberDailyDatePickerState
 import com.practice.main.main.daily.picker.toTextFieldFormat
 import com.practice.main.main.previewMemos
 import com.practice.main.main.previewMenus
-import com.practice.main.main.previewNutrients
 import com.practice.main.main.previewSchedules
+import com.practice.main.main.previewUiNutrients
 import com.practice.main.main.state.DailyData
 import com.practice.main.main.state.MainUiMode
 import com.practice.main.main.state.MainUiState
@@ -165,7 +165,7 @@ private fun VerticalDailyMainScreenPreview() {
             DailyData(
                 schoolCode = 1,
                 date = Date(2024, 1, 7).plusDays(it),
-                uiMeals = UiMeals(UiMeal(2024, 1, 10, "중식", previewMenus, previewNutrients)),
+                uiMeals = UiMeals(UiMeal(2024, 1, 10, "중식", previewMenus, previewUiNutrients)),
                 uiSchedules = UiSchedules(
                     date = selectedDate,
                     uiSchedules = previewSchedules,

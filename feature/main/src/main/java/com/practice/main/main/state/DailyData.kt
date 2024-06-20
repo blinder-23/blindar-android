@@ -33,7 +33,7 @@ data class DailyData(
                     day = 11,
                     mealTime = "중식",
                     menus = (1..6).map { Menu("식단 $it") }.toPersistentList(),
-                    nutrients = (0..3).map { Nutrient("탄수화물", 123.0, "g") }.toImmutableList()
+                    nutrients = (0..3).map { UiNutrient("탄수화물", 123.0, "g") }.toImmutableList()
                 ),
             ),
             uiSchedules = UiSchedules(

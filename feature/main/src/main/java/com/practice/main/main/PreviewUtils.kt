@@ -23,7 +23,7 @@ internal fun previewMainUiState(): MainUiState {
             DailyData(
                 schoolCode = 1,
                 date = now.plusDays(it),
-                uiMeals = UiMeals(UiMeal(year, month, day, "", previewMenus, previewNutrients)),
+                uiMeals = UiMeals(UiMeal(year, month, day, "", previewMenus, previewUiNutrients)),
                 uiSchedules = UiSchedules(
                     date = now,
                     uiSchedules = previewSchedules,

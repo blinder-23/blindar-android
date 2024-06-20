@@ -47,8 +47,8 @@ import com.practice.designsystem.components.DialogTitleLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.main.R
 import com.practice.main.main.previewMenus
-import com.practice.main.main.state.Nutrient
 import com.practice.main.main.state.UiMeal
+import com.practice.main.main.state.UiNutrient
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -108,7 +108,7 @@ fun NutrientDialogContents(
 
 @Composable
 private fun ImportantNutrients(
-    importantNutrients: ImmutableList<Nutrient>,
+    importantNutrients: ImmutableList<UiNutrient>,
     modifier: Modifier = Modifier,
 ) {
     if (LocalDensity.current.isLargeFont) {
@@ -126,7 +126,7 @@ private fun ImportantNutrients(
 
 @Composable
 private fun NutrientChipGrid(
-    nutrients: ImmutableList<Nutrient>,
+    nutrients: ImmutableList<UiNutrient>,
     modifier: Modifier = Modifier
 ) {
     val chipColors =
@@ -143,7 +143,7 @@ private fun NutrientChipGrid(
                 row.forEachIndexed { colIndex, item ->
                     val index = rowIndex * columns + colIndex
                     NutrientChip(
-                        nutrient = item,
+                        uiNutrient = item,
                         backgroundColor = chipColors[index],
                         modifier = Modifier.weight(1f),
                     )
@@ -155,7 +155,7 @@ private fun NutrientChipGrid(
 
 @Composable
 private fun NutrientList(
-    nutrients: ImmutableList<Nutrient>,
+    nutrients: ImmutableList<UiNutrient>,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -167,20 +167,20 @@ private fun NutrientList(
 
 @Composable
 private fun NutrientListItem(
-    nutrient: Nutrient,
+    uiNutrient: UiNutrient,
     modifier: Modifier = Modifier,
 ) {
     val itemModifier = modifier.clearAndSetSemantics {
-        contentDescription = nutrient.description
+        contentDescription = uiNutrient.description
     }
     if (LocalDensity.current.isLargeFont) {
         NutrientListItemLarge(
-            nutrient = nutrient,
+            uiNutrient = uiNutrient,
             modifier = itemModifier,
         )
     } else {
         NutrientListItemNormal(
-            nutrient = nutrient,
+            uiNutrient = uiNutrient,
             modifier = itemModifier,
         )
     }
@@ -188,18 +188,18 @@ private fun NutrientListItem(
 
 @Composable
 private fun NutrientListItemNormal(
-    nutrient: Nutrient,
+    uiNutrient: UiNutrient,
     modifier: Modifier = Modifier,
     textColor: Color = contentColorFor(MaterialTheme.colorScheme.surface),
 ) {
     Row(modifier = modifier.padding(16.dp)) {
         DialogBodySmall(
-            text = nutrient.name,
+            text = uiNutrient.name,
             color = textColor
         )
         Spacer(modifier = Modifier.weight(1f))
         DialogBodySmall(
-            text = "${nutrient.amount} ${nutrient.unit}",
+            text = "${uiNutrient.amount} ${uiNutrient.unit}",
             color = textColor,
         )
     }
@@ -207,17 +207,17 @@ private fun NutrientListItemNormal(
 
 @Composable
 private fun NutrientListItemLarge(
-    nutrient: Nutrient,
+    uiNutrient: UiNutrient,
     modifier: Modifier = Modifier,
     textColor: Color = contentColorFor(MaterialTheme.colorScheme.surface),
 ) {
     Column(modifier = modifier) {
         DialogBodyLarge(
-            text = nutrient.name,
+            text = uiNutrient.name,
             color = textColor
         )
         DialogBodyLarge(
-            text = "${nutrient.amount} ${nutrient.unit}",
+            text = "${uiNutrient.amount} ${uiNutrient.unit}",
             color = textColor,
         )
     }
@@ -225,7 +225,7 @@ private fun NutrientListItemLarge(
 
 @Composable
 private fun NutrientChip(
-    nutrient: Nutrient,
+    uiNutrient: UiNutrient,
     modifier: Modifier = Modifier,
     backgroundColor: Color = Color.Unspecified,
 ) {
@@ -236,7 +236,7 @@ private fun NutrientChip(
             .clip(RoundedCornerShape(16.dp))
             .background(backgroundColor)
             .clearAndSetSemantics {
-                contentDescription = nutrient.description
+                contentDescription = uiNutrient.description
             }
     ) {
         Column(
@@ -244,11 +244,11 @@ private fun NutrientChip(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             DialogTitleLarge(
-                text = "${nutrient.amount}${nutrient.unit}",
+                text = "${uiNutrient.amount}${uiNutrient.unit}",
                 color = textColor,
             )
             DialogBodyMedium(
-                text = nutrient.name,
+                text = uiNutrient.name,
                 color = textColor,
             )
         }
@@ -275,17 +275,17 @@ private fun NutrientDialogCloseButton(
     }
 }
 
-private val previewNutrients = persistentListOf(
-    Nutrient("열량", 765.8, "kcal"),
-    Nutrient("탄수화물", 110.2, "g"),
-    Nutrient("단백질", 34.9, "g"),
-    Nutrient("지방", 32.0, "g"),
-    Nutrient("비타민A", 595.2, "R.E"),
-    Nutrient("티아민", 0.5, "mg"),
-    Nutrient("리보플라민", 0.8, "mg"),
-    Nutrient("비타민C", 11.3, "mg"),
-    Nutrient("칼슘", 322.3, "mg"),
-    Nutrient("철분", 5.2, "mg"),
+private val previewUiNutrients = persistentListOf(
+    UiNutrient("열량", 765.8, "kcal"),
+    UiNutrient("탄수화물", 110.2, "g"),
+    UiNutrient("단백질", 34.9, "g"),
+    UiNutrient("지방", 32.0, "g"),
+    UiNutrient("비타민A", 595.2, "R.E"),
+    UiNutrient("티아민", 0.5, "mg"),
+    UiNutrient("리보플라민", 0.8, "mg"),
+    UiNutrient("비타민C", 11.3, "mg"),
+    UiNutrient("칼슘", 322.3, "mg"),
+    UiNutrient("철분", 5.2, "mg"),
 )
 
 @LightAndDarkPreview
@@ -293,7 +293,7 @@ private val previewNutrients = persistentListOf(
 private fun NutrientChipPreview() {
     BlindarTheme {
         NutrientChip(
-            nutrient = previewNutrients[0],
+            uiNutrient = previewUiNutrients[0],
             backgroundColor = Color(0xFFFFE2E5),
             modifier = Modifier.size(150.dp),
         )
@@ -305,7 +305,7 @@ private fun NutrientChipPreview() {
 private fun NutrientListPreview() {
     BlindarTheme {
         NutrientList(
-            nutrients = previewNutrients.subList(0, 4),
+            nutrients = previewUiNutrients.subList(0, 4),
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
@@ -356,7 +356,7 @@ private fun NutrientDialogContentsPreview() {
                     now.dayOfMonth,
                     "중식",
                     previewMenus,
-                    previewNutrients
+                    previewUiNutrients
                 ),
                 onClose = {},
                 modifier = Modifier
@@ -373,7 +373,7 @@ private fun NutrientDialogContentsPreview() {
 private fun NutrientListItemLargePreview() {
     BlindarTheme {
         NutrientListItemLarge(
-            nutrient = previewNutrients[0],
+            uiNutrient = previewUiNutrients[0],
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(16.dp),
