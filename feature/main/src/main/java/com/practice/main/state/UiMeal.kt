@@ -52,8 +52,7 @@ fun Meal.toMealUiState() = if (this.menus.isEmpty()) {
         day = day,
         mealTime = mealTime,
         menus = menus.filter { it.name != "급식우유" }.map { UiMenu(it.name) }.toPersistentList(),
-        nutrients = nutrients.map { UiNutrient(it.name, it.amount, it.unit) }.toPersistentList()
-            .add(0, UiNutrient("열량", calorie, "kcal")),
+        nutrients = nutrients.toUiNutrient(calorie),
     )
 }
 
