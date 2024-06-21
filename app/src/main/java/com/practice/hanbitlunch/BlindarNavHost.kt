@@ -16,15 +16,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.practice.hanbitlunch.BlindarRoute.Companion.toBlindarRoute
 import com.practice.main.main.MainScreen
+import com.practice.main.nutrient.NutrientScreen
 import com.practice.onboarding.onboarding.OnboardingScreen
 import com.practice.onboarding.splash.SplashScreen
 import com.practice.register.phonenumber.VerifyPhoneNumber
@@ -44,7 +44,7 @@ fun BlindarNavHost(
     onNavigateToMainScreen: () -> Unit = {},
 ) {
     val tweenSpec = tween<IntOffset>(
-        durationMillis = 250,
+        durationMillis = 500,
     )
 
     NavHost(
@@ -52,28 +52,36 @@ fun BlindarNavHost(
         startDestination = BlindarRoute.Splash,
         modifier = modifier,
         enterTransition = {
-            if ((initialState.toBlindarRoute() is BlindarRoute.Splash && targetState.toBlindarRoute() is BlindarRoute.Onboarding)) {
+            if (targetState.toBlindarRoute() is BlindarRoute.Onboarding) {
                 fadeIn(initialAlpha = 1f)
             } else {
-                val direction = animationDirection(initialState, targetState)
                 slideIntoContainer(
-                    towards = direction,
+                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
                     animationSpec = tweenSpec,
                 )
             }
         },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tweenSpec,
+            )
+        },
         exitTransition = {
-            if ((initialState.toBlindarRoute() is BlindarRoute.Splash && targetState.toBlindarRoute() !is BlindarRoute.Main) ||
-                (initialState.toBlindarRoute() !is BlindarRoute.SelectSchool && targetState.toBlindarRoute() is BlindarRoute.Main)
-            ) {
-                fadeOut()
+            if ((initialState.toBlindarRoute() is BlindarRoute.Splash && targetState.toBlindarRoute() !is BlindarRoute.Main)) {
+                fadeOut(targetAlpha = 1f)
             } else {
-                val direction = animationDirection(initialState, targetState)
                 slideOutOfContainer(
-                    towards = direction,
+                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
                     animationSpec = tweenSpec,
                 )
             }
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tweenSpec,
+            )
         },
     ) {
         blindarMainNavGraph(
@@ -213,7 +221,16 @@ fun NavGraphBuilder.blindarMainNavGraph(
                 navController.navigate(BlindarRoute.SelectSchool)
             },
             onNavigateToSettingsScreen = {
-                navController.navigate(BlindarRoute.Settings)
+//                navController.navigate(BlindarRoute.Settings)
+                navController.navigate(
+                    BlindarRoute.Nutrient(
+                        year = 2022,
+                        month = 2,
+                        dayOfMonth = 23,
+                        schoolCode = 123456,
+                        mealTime = "중식"
+                    )
+                )
             },
         )
     }
@@ -227,20 +244,14 @@ fun NavGraphBuilder.blindarMainNavGraph(
                 .fillMaxSize(),
         )
     }
-}
 
-fun NavGraphBuilder.registerGraph(
-    navController: NavHostController,
-    onUsernameNotSet: () -> Unit,
-    onSchoolNotSelected: () -> Unit,
-    onNavigateToMainScreen: () -> Unit,
-) {
-
-}
-
-private fun animationDirection(initialState: NavBackStackEntry, targetState: NavBackStackEntry) =
-    if (initialState.toBlindarRoute() > targetState.toBlindarRoute()) {
-        AnimatedContentTransitionScope.SlideDirection.Right
-    } else {
-        AnimatedContentTransitionScope.SlideDirection.Left
+    composable<BlindarRoute.Nutrient> { backStackEntry ->
+        val nutrient = backStackEntry.toRoute<BlindarRoute.Nutrient>()
+        NutrientScreen(
+            route = nutrient,
+            modifier = Modifier
+                .safeDrawingPadding()
+                .fillMaxSize(),
+        )
     }
+}
