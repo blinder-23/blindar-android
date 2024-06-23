@@ -204,7 +204,7 @@ internal fun MainScreenContents(
     mealPagerState: PagerState,
     memoDialogElements: ImmutableList<MemoDialogElement>,
     onMealTimeClick: (Int) -> Unit,
-    onNutrientDialogOpen: () -> Unit,
+    onNutrientButtonClick: () -> Unit,
     onMemoDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
     emptyContentAlignment: Alignment = Alignment.Center,
@@ -238,7 +238,7 @@ internal fun MainScreenContents(
                         uiMeals = uiMeals,
                         pagerState = mealPagerState,
                         onMealTimeClick = onMealTimeClick,
-                        onNutrientDialogOpen = onNutrientDialogOpen,
+                        onNutrientButtonClick = onNutrientButtonClick,
                     )
                 }
             }
@@ -292,7 +292,7 @@ private fun EmptyContentIndicator(
 internal fun MealContents(
     uiMeals: UiMeals,
     onMealTimeClick: (Int) -> Unit,
-    onNutrientDialogOpen: () -> Unit,
+    onNutrientButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
     itemPadding: Dp = 16.dp,
     pagerState: PagerState = rememberPagerState { uiMeals.mealTimes.size },
@@ -329,7 +329,7 @@ internal fun MealContents(
             }
             MainScreenContentBottomButton(
                 title = stringResource(id = R.string.open_nutrient_dialog_button),
-                onButtonClick = onNutrientDialogOpen,
+                onButtonClick = onNutrientButtonClick,
             )
         }
     }
@@ -653,7 +653,7 @@ private fun MealContentPreview() {
             onMealTimeClick = {
                 coroutineScope.launch { pagerState.animateScrollToPage(it) }
             },
-            onNutrientDialogOpen = {},
+            onNutrientButtonClick = {},
         )
     }
 }

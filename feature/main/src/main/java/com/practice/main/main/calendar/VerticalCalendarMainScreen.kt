@@ -65,7 +65,7 @@ fun VerticalCalendarMainScreen(
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
     onMealTimeClick: (Int) -> Unit,
-    onNutrientDialogOpen: () -> Unit,
+    onNutrientButtonClick: (MainUiState) -> Unit,
     onMemoDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
@@ -109,7 +109,7 @@ fun VerticalCalendarMainScreen(
                 mealPagerState = mealPagerState,
                 memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
                 onMealTimeClick = onMealTimeClick,
-                onNutrientDialogOpen = onNutrientDialogOpen,
+                onNutrientButtonClick = { onNutrientButtonClick(uiState) },
                 onMemoDialogOpen = onMemoDialogOpen,
                 modifier = Modifier
                     .weight(1f)
@@ -196,7 +196,7 @@ private fun VerticalCalendarMainScreenPreview() {
             drawUnderlineToScheduleDate = {},
             onNavigateToSelectSchoolScreen = {},
             onMealTimeClick = {},
-            onNutrientDialogOpen = {},
+            onNutrientButtonClick = {},
             onMemoDialogOpen = {},
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.surface)

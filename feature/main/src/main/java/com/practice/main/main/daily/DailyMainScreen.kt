@@ -14,6 +14,7 @@ import com.practice.main.main.MainScreenViewModel
 import com.practice.main.main.daily.picker.rememberDailyDatePickerState
 import com.practice.main.main.daily.picker.toTextFieldFormat
 import com.practice.main.main.mealColumns
+import com.practice.main.main.state.MainUiState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -24,6 +25,7 @@ fun DailyMainScreen(
     mealPagerState: PagerState,
     onNavigateToSettingsScreen: () -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
+    onNavigateToNutrientScreen: (MainUiState) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -60,7 +62,7 @@ fun DailyMainScreen(
                 onSettingsIconClick = onNavigateToSettingsScreen,
                 onSchoolNameClick = onNavigateToSelectSchoolScreen,
                 onMealTimeClick = onMealTimeClick,
-                onNutrientDialogOpen = viewModel::openNutrientDialog,
+                onNutrientButtonClick = onNavigateToNutrientScreen,
                 onMemoDialogOpen = viewModel::openMemoDialog,
                 onMealDialogOpen = viewModel::onMealDialog,
                 onScheduleDialogOpen = viewModel::onScheduleDialogOpen,
@@ -77,7 +79,7 @@ fun DailyMainScreen(
                 onSettingsIconClick = onNavigateToSettingsScreen,
                 onSchoolNameClick = onNavigateToSelectSchoolScreen,
                 onMealTimeClick = onMealTimeClick,
-                onNutrientDialogOpen = viewModel::openNutrientDialog,
+                onNutrientButtonClick = onNavigateToNutrientScreen,
                 onMemoDialogOpen = viewModel::openMemoDialog,
                 onMealDialogOpen = viewModel::onMealDialog,
                 onScheduleDialogOpen = viewModel::onScheduleDialogOpen,

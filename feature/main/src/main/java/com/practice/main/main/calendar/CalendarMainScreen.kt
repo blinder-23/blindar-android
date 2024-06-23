@@ -12,8 +12,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.rememberCalendarState
-import com.practice.main.main.MainScreenViewModel
 import com.practice.main.R
+import com.practice.main.main.MainScreenViewModel
+import com.practice.main.main.state.MainUiState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -24,6 +25,7 @@ fun CalendarMainScreen(
     mealPagerState: PagerState,
     onNavigateToSettingsScreen: () -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
+    onNavigateToNutrientScreen: (MainUiState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -56,7 +58,7 @@ fun CalendarMainScreen(
                 drawUnderlineToScheduleDate = { },
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
                 onMealTimeClick = onMealTimeClick,
-                onNutrientDialogOpen = viewModel::openNutrientDialog,
+                onNutrientButtonClick = onNavigateToNutrientScreen,
                 onMemoDialogOpen = viewModel::openMemoDialog,
                 modifier = modifier,
             ) { date -> viewModel.getCustomActions(date) }
@@ -79,7 +81,7 @@ fun CalendarMainScreen(
                 drawUnderlineToScheduleDate = {},
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
                 onMealTimeClick = onMealTimeClick,
-                onNutrientDialogOpen = viewModel::openNutrientDialog,
+                onNutrientButtonClick = onNavigateToNutrientScreen,
                 onMemoDialogOpen = viewModel::openMemoDialog,
                 modifier = modifier,
             ) { date -> viewModel.getCustomActions(date) }

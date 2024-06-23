@@ -221,16 +221,10 @@ fun NavGraphBuilder.blindarMainNavGraph(
                 navController.navigate(BlindarRoute.SelectSchool)
             },
             onNavigateToSettingsScreen = {
-//                navController.navigate(BlindarRoute.Settings)
-                navController.navigate(
-                    BlindarRoute.Nutrient(
-                        year = 2022,
-                        month = 2,
-                        dayOfMonth = 23,
-                        schoolCode = 123456,
-                        mealTime = "중식"
-                    )
-                )
+                navController.navigate(SettingsRoute)
+            },
+            onNavigateToNutrientScreen = { mainUiState ->
+                navController.navigate(mainUiState.nutrientRoute)
             },
         )
     }
@@ -245,10 +239,11 @@ fun NavGraphBuilder.blindarMainNavGraph(
         )
     }
 
-    composable<BlindarRoute.Nutrient> { backStackEntry ->
-        val nutrient = backStackEntry.toRoute<BlindarRoute.Nutrient>()
+    composable<NutrientRoute> {
         NutrientScreen(
-            route = nutrient,
+            onNavigateToBack = {
+                navController.popBackStack()
+            },
             modifier = Modifier
                 .safeDrawingPadding()
                 .fillMaxSize(),

@@ -24,9 +24,9 @@ import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.designsystem.calendar.largeCalendarDateShape
 import com.practice.designsystem.theme.BlindarTheme
+import com.practice.main.R
 import com.practice.main.main.MainScreenContents
 import com.practice.main.main.MainScreenTopBar
-import com.practice.main.R
 import com.practice.main.main.previewMainUiState
 import com.practice.main.main.state.MainUiState
 import kotlinx.collections.immutable.ImmutableList
@@ -50,7 +50,7 @@ fun HorizontalCalendarMainScreen(
     drawUnderlineToScheduleDate: DrawScope.(Date) -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
     onMealTimeClick: (Int) -> Unit,
-    onNutrientDialogOpen: () -> Unit,
+    onNutrientButtonClick: (MainUiState) -> Unit,
     onMemoDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
@@ -91,7 +91,7 @@ fun HorizontalCalendarMainScreen(
                 mealPagerState = mealPagerState,
                 memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
                 onMealTimeClick = onMealTimeClick,
-                onNutrientDialogOpen = onNutrientDialogOpen,
+                onNutrientButtonClick = { onNutrientButtonClick(uiState) },
                 onMemoDialogOpen = onMemoDialogOpen,
                 modifier = Modifier
                     .weight(1f)
@@ -132,7 +132,7 @@ private fun HorizontalCalendarMainScreenPreview() {
             drawUnderlineToScheduleDate = {},
             onNavigateToSelectSchoolScreen = {},
             onMealTimeClick = {},
-            onNutrientDialogOpen = {},
+            onNutrientButtonClick = {},
             onMemoDialogOpen = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.surface),
         )

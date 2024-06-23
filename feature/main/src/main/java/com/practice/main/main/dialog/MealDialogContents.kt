@@ -52,7 +52,7 @@ fun MealDialogContents(
             uiMeals = uiMeals,
             pagerState = mealPagerState,
             onMealTimeClick = onMealTimeClick,
-            onNutrientDialogOpen = onNutrientDialogOpen,
+            onNutrientButtonClick = onNutrientDialogOpen,
         )
         CloseMealDialogButton(
             onClose = onMealDialogClose,

@@ -30,6 +30,7 @@ import com.practice.main.main.dialog.NutrientDialogContents
 import com.practice.main.main.dialog.ScheduleDialogContents
 import com.practice.main.main.loading.LoadingMainScreen
 import com.practice.main.main.state.MainUiMode
+import com.practice.main.main.state.MainUiState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -39,6 +40,7 @@ fun MainScreen(
     viewModel: MainScreenViewModel,
     onNavigateToSelectSchoolScreen: () -> Unit,
     onNavigateToSettingsScreen: () -> Unit,
+    onNavigateToNutrientScreen: (MainUiState) -> Unit,
     modifier: Modifier = Modifier,
     onLaunch: suspend () -> Unit = {},
 ) {
@@ -73,6 +75,7 @@ fun MainScreen(
                     mealPagerState = mealPagerState,
                     onNavigateToSettingsScreen = onNavigateToSettingsScreen,
                     onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
+                    onNavigateToNutrientScreen = onNavigateToNutrientScreen,
                     modifier = paddingModifier,
                 )
             }
@@ -84,6 +87,7 @@ fun MainScreen(
                     mealPagerState = mealPagerState,
                     onNavigateToSettingsScreen = onNavigateToSettingsScreen,
                     onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
+                    onNavigateToNutrientScreen = onNavigateToNutrientScreen,
                     modifier = paddingModifier,
                 )
             }
