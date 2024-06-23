@@ -10,55 +10,53 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.serializer
 
 @Serializable
-sealed interface BlindarRoute {
-    @Serializable
-    data object Splash : BlindarRoute
+data object SplashRoute
 
-    @Serializable
-    data object Onboarding : BlindarRoute
+@Serializable
+data object OnboardingRoute
 
-    @Serializable
-    data object VerifyPhone : BlindarRoute
+@Serializable
+data object VerifyPhoneRoute
 
-    @Serializable
-    data object VerifyUsername : BlindarRoute
+@Serializable
+data object VerifyUsernameRoute
 
-    @Serializable
-    data object SelectSchool : BlindarRoute
+@Serializable
+data object SelectSchoolRoute
 
-    @Serializable
-    data object Main : BlindarRoute
+@Serializable
+data object MainRoute
 
-    @Serializable
-    data object Settings : BlindarRoute
+@Serializable
+data object SettingsRoute
 
-    @Serializable
-    data class Nutrient(
-        override val year: Int,
-        override val month: Int,
-        override val dayOfMonth: Int,
-        override val schoolCode: Int,
-        override val mealTime: String,
-    ) : BlindarRoute, NutrientRoute
+// TODO: add memo, schedule routes
 
-    // TODO: add memo, schedule routes
-}
-
+/**
+ * 매개변수가 없는 route는 여기에 data object로 선언하고,
+ * 매개변수가 있는 route는 각 모듈에 data class로 선언한다.
+ * 그 후 [blindarRoute]에 KClass를 추가한다.
+ */
 private val blindarRoutes = listOf(
-    BlindarRoute.Splash::class,
-    BlindarRoute.Onboarding::class,
-    BlindarRoute.VerifyPhone::class,
-    BlindarRoute.VerifyUsername::class,
-    BlindarRoute.SelectSchool::class,
-    BlindarRoute.Main::class,
-    BlindarRoute.Settings::class,
-    BlindarRoute.Nutrient::class,
+    SplashRoute::class,
+    OnboardingRoute::class,
+    VerifyPhoneRoute::class,
+    VerifyUsernameRoute::class,
+    SelectSchoolRoute::class,
+    MainRoute::class,
+    SettingsRoute::class,
+    NutrientRoute::class,
 ).associateBy {
     it.simpleName
 }.toPersistentHashMap()
 
+/**
+ * Only call this when the type of the route is not known. I.e. in NavHost::enterTransition().
+ *
+ * In many cases, type-safe [NavBackStackEntry.toRoute()] is recommended.
+ */
 @OptIn(InternalSerializationApi::class)
-fun NavBackStackEntry.toBlindarRoute(): BlindarRoute {
+fun NavBackStackEntry.toBlindarRoute(): Any {
     val clazz = blindarRoutes[destinationClassName]
         ?: throw IllegalArgumentException("No route with name: $destinationClassPackageName")
 
