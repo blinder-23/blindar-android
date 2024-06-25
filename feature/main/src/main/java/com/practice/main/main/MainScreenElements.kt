@@ -205,7 +205,7 @@ internal fun MainScreenContents(
     memoDialogElements: ImmutableList<MemoDialogElement>,
     onMealTimeClick: (Int) -> Unit,
     onNutrientButtonClick: () -> Unit,
-    onMemoDialogOpen: () -> Unit,
+    onMemoButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
     emptyContentAlignment: Alignment = Alignment.Center,
     header: @Composable (() -> Unit)? = null,
@@ -220,7 +220,7 @@ internal fun MainScreenContents(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 header?.invoke()
-                EmptyContentIndicator(onClick = onMemoDialogOpen)
+                EmptyContentIndicator(onClick = onMemoButtonClick)
             }
         }
     } else {
@@ -245,7 +245,7 @@ internal fun MainScreenContents(
             item {
                 ScheduleContents(
                     scheduleElements = memoDialogElements,
-                    onMemoDialogOpen = onMemoDialogOpen,
+                    onMemoButtonClick = onMemoButtonClick,
                 )
             }
         }
@@ -338,12 +338,12 @@ internal fun MealContents(
 @Composable
 internal fun ScheduleContents(
     scheduleElements: ImmutableList<MemoDialogElement>,
-    onMemoDialogOpen: () -> Unit,
+    onMemoButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
     itemPadding: Dp = 16.dp,
 ) {
     if (scheduleElements.isEmpty()) {
-        EmptyScheduleContent(onMemoDialogOpen = onMemoDialogOpen)
+        EmptyScheduleContent(onMemoButtonClick = onMemoButtonClick)
     } else {
         MainScreenContent(
             modifier = modifier,
@@ -357,7 +357,7 @@ internal fun ScheduleContents(
                 MainScreenContentItems(items = scheduleElements) { it.displayText }
                 MainScreenContentBottomButton(
                     title = stringResource(id = R.string.open_memo_dialog_button),
-                    onButtonClick = onMemoDialogOpen,
+                    onButtonClick = onMemoButtonClick,
                 )
             }
         }
@@ -366,7 +366,7 @@ internal fun ScheduleContents(
 
 @Composable
 private fun EmptyScheduleContent(
-    onMemoDialogOpen: () -> Unit,
+    onMemoButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     MainScreenContent(
@@ -376,7 +376,7 @@ private fun EmptyScheduleContent(
         modifier = modifier,
     ) {
         EmptyContentIndicator(
-            onClick = onMemoDialogOpen,
+            onClick = onMemoButtonClick,
             modifier = Modifier.fillMaxWidth(),
             padding = PaddingValues(vertical = 12.dp),
         )
@@ -664,7 +664,7 @@ private fun ScheduleContentPreview() {
     BlindarTheme {
         ScheduleContents(
             scheduleElements = previewSchedules,
-            onMemoDialogOpen = {},
+            onMemoButtonClick = {},
         )
     }
 }

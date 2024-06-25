@@ -48,7 +48,7 @@ fun ScheduleDialogContents(
     ) {
         ScheduleContents(
             scheduleElements = scheduleElements,
-            onMemoDialogOpen = onMemoDialogOpen,
+            onMemoButtonClick = onMemoDialogOpen,
         )
         CloseScheduleDialogButton(
             onClose = onScheduleDialogClose,

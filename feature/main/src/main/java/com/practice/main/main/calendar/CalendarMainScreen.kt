@@ -26,6 +26,7 @@ fun CalendarMainScreen(
     onNavigateToSettingsScreen: () -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
     onNavigateToNutrientScreen: (MainUiState) -> Unit,
+    onNavigateToMemoScreen: (MainUiState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -59,7 +60,7 @@ fun CalendarMainScreen(
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
                 onMealTimeClick = onMealTimeClick,
                 onNutrientButtonClick = onNavigateToNutrientScreen,
-                onMemoDialogOpen = viewModel::openMemoDialog,
+                onMemoButtonClick = onNavigateToMemoScreen,
                 modifier = modifier,
             ) { date -> viewModel.getCustomActions(date) }
         }
@@ -82,7 +83,7 @@ fun CalendarMainScreen(
                 onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
                 onMealTimeClick = onMealTimeClick,
                 onNutrientButtonClick = onNavigateToNutrientScreen,
-                onMemoDialogOpen = viewModel::openMemoDialog,
+                onMemoButtonClick = onNavigateToMemoScreen,
                 modifier = modifier,
             ) { date -> viewModel.getCustomActions(date) }
         }

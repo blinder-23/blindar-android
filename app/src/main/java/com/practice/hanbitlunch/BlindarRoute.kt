@@ -3,6 +3,7 @@ package com.practice.hanbitlunch
 import android.os.Bundle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.serialization.decodeArguments
+import com.practice.main.memo.MemoRoute
 import com.practice.main.nutrient.NutrientRoute
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.serialization.InternalSerializationApi
@@ -46,6 +47,7 @@ private val blindarRoutes = listOf(
     MainRoute::class,
     SettingsRoute::class,
     NutrientRoute::class,
+    MemoRoute::class,
 ).associateBy {
     it.simpleName
 }.toPersistentHashMap()

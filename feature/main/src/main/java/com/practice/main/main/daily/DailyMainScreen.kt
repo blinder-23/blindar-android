@@ -26,6 +26,7 @@ fun DailyMainScreen(
     onNavigateToSettingsScreen: () -> Unit,
     onNavigateToSelectSchoolScreen: () -> Unit,
     onNavigateToNutrientScreen: (MainUiState) -> Unit,
+    onNavigateToMemoScreen: (MainUiState) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -63,7 +64,7 @@ fun DailyMainScreen(
                 onSchoolNameClick = onNavigateToSelectSchoolScreen,
                 onMealTimeClick = onMealTimeClick,
                 onNutrientButtonClick = onNavigateToNutrientScreen,
-                onMemoDialogOpen = viewModel::openMemoDialog,
+                onMemoButtonClick = onNavigateToMemoScreen,
                 onMealDialogOpen = viewModel::onMealDialog,
                 onScheduleDialogOpen = viewModel::onScheduleDialogOpen,
                 modifier = modifier,
@@ -80,7 +81,7 @@ fun DailyMainScreen(
                 onSchoolNameClick = onNavigateToSelectSchoolScreen,
                 onMealTimeClick = onMealTimeClick,
                 onNutrientButtonClick = onNavigateToNutrientScreen,
-                onMemoDialogOpen = viewModel::openMemoDialog,
+                onMemoButtonClick = onNavigateToMemoScreen,
                 onMealDialogOpen = viewModel::onMealDialog,
                 onScheduleDialogOpen = viewModel::onScheduleDialogOpen,
                 modifier = modifier,

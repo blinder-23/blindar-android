@@ -57,7 +57,7 @@ fun HorizontalDailyMainScreen(
     onSchoolNameClick: () -> Unit,
     onMealTimeClick: (Int) -> Unit,
     onNutrientButtonClick: (MainUiState) -> Unit,
-    onMemoDialogOpen: () -> Unit,
+    onMemoButtonClick: (MainUiState) -> Unit,
     onMealDialogOpen: () -> Unit,
     onScheduleDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
@@ -80,7 +80,7 @@ fun HorizontalDailyMainScreen(
             mealPagerState = mealPagerState,
             onMealTimeClick = onMealTimeClick,
             onNutrientButtonClick = onNutrientButtonClick,
-            onMemoDialogOpen = onMemoDialogOpen,
+            onMemoButtonClick = onMemoButtonClick,
             onMealDialogOpen = onMealDialogOpen,
             onScheduleDialogOpen = onScheduleDialogOpen,
         )
@@ -95,7 +95,7 @@ private fun HorizontalDailyMainScreenContents(
     mealPagerState: PagerState,
     onMealTimeClick: (Int) -> Unit,
     onNutrientButtonClick: (MainUiState) -> Unit,
-    onMemoDialogOpen: () -> Unit,
+    onMemoButtonClick: (MainUiState) -> Unit,
     onMealDialogOpen: () -> Unit,
     onScheduleDialogOpen: () -> Unit,
 ) {
@@ -122,7 +122,7 @@ private fun HorizontalDailyMainScreenContents(
             memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
             onMealTimeClick = onMealTimeClick,
             onNutrientButtonClick = { onNutrientButtonClick(uiState) },
-            onMemoDialogOpen = onMemoDialogOpen,
+            onMemoButtonClick = { onMemoButtonClick(uiState) },
             modifier = Modifier.weight(1f),
         )
     }
@@ -216,7 +216,7 @@ private fun HorizontalDailyMainScreenPreview() {
             onSchoolNameClick = {},
             onMealTimeClick = {},
             onNutrientButtonClick = {},
-            onMemoDialogOpen = {},
+            onMemoButtonClick = {},
             onMealDialogOpen = {},
             onScheduleDialogOpen = {},
             modifier = Modifier

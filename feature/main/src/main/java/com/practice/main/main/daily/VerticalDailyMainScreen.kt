@@ -54,7 +54,7 @@ fun VerticalDailyMainScreen(
     onSchoolNameClick: () -> Unit,
     onMealTimeClick: (Int) -> Unit,
     onNutrientButtonClick: (MainUiState) -> Unit,
-    onMemoDialogOpen: () -> Unit,
+    onMemoButtonClick: (MainUiState) -> Unit,
     onMealDialogOpen: () -> Unit,
     onScheduleDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
@@ -77,7 +77,7 @@ fun VerticalDailyMainScreen(
             uiState = uiState,
             onMealTimeClick = onMealTimeClick,
             onNutrientButtonClick = onNutrientButtonClick,
-            onMemoDialogOpen = onMemoDialogOpen,
+            onMemoButtonClick = onMemoButtonClick,
             onMealDialogOpen = onMealDialogOpen,
             onScheduleDialogOpen = onScheduleDialogOpen,
         )
@@ -92,7 +92,7 @@ private fun VerticalDailyMainScreenContents(
     mealPagerState: PagerState,
     onMealTimeClick: (Int) -> Unit,
     onNutrientButtonClick: (MainUiState) -> Unit,
-    onMemoDialogOpen: () -> Unit,
+    onMemoButtonClick: (MainUiState) -> Unit,
     onMealDialogOpen: () -> Unit,
     onScheduleDialogOpen: () -> Unit,
 ) {
@@ -106,7 +106,7 @@ private fun VerticalDailyMainScreenContents(
             memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
             onMealTimeClick = onMealTimeClick,
             onNutrientButtonClick = { onNutrientButtonClick(uiState) },
-            onMemoDialogOpen = onMemoDialogOpen,
+            onMemoButtonClick = { onMemoButtonClick(uiState) },
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth(),
@@ -203,7 +203,7 @@ private fun VerticalDailyMainScreenPreview() {
             onSchoolNameClick = {},
             onMealTimeClick = {},
             onNutrientButtonClick = {},
-            onMemoDialogOpen = {},
+            onMemoButtonClick = {},
             onMealDialogOpen = {},
             onScheduleDialogOpen = {},
             modifier = Modifier

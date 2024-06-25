@@ -21,9 +21,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.practice.hanbitlunch.navigation.memoRoute
 import com.practice.hanbitlunch.navigation.nutrientRoute
 import com.practice.main.main.MainScreen
+import com.practice.main.memo.MemoRoute
+import com.practice.main.memo.MemoScreen
 import com.practice.main.nutrient.NutrientRoute
 import com.practice.main.nutrient.NutrientScreen
 import com.practice.onboarding.onboarding.OnboardingScreen
@@ -227,6 +231,9 @@ fun NavGraphBuilder.blindarMainNavGraph(
             onNavigateToNutrientScreen = { mainUiState ->
                 navController.navigate(mainUiState.nutrientRoute)
             },
+            onNavigateToMemoScreen = { mainUiState ->
+                navController.navigate(mainUiState.memoRoute)
+            },
         )
     }
     composable<SettingsRoute> {
@@ -245,6 +252,15 @@ fun NavGraphBuilder.blindarMainNavGraph(
             onNavigateToBack = {
                 navController.popBackStack()
             },
+            modifier = Modifier
+                .safeDrawingPadding()
+                .fillMaxSize(),
+        )
+    }
+    composable<MemoRoute> { navBackStackEntry ->
+        val route = navBackStackEntry.toRoute<MemoRoute>()
+        MemoScreen(
+            route = route,
             modifier = Modifier
                 .safeDrawingPadding()
                 .fillMaxSize(),

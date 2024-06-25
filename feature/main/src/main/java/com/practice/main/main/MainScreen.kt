@@ -41,6 +41,7 @@ fun MainScreen(
     onNavigateToSelectSchoolScreen: () -> Unit,
     onNavigateToSettingsScreen: () -> Unit,
     onNavigateToNutrientScreen: (MainUiState) -> Unit,
+    onNavigateToMemoScreen: (MainUiState) -> Unit,
     modifier: Modifier = Modifier,
     onLaunch: suspend () -> Unit = {},
 ) {
@@ -76,6 +77,7 @@ fun MainScreen(
                     onNavigateToSettingsScreen = onNavigateToSettingsScreen,
                     onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
                     onNavigateToNutrientScreen = onNavigateToNutrientScreen,
+                    onNavigateToMemoScreen = onNavigateToMemoScreen,
                     modifier = paddingModifier,
                 )
             }
@@ -88,6 +90,7 @@ fun MainScreen(
                     onNavigateToSettingsScreen = onNavigateToSettingsScreen,
                     onNavigateToSelectSchoolScreen = onNavigateToSelectSchoolScreen,
                     onNavigateToNutrientScreen = onNavigateToNutrientScreen,
+                    onNavigateToMemoScreen = onNavigateToMemoScreen,
                     modifier = paddingModifier,
                 )
             }
