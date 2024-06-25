@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,8 +15,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
@@ -31,6 +36,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -41,9 +48,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.DarkPreview
 import com.practice.designsystem.components.BlindarButton
+import com.practice.designsystem.components.BlindarDialog
 import com.practice.designsystem.components.BlindarTopAppBar
 import com.practice.designsystem.components.BlindarTopAppBarDefaults
 import com.practice.designsystem.components.BodyLarge
+import com.practice.designsystem.components.DialogBodyLarge
+import com.practice.designsystem.components.DialogTitleMedium
 import com.practice.designsystem.components.HeadlineMedium
 import com.practice.designsystem.components.LabelMedium
 import com.practice.designsystem.components.TitleLarge
@@ -64,6 +74,7 @@ fun MemoScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val memoBottomSheetState by viewModel.bottomSheetState.collectAsStateWithLifecycle()
+    val deletionTargetMemo by viewModel.deletionTargetMemo.collectAsStateWithLifecycle()
 
     MemoScreen(
         uiState = state,
@@ -74,7 +85,10 @@ fun MemoScreen(
         onMemoBottomSheetStateUpdate = viewModel::onMemoBottomSheetUpdate,
         onMemoBottomSheetDismiss = viewModel::onMemoEditDismiss,
         onMemoUpdate = viewModel::onMemoEditSubmit,
-        onMemoDelete = viewModel::onMemoDelete,
+        onMemoDeleteButtonClick = viewModel::onMemoDeleteIconClick,
+        deletionTargetMemo = deletionTargetMemo,
+        onDeletionMemoDismiss = viewModel::clearDeletionTargetMemo,
+        onMemoDelete = viewModel::deleteTargetMemo,
         modifier = modifier,
     )
 }
@@ -90,6 +104,9 @@ private fun MemoScreen(
     onMemoBottomSheetStateUpdate: (MemoBottomSheetState) -> Unit,
     onMemoBottomSheetDismiss: () -> Unit,
     onMemoUpdate: (MemoBottomSheetState) -> Unit,
+    onMemoDeleteButtonClick: (UiMemo) -> Unit,
+    deletionTargetMemo: UiMemo?,
+    onDeletionMemoDismiss: () -> Unit,
     onMemoDelete: (UiMemo) -> Unit,
     modifier: Modifier = Modifier,
     modalBottomSheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
@@ -135,7 +152,7 @@ private fun MemoScreen(
                         coroutineScope.launch { modalBottomSheetState.expand() }
                         onEditMemoButtonClick(uiMemo)
                     },
-                    onMemoDelete = onMemoDelete,
+                    onMemoDelete = onMemoDeleteButtonClick,
                     modifier = Modifier.fillMaxSize(),
                 )
 
@@ -164,7 +181,15 @@ private fun MemoScreen(
         }
     }
 
-    // TODO: 삭제 dialog: 별도의 StateFlow 선언하기
+    if (deletionTargetMemo != null) {
+        BlindarDialog(onDismissRequest = onDeletionMemoDismiss) {
+            DeleteMemoDialogContents(
+                target = deletionTargetMemo,
+                onCancel = onDeletionMemoDismiss,
+                onDelete = onMemoDelete,
+            )
+        }
+    }
 }
 
 @Composable
@@ -334,6 +359,76 @@ private fun EditMemoBottomSheetButtons(
     }
 }
 
+@Composable
+private fun DeleteMemoDialogContents(
+    target: UiMemo,
+    onCancel: () -> Unit,
+    onDelete: (UiMemo) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface),
+    ) {
+        DialogTitleMedium(
+            text = stringResource(id = R.string.memo_delete_dialog_title),
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(16.dp),
+        )
+        DialogBodyLarge(
+            text = target.contents,
+            maxLines = 2,
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 16.dp),
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        DeleteMemoDialogButtons(
+            target = target,
+            onCancel = onCancel,
+            onDelete = onDelete,
+        )
+    }
+}
+
+@Composable
+private fun DeleteMemoDialogButtons(
+    target: UiMemo,
+    onCancel: () -> Unit,
+    onDelete: (UiMemo) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(modifier = modifier) {
+        Button(
+            onClick = onCancel,
+            modifier = Modifier
+                .weight(1f)
+                .height(IntrinsicSize.Max),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+            ),
+            shape = RectangleShape,
+            contentPadding = PaddingValues(0.dp),
+        ) {
+            BodyLarge(text = stringResource(id = R.string.memo_delete_dialog_cancel))
+        }
+        Button(
+            onClick = { onDelete(target) },
+            modifier = Modifier
+                .weight(1f)
+                .height(IntrinsicSize.Max),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            ),
+            shape = RectangleShape,
+            contentPadding = PaddingValues(0.dp),
+        ) {
+            BodyLarge(text = stringResource(id = R.string.memo_delete_dialog_delete))
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @DarkPreview
 @Composable
@@ -353,8 +448,11 @@ private fun MemoScreenPreview_Success() {
             onMemoBottomSheetStateUpdate = {},
             onMemoUpdate = {},
             onMemoBottomSheetDismiss = {},
-            onMemoDelete = {},
+            onMemoDeleteButtonClick = {},
             onEditMemoButtonClick = {},
+            deletionTargetMemo = null,
+            onDeletionMemoDismiss = {},
+            onMemoDelete = {},
             modifier = Modifier.fillMaxSize(),
         )
     }
@@ -370,6 +468,21 @@ private fun EditMemoBottomSheetPreview() {
             onDismissRequest = {},
             onSubmitUpdate = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+        )
+    }
+}
+
+@DarkPreview
+@Composable
+private fun DeleteMemoDialogContentsPreview() {
+    BlindarTheme {
+        DeleteMemoDialogContents(
+            target = previewMemos[0],
+            onCancel = {},
+            onDelete = {},
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .fillMaxWidth(),
         )
     }
 }

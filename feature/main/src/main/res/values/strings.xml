@@ -89,4 +89,8 @@
     <string name="memo_bottom_sheet_textfield_label">메모 내용</string>
     <string name="memo_bottom_sheet_cancel_button">취소</string>
     <string name="memo_bottom_sheet_submit_button">저장</string>
+
+    <string name="memo_delete_dialog_title">메모를 삭제할까요?</string>
+    <string name="memo_delete_dialog_cancel">취소</string>
+    <string name="memo_delete_dialog_delete">삭제</string>
 </resources>
