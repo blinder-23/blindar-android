@@ -39,6 +39,9 @@ class MemoViewModel @Inject constructor(
     private val _bottomSheetState = MutableStateFlow<MemoBottomSheetState?>(null)
     val bottomSheetState: StateFlow<MemoBottomSheetState?> = _bottomSheetState.asStateFlow()
 
+    private val _deletionTargetMemo = MutableStateFlow<UiMemo?>(null)
+    val deletionTargetMemo: StateFlow<UiMemo?> = _deletionTargetMemo.asStateFlow()
+
     init {
         viewModelScope.launch {
             loadSchedulesAndMemos()
@@ -90,12 +93,8 @@ class MemoViewModel @Inject constructor(
         _bottomSheetState.value = state
     }
 
-    fun onMemoDelete(uiMemo: UiMemo) {
-        viewModelScope.launch {
-            localMemoRepository.deleteMemo(uiMemo.id)
-            remoteMemoRepository.deleteMemo(uiMemo.id)
-            loadSchedulesAndMemos()
-        }
+    fun onMemoDeleteIconClick(uiMemo: UiMemo) {
+        _deletionTargetMemo.value = uiMemo
     }
 
     fun onMemoEditDismiss() {
@@ -127,5 +126,18 @@ class MemoViewModel @Inject constructor(
 
     private fun clearBottomSheetState() {
         _bottomSheetState.value = null
+    }
+
+    fun clearDeletionTargetMemo() {
+        _deletionTargetMemo.value = null
+    }
+
+    fun deleteTargetMemo(target: UiMemo) {
+        viewModelScope.launch {
+            localMemoRepository.deleteMemo(target.id)
+            remoteMemoRepository.deleteMemo(target.id)
+            loadSchedulesAndMemos()
+            clearDeletionTargetMemo()
+        }
     }
 }
