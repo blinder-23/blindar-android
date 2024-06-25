@@ -36,8 +36,8 @@ class MemoViewModel @Inject constructor(
     )
     val uiState: StateFlow<MemoUiState> = _uiState.asStateFlow()
 
-    private val _bottomSheetState = MutableStateFlow<UiMemo?>(null)
-    val bottomSheetState: StateFlow<UiMemo?> = _bottomSheetState.asStateFlow()
+    private val _bottomSheetState = MutableStateFlow<MemoBottomSheetState?>(null)
+    val bottomSheetState: StateFlow<MemoBottomSheetState?> = _bottomSheetState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -77,8 +77,17 @@ class MemoViewModel @Inject constructor(
         )
     }
 
-    fun onMemoEdit(uiMemo: UiMemo) {
-        _bottomSheetState.value = uiMemo
+    fun onAddMemoButtonClick() {
+        _bottomSheetState.value =
+            MemoBottomSheetState.Add(UiMemo.getEmptyMemo(userId = route.userId))
+    }
+
+    fun onEditMemoButtonClick(uiMemo: UiMemo) {
+        _bottomSheetState.value = MemoBottomSheetState.Update(uiMemo)
+    }
+
+    fun onMemoBottomSheetUpdate(state: MemoBottomSheetState) {
+        _bottomSheetState.value = state
     }
 
     fun onMemoDelete(uiMemo: UiMemo) {
@@ -89,17 +98,31 @@ class MemoViewModel @Inject constructor(
         }
     }
 
-    fun onMemoEditCancel() {
+    fun onMemoEditDismiss() {
         clearBottomSheetState()
     }
 
-    fun onMemoEditSubmit(uiMemo: UiMemo) {
+    fun onMemoEditSubmit(state: MemoBottomSheetState) {
         viewModelScope.launch {
-            localMemoRepository.updateMemo(uiMemo.toMemo())
-            remoteMemoRepository.updateMemo(uiMemo.toMemo())
-            clearBottomSheetState()
+            when (state) {
+                is MemoBottomSheetState.Add -> onMemoAddSubmit(state)
+                is MemoBottomSheetState.Update -> onMemoUpdateSubmit(state)
+            }
             loadSchedulesAndMemos()
+            clearBottomSheetState()
         }
+    }
+
+    private suspend fun onMemoAddSubmit(state: MemoBottomSheetState.Add) {
+        val memo = state.uiMemo.toMemo()
+        val assignedMemoId = remoteMemoRepository.updateMemo(memo)
+        localMemoRepository.insertMemo(memo.copy(id = assignedMemoId, isSavedOnRemote = true))
+    }
+
+    private suspend fun onMemoUpdateSubmit(state: MemoBottomSheetState.Update) {
+        val memo = state.uiMemo.toMemo()
+        remoteMemoRepository.updateMemo(memo)
+        localMemoRepository.updateMemo(memo)
     }
 
     private fun clearBottomSheetState() {
