@@ -31,8 +31,6 @@ data object MainRoute
 @Serializable
 data object SettingsRoute
 
-// TODO: add memo, schedule routes
-
 /**
  * 매개변수가 없는 route는 여기에 data object로 선언하고,
  * 매개변수가 있는 route는 각 모듈에 data class로 선언한다.
