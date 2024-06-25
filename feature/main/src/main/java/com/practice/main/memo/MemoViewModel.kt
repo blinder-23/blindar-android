@@ -44,11 +44,11 @@ class MemoViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            loadSchedulesAndMemos()
+            refreshSchedulesAndMemos()
         }
     }
 
-    private suspend fun loadSchedulesAndMemos() {
+    private suspend fun refreshSchedulesAndMemos() {
         _uiState.value = loadingUiState()
         _uiState.value = successOrFailState()
     }
@@ -107,7 +107,7 @@ class MemoViewModel @Inject constructor(
                 is MemoBottomSheetState.Add -> onMemoAddSubmit(state)
                 is MemoBottomSheetState.Update -> onMemoUpdateSubmit(state)
             }
-            loadSchedulesAndMemos()
+            refreshSchedulesAndMemos()
             clearBottomSheetState()
         }
     }
@@ -136,7 +136,7 @@ class MemoViewModel @Inject constructor(
         viewModelScope.launch {
             localMemoRepository.deleteMemo(target.id)
             remoteMemoRepository.deleteMemo(target.id)
-            loadSchedulesAndMemos()
+            refreshSchedulesAndMemos()
             clearDeletionTargetMemo()
         }
     }
