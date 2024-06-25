@@ -76,6 +76,9 @@ data class UiMemo(
     override val displayText: String
         get() = contents
 
+    val date: Date
+        get() = Date(year, month, day)
+
     companion object {
         fun getEmptyMemo(
             id: String = "",

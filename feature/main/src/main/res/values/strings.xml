@@ -86,4 +86,7 @@
 
     <string name="memo_bottom_sheet_title_add">메모 추가</string>
     <string name="memo_bottom_sheet_title_edit">메모 편집</string>
+    <string name="memo_bottom_sheet_textfield_label">메모 내용</string>
+    <string name="memo_bottom_sheet_cancel_button">취소</string>
+    <string name="memo_bottom_sheet_submit_button">저장</string>
 </resources>
