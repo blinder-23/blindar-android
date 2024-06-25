@@ -75,4 +75,15 @@
     <string name="nutrient_fail">오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.</string>
 
     <string name="nutrient_item_amount">%.1f%s</string>
+
+    <!--  memo screen  -->
+    <string name="memo_header">메모 편집</string>
+    <string name="memo_date_format">%d년 %d월 %d일 (%s)</string>
+    <string name="memo_add_button">메모 추가하기</string>
+    <string name="memo_fail">오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.</string>
+    <string name="memo_item_edit">수정하기</string>
+    <string name="memo_item_delete">삭제하기</string>
+
+    <string name="memo_bottom_sheet_title_add">메모 추가</string>
+    <string name="memo_bottom_sheet_title_edit">메모 편집</string>
 </resources>

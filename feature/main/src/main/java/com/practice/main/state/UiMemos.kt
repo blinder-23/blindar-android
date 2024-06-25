@@ -96,6 +96,8 @@ data class UiMemo(
     }
 }
 
+fun List<Memo>.toUiMemo() = map { it.toUiMemo() }
+
 fun Memo.toUiMemo() = UiMemo(
     id = id,
     userId = userId,

@@ -44,6 +44,8 @@ data class UiSchedule(
         get() = if (eventName == eventContent) eventName else "$eventName - $eventContent"
 }
 
+fun List<Schedule>.toUiSchedule() = map { it.toUiSchedule() }
+
 fun Schedule.toUiSchedule() = UiSchedule(
     schoolCode = schoolCode,
     id = id,

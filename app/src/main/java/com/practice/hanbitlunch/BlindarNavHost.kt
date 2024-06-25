@@ -21,7 +21,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.practice.hanbitlunch.navigation.memoRoute
 import com.practice.hanbitlunch.navigation.nutrientRoute
@@ -257,11 +256,13 @@ fun NavGraphBuilder.blindarMainNavGraph(
                 .fillMaxSize(),
         )
     }
-    composable<MemoRoute> { navBackStackEntry ->
-        val route = navBackStackEntry.toRoute<MemoRoute>()
+    composable<MemoRoute> {
         MemoScreen(
-            route = route,
+            onNavigateToBack = {
+                navController.popBackStack()
+            },
             modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
                 .safeDrawingPadding()
                 .fillMaxSize(),
         )
