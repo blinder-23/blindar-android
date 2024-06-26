@@ -62,7 +62,7 @@ fun CalendarMainScreen(
                 onNutrientButtonClick = onNavigateToNutrientScreen,
                 onMemoButtonClick = onNavigateToMemoScreen,
                 modifier = modifier,
-            ) { date -> viewModel.getCustomActions(date) }
+            )
         }
 
         else -> {
@@ -85,7 +85,7 @@ fun CalendarMainScreen(
                 onNutrientButtonClick = onNavigateToNutrientScreen,
                 onMemoButtonClick = onNavigateToMemoScreen,
                 modifier = modifier,
-            ) { date -> viewModel.getCustomActions(date) }
+            )
         }
     }
 }

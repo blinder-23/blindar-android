@@ -106,8 +106,6 @@ class MainScreenViewModel @Inject constructor(
         selectedMealIndex: Int = state.selectedMealIndex,
         isLoading: Boolean = state.isLoading,
         selectedSchool: School = state.selectedSchool,
-        isNutrientDialogVisible: Boolean = state.isNutrientDialogVisible,
-        isMemoDialogVisible: Boolean = state.isMemoDialogVisible,
         isMealDialogVisible: Boolean = state.isMealDialogVisible,
         isScheduleDialogVisible: Boolean = state.isScheduleDialogVisible,
         mainUiMode: MainUiMode = state.mainUiMode
@@ -124,8 +122,6 @@ class MainScreenViewModel @Inject constructor(
                 selectedDate = selectedDate,
                 isLoading = isLoading,
                 selectedSchool = selectedSchool,
-                isNutrientDialogVisible = isNutrientDialogVisible,
-                isMemoDialogVisible = isMemoDialogVisible,
                 isMealDialogVisible = isMealDialogVisible,
                 isScheduleDialogVisible = isScheduleDialogVisible,
                 mainUiMode = mainUiMode,
@@ -241,63 +237,6 @@ class MainScreenViewModel @Inject constructor(
     fun getClickLabel(date: Date): String =
         if (date == state.selectedDate) "" else "식단 및 학사일정 보기"
 
-    fun openNutrientDialog() {
-        updateUiState(isNutrientDialogVisible = true)
-    }
-
-    fun closeNutrientDialog() {
-        updateUiState(isNutrientDialogVisible = false)
-    }
-
-    fun openMemoDialog() {
-        updateUiState(isMemoDialogVisible = true)
-    }
-
-    fun closeMemoDialog() {
-        updateMemoOnRemote()
-        updateUiState(isMemoDialogVisible = false)
-    }
-
-    fun addMemo() {
-        viewModelScope.launch {
-            val newMemoId = preferencesRepository.getAndIncreaseMemoIdCount().toString()
-            updateMemoUiState {
-                state.selectedDateDataState.uiMemos.addUiMemoAtLast(
-                    newMemoId,
-                    state.userId,
-                    state.selectedDate
-                )
-            }
-        }
-    }
-
-    fun updateMemoOnLocal(uiMemo: UiMemo) {
-        updateMemoUiState {
-            state.selectedDateDataState.uiMemos.updateMemo(uiMemo)
-        }
-    }
-
-    private fun updateMemoUiState(block: () -> UiMemos) {
-        val newMemoUiState = block()
-        val newDailyData = state.updateMemoUiState(state.selectedDate, newMemoUiState)
-        updateUiState(monthlyData = newDailyData)
-    }
-
-    private fun updateMemoOnRemote() {
-        val userId = state.userId
-        val selectedDate = state.selectedDate
-        val updateItems = state.selectedDateDataState.uiMemos.memos.map { it.toMemo() }
-        viewModelScope.launch {
-            loadMonthlyDataUseCase.updateMemoToRemote(userId, selectedDate, updateItems)
-        }
-    }
-
-    fun deleteMemo(uiMemo: UiMemo) {
-        updateMemoUiState {
-            state.selectedDateDataState.uiMemos.deleteUiMemo(uiMemo)
-        }
-    }
-
     fun onMealDialog() {
         updateUiState(isMealDialogVisible = true)
     }
@@ -312,38 +251,6 @@ class MainScreenViewModel @Inject constructor(
 
     fun onScheduleDialogClose() {
         updateUiState(isScheduleDialogVisible = false)
-    }
-
-    fun getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
-        return state.monthlyDataState.getCustomActions(date)
-    }
-
-    private fun List<DailyData>.getCustomActions(date: Date): ImmutableList<CustomAccessibilityAction> {
-        val (_, month, day) = date
-        val actions = mutableListOf<CustomAccessibilityAction>()
-        actions.add(createMemoDialogCustomAction(month, day))
-
-        this.find { it.date == date }?.let {
-            if (!it.uiMeals.isEmpty) {
-                actions.add(createNutrientDialogCustomAction(month, day))
-            }
-        }
-
-        return actions.toImmutableList()
-    }
-
-    private fun createNutrientDialogCustomAction(month: Int, day: Int): CustomAccessibilityAction {
-        return CustomAccessibilityAction("${month}월 ${day}일 영양 보기") {
-            openNutrientDialog()
-            true
-        }
-    }
-
-    private fun createMemoDialogCustomAction(month: Int, day: Int): CustomAccessibilityAction {
-        return CustomAccessibilityAction("${month}월 ${day}일 메모 보기") {
-            openMemoDialog()
-            true
-        }
     }
 
     companion object {

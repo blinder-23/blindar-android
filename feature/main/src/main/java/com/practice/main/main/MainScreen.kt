@@ -25,8 +25,6 @@ import com.practice.designsystem.components.dialogContentPadding
 import com.practice.main.main.calendar.CalendarMainScreen
 import com.practice.main.main.daily.DailyMainScreen
 import com.practice.main.main.dialog.MealDialogContents
-import com.practice.main.main.dialog.MemoDialogContents
-import com.practice.main.main.dialog.NutrientDialogContents
 import com.practice.main.main.dialog.ScheduleDialogContents
 import com.practice.main.main.loading.LoadingMainScreen
 import com.practice.main.main.state.MainUiMode
@@ -116,37 +114,6 @@ private fun MainScreenDialogs(
     mealPagerState: PagerState,
 ) {
     val uiState by viewModel.uiState
-
-    if (uiState.isNutrientDialogVisible) {
-        val selectedMealIndex = uiState.selectedMealIndex
-        val selectedMeal = uiState.selectedDateDataState.uiMeals[selectedMealIndex]
-        BlindarDialog(
-            onDismissRequest = viewModel::closeNutrientDialog,
-            properties = DialogProperties(usePlatformDefaultWidth = false),
-        ) {
-            NutrientDialogContents(
-                uiMeal = selectedMeal,
-                onClose = viewModel::closeNutrientDialog,
-                modifier = Modifier.padding(dialogContentPadding),
-            )
-        }
-    }
-    if (uiState.isMemoDialogVisible) {
-        BlindarDialog(
-            onDismissRequest = viewModel::closeMemoDialog,
-            properties = DialogProperties(usePlatformDefaultWidth = false),
-        ) {
-            MemoDialogContents(
-                date = uiState.selectedDateDataState.uiMemos.date,
-                memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
-                onAddMemo = viewModel::addMemo,
-                onContentsChange = viewModel::updateMemoOnLocal,
-                onMemoDelete = viewModel::deleteMemo,
-                onDialogClose = viewModel::closeMemoDialog,
-                modifier = Modifier.padding(dialogContentPadding),
-            )
-        }
-    }
 
     if (uiState.isMealDialogVisible) {
         val scope = rememberCoroutineScope()

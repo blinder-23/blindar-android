@@ -3,9 +3,6 @@ package com.practice.main.main.state
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.domain.School
-import com.practice.main.state.UiMeals
-import com.practice.main.state.UiMemos
-import com.practice.main.state.UiSchedules
 
 data class MainUiState(
     val userId: String,
@@ -16,8 +13,6 @@ data class MainUiState(
     val selectedMealIndex: Int,
     val isLoading: Boolean,
     val selectedSchool: School,
-    val isNutrientDialogVisible: Boolean,
-    val isMemoDialogVisible: Boolean,
     val isMealDialogVisible: Boolean,
     val isScheduleDialogVisible: Boolean,
     val mainUiMode: MainUiMode,
@@ -38,40 +33,6 @@ data class MainUiState(
     val isScheduleOrMemoExists: Boolean
         get() = selectedDateDataState.memoDialogElements.isNotEmpty()
 
-    fun updateMemoUiState(date: Date, uiMemos: UiMemos): List<DailyData> {
-        return if (monthlyDataState.any { it.date == date }) {
-            addMemoUiStateOnExistingDate(date, uiMemos)
-        } else {
-            addMemoUiStateOnNewDate(date, uiMemos)
-        }
-    }
-
-    private fun addMemoUiStateOnNewDate(
-        date: Date,
-        uiMemos: UiMemos
-    ): List<DailyData> = monthlyDataState.toMutableList().apply {
-        add(
-            DailyData(
-                schoolCode = selectedSchoolCode,
-                date = date,
-                uiMeals = UiMeals(),
-                uiSchedules = UiSchedules.EmptyUiSchedules,
-                uiMemos = uiMemos
-            )
-        )
-    }.sortedBy { it.date }
-
-    private fun addMemoUiStateOnExistingDate(
-        date: Date,
-        uiMemos: UiMemos
-    ): List<DailyData> = monthlyDataState.map {
-        if (it.date == date) {
-            it.copy(uiMemos = uiMemos)
-        } else {
-            it
-        }
-    }
-
     companion object {
         val EMPTY = MainUiState(
             userId = "",
@@ -82,8 +43,6 @@ data class MainUiState(
             selectedMealIndex = 0,
             isLoading = false,
             selectedSchool = School.EmptySchool,
-            isNutrientDialogVisible = false,
-            isMemoDialogVisible = false,
             isMealDialogVisible = false,
             isScheduleDialogVisible = false,
             mainUiMode = MainUiMode.LOADING,
