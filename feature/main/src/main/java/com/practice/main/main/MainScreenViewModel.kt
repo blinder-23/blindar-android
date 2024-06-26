@@ -46,6 +46,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// TODO: 빠른 보기에서 영양/메모 팝업 대신 내비게이션 화면으로 가도록 수정
+// TODO: UiState 구조를 Flow로 싹 뜯어고치기 (메모 화면에서 돌아왔을 때 메모가 업데이트되지 않는 문제 해결)
+
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
     private val loadMonthlyDataUseCase: LoadMonthlyDataUseCase,
@@ -87,7 +90,7 @@ class MainScreenViewModel @Inject constructor(
      * 아직 UI에 반영되지 않은 값을 참조하기 때문에 예외가 발생한다.
      */
     fun onLaunch() {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch {
             collectPreferences()
         }
     }
@@ -154,12 +157,10 @@ class MainScreenViewModel @Inject constructor(
         loadMonthlyDataJob?.cancel()
 
         val (queryYear, queryMonth) = yearMonth
-        loadMonthlyDataJob = viewModelScope.launch(Dispatchers.Main) {
+        loadMonthlyDataJob = viewModelScope.launch {
             loadMonthlyDataUseCase.loadData(userId, schoolCode, queryYear, queryMonth)
                 .collectLatest {
-                    if (!state.isMemoDialogVisible) {
-                        updateUiState(monthlyData = parseDailyState(it))
-                    }
+                    updateUiState(monthlyData = parseDailyState(it))
                 }
         }
     }
