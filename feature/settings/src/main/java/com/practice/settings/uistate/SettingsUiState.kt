@@ -7,5 +7,6 @@ sealed class SettingsUiState {
     data class SettingsUiStateImpl(
         val mainScreenMode: MainScreenMode,
         val isDailyAlarmEnabled: Boolean,
+        val profileUiState: ProfileUiState,
     ) : SettingsUiState()
 }
