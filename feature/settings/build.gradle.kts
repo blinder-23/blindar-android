@@ -50,6 +50,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:firebase"))
     implementation(project(":core:util"))
+    implementation(project(":core:auth"))
     implementation(project(":data:preferences"))
     implementation(project(":data:api"))
 
@@ -70,4 +71,7 @@ dependencies {
     // Kotlin Coroutines
     implementation(libs.bundles.coroutines)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // Coil
+    implementation(libs.coil)
 }

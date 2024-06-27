@@ -116,6 +116,7 @@ androidx-junit = "androidx.test.ext:junit:1.1.5"
 androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.0" # 절대 업데이트하지 말 것
 
 vanniktech-dependency-graph-generator = 'com.vanniktech:gradle-dependency-graph-generator-plugin:0.7.0'
+coil = "io.coil-kt:coil-compose:2.6.0"
 
 google-play-auth = 'com.google.android.gms:play-services-auth:21.2.0'
 
