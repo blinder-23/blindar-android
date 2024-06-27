@@ -21,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// TODO: 로그인/로그아웃 로직을 모두 여기로 모으고, BlindarFirebase에 직접 접근할 수 없도록 수정
 class RegisterManager @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
 ) {
@@ -293,6 +294,10 @@ class RegisterManager @Inject constructor(
 
     private val Task<AuthResult>.isSignInSuccessful: Boolean
         get() = this.isSuccessful && this.result?.user != null
+
+    fun logout() {
+        BlindarFirebase.logout()
+    }
 
     companion object {
         private const val TAG = "RegisterManager"
