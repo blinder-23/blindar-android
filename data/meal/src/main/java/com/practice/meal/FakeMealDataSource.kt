@@ -8,7 +8,7 @@ class FakeMealDataSource : MealDataSource {
 
     private val meals = mutableSetOf<Meal>()
 
-    override suspend fun getMeals(schoolCode: Int, year: Int, month: Int): Flow<List<Meal>> {
+    override fun getMeals(schoolCode: Int, year: Int, month: Int): Flow<List<Meal>> {
         return flow {
             emit(meals.filter { it.schoolCode == schoolCode && it.year == year && it.month == month })
         }

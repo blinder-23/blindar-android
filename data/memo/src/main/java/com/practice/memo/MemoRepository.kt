@@ -16,10 +16,8 @@ class MemoRepository @Inject constructor(private val dataSource: MemoDataSource)
         }
     }
 
-    suspend fun getMemos(userId: String, year: Int, month: Int): Flow<List<Memo>> {
-        return withIoContext {
-            dataSource.getMemos(userId, year, month)
-        }
+    fun getMemos(userId: String, year: Int, month: Int): Flow<List<Memo>> {
+        return dataSource.getMemos(userId, year, month)
     }
 
     suspend fun getMemosPlain(userId: String, year: Int, month: Int): List<Memo> {

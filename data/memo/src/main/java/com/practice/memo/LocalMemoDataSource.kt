@@ -1,5 +1,6 @@
 package com.practice.memo
 
+import android.util.Log
 import com.hsk.ktx.getDateString
 import com.practice.domain.Memo
 import com.practice.memo.room.MemoDao
@@ -16,9 +17,10 @@ class LocalMemoDataSource @Inject constructor(private val memoDao: MemoDao) : Me
         return memoDao.getMemos(userId, dateString).map { memoEntity -> memoEntity.toMemo() }
     }
 
-    override suspend fun getMemos(userId: String, year: Int, month: Int): Flow<List<Memo>> {
+    override fun getMemos(userId: String, year: Int, month: Int): Flow<List<Memo>> {
         val monthPadZeroStart = month.toString().padStart(2, '0')
         return memoDao.getMemos(userId, year, monthPadZeroStart).map { memoEntity ->
+            Log.d("LocalMemoDataSource", "memo $year $month: ${memoEntity.size}")
             memoEntity.toMemo()
         }
     }

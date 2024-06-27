@@ -14,7 +14,7 @@ class FakeMemoDataSource : MemoDataSource {
         }
     }
 
-    override suspend fun getMemos(userId: String, year: Int, month: Int): Flow<List<Memo>> {
+    override fun getMemos(userId: String, year: Int, month: Int): Flow<List<Memo>> {
         return flow {
             emit(memos.filter { it.userId == userId && it.year == year && it.month == month })
         }

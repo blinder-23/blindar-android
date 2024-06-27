@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -33,7 +34,7 @@ class LoadMonthlyDataUseCase @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = SupervisorJob() + Dispatchers.IO
 
-    suspend fun loadData(
+    fun loadData(
         userId: String,
         schoolCode: Int,
         year: Int,
@@ -44,9 +45,9 @@ class LoadMonthlyDataUseCase @Inject constructor(
         loadMemoData(userId, year, month),
     ) { mealData, scheduleData, memoData ->
         MonthlyData(schoolCode, year, month, mealData, scheduleData, memoData)
-    }.stateIn(this)
+    }.stateIn(this, SharingStarted.Lazily, MonthlyData.Empty)
 
-    internal suspend fun loadMealData(
+    internal fun loadMealData(
         schoolCode: Int,
         year: Int,
         month: Int
@@ -56,7 +57,7 @@ class LoadMonthlyDataUseCase @Inject constructor(
         }
     }
 
-    internal suspend fun loadScheduleData(
+    internal fun loadScheduleData(
         schoolCode: Int,
         year: Int,
         month: Int,
@@ -64,7 +65,7 @@ class LoadMonthlyDataUseCase @Inject constructor(
         return loadScheduleFromLocal(schoolCode, year, month).map { it.toImmutableList() }
     }
 
-    internal suspend fun loadMemoData(
+    internal fun loadMemoData(
         userId: String,
         year: Int,
         month: Int
@@ -72,7 +73,7 @@ class LoadMonthlyDataUseCase @Inject constructor(
         return loadMemoFromLocal(userId, year, month).map { it.toImmutableList() }
     }
 
-    private suspend fun loadMealFromLocal(
+    private fun loadMealFromLocal(
         schoolCode: Int,
         year: Int,
         month: Int
@@ -80,7 +81,7 @@ class LoadMonthlyDataUseCase @Inject constructor(
         return localMealRepository.getMeals(schoolCode, year, month)
     }
 
-    private suspend fun loadScheduleFromLocal(
+    private fun loadScheduleFromLocal(
         schoolCode: Int,
         year: Int,
         month: Int
@@ -88,7 +89,7 @@ class LoadMonthlyDataUseCase @Inject constructor(
         return localScheduleRepository.getSchedules(schoolCode, year, month)
     }
 
-    private suspend fun loadMemoFromLocal(userId: String, year: Int, month: Int): Flow<List<Memo>> {
+    private fun loadMemoFromLocal(userId: String, year: Int, month: Int): Flow<List<Memo>> {
         return localMemoRepository.getMemos(userId, year, month)
     }
 

@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface MemoDataSource {
     suspend fun getMemos(userId: String, year: Int, month: Int, day: Int): List<Memo>
-    suspend fun getMemos(userId: String, year: Int, month: Int): Flow<List<Memo>>
+    fun getMemos(userId: String, year: Int, month: Int): Flow<List<Memo>>
     suspend fun getMemosPlain(userId: String, year: Int, month: Int): List<Memo>
 
     suspend fun insertMemo(memo: Memo)

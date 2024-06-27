@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 
 class LocalScheduleDataSource(private val scheduleDao: ScheduleDao) : ScheduleDataSource {
 
-    override suspend fun getSchedules(
+    override fun getSchedules(
         schoolCode: Int,
         year: Int,
         month: Int,

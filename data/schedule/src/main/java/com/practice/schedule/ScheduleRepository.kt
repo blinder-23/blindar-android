@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class ScheduleRepository(private val dataSource: ScheduleDataSource) {
 
-    suspend fun getSchedules(schoolCode: Int, year: Int, month: Int): Flow<List<Schedule>> {
+    fun getSchedules(schoolCode: Int, year: Int, month: Int): Flow<List<Schedule>> {
         return dataSource.getSchedules(schoolCode, year, month)
     }
 
