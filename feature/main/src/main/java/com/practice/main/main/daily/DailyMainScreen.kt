@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.practice.main.main.MainScreenViewModel
 import com.practice.main.main.daily.picker.rememberDailyDatePickerState
 import com.practice.main.main.daily.picker.toTextFieldFormat
@@ -30,7 +31,7 @@ fun DailyMainScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val uiState by viewModel.uiState
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val mealColumns = windowSize.mealColumns
 

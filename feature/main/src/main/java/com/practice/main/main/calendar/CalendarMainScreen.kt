@@ -1,6 +1,5 @@
 package com.practice.main.main.calendar
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -10,6 +9,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hsk.ktx.date.Date
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import com.practice.main.R
@@ -17,7 +17,6 @@ import com.practice.main.main.MainScreenViewModel
 import com.practice.main.main.state.MainUiState
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarMainScreen(
     windowSize: WindowSizeClass,
@@ -30,7 +29,7 @@ fun CalendarMainScreen(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val uiState by viewModel.uiState
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val calendarState = rememberCalendarState(uiState.year, uiState.month, uiState.selectedDate)
     val calendarPageCount = 13

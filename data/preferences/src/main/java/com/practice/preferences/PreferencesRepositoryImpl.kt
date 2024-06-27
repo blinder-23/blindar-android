@@ -2,22 +2,11 @@ package com.practice.preferences
 
 import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.MutablePreferences
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.*
 import com.practice.preferences.preferences.MainScreenMode
 import com.practice.preferences.preferences.ThemeMode
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
@@ -34,7 +23,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
     private val TAG = "PreferencesRepository"
 
     private object PreferenceKeys {
-//        val UI_MODE = stringPreferencesKey("ui-mode")
+        //        val UI_MODE = stringPreferencesKey("ui-mode")
         val MAIN_SCREEN_MODE = stringPreferencesKey("main-screen-mode")
         val THEME_MODE = stringPreferencesKey("theme-mode")
         val FIRST_EXECUTION = booleanPreferencesKey("first-execution")

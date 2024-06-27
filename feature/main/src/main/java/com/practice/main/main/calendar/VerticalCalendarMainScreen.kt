@@ -132,8 +132,6 @@ private fun VerticalCalendarMainScreenPreview() {
         mutableStateOf(
             MainUiState(
                 userId = "",
-                year = year,
-                month = month,
                 selectedDate = selectedDate,
                 monthlyDataState = (0..3).map {
                     DailyData(
@@ -165,11 +163,9 @@ private fun VerticalCalendarMainScreenPreview() {
                     name = "어떤 학교",
                     schoolCode = -1,
                 ),
-                isNutrientDialogVisible = false,
-                isMemoDialogVisible = false,
                 isMealDialogVisible = false,
                 isScheduleDialogVisible = false,
-                mainUiMode = MainUiMode.CALENDAR,
+                mainUiMode = MainUiMode.Calendar,
             )
         )
     }

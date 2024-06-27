@@ -2,19 +2,20 @@ package com.practice.main.main.state
 
 import com.practice.preferences.preferences.MainScreenMode
 
-enum class MainUiMode {
-    LOADING,
-    CALENDAR,
-    DAILY;
+sealed interface MainUiMode {
 
-    fun toMainScreenMode(): MainScreenMode? = when (this) {
-        LOADING -> null
-        CALENDAR -> MainScreenMode.Calendar
-        DAILY -> MainScreenMode.Daily
+    data object Loading : MainUiMode
+    data object Calendar : MainUiMode
+    data object Daily : MainUiMode
+
+    fun MainUiMode.toMainScreenMode(): MainScreenMode? = when (this) {
+        is Loading -> null
+        is Calendar -> MainScreenMode.Calendar
+        is Daily -> MainScreenMode.Daily
     }
-}
 
-fun MainScreenMode.toUiMode() = when (this) {
-    MainScreenMode.Calendar -> MainUiMode.CALENDAR
-    MainScreenMode.Daily -> MainUiMode.DAILY
+    fun MainScreenMode.toUiLoadedMode(): MainUiMode = when (this) {
+        MainScreenMode.Calendar -> Calendar
+        MainScreenMode.Daily -> Daily
+    }
 }

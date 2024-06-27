@@ -18,6 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.a11y.isLargeFont
 import com.practice.designsystem.components.BlindarDialog
@@ -49,10 +52,13 @@ fun MainScreen(
         systemUiController.setStatusBarColor(systemBarColor)
         systemUiController.setNavigationBarColor(systemBarColor)
         onLaunch()
+    }
+
+    LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
         viewModel.onLaunch()
     }
 
-    val uiState by viewModel.uiState
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val backgroundModifier = modifier.background(MaterialTheme.colorScheme.surface)
 
@@ -61,13 +67,13 @@ fun MainScreen(
     Scaffold {
         val paddingModifier = backgroundModifier.padding(it)
         when (uiState.mainUiMode) {
-            MainUiMode.LOADING -> {
+            is MainUiMode.Loading -> {
                 LoadingMainScreen(
                     modifier = paddingModifier,
                 )
             }
 
-            MainUiMode.CALENDAR -> {
+            is MainUiMode.Calendar -> {
                 CalendarMainScreen(
                     windowSize = windowSize,
                     viewModel = viewModel,
@@ -80,7 +86,7 @@ fun MainScreen(
                 )
             }
 
-            MainUiMode.DAILY -> {
+            is MainUiMode.Daily -> {
                 DailyMainScreen(
                     windowSize = windowSize,
                     viewModel = viewModel,
@@ -113,7 +119,7 @@ private fun MainScreenDialogs(
     viewModel: MainScreenViewModel,
     mealPagerState: PagerState,
 ) {
-    val uiState by viewModel.uiState
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     if (uiState.isMealDialogVisible) {
         val scope = rememberCoroutineScope()
@@ -128,7 +134,7 @@ private fun MainScreenDialogs(
                     viewModel.onMealTimeClick(it)
                     scope.launch { mealPagerState.animateScrollToPage(it) }
                 },
-                onNutrientDialogOpen = viewModel::openNutrientDialog,
+                onNutrientDialogOpen = { /* TODO: 영양 페이지로 연결 */ },
                 onMealDialogClose = viewModel::onMealDialogClose,
                 modifier = Modifier
                     .padding(dialogContentPadding)
@@ -144,7 +150,7 @@ private fun MainScreenDialogs(
         ) {
             ScheduleDialogContents(
                 scheduleElements = uiState.selectedDateDataState.memoDialogElements,
-                onMemoDialogOpen = viewModel::openMemoDialog,
+                onMemoDialogOpen = { /* TODO: 메모 페이지로 연결 */ },
                 onScheduleDialogClose = viewModel::onScheduleDialogClose,
                 modifier = Modifier
                     .padding(dialogContentPadding)

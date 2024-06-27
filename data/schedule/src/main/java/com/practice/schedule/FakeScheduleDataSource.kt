@@ -8,7 +8,7 @@ class FakeScheduleDataSource : ScheduleDataSource {
 
     private val scheduleEntities = mutableSetOf<Schedule>()
 
-    override suspend fun getSchedules(
+    override fun getSchedules(
         schoolCode: Int,
         year: Int,
         month: Int,

@@ -6,8 +6,6 @@ import com.practice.domain.School
 
 data class MainUiState(
     val userId: String,
-    val year: Int,
-    val month: Int,
     val selectedDate: Date,
     val monthlyDataState: List<DailyData>,
     val selectedMealIndex: Int,
@@ -17,6 +15,10 @@ data class MainUiState(
     val isScheduleDialogVisible: Boolean,
     val mainUiMode: MainUiMode,
 ) {
+    val year: Int
+        get() = selectedDate.year
+    val month: Int
+        get() = selectedDate.month
     val yearMonth: YearMonth
         get() = YearMonth(year, month)
 
@@ -36,8 +38,6 @@ data class MainUiState(
     companion object {
         val EMPTY = MainUiState(
             userId = "",
-            year = Date.now().year,
-            month = Date.now().month,
             selectedDate = Date.now(),
             monthlyDataState = emptyList(),
             selectedMealIndex = 0,
@@ -45,7 +45,7 @@ data class MainUiState(
             selectedSchool = School.EmptySchool,
             isMealDialogVisible = false,
             isScheduleDialogVisible = false,
-            mainUiMode = MainUiMode.LOADING,
+            mainUiMode = MainUiMode.Loading,
         )
     }
 }

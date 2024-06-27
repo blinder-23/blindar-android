@@ -32,7 +32,6 @@ import com.practice.main.main.state.MainUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HorizontalCalendarMainScreen(
     calendarPageCount: Int,

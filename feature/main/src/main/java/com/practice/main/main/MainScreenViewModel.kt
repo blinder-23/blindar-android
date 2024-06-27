@@ -2,14 +2,9 @@ package com.practice.main.main
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hsk.ktx.date.Date
-import com.practice.combine.LoadMonthlyDataUseCase
 import com.practice.combine.MonthlyData
 import com.practice.designsystem.calendar.core.YearMonth
 import com.practice.designsystem.calendar.core.getFirstWeekday
@@ -21,67 +16,127 @@ import com.practice.domain.schedule.Schedule
 import com.practice.firebase.BlindarFirebase
 import com.practice.firebase.BlindarUserStatus
 import com.practice.main.main.state.DailyData
-import com.practice.main.main.state.MainUiMode
+import com.practice.main.main.state.DialogUiState
+import com.practice.main.main.state.MainUiMode.Calendar.toUiLoadedMode
 import com.practice.main.main.state.MainUiState
-import com.practice.main.main.state.toUiMode
-import com.practice.main.state.UiMeals
-import com.practice.main.state.UiMemo
-import com.practice.main.state.UiMemos
-import com.practice.main.state.UiSchedules
-import com.practice.main.state.toMealUiState
-import com.practice.main.state.toMemo
-import com.practice.main.state.toUiMemo
-import com.practice.main.state.toUiSchedule
+import com.practice.main.main.state.PreferencesState
+import com.practice.main.state.*
+import com.practice.meal.MealRepository
+import com.practice.memo.MemoRepository
 import com.practice.preferences.PreferencesRepository
+import com.practice.schedule.ScheduleRepository
 import com.practice.util.date.DateUtil
 import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 // TODO: 빠른 보기에서 영양/메모 팝업 대신 내비게이션 화면으로 가도록 수정
-// TODO: UiState 구조를 Flow로 싹 뜯어고치기 (메모 화면에서 돌아왔을 때 메모가 업데이트되지 않는 문제 해결)
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-    private val loadMonthlyDataUseCase: LoadMonthlyDataUseCase,
-    private val preferencesRepository: PreferencesRepository,
+    private val mealRepository: MealRepository,
+    private val scheduleRepository: ScheduleRepository,
+    private val memoRepository: MemoRepository,
+    preferencesRepository: PreferencesRepository,
 ) : ViewModel() {
 
-    private val _uiState: MutableState<MainUiState>
-    val uiState: State<MainUiState>
-        get() = _uiState
+    private val userId = getCurrentUserId()
+
+    private val preferencesState: Flow<PreferencesState> =
+        preferencesRepository.userPreferencesFlow.map {
+            if (initialWorkCount == null) {
+                initialWorkCount = it.runningWorksCount
+            }
+            PreferencesState.Loaded(
+                isRefreshing = it.runningWorksCount != initialWorkCount,
+                selectedSchool = School(
+                    name = it.schoolName,
+                    schoolCode = it.schoolCode,
+                ),
+                mainUiMode = it.mainScreenMode.toUiLoadedMode(),
+            )
+        }
+    private val selectedDate = MutableStateFlow(Date.now())
+    private val selectedMealIndex = MutableStateFlow(0)
+    private val isDialogVisible = MutableStateFlow(DialogUiState.EMPTY)
+    private val monthlyData: MutableStateFlow<MonthlyData> = MutableStateFlow(MonthlyData.Empty)
+
+    val uiState: StateFlow<MainUiState> = combine(
+        preferencesState,
+        selectedDate,
+        selectedMealIndex,
+        isDialogVisible,
+        monthlyData,
+    ) { preferencesState, selectedDate, selectedMealIndex, isDialogVisible, monthlyData ->
+        when (preferencesState) {
+            is PreferencesState.Loading -> {
+                MainUiState.EMPTY
+            }
+
+            is PreferencesState.Loaded -> {
+                MainUiState(
+                    userId = userId,
+                    selectedDate = selectedDate,
+                    monthlyDataState = parseDailyState(monthlyData),
+                    selectedMealIndex = selectedMealIndex,
+                    isLoading = preferencesState.isRefreshing,
+                    selectedSchool = preferencesState.selectedSchool,
+                    isMealDialogVisible = isDialogVisible.isMealDialogVisible,
+                    isScheduleDialogVisible = isDialogVisible.isScheduleDialogVisible,
+                    mainUiMode = preferencesState.mainUiMode,
+                )
+            }
+        }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, MainUiState.EMPTY)
 
     // For internal use only
-    private var state: MainUiState
-        get() = _uiState.value
-        set(value) {
-            _uiState.value = value
-        }
+    private val state: MainUiState
+        get() = uiState.value
 
-    private val selectedDateFlow: MutableStateFlow<Date>
-
-    private var loadMonthlyDataJob: Job? = null
     private var initialWorkCount: Int? = null
-
-    init {
-        val current = Date.now()
-        val userId = getCurrentUserId()
-        _uiState = mutableStateOf(MainUiState.EMPTY.copy(userId = userId))
-        selectedDateFlow = MutableStateFlow(current)
-    }
 
     private fun getCurrentUserId(): String {
         return when (val currentlyLoggedInUser = BlindarFirebase.getBlindarUser()) {
             is BlindarUserStatus.LoginUser -> currentlyLoggedInUser.user.uid
             is BlindarUserStatus.NotLoggedIn -> ""
+        }
+    }
+
+    private suspend fun collectPreferences() {
+        preferencesState.collectLatest {
+            when (it) {
+                is PreferencesState.Loading -> MonthlyData.Empty
+                is PreferencesState.Loaded -> {
+                    collectMonthlyData(it)
+                }
+            }
+        }
+    }
+
+    private suspend fun collectMonthlyData(preferences: PreferencesState.Loaded) {
+        val schoolCode = preferences.selectedSchool.schoolCode
+        val (year, month) = selectedDate.value.yearMonth
+
+        combine(
+            mealRepository.getMeals(schoolCode, year, month),
+            scheduleRepository.getSchedules(schoolCode, year, month),
+            memoRepository.getMemos(userId, year, month),
+        ) { meals, schedules, memos ->
+            MonthlyData(
+                schoolCode = schoolCode,
+                year = year,
+                month = month,
+                meals = meals.toImmutableList(),
+                schedules = schedules.toImmutableList(),
+                memos = memos.toImmutableList(),
+            )
+        }.collectLatest {
+            monthlyData.value = it
         }
     }
 
@@ -95,50 +150,10 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Kotlin Flow의 combine 함수를 본따 작성했다.
-     */
-    private fun updateUiState(
-        userId: String = state.userId,
-        yearMonth: YearMonth = state.yearMonth,
-        selectedDate: Date = state.selectedDate,
-        monthlyData: List<DailyData> = state.monthlyDataState,
-        selectedMealIndex: Int = state.selectedMealIndex,
-        isLoading: Boolean = state.isLoading,
-        selectedSchool: School = state.selectedSchool,
-        isMealDialogVisible: Boolean = state.isMealDialogVisible,
-        isScheduleDialogVisible: Boolean = state.isScheduleDialogVisible,
-        mainUiMode: MainUiMode = state.mainUiMode
-    ) {
-        val isCollectNeeded =
-            userId != state.userId || yearMonth != state.yearMonth || selectedSchool != state.selectedSchool || loadMonthlyDataJob == null
-        synchronized(state) {
-            state = state.copy(
-                userId = userId,
-                year = yearMonth.year,
-                month = yearMonth.month,
-                monthlyDataState = monthlyData,
-                selectedMealIndex = selectedMealIndex,
-                selectedDate = selectedDate,
-                isLoading = isLoading,
-                selectedSchool = selectedSchool,
-                isMealDialogVisible = isMealDialogVisible,
-                isScheduleDialogVisible = isScheduleDialogVisible,
-                mainUiMode = mainUiMode,
-            )
-        }
-        if (isCollectNeeded) {
-            startCollectMonthlyDataJob(userId, selectedSchool.schoolCode, yearMonth)
-        }
-    }
-
     fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
         Log.d(TAG, "clicked date: $clickedDate")
-        updateUiState(
-            yearMonth = clickedDate.yearMonth,
-            selectedDate = clickedDate,
-            selectedMealIndex = 0,
-        )
+        selectedDate.value = clickedDate
+        selectedMealIndex.value = 0
     }
 
     fun onRefreshIconClick(context: Context) {
@@ -149,28 +164,8 @@ class MainScreenViewModel @Inject constructor(
         )
     }
 
-    private fun startCollectMonthlyDataJob(userId: String, schoolCode: Int, yearMonth: YearMonth) {
-        loadMonthlyDataJob?.cancel()
-
-        val (queryYear, queryMonth) = yearMonth
-        loadMonthlyDataJob = viewModelScope.launch {
-            loadMonthlyDataUseCase.loadData(userId, schoolCode, queryYear, queryMonth)
-                .collectLatest {
-                    updateUiState(monthlyData = parseDailyState(it))
-                }
-        }
-    }
-
-    fun onMainScreenModeSet(mainUiMode: MainUiMode) {
-        mainUiMode.toMainScreenMode()?.let { mainScreenMode ->
-            viewModelScope.launch {
-                preferencesRepository.updateMainScreenMode(mainScreenMode)
-            }
-        }
-    }
-
     fun onMealTimeClick(index: Int) {
-        updateUiState(selectedMealIndex = index)
+        selectedMealIndex.value = index
     }
 
     private fun parseDailyState(monthlyData: MonthlyData): List<DailyData> {
@@ -195,33 +190,15 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onSwiped(yearMonth: YearMonth) = viewModelScope.launch {
-        if (yearMonth != state.yearMonth) {
-            val firstWeekday = yearMonth.getFirstWeekday()
-            updateUiState(yearMonth = yearMonth, selectedDate = firstWeekday)
-        }
-    }
-
-    private suspend fun collectPreferences() {
-        preferencesRepository.userPreferencesFlow.collectLatest {
-            if (initialWorkCount == null) {
-                initialWorkCount = it.runningWorksCount
-            }
-
-            updateUiState(
-                isLoading = (it.runningWorksCount != initialWorkCount),
-                selectedSchool = School(
-                    name = it.schoolName,
-                    schoolCode = it.schoolCode,
-                ),
-                mainUiMode = it.mainScreenMode.toUiMode(),
-            )
-        }
+        val firstWeekday = yearMonth.getFirstWeekday()
+        selectedDate.value = firstWeekday
     }
 
     fun getContentDescription(date: Date): String {
+        // TODO: dangerous???
         val dailyState = state.monthlyDataState.find { it.date == date }
 
-        val isSelectedString = if (date == state.selectedDate) "선택됨" else ""
+        val isSelectedString = if (date == selectedDate.value) "선택됨" else ""
         val isTodayString = if (date == DateUtil.today()) "오늘" else ""
         val dailyStateString = if (dailyState != null) {
             "식단: ${dailyState.uiMeals.description}\n학사일정:${dailyState.uiSchedules.description}\n메모: ${dailyState.uiMemos.description}"
@@ -235,22 +212,30 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun getClickLabel(date: Date): String =
-        if (date == state.selectedDate) "" else "식단 및 학사일정 보기"
+        if (date == selectedDate.value) "" else "식단 및 학사일정 보기"
 
     fun onMealDialog() {
-        updateUiState(isMealDialogVisible = true)
+        isDialogVisible.update {
+            it.copy(isMealDialogVisible = true)
+        }
     }
 
     fun onMealDialogClose() {
-        updateUiState(isMealDialogVisible = false)
+        isDialogVisible.update {
+            it.copy(isMealDialogVisible = false)
+        }
     }
 
     fun onScheduleDialogOpen() {
-        updateUiState(isScheduleDialogVisible = true)
+        isDialogVisible.update {
+            it.copy(isScheduleDialogVisible = true)
+        }
     }
 
     fun onScheduleDialogClose() {
-        updateUiState(isScheduleDialogVisible = false)
+        isDialogVisible.update {
+            it.copy(isScheduleDialogVisible = false)
+        }
     }
 
     companion object {

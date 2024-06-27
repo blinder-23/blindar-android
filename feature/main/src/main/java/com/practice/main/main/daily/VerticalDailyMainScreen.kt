@@ -1,6 +1,5 @@
 package com.practice.main.main.daily
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,7 +42,6 @@ import com.practice.main.state.UiMemos
 import com.practice.main.state.UiSchedules
 import kotlin.math.absoluteValue
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun VerticalDailyMainScreen(
     uiState: MainUiState,
@@ -84,7 +82,6 @@ fun VerticalDailyMainScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun VerticalDailyMainScreenContents(
     datePickerState: DailyDatePickerState,
@@ -151,15 +148,12 @@ private fun DatePickerCard(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @LightPreview
 @Composable
 private fun VerticalDailyMainScreenPreview() {
     val selectedDate = Date(2024, 1, 8)
     val uiState = MainUiState(
         userId = "",
-        year = 2024,
-        month = 1,
         selectedDate = selectedDate,
         monthlyDataState = (1..3).map {
             DailyData(
@@ -182,11 +176,9 @@ private fun VerticalDailyMainScreenPreview() {
             name = "어떤 학교",
             schoolCode = -1,
         ),
-        isNutrientDialogVisible = false,
-        isMemoDialogVisible = false,
         isMealDialogVisible = false,
         isScheduleDialogVisible = false,
-        mainUiMode = MainUiMode.DAILY,
+        mainUiMode = MainUiMode.Daily,
     )
     val datePickerState = rememberDailyDatePickerState(
         initialDate = uiState.selectedDate,

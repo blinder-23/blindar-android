@@ -16,8 +16,6 @@ internal fun previewMainUiState(): MainUiState {
 
     return MainUiState(
         userId = "",
-        year = year,
-        month = month,
         selectedDate = now,
         monthlyDataState = (1..3).map {
             DailyData(
@@ -40,10 +38,8 @@ internal fun previewMainUiState(): MainUiState {
             name = "어떤 학교",
             schoolCode = -1,
         ),
-        isNutrientDialogVisible = false,
-        isMemoDialogVisible = false,
         isMealDialogVisible = false,
         isScheduleDialogVisible = false,
-        mainUiMode = MainUiMode.CALENDAR,
+        mainUiMode = MainUiMode.Calendar,
     )
 }
