@@ -49,6 +49,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.practice.designsystem.DarkPreview
@@ -354,7 +355,10 @@ internal fun ScheduleContents(
                 verticalArrangement = Arrangement.spacedBy(itemPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                MainScreenContentItems(items = scheduleElements) { it.displayText }
+                MainScreenContentItems(
+                    items = scheduleElements,
+                    itemSpacing = 12.dp,
+                ) { it.displayText }
                 MainScreenContentBottomButton(
                     title = stringResource(id = R.string.open_memo_dialog_button),
                     onButtonClick = onMemoButtonClick,
@@ -387,15 +391,19 @@ private fun EmptyScheduleContent(
 private fun <T> MainScreenContentItems(
     items: ImmutableList<T>,
     modifier: Modifier = Modifier,
+    itemSpacing: Dp = 8.dp,
     itemToString: (T) -> String,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(itemSpacing),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         items.forEach { item ->
-            BodyLarge(text = itemToString(item))
+            BodyLarge(
+                text = itemToString(item),
+                textAlign = TextAlign.Center,
+            )
         }
     }
 }
