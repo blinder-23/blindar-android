@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -16,15 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.QuestionMark
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -49,7 +45,6 @@ import com.practice.designsystem.components.BlindarChip
 import com.practice.designsystem.components.BlindarTopAppBar
 import com.practice.designsystem.components.BlindarTopAppBarDefaults
 import com.practice.designsystem.components.BodyLarge
-import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.preferences.preferences.MainScreenMode
 import com.practice.settings.dialog.FeedbackDialog
@@ -70,8 +65,6 @@ fun Settings(
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var isScreenModeDialogVisible by rememberSaveable { mutableStateOf(false) }
     var isFeedbackDialogVisible by rememberSaveable { mutableStateOf(false) }
@@ -249,13 +242,6 @@ private fun SettingsScreen(
             onToggleDailyAlarm = onToggleDailyAlarm,
             onFeedbackDialogOpen = onFeedbackDialogOpen,
         )
-        Spacer(modifier = Modifier.weight(1f))
-        CloseSettingsButton(
-            onClick = onBackButtonClick,
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-        )
     }
 }
 
@@ -336,30 +322,6 @@ private fun SettingsItems(
         SendFeedbackItem(
             onClick = onFeedbackDialogOpen,
             color = textColor,
-        )
-    }
-}
-
-@Composable
-private fun CloseSettingsButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val shape = RoundedCornerShape(12.dp)
-    TextButton(
-        onClick = onClick,
-        shape = shape,
-        modifier = modifier
-            .clip(shape),
-        colors = ButtonDefaults.textButtonColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        ),
-        contentPadding = PaddingValues(12.dp),
-    ) {
-        TitleMedium(
-            text = stringResource(id = R.string.close),
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
         )
     }
 }
