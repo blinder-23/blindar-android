@@ -82,7 +82,12 @@ class MemoViewModel @Inject constructor(
 
     fun onAddMemoButtonClick() {
         _bottomSheetState.value =
-            MemoBottomSheetState.Add(UiMemo.getEmptyMemo(userId = route.userId))
+            MemoBottomSheetState.Add(
+                UiMemo.getEmptyMemo(
+                    userId = route.userId,
+                    date = route.date,
+                )
+            )
     }
 
     fun onEditMemoButtonClick(uiMemo: UiMemo) {
