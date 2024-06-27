@@ -5,6 +5,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.serialization.decodeArguments
 import com.practice.main.memo.MemoRoute
 import com.practice.main.nutrient.NutrientRoute
+import com.practice.settings.feedback.FeedbackRoute
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
@@ -46,6 +47,7 @@ private val blindarRoutes = listOf(
     SettingsRoute::class,
     NutrientRoute::class,
     MemoRoute::class,
+    FeedbackRoute::class,
 ).associateBy {
     it.simpleName
 }.toPersistentHashMap()

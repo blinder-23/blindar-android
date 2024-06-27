@@ -34,6 +34,8 @@ import com.practice.onboarding.splash.SplashScreen
 import com.practice.register.phonenumber.VerifyPhoneNumber
 import com.practice.register.registerform.RegisterFormScreen
 import com.practice.register.selectschool.SelectSchoolScreen
+import com.practice.settings.feedback.FeedbackRoute
+import com.practice.settings.feedback.FeedbackScreen
 import com.practice.settings.settings.Settings
 import com.practice.util.makeToast
 
@@ -245,6 +247,9 @@ fun NavGraphBuilder.blindarMainNavGraph(
                     popUpTo(MainRoute) { inclusive = true }
                 }
             },
+            onFeedbackButtonClick = {
+                navController.navigate(FeedbackRoute)
+            },
             modifier = Modifier
                 .safeDrawingPadding()
                 .fillMaxSize(),
@@ -266,6 +271,15 @@ fun NavGraphBuilder.blindarMainNavGraph(
             onNavigateToBack = {
                 navController.popBackStack()
             },
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .safeDrawingPadding()
+                .fillMaxSize(),
+        )
+    }
+    composable<FeedbackRoute> {
+        FeedbackScreen(
+            onNavigateBack = { navController.popBackStack() },
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.surface)
                 .safeDrawingPadding()
