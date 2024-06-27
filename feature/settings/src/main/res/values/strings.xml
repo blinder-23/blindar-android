@@ -45,5 +45,9 @@
     <string name="feedback_dialog_cancel_button">취소</string>
     <string name="feedback_dialog_send_button">전송</string>
 
+    <string name="feedback_screen_title">피드백 작성</string>
+    <string name="feedback_screen_textfield_label">피드백 작성</string>
+    <string name="feedback_screen_textfield_error_empty">피드백을 입력해 주세요.</string>
+
     <string name="close">닫기</string>
 </resources>
