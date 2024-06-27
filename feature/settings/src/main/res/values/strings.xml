@@ -2,6 +2,7 @@
 <resources>
     <string name="top_bar_title">설정</string>
 
+    <string name="settings_username">사용자 이름: %s</string>
     <string name="settings_logout">로그아웃</string>
     <string name="settings_logout_dialog_title">로그아웃할까요?</string>
     <string name="settings_logout_dialog_dismiss">취소</string>

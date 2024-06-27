@@ -36,6 +36,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -243,6 +245,8 @@ private fun UserProfile(
     modifier: Modifier = Modifier,
 ) {
     Log.d("Settings", "profile image uri: ${profileUiState.profileImageUri}")
+    val usernameDescription =
+        stringResource(id = R.string.settings_username, profileUiState.username)
     Row(
         modifier = modifier.padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -262,7 +266,12 @@ private fun UserProfile(
                     )
                 },
             )
-            BodyLarge(text = profileUiState.username)
+            BodyLarge(
+                text = profileUiState.username,
+                modifier = Modifier.clearAndSetSemantics {
+                    contentDescription = usernameDescription
+                },
+            )
             Spacer(modifier = Modifier.weight(1f))
             BlindarChip(
                 text = stringResource(id = R.string.settings_logout),
