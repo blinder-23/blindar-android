@@ -1,4 +1,4 @@
-package com.practice.settings.items
+package com.practice.settings.settings.items
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

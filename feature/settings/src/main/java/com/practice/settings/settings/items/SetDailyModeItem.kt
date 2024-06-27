@@ -1,4 +1,4 @@
-package com.practice.settings.items
+package com.practice.settings.settings.items
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -25,35 +24,26 @@ import com.practice.designsystem.components.LabelMedium
 import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.settings.R
-import com.practice.settings.onDailyAlarmClick
-import com.practice.settings.rememberNotificationPermissionLauncher
 
 @Composable
-internal fun SetDailyAlarmItem(
-    isDailyAlarmEnabled: Boolean,
+internal fun SetDailyModeItem(
+    isDailyModeEnabled: Boolean,
     onToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
 ) {
-    val permissionLauncher = rememberNotificationPermissionLauncher(isDailyAlarmEnabled, onToggle)
-
-    val context = LocalContext.current
-    val onClick = {
-        onDailyAlarmClick(!isDailyAlarmEnabled, context, permissionLauncher) {
-            onToggle(!isDailyAlarmEnabled)
-        }
-    }
-
     val titleDescription =
-        stringResource(id = if (isDailyAlarmEnabled) R.string.settings_daily_alarm_title_description_enabled else R.string.settings_daily_alarm_title_description_disabled)
+        stringResource(id = if (isDailyModeEnabled) R.string.settings_daily_mode_title_description_enabled else R.string.settings_daily_mode_title_description_disabled)
     val onClickLabel =
-        stringResource(id = if (isDailyAlarmEnabled) R.string.settings_daily_alarm_disable else R.string.settings_daily_alarm_enable)
+        stringResource(id = if (isDailyModeEnabled) R.string.settings_daily_mode_disable else R.string.settings_daily_mode_enable)
 
     Row(
         modifier = modifier
             .semantics(mergeDescendants = true) {}
             .clickable(
-                onClick = onClick,
+                onClick = {
+                    onToggle(!isDailyModeEnabled)
+                },
                 onClickLabel = onClickLabel,
                 role = Role.Switch,
             )
@@ -67,20 +57,22 @@ internal fun SetDailyAlarmItem(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             TitleMedium(
-                text = stringResource(id = R.string.settings_daily_alarm_title),
+                text = stringResource(id = R.string.settings_daily_mode_title),
                 color = color,
                 modifier = Modifier.clearAndSetSemantics {
                     contentDescription = titleDescription
                 },
             )
             LabelMedium(
-                text = stringResource(id = R.string.settings_daily_alarm_body),
+                text = stringResource(id = R.string.settings_daily_mode_body),
                 color = color,
             )
         }
         Switch(
-            checked = isDailyAlarmEnabled,
-            onCheckedChange = { onClick() },
+            checked = isDailyModeEnabled,
+            onCheckedChange = {
+                onToggle(!isDailyModeEnabled)
+            },
             modifier = Modifier.clearAndSetSemantics { },
         )
     }
@@ -88,9 +80,9 @@ internal fun SetDailyAlarmItem(
 
 @LightAndDarkPreview
 @Composable
-private fun SetDailyAlarmItemPreview() {
+private fun SetDailyModeItemPreview() {
     var enabled by remember { mutableStateOf(false) }
     BlindarTheme {
-        SetDailyAlarmItem(isDailyAlarmEnabled = enabled, onToggle = { enabled = !it })
+        SetDailyModeItem(isDailyModeEnabled = enabled, onToggle = { enabled = !it })
     }
 }

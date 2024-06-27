@@ -1,4 +1,4 @@
-package com.practice.settings
+package com.practice.settings.settings
 
 import android.Manifest
 import android.app.AlarmManager
@@ -16,6 +16,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.getSystemService
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import com.practice.settings.R
 import com.practice.util.makeToast
 
 @OptIn(ExperimentalPermissionsApi::class)

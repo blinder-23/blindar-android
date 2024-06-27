@@ -34,7 +34,7 @@ import com.practice.onboarding.splash.SplashScreen
 import com.practice.register.phonenumber.VerifyPhoneNumber
 import com.practice.register.registerform.RegisterFormScreen
 import com.practice.register.selectschool.SelectSchoolScreen
-import com.practice.settings.Settings
+import com.practice.settings.settings.Settings
 import com.practice.util.makeToast
 
 private const val TAG = "BlindarNavHost"

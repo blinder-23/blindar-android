@@ -1,4 +1,4 @@
-package com.practice.settings.dialog
+package com.practice.settings.settings.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row

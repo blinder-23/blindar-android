@@ -1,4 +1,4 @@
-package com.practice.settings.dialog
+package com.practice.settings.settings.dialog
 
 import android.content.Context
 import androidx.compose.runtime.Composable

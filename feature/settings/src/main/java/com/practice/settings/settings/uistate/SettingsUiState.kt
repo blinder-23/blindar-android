@@ -1,4 +1,4 @@
-package com.practice.settings.uistate
+package com.practice.settings.settings.uistate
 
 import com.practice.preferences.preferences.MainScreenMode
 

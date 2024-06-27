@@ -1,4 +1,4 @@
-package com.practice.settings
+package com.practice.settings.settings
 
 import android.util.Log
 import android.widget.Toast
@@ -47,14 +47,15 @@ import com.practice.designsystem.components.BlindarTopAppBarDefaults
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.preferences.preferences.MainScreenMode
-import com.practice.settings.dialog.FeedbackDialog
-import com.practice.settings.dialog.LogoutDialog
-import com.practice.settings.dialog.MainScreenModeDialog
-import com.practice.settings.items.SendFeedbackItem
-import com.practice.settings.items.SetDailyAlarmItem
-import com.practice.settings.items.SetDailyModeItem
-import com.practice.settings.uistate.ProfileUiState
-import com.practice.settings.uistate.SettingsUiState
+import com.practice.settings.R
+import com.practice.settings.settings.dialog.FeedbackDialog
+import com.practice.settings.settings.dialog.LogoutDialog
+import com.practice.settings.settings.dialog.MainScreenModeDialog
+import com.practice.settings.settings.items.SendFeedbackItem
+import com.practice.settings.settings.items.SetDailyAlarmItem
+import com.practice.settings.settings.items.SetDailyModeItem
+import com.practice.settings.settings.uistate.ProfileUiState
+import com.practice.settings.settings.uistate.SettingsUiState
 import com.practice.util.makeToast
 import kotlinx.coroutines.launch
 

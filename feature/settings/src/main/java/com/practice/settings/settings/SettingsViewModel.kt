@@ -1,4 +1,4 @@
-package com.practice.settings
+package com.practice.settings.settings
 
 import android.os.Build
 import androidx.lifecycle.ViewModel
@@ -10,8 +10,8 @@ import com.practice.firebase.BlindarFirebase
 import com.practice.firebase.BlindarUserStatus
 import com.practice.preferences.PreferencesRepository
 import com.practice.preferences.preferences.MainScreenMode
-import com.practice.settings.uistate.ProfileUiState
-import com.practice.settings.uistate.SettingsUiState
+import com.practice.settings.settings.uistate.ProfileUiState
+import com.practice.settings.settings.uistate.SettingsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
