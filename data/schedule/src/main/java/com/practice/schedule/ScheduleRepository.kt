@@ -11,6 +11,10 @@ class ScheduleRepository(private val dataSource: ScheduleDataSource) {
         return dataSource.getSchedules(schoolCode, year, month)
     }
 
+    suspend fun getSchedulesPlain(schoolCode: Int, year: Int, month: Int): List<Schedule> {
+        return dataSource.getSchedulesPlain(schoolCode, year, month)
+    }
+
     suspend fun getSchedules(schoolCode: Int, date: Date): List<Schedule> {
         val (year, month, day) = date
         return dataSource.getSchedules(schoolCode, getDateString(year, month, day))

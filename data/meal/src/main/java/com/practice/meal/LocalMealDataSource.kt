@@ -18,6 +18,12 @@ class LocalMealDataSource(private val mealDao: MealDao) : MealDataSource {
         }
     }
 
+    override suspend fun getMealsPlain(schoolCode: Int, year: Int, month: Int): List<Meal> {
+        return mealDao.getMealsPlain(schoolCode, getDateString(year, month)).map {
+            it.toMealEntity()
+        }
+    }
+
     override suspend fun getMeal(
         schoolCode: Int,
         year: Int,

@@ -18,6 +18,10 @@ class FakeScheduleDataSource : ScheduleDataSource {
         }
     }
 
+    override suspend fun getSchedulesPlain(schoolCode: Int, year: Int, month: Int): List<Schedule> {
+        return scheduleEntities.filter { it.schoolCode == schoolCode && it.year == year && it.month == month }
+    }
+
     override suspend fun getSchedules(schoolCode: Int, ymd: String): List<Schedule> {
         return try {
             val year = ymd.substring(0..3).toInt()

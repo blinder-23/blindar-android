@@ -10,6 +10,10 @@ class MealRepository(private val dataSource: MealDataSource) {
         return dataSource.getMeals(schoolCode, year, month)
     }
 
+    suspend fun getMealsPlain(schoolCode: Int, year: Int, month: Int): List<Meal> {
+        return dataSource.getMealsPlain(schoolCode, year, month)
+    }
+
     suspend fun getMeal(schoolCode: Int, date: Date): List<Meal> {
         return getMeal(schoolCode, date.year, date.month, date.dayOfMonth)
     }

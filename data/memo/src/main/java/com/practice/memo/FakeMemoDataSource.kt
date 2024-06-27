@@ -20,6 +20,12 @@ class FakeMemoDataSource : MemoDataSource {
         }
     }
 
+    override suspend fun getMemosPlain(userId: String, year: Int, month: Int): List<Memo> {
+        return memos.filter {
+            it.userId == userId && it.year == year && it.month == month
+        }
+    }
+
     override suspend fun insertMemo(memo: Memo) {
         memos.add(memo)
     }

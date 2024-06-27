@@ -13,6 +13,9 @@ interface ScheduleDao {
     @Query("SELECT * FROM schedule WHERE school_code = :schoolCode AND date LIKE :yearMonth || '%%'")
     fun getSchedule(schoolCode: Int, yearMonth: String): Flow<List<ScheduleEntityRoom>>
 
+    @Query("SELECT * FROM schedule WHERE school_code = :schoolCode AND date LIKE :yearMonth || '%%'")
+    suspend fun getSchedulePlain(schoolCode: Int, yearMonth: String): List<ScheduleEntityRoom>
+
     @Query("SELECT * FROM schedule WHERE school_code = :schoolCode AND date = :ymd")
     suspend fun getSchedules(schoolCode: Int, ymd: String): List<ScheduleEntityRoom>
 

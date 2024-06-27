@@ -23,6 +23,12 @@ class LocalMemoDataSource @Inject constructor(private val memoDao: MemoDao) : Me
         }
     }
 
+    override suspend fun getMemosPlain(userId: String, year: Int, month: Int): List<Memo> {
+        val monthPadZeroStart = month.toString().padStart(2, '0')
+        return memoDao.getMemosPlain(userId, year, monthPadZeroStart)
+            .map { memoEntity -> memoEntity.toMemo() }
+    }
+
     override suspend fun insertMemo(memo: Memo) {
         memoDao.insertMemo(memo.toEntity())
     }

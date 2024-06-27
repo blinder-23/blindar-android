@@ -20,6 +20,11 @@ class LocalScheduleDataSource(private val scheduleDao: ScheduleDao) : ScheduleDa
             .map { it.toScheduleEntities() }
     }
 
+    override suspend fun getSchedulesPlain(schoolCode: Int, year: Int, month: Int): List<Schedule> {
+        return scheduleDao.getSchedulePlain(schoolCode, getDateString(year, month))
+            .map { it.toScheduleEntity() }
+    }
+
     override suspend fun getSchedules(schoolCode: Int, ymd: String): List<Schedule> {
         return scheduleDao.getSchedules(schoolCode, ymd).map { it.toScheduleEntity() }
     }

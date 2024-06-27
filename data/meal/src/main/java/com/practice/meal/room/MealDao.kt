@@ -7,11 +7,15 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
+// TODO: getMeals -> getMealsAsFlow, getMealsPlain -> getMeals로 rename (다른 DAO, repository도 동일)
 @Dao
 interface MealDao {
 
     @Query("SELECT * FROM meal WHERE school_code = :schoolCode AND date LIKE :yearMonthString || '%%'")
     fun getMeals(schoolCode: Int, yearMonthString: String): Flow<List<MealEntityRoom>>
+
+    @Query("SELECT * FROM meal WHERE school_code = :schoolCode AND date LIKE :yearMonthString || '%%'")
+    suspend fun getMealsPlain(schoolCode: Int, yearMonthString: String): List<MealEntityRoom>
 
     @Query("SELECT * FROM meal WHERE school_code = :schoolCode AND date = :dateString")
     suspend fun getMeal(schoolCode: Int, dateString: String): List<MealEntityRoom>

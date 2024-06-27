@@ -14,6 +14,12 @@ class FakeMealDataSource : MealDataSource {
         }
     }
 
+    override suspend fun getMealsPlain(schoolCode: Int, year: Int, month: Int): List<Meal> {
+        return meals.filter {
+            it.schoolCode == schoolCode && it.year == year && it.month == month
+        }
+    }
+
     override suspend fun getMeal(
         schoolCode: Int,
         year: Int,

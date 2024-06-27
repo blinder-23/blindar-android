@@ -16,6 +16,9 @@ interface MemoDao {
     @Query("SELECT * FROM memo WHERE user_id = :userId AND date LIKE :year || :month || '%'")
     fun getMemos(userId: String, year: Int, month: String): Flow<List<MemoEntity>>
 
+    @Query("SELECT * FROM memo WHERE user_id = :userId AND date LIKE :year || :month || '%'")
+    suspend fun getMemosPlain(userId: String, year: Int, month: String): List<MemoEntity>
+
     @Insert
     suspend fun insertMemo(memo: MemoEntity)
 

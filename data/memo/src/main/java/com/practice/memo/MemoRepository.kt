@@ -22,6 +22,10 @@ class MemoRepository @Inject constructor(private val dataSource: MemoDataSource)
         }
     }
 
+    suspend fun getMemosPlain(userId: String, year: Int, month: Int): List<Memo> {
+        return withIoContext { dataSource.getMemosPlain(userId, year, month) }
+    }
+
     suspend fun insertMemo(memo: Memo) {
         withIoContext {
             dataSource.insertMemo(memo)
