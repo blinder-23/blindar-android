@@ -240,6 +240,11 @@ fun NavGraphBuilder.blindarMainNavGraph(
             onBackButtonClick = {
                 navController.popBackStack()
             },
+            onLogout = {
+                navController.navigate(OnboardingRoute) {
+                    popUpTo(MainRoute) { inclusive = true }
+                }
+            },
             modifier = Modifier
                 .safeDrawingPadding()
                 .fillMaxSize(),

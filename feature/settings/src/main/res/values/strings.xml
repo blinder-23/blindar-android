@@ -2,6 +2,11 @@
 <resources>
     <string name="top_bar_title">설정</string>
 
+    <string name="settings_logout">로그아웃</string>
+    <string name="settings_logout_dialog_title">로그아웃할까요?</string>
+    <string name="settings_logout_dialog_dismiss">취소</string>
+    <string name="settings_logout_dialog_logout">로그아웃</string>
+
     <string name="settings_daily_mode_title">하루씩 보기 모드</string>
     <string name="settings_daily_mode_title_description_enabled">하루씩 보기 모드 켜짐</string>
     <string name="settings_daily_mode_title_description_disabled">하루씩 보기 모드 꺼짐</string>

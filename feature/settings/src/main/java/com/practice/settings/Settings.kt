@@ -1,23 +1,32 @@
 package com.practice.settings
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,17 +42,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.SubcomposeAsyncImage
 import com.practice.designsystem.LightPreview
+import com.practice.designsystem.components.BlindarChip
 import com.practice.designsystem.components.BlindarTopAppBar
 import com.practice.designsystem.components.BlindarTopAppBarDefaults
+import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.preferences.preferences.MainScreenMode
 import com.practice.settings.dialog.FeedbackDialog
+import com.practice.settings.dialog.LogoutDialog
 import com.practice.settings.dialog.MainScreenModeDialog
 import com.practice.settings.items.SendFeedbackItem
 import com.practice.settings.items.SetDailyAlarmItem
 import com.practice.settings.items.SetDailyModeItem
+import com.practice.settings.uistate.ProfileUiState
 import com.practice.settings.uistate.SettingsUiState
 import com.practice.util.makeToast
 import kotlinx.coroutines.launch
@@ -51,16 +66,28 @@ import kotlinx.coroutines.launch
 @Composable
 fun Settings(
     onBackButtonClick: () -> Unit,
+    onLogout: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var isScreenModeDialogVisible by rememberSaveable { mutableStateOf(false) }
     var isFeedbackDialogVisible by rememberSaveable { mutableStateOf(false) }
+
+    val isLogoutDialogOpen by viewModel.logoutDialogOpen.collectAsStateWithLifecycle()
 
     Settings(
         uiState = uiState,
         onBackButtonClick = onBackButtonClick,
+        isLogoutDialogVisible = isLogoutDialogOpen,
+        onLogoutDialogOpen = viewModel::onLogoutDialogOpen,
+        onLogoutDialogDismiss = viewModel::onLogoutDialogDismiss,
+        onLogout = {
+            viewModel.onLogout()
+            onLogout()
+        },
         isScreenModeDialogVisible = isScreenModeDialogVisible,
         onChangeScreenModeDialogVisibility = {
             isScreenModeDialogVisible = it
@@ -79,6 +106,10 @@ fun Settings(
 private fun Settings(
     uiState: SettingsUiState,
     onBackButtonClick: () -> Unit,
+    isLogoutDialogVisible: Boolean,
+    onLogoutDialogOpen: () -> Unit,
+    onLogoutDialogDismiss: () -> Unit,
+    onLogout: () -> Unit,
     isScreenModeDialogVisible: Boolean,
     onChangeScreenModeDialogVisibility: (Boolean) -> Unit,
     onToggleDailyMode: (Boolean) -> Unit,
@@ -111,6 +142,7 @@ private fun Settings(
                 modifier = modifier,
                 onBackButtonClick = onBackButtonClick,
                 uiState = uiState,
+                onLogoutDialogOpen = onLogoutDialogOpen,
                 onToggleDailyMode = {
                     if (uiState.mainScreenMode == MainScreenMode.Calendar) {
                         onToggleDailyMode(true)
@@ -165,6 +197,16 @@ private fun Settings(
                 .widthIn(max = 600.dp),
         )
     }
+
+    if (isLogoutDialogVisible) {
+        LogoutDialog(
+            onDismiss = onLogoutDialogDismiss,
+            onLogout = onLogout,
+            modifier = Modifier
+                .fillMaxWidth()
+                .widthIn(max = 600.dp),
+        )
+    }
 }
 
 @Composable
@@ -185,6 +227,7 @@ private fun SettingsScreenLoadingIndicator(
 private fun SettingsScreen(
     uiState: SettingsUiState.SettingsUiStateImpl,
     onBackButtonClick: () -> Unit,
+    onLogoutDialogOpen: () -> Unit,
     onToggleDailyMode: (Boolean) -> Unit,
     onToggleDailyAlarm: (Boolean) -> Unit,
     onFeedbackDialogOpen: () -> Unit,
@@ -193,6 +236,11 @@ private fun SettingsScreen(
     Column(modifier = modifier.background(MaterialTheme.colorScheme.surface)) {
         SettingsTopAppBar(
             onBackButtonClick = onBackButtonClick,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        UserProfile(
+            onLogout = onLogoutDialogOpen,
+            profileUiState = uiState.profileUiState,
             modifier = Modifier.fillMaxWidth(),
         )
         SettingsItems(
@@ -223,6 +271,43 @@ private fun SettingsTopAppBar(
             BlindarTopAppBarDefaults.NavigationIcon(onClick = onBackButtonClick)
         },
     )
+}
+
+@Composable
+private fun UserProfile(
+    onLogout: () -> Unit,
+    profileUiState: ProfileUiState,
+    modifier: Modifier = Modifier,
+) {
+    Log.d("Settings", "profile image uri: ${profileUiState.profileImageUri}")
+    Row(
+        modifier = modifier.padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+            SubcomposeAsyncImage(
+                model = profileUiState.profileImageUri,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape),
+                error = {
+                    Icon(
+                        imageVector = Icons.Filled.QuestionMark,
+                        contentDescription = null,
+                    )
+                },
+            )
+            BodyLarge(text = profileUiState.username)
+            Spacer(modifier = Modifier.weight(1f))
+            BlindarChip(
+                text = stringResource(id = R.string.settings_logout),
+                enabled = true,
+                onClick = onLogout,
+            )
+        }
+    }
 }
 
 @Composable
@@ -292,8 +377,16 @@ private fun SettingsPreview() {
             uiState = SettingsUiState.SettingsUiStateImpl(
                 mainScreenMode = mainScreenMode,
                 isDailyAlarmEnabled = isDailyAlarmEnabled,
+                profileUiState = ProfileUiState(
+                    profileImageUri = null,
+                    username = "블린더",
+                ),
             ),
             onBackButtonClick = {},
+            isLogoutDialogVisible = false,
+            onLogoutDialogOpen = {},
+            onLogoutDialogDismiss = {},
+            onLogout = {},
             isScreenModeDialogVisible = isScreenModeDialogVisible,
             onChangeScreenModeDialogVisibility = {
                 isScreenModeDialogVisible = it
@@ -318,6 +411,10 @@ private fun SettingsPreview_Loading() {
         Settings(
             uiState = SettingsUiState.Loading,
             onBackButtonClick = {},
+            isLogoutDialogVisible = false,
+            onLogoutDialogOpen = {},
+            onLogoutDialogDismiss = {},
+            onLogout = {},
             isScreenModeDialogVisible = false,
             onChangeScreenModeDialogVisibility = {},
             onToggleDailyMode = {},
