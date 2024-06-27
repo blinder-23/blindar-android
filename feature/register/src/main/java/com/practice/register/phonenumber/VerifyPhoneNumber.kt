@@ -38,12 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.DarkPreview
 import com.practice.designsystem.LightPreview
-import com.practice.designsystem.components.BlindarLargeTopAppBar
-import com.practice.designsystem.components.BlindarTopAppBarDefaults
-import com.practice.designsystem.components.BottomNextButton
-import com.practice.designsystem.components.LabelMedium
-import com.practice.designsystem.components.LabelSmall
-import com.practice.designsystem.components.TitleSmall
+import com.practice.designsystem.components.*
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.register.R
 import com.practice.register.RegisterUiState
@@ -229,7 +224,8 @@ private fun PhoneNumberTextField(
             }
         },
         trailingIcon = {
-            PhoneNumberAuthChip(
+            BlindarChip(
+                text = stringResource(R.string.auth_chip_label),
                 enabled = isValid,
                 onClick = onAuthChipClick,
                 modifier = Modifier.padding(end = 12.dp),
@@ -246,41 +242,6 @@ private fun PhoneNumberTextField(
             },
         ),
         singleLine = true,
-    )
-}
-
-@Composable
-private fun PhoneNumberAuthChip(
-    enabled: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val chipColor = MaterialTheme.colorScheme.primaryContainer
-    val textColor = contentColorFor(backgroundColor = chipColor)
-    val alpha by animateFloatAsState(
-        targetValue = if (enabled) 1f else 0.7f,
-        label = "PhoneNumberAuthChip alpha",
-    )
-    AssistChip(
-        onClick = onClick,
-        label = {
-            LabelMedium(
-                text = stringResource(R.string.auth_chip_label),
-                color = textColor,
-                modifier = Modifier.graphicsLayer {
-                    this.alpha = alpha
-                },
-            )
-        },
-        enabled = enabled,
-        modifier = modifier.graphicsLayer {
-            this.alpha = alpha
-        },
-        colors = AssistChipDefaults.assistChipColors(
-            containerColor = chipColor,
-            disabledContainerColor = chipColor,
-        ),
-        border = BorderStroke(width = 1.dp, color = chipColor),
     )
 }
 
@@ -337,20 +298,6 @@ private fun VerifyPhoneNumberPreview() {
             isAuthCodeInvalid = registerState.authCode.let { it.isNotEmpty() && it.length != 6 },
             modifier = Modifier.fillMaxSize(),
         )
-    }
-}
-
-@DarkPreview
-@Composable
-private fun PhoneNumberAuthChipPreview() {
-    var enabled by remember { mutableStateOf(true) }
-    BlindarTheme {
-        Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
-            PhoneNumberAuthChip(
-                enabled = enabled,
-                onClick = { enabled = !enabled },
-            )
-        }
     }
 }
 
