@@ -103,6 +103,8 @@ fun MainScreen(
     MainScreenDialogs(
         viewModel = viewModel,
         mealPagerState = mealPagerState,
+        navigateToNutrientPage = onNavigateToNutrientScreen,
+        navigateToMemoPage = onNavigateToMemoScreen,
     )
 }
 
@@ -118,6 +120,8 @@ val WindowSizeClass.mealColumns: Int
 private fun MainScreenDialogs(
     viewModel: MainScreenViewModel,
     mealPagerState: PagerState,
+    navigateToNutrientPage: (MainUiState) -> Unit,
+    navigateToMemoPage: (MainUiState) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -134,7 +138,7 @@ private fun MainScreenDialogs(
                     viewModel.onMealTimeClick(it)
                     scope.launch { mealPagerState.animateScrollToPage(it) }
                 },
-                onNutrientDialogOpen = { /* TODO: 영양 페이지로 연결 */ },
+                onNutrientDialogOpen = { navigateToNutrientPage(uiState) },
                 onMealDialogClose = viewModel::onMealDialogClose,
                 modifier = Modifier
                     .padding(dialogContentPadding)
@@ -150,7 +154,7 @@ private fun MainScreenDialogs(
         ) {
             ScheduleDialogContents(
                 scheduleElements = uiState.selectedDateDataState.memoDialogElements,
-                onMemoDialogOpen = { /* TODO: 메모 페이지로 연결 */ },
+                onMemoDialogOpen = { navigateToMemoPage(uiState) },
                 onScheduleDialogClose = viewModel::onScheduleDialogClose,
                 modifier = Modifier
                     .padding(dialogContentPadding)
