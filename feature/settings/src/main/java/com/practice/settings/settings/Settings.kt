@@ -48,7 +48,6 @@ import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.preferences.preferences.MainScreenMode
 import com.practice.settings.R
-import com.practice.settings.settings.dialog.FeedbackDialog
 import com.practice.settings.settings.dialog.LogoutDialog
 import com.practice.settings.settings.dialog.MainScreenModeDialog
 import com.practice.settings.settings.items.SendFeedbackItem
@@ -56,13 +55,12 @@ import com.practice.settings.settings.items.SetDailyAlarmItem
 import com.practice.settings.settings.items.SetDailyModeItem
 import com.practice.settings.settings.uistate.ProfileUiState
 import com.practice.settings.settings.uistate.SettingsUiState
-import com.practice.util.makeToast
-import kotlinx.coroutines.launch
 
 @Composable
 fun Settings(
     onBackButtonClick: () -> Unit,
     onLogout: () -> Unit,
+    onFeedbackButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
@@ -89,8 +87,7 @@ fun Settings(
         onToggleDailyMode = viewModel::onToggleDailyMode,
         onToggleDailyAlarm = viewModel::onToggleDailyAlarm,
         isFeedbackDialogVisible = isFeedbackDialogVisible,
-        onFeedbackDialogOpen = { isFeedbackDialogVisible = true },
-        onFeedbackDialogClose = { isFeedbackDialogVisible = false },
+        onFeedbackButtonClick = onFeedbackButtonClick,
         onSendFeedback = viewModel::sendFeedback,
         modifier = modifier,
     )
@@ -109,8 +106,7 @@ private fun Settings(
     onToggleDailyMode: (Boolean) -> Unit,
     onToggleDailyAlarm: (Boolean) -> Unit,
     isFeedbackDialogVisible: Boolean,
-    onFeedbackDialogOpen: () -> Unit,
-    onFeedbackDialogClose: () -> Unit,
+    onFeedbackButtonClick: () -> Unit,
     onSendFeedback: suspend (String, String) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -146,29 +142,9 @@ private fun Settings(
                     }
                 },
                 onToggleDailyAlarm = onToggleDailyAlarm,
-                onFeedbackDialogOpen = onFeedbackDialogOpen,
+                onFeedbackButtonClick = onFeedbackButtonClick,
             )
         }
-    }
-
-    if (isFeedbackDialogVisible) {
-        val successMessage = stringResource(id = R.string.settings_send_feedback_on_success)
-        val failMessage = stringResource(id = R.string.settings_send_feedback_on_error)
-        FeedbackDialog(
-            onSend = { appVersion, feedback ->
-                coroutineScope.launch {
-                    val result = onSendFeedback(appVersion, feedback)
-                    val message = if (result) {
-                        onFeedbackDialogClose()
-                        successMessage
-                    } else {
-                        failMessage
-                    }
-                    context.makeToast(message)
-                }
-            },
-            onDismiss = onFeedbackDialogClose,
-        )
     }
 
     if (isScreenModeDialogVisible) {
@@ -224,7 +200,7 @@ private fun SettingsScreen(
     onLogoutDialogOpen: () -> Unit,
     onToggleDailyMode: (Boolean) -> Unit,
     onToggleDailyAlarm: (Boolean) -> Unit,
-    onFeedbackDialogOpen: () -> Unit,
+    onFeedbackButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.background(MaterialTheme.colorScheme.surface)) {
@@ -241,7 +217,7 @@ private fun SettingsScreen(
             uiState = uiState,
             onToggleDailyMode = onToggleDailyMode,
             onToggleDailyAlarm = onToggleDailyAlarm,
-            onFeedbackDialogOpen = onFeedbackDialogOpen,
+            onFeedbackButtonClick = onFeedbackButtonClick,
         )
     }
 }
@@ -302,7 +278,7 @@ private fun SettingsItems(
     uiState: SettingsUiState.SettingsUiStateImpl,
     onToggleDailyMode: (Boolean) -> Unit,
     onToggleDailyAlarm: (Boolean) -> Unit,
-    onFeedbackDialogOpen: () -> Unit,
+    onFeedbackButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentColor: Color = Color.Unspecified,
 ) {
@@ -321,7 +297,7 @@ private fun SettingsItems(
             color = textColor,
         )
         SendFeedbackItem(
-            onClick = onFeedbackDialogOpen,
+            onClick = onFeedbackButtonClick,
             color = textColor,
         )
     }
@@ -359,8 +335,7 @@ private fun SettingsPreview() {
             },
             onToggleDailyAlarm = { isDailyAlarmEnabled = it },
             isFeedbackDialogVisible = isFeedbackDialogVisible,
-            onFeedbackDialogOpen = { isFeedbackDialogVisible = true },
-            onFeedbackDialogClose = { isFeedbackDialogVisible = false },
+            onFeedbackButtonClick = {},
             onSendFeedback = { _, _ -> true },
             modifier = Modifier.fillMaxSize(),
         )
@@ -383,8 +358,7 @@ private fun SettingsPreview_Loading() {
             onToggleDailyMode = {},
             onToggleDailyAlarm = {},
             isFeedbackDialogVisible = false,
-            onFeedbackDialogOpen = {},
-            onFeedbackDialogClose = {},
+            onFeedbackButtonClick = {},
             onSendFeedback = { _, _ -> true },
             modifier = Modifier.fillMaxSize(),
         )
