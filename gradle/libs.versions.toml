@@ -2,7 +2,7 @@
 accompanist = '0.32.0'
 compose-bom = "2024.06.00"
 coroutines = "1.8.1"
-firebase-bom = "33.1.0"
+firebase-bom = "33.1.1"
 hilt = "2.51.1"
 hsk-ktx = '1.0-beta17'
 junit5 = "5.9.3"
@@ -11,7 +11,7 @@ lifecycle = '2.8.2'
 retrofit = '2.11.0'
 room = "2.6.1"
 violet-dreams = '0.1.2'
-navigation = '2.8.0-beta03'
+navigation = '2.8.0-beta04'
 work = "2.9.0"
 
 [libraries]
@@ -20,7 +20,7 @@ hilt-android-gradle-plugin = { module = 'com.google.dagger:hilt-android-gradle-p
 kotlin-gradle-plugin = { module = 'org.jetbrains.kotlin:kotlin-gradle-plugin', version.ref = 'kotlin' }
 kotlinx-serialization-plugin = { module = 'org.jetbrains.kotlin:kotlin-serialization', version.ref = 'kotlin' }
 
-firebase-crashlytics-gradle = 'com.google.firebase:firebase-crashlytics-gradle:3.0.1' # 3.0.0은 순환 참조 문제가 있음
+firebase-crashlytics-gradle = 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
 google-services = 'com.google.gms:google-services:4.4.2'
 
 hsk-ktx = { module = 'com.github.mwy3055:hsk-ktx', version.ref = 'hsk-ktx' }
@@ -109,10 +109,10 @@ junit-vintage-engine = { module = 'org.junit.vintage:junit-vintage-engine', vers
 androidx-benchmark-macro-junit4 = 'androidx.benchmark:benchmark-macro-junit4:1.2.4'
 androidx-test-uiautomaker = 'androidx.test.uiautomator:uiautomator:2.3.0'
 
-androidx-test-orchestrator = 'androidx.test:orchestrator:1.4.2'
+androidx-test-orchestrator = 'androidx.test:orchestrator:1.5.0'
 assertj-core = 'org.assertj:assertj-core:3.24.2'
 
-androidx-junit = "androidx.test.ext:junit:1.1.5"
+androidx-junit = "androidx.test.ext:junit:1.2.1"
 androidx-test-espresso-core = "androidx.test.espresso:espresso-core:3.5.0" # 절대 업데이트하지 말 것
 
 vanniktech-dependency-graph-generator = 'com.vanniktech:gradle-dependency-graph-generator-plugin:0.7.0'
