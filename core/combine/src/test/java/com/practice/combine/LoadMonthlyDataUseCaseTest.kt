@@ -9,6 +9,7 @@ import com.practice.memo.MemoRepository
 import com.practice.schedule.FakeScheduleDataSource
 import com.practice.schedule.ScheduleRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
@@ -50,7 +51,8 @@ class LoadMonthlyDataUseCaseTest {
         val memoData = useCase.loadMemoData(userId, 2022, 8).first()
 
         val expected = MonthlyData(schoolCode, 2022, 8, mealData, scheduleData, memoData)
-        val actual = useCase.loadData(userId, schoolCode, 2022, 8).first()
+        val actual = useCase.loadData(userId, schoolCode, 2022, 8).drop(1)
+            .first() // drop the first default value
         assertThat(actual).isEqualTo(expected)
     }
 
