@@ -64,7 +64,9 @@ class SettingsViewModel @Inject constructor(
 
     fun onLogout() {
         _logoutDialogOpen.value = false
-        registerManager.logout()
+        viewModelScope.launch {
+            registerManager.logout()
+        }
     }
 
     fun onToggleDailyMode(value: Boolean) {

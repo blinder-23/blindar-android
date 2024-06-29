@@ -295,8 +295,9 @@ class RegisterManager @Inject constructor(
     private val Task<AuthResult>.isSignInSuccessful: Boolean
         get() = this.isSuccessful && this.result?.user != null
 
-    fun logout() {
+    suspend fun logout() {
         BlindarFirebase.logout()
+        preferencesRepository.clear()
     }
 
     companion object {
