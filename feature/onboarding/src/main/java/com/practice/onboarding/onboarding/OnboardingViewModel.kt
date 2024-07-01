@@ -2,8 +2,6 @@ package com.practice.onboarding.onboarding
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-import androidx.activity.result.ActivityResult
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.practice.auth.RegisterManager
@@ -23,7 +21,6 @@ class OnboardingViewModel @Inject constructor(
         onExistingUserLogin: (FirebaseUser) -> Unit,
         onFail: () -> Unit,
     ) {
-        Log.d(TAG, "google login launcher success: ${intent.data}")
         registerManager.parseIntentAndSignInWithGoogle(
             intent = intent,
             onNewUserSignUp = onNewUserSignUp,
@@ -34,10 +31,6 @@ class OnboardingViewModel @Inject constructor(
             },
             onFail = onFail
         )
-    }
-
-    fun onGoogleLoginLauncherFail(result: ActivityResult) {
-        Log.e(TAG, "google login launcher fail: ${result.resultCode}")
     }
 
     companion object {

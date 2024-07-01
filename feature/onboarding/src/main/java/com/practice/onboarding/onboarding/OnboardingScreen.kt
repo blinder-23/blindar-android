@@ -2,7 +2,6 @@ package com.practice.onboarding.onboarding
 
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -76,13 +75,12 @@ fun OnboardingScreen(
                 )
             }
         },
-        onFail = viewModel::onGoogleLoginLauncherFail,
+        onFail = { },
     )
 
     val appIconOffset = getAppIconOffset(playAnimation = route.playAnimation)
     val buttonAlpha = getButtonAlpha(playAnimation = route.playAnimation)
     LaunchedEffect(true) {
-        Log.d("OnboardingScreen", "animation? ${route.playAnimation}")
         if (route.playAnimation) {
             appIconOffset.animateAppIconOffset()
             buttonAlpha.animateButtonAlpha()

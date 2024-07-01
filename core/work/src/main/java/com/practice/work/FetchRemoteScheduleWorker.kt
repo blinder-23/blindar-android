@@ -1,7 +1,6 @@
 package com.practice.work
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.Data
@@ -34,17 +33,13 @@ class FetchRemoteScheduleWorker @AssistedInject constructor(
         preferencesRepository.increaseRunningWorkCount()
         val result = fetchRemoteSchedules()
         preferencesRepository.decreaseRunningWorkCount()
-        Log.d(TAG, "finished!")
         return result
     }
 
     private suspend fun clearDatabaseIfValueIsSet() {
         val clearDatabase = inputData.getBoolean(clearDatabaseKey, false)
         if (clearDatabase) {
-            Log.d(TAG, "clear database")
             localRepository.clear()
-        } else {
-            Log.d(TAG, "doesn't clear database")
         }
     }
 
@@ -65,7 +60,7 @@ class FetchRemoteScheduleWorker @AssistedInject constructor(
         try {
             fetchAndStoreSchedules(schoolCode, year, month)
         } catch (e: Exception) {
-            handleException(e, year, month)
+            handleException(e)
         }
     }
 
@@ -75,16 +70,13 @@ class FetchRemoteScheduleWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchSchedules(schoolCode: Int, year: Int, month: Int): List<Schedule> =
-        remoteRepository.getSchedules(schoolCode, year, month).schedules.apply {
-            Log.d(TAG, "$schoolCode schedule $year $month: $size")
-        }
+        remoteRepository.getSchedules(schoolCode, year, month).schedules
 
     private suspend fun storeSchedules(schedules: List<Schedule>) {
         localRepository.insertSchedules(schedules)
     }
 
-    private fun handleException(e: Exception, year: Int, month: Int): Result {
-        Log.e(TAG, "$year, $month has an exception: ${e.message}")
+    private fun handleException(e: Exception): Result {
         e.printStackTrace()
         return Result.failure()
     }

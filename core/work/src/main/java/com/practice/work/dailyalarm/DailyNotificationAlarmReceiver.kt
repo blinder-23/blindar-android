@@ -12,14 +12,11 @@ import com.practice.util.date.DateUtil
 
 class DailyNotificationAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        Log.d(TAG, "alarm received")
         if (intent?.extras?.getInt(ALARM_REQUEST_KEY) == ALARM_REQUEST_CODE) {
             context?.let {
                 val workManager = WorkManager.getInstance(context)
                 DailyNotificationWork.setOneTimeDailyNotificationWork(workManager)
-                Log.d(TAG, "work enqueued at alarm!")
                 setNextAlarm(context)
-                Log.d(TAG, "set next alarm!")
             }
         }
     }
@@ -38,7 +35,6 @@ class DailyNotificationAlarmReceiver : BroadcastReceiver() {
 
         fun setInitialAlarm(context: Context) {
             setAlarm(context, SystemClock.elapsedRealtime() + 1000 * getInitialDelayInSeconds())
-            Log.d("SplashScreen", "set initial alarm!")
         }
 
         private fun setAlarm(context: Context, triggerAtMillis: Long) {

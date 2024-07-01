@@ -34,7 +34,6 @@ object ScheduleRoomModule {
             database.execSQL("INSERT INTO schedule_migration (id, date, event_name, event_content) SELECT id, date, event_name, event_content FROM schedule")
             database.execSQL("DROP TABLE schedule")
             database.execSQL("ALTER TABLE schedule_migration RENAME TO schedule")
-            Log.d("schedule migration", "complete!")
         }
     }
 

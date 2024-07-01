@@ -6,11 +6,8 @@ import android.util.Log
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseException
-import com.google.firebase.FirebaseNetworkException
-import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
@@ -38,10 +35,6 @@ class RegisterManager @Inject constructor(
     private suspend fun getUserRegisterState(firebaseUser: FirebaseUser): UserRegisterState {
         val username = firebaseUser.displayName
         val preferences = preferencesRepository.userPreferencesFlow.value
-        Log.d(
-            TAG,
-            "username: $username, local school empty: ${preferences.isSchoolCodeEmpty}, ${preferences.isSchoolNameEmpty}"
-        )
 
         return when {
             username != null && !preferences.isSchoolCodeEmpty -> UserRegisterState.AUTO_LOGIN
@@ -66,7 +59,6 @@ class RegisterManager @Inject constructor(
                 onFail = onFail,
             )
         } catch (e: ApiException) {
-            Log.d(TAG, "parse account fail", e)
             onFail()
         }
     }
@@ -80,13 +72,11 @@ class RegisterManager @Inject constructor(
         when {
             user == null -> {
                 // google login fail
-                Log.e(TAG, "sign in with google fail")
                 onFail()
             }
 
             getUserRegisterState(user) == UserRegisterState.ALL_FILLED -> {
                 // existing user login
-                Log.d(TAG, "user ${user.uid} re-login")
                 storeSchoolCodeAndNameToPreferences()
                 onExistingUserLogin(user)
             }
@@ -96,7 +86,6 @@ class RegisterManager @Inject constructor(
                 BlindarFirebase.storeUsername(user.displayName!!)?.addOnSuccessListener {
                     onNewUserSignUp(user)
                 }?.addOnFailureListener {
-                    Log.e(TAG, "username owner set failed: ${user.uid}, ${user.displayName}", it)
                     onFail()
                 }
             }
@@ -145,7 +134,6 @@ class RegisterManager @Inject constructor(
         onCodeInvalid: () -> Unit,
     ) = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-            Log.d(TAG, "phone auth code verification complete")
             signInWithPhoneAuthCredential(
                 activity = activity,
                 credential = credential,
@@ -163,20 +151,18 @@ class RegisterManager @Inject constructor(
         }
 
         override fun onVerificationFailed(e: FirebaseException) {
-            catchVerificationFailException(e, onVerificationFail)
+            catchVerificationFailException(onVerificationFail)
         }
 
         override fun onCodeSent(
             verificationId: String,
             token: PhoneAuthProvider.ForceResendingToken,
         ) {
-            Log.d(TAG, "phone code is sent.")
             onCodeSent(verificationId, token)
         }
 
         override fun onCodeAutoRetrievalTimeOut(p0: String) {
             // TODO: UI에서 남은 초 보여주기?
-            Log.e(TAG, "phone auth code timeout! $p0")
             super.onCodeAutoRetrievalTimeOut(p0)
         }
     }
@@ -190,13 +176,9 @@ class RegisterManager @Inject constructor(
         BlindarFirebase.trySignInWithPhoneAuthCredential(credential)
             .addOnCompleteListener(activity) { task ->
                 if (task.isSignInSuccessful) {
-                    Log.d(TAG, "sign in with phone credential successful!")
                     onSignInSuccess()
                 } else if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                    Log.e(TAG, "sign in with phone credential fail: invalid verification code")
                     onSignInFail()
-                } else {
-                    Log.e(TAG, "sign in with phone credential fail: unknown error", task.exception)
                 }
             }
     }
@@ -210,7 +192,6 @@ class RegisterManager @Inject constructor(
     ) {
         coroutineScope.launch {
             val state = getUserRegisterState()
-            Log.d(TAG, "user register state: $state")
             when (state) {
                 UserRegisterState.NOT_LOGGED_IN -> onNewUserSignUp()
                 UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()
@@ -236,31 +217,7 @@ class RegisterManager @Inject constructor(
         }
     }
 
-    private fun catchVerificationFailException(
-        e: FirebaseException,
-        onFail: () -> Unit,
-    ) {
-        when (e) {
-            is FirebaseAuthInvalidCredentialsException -> {
-                Log.e(TAG, "phone verification fail: invalid request")
-            }
-
-            is FirebaseTooManyRequestsException -> {
-                Log.e(TAG, "phone verification fail: firebase auth quota exceeded. try later.")
-            }
-
-            is FirebaseAuthMissingActivityForRecaptchaException -> {
-                Log.e(TAG, "phone verification fail: reCAPTCHA is attempted with null activity")
-            }
-
-            is FirebaseNetworkException -> {
-                Log.e(TAG, "phone verification fail: no network connection")
-            }
-
-            else -> {
-                Log.e(TAG, "phone verification fail: ${e::class.java}")
-            }
-        }
+    private fun catchVerificationFailException(onFail: () -> Unit) {
         onFail()
     }
 

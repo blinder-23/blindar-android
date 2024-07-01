@@ -20,7 +20,6 @@ class LocalMemoDataSource @Inject constructor(private val memoDao: MemoDao) : Me
     override fun getMemos(userId: String, year: Int, month: Int): Flow<List<Memo>> {
         val monthPadZeroStart = month.toString().padStart(2, '0')
         return memoDao.getMemos(userId, year, monthPadZeroStart).map { memoEntity ->
-            Log.d("LocalMemoDataSource", "memo $year $month: ${memoEntity.size}")
             memoEntity.toMemo()
         }
     }

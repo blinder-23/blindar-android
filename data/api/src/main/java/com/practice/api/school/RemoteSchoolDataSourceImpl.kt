@@ -9,11 +9,8 @@ class RemoteSchoolDataSourceImpl @Inject constructor(private val api: SchoolApi)
     RemoteSchoolDataSource {
     override suspend fun getSupportedSchools(): List<SchoolModel> {
         return try {
-            api.getSupportedSchools().data.apply {
-                Log.d(TAG, "schools: ${this.map { it.schoolName }}")
-            }.sortedBy { it.schoolName }
+            api.getSupportedSchools().data.sortedBy { it.schoolName }
         } catch (e: Exception) {
-            Log.e(TAG, "School api error", e)
             emptyList()
         }
     }

@@ -35,7 +35,6 @@ object MealRoomModule {
             db.execSQL("INSERT INTO meal_migration (date, menu, origin, calorie, nutrient, school_code) SELECT date, menu, origin, calorie, nutrient, school_code FROM meal")
             db.execSQL("DROP TABLE meal")
             db.execSQL("ALTER TABLE meal_migration RENAME TO meal")
-            Log.d("meal migration", "success!")
         }
     }
 

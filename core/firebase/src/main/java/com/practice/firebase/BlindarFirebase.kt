@@ -2,7 +2,6 @@ package com.practice.firebase
 
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -71,14 +70,12 @@ object BlindarFirebase {
         onRegisterOrLoginSuccessful: () -> Unit,
         onLoginFail: () -> Unit,
     ) {
-        Log.d(TAG, "credential: $credential")
         auth.signInWithCredential(credential)
             .addOnCompleteListener(activity) { task ->
                 val user = task.result?.user
                 if (task.isSuccessful && user != null) {
                     onRegisterOrLoginSuccessful()
                 } else {
-                    Log.e(TAG, "signInWithCredential failure", task.exception)
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
                         // verification code invalid
                         onLoginFail()
@@ -90,7 +87,6 @@ object BlindarFirebase {
     fun trySignInWithPhoneAuthCredential(
         credential: PhoneAuthCredential,
     ): Task<AuthResult> {
-        Log.d(TAG, "trying phone sign in w/ credential $credential")
         return auth.signInWithCredential(credential)
     }
 
@@ -110,7 +106,6 @@ object BlindarFirebase {
                     }
                 }
                 .addOnFailureListener {
-                    Log.e(TAG, "Username owner set failed", it)
                     onFail()
                 }
         }
@@ -131,10 +126,8 @@ object BlindarFirebase {
         }
         user.updateProfile(profileUpdates)
             .addOnSuccessListener {
-                Log.d(TAG, "update profile success")
                 onSuccess()
             }.addOnFailureListener {
-                Log.e(TAG, "Update profile failed", it)
                 onFail()
             }
     }
@@ -148,15 +141,12 @@ object BlindarFirebase {
         if (username != null) {
             database.child(usersKey).child(username).child(schoolCodeKey).setValue(schoolCode)
                 .addOnSuccessListener {
-                    Log.d(TAG, "user $username school set to $schoolCode")
                     onSuccess()
                 }
                 .addOnFailureListener {
-                    Log.e(TAG, "user $username school set fail to $schoolCode")
                     onFail()
                 }
         } else {
-            Log.e(TAG, "username is null: ${auth.currentUser}")
             onFail()
         }
     }
@@ -170,15 +160,12 @@ object BlindarFirebase {
         if (username != null) {
             database.child(usersKey).child(username).child(schoolNameKey).setValue(schoolName)
                 .addOnSuccessListener {
-                    Log.d(TAG, "user $username school name update success: $schoolName")
                     onSuccess()
                 }
                 .addOnFailureListener {
-                    Log.e(TAG, "user $username school name update fail: $schoolName")
                     onFail()
                 }
         } else {
-            Log.e(TAG, "username is null while updating school name: ${auth.currentUser}")
             onFail()
         }
     }
@@ -186,21 +173,18 @@ object BlindarFirebase {
     suspend fun getSchoolCode(username: String = auth.currentUser?.displayName ?: ""): Long? {
         val value =
             database.child(usersKey).child(username).child(schoolCodeKey).get().await().value
-        Log.d(TAG, "username $username schoolCode: $value")
         if (value != null) {
             return value as? Long
         }
 
         val oldValue =
             database.child(usersKey).child(username).child(oldSchoolCodeKey).get().await().value
-        Log.d(TAG, "username $username old school code: $oldValue")
         return oldValue as? Long
     }
 
     suspend fun getSchoolName(username: String = auth.currentUser?.displayName ?: ""): String? {
         val value =
             database.child(usersKey).child(username).child(schoolNameKey).get().await().value
-        Log.d(TAG, "get school name of user $username: $value")
         return value as? String
     }
 

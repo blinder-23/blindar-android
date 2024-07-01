@@ -39,7 +39,6 @@ internal fun rememberNotificationPermissionLauncher(
 
     val exactAlarmPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         rememberPermissionState(permission = Manifest.permission.USE_EXACT_ALARM) { granted ->
-            Log.d("MainScreenElements", "exact alarm permission? $granted")
             if (granted) {
                 onPermissionGranted()
             } else {

@@ -24,13 +24,10 @@ class LoadMemoFromServerWork @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val userId = workerParams.inputData.getString(USER_ID_KEY)
             ?: return Result.failure(workerParams.inputData)
-        Log.d(TAG, "load memo of user $userId from server")
 
         val memos = remoteMemoRepository.getAllMemos(userId)
-        Log.d(TAG, "loaded ${memos.size} memos from server of user $userId")
 
         localMemoRepository.insertMemos(memos)
-        Log.d(TAG, "stored ${memos.size} memos from server of user $userId")
         return Result.success()
     }
 

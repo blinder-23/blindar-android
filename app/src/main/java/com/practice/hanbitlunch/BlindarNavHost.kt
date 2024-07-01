@@ -1,6 +1,5 @@
 package com.practice.hanbitlunch
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -141,14 +140,12 @@ fun NavGraphBuilder.blindarMainNavGraph(
     composable<SplashRoute> {
         SplashScreen(
             onAutoLoginSuccess = {
-                Log.d(TAG, "auto login success")
                 onNavigateToMainScreen()
                 onLoginSuccess()
             },
             onUsernameNotSet = onUsernameNotSet,
             onSchoolNotSelected = onSchoolNotSelected,
             onAutoLoginFail = {
-                Log.d(TAG, "auto login fail")
                 onAutoLoginFail()
             },
             modifier = Modifier
@@ -165,11 +162,9 @@ fun NavGraphBuilder.blindarMainNavGraph(
             route = route,
             onPhoneLogin = { navController.navigate(VerifyPhoneRoute) },
             onNewUserSignUp = { user ->
-                Log.d(TAG, "new user with google: ${user.uid}")
                 navController.navigate(SelectSchoolRoute)
             },
             onExistingUserLogin = { user ->
-                Log.d(TAG, "existing user with google: ${user.uid}")
                 navController.navigate(MainRoute) {
                     popUpTo<OnboardingRoute> { inclusive = true }
                 }

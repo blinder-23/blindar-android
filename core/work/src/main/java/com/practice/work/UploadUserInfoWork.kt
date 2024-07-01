@@ -1,7 +1,6 @@
 package com.practice.work
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
@@ -73,15 +72,9 @@ class UploadUserInfoWork @AssistedInject constructor(
         username?.let {
             BlindarFirebase.tryStoreUsername(
                 username = username,
-                onSuccess = {
-                    log("upload username to firebase success")
-                },
-                onFail = {
-                    log("upload username to firebase fail")
-                },
+                onSuccess = {                },
+                onFail = {                },
             )
-        } ?: run {
-            logError("upload username to firebase fail: username is null")
         }
     }
 
@@ -89,15 +82,9 @@ class UploadUserInfoWork @AssistedInject constructor(
         schoolCode?.let {
             BlindarFirebase.tryUpdateCurrentUserSchoolCode(
                 schoolCode = schoolCode,
-                onSuccess = {
-                    log("upload school code to firebase success")
-                },
-                onFail = {
-                    logError("upload school to firebase code fail")
-                },
+                onSuccess = { },
+                onFail = { },
             )
-        } ?: run {
-            logError("upload school code to firebase fail: school code is null")
         }
     }
 
@@ -105,29 +92,16 @@ class UploadUserInfoWork @AssistedInject constructor(
         schoolName?.let {
             BlindarFirebase.tryUpdateCurrentUserSchoolName(
                 schoolName = schoolName,
-                onSuccess = { log("upload school name to firebase success") },
-                onFail = { logError("upload school name to firebase fail") },
+                onSuccess = { },
+                onFail = { },
             )
-        } ?: run {
-            logError("upload school name to firebase fail: school name is null")
         }
     }
 
     private suspend fun uploadToServer(userId: String?, schoolCode: Int?, username: String?) {
         if (userId != null && schoolCode != null && username != null) {
             userRepository.updateUserInfo(userId, schoolCode, username)
-            log("upload user info to server success: $userId, $schoolCode, $username")
-        } else {
-            logError("upload user into to server fail: $userId, $schoolCode, $username")
         }
-    }
-
-    private fun log(message: String) {
-        Log.d(TAG, message)
-    }
-
-    private fun logError(message: String) {
-        Log.e(TAG, message)
     }
 
     companion object {

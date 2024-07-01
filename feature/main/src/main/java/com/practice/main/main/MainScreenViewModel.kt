@@ -162,7 +162,6 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
-        Log.d(TAG, "clicked date: $clickedDate")
         selectedDate.value = clickedDate
         selectedMealIndex.value = 0
     }
@@ -256,7 +255,6 @@ class MainScreenViewModel @Inject constructor(
 
 private fun MonthlyData.getMeals(date: Date): UiMeals {
     val meals = meals.filter { it.dateEquals(date) }.map { it.toMealUiState() }
-    Log.d("MainScreenModel", "$date: $meals")
     return UiMeals(meals)
 }
 

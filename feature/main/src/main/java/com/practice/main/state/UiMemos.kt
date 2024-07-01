@@ -1,6 +1,5 @@
 package com.practice.main.state
 
-import android.util.Log
 import com.hsk.ktx.date.Date
 import com.practice.domain.Memo
 import com.practice.main.main.state.MemoDialogElement
@@ -40,10 +39,9 @@ data class UiMemos(
     }
 
     private fun editMemoList(block: MutableList<UiMemo>.() -> Unit): ImmutableList<UiMemo> {
-        return memos.toMutableList().apply {
-            block()
-            Log.d("APPLY", "updated: $this")
-        }.toImmutableList()
+        return memos.toMutableList()
+            .apply { block() }
+            .toImmutableList()
     }
 
     private fun catchIndexError(block: () -> Unit) {
