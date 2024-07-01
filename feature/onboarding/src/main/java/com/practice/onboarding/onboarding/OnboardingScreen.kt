@@ -2,12 +2,10 @@ package com.practice.onboarding.onboarding
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.CubicBezierEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -22,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,10 +45,15 @@ import com.practice.designsystem.components.AppIcon
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.onboarding.R
+import com.practice.onboarding.onboarding.animation.animateAppIconOffset
+import com.practice.onboarding.onboarding.animation.animateButtonAlpha
+import com.practice.onboarding.onboarding.animation.getAppIconOffset
+import com.practice.onboarding.onboarding.animation.getButtonAlpha
 import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingScreen(
+    route: OnboardingRoute,
     onPhoneLogin: () -> Unit,
     onNewUserSignUp: (FirebaseUser) -> Unit,
     onExistingUserLogin: (FirebaseUser) -> Unit,
@@ -77,22 +79,14 @@ fun OnboardingScreen(
         onFail = viewModel::onGoogleLoginLauncherFail,
     )
 
-    val appIconOffset = remember { Animatable(0f) }
-    val buttonAlpha = remember { Animatable(0f) }
+    val appIconOffset = getAppIconOffset(playAnimation = route.playAnimation)
+    val buttonAlpha = getButtonAlpha(playAnimation = route.playAnimation)
     LaunchedEffect(true) {
-        appIconOffset.animateTo(
-            targetValue = -125f,
-            animationSpec = tween(
-                durationMillis = 1000,
-                easing = CubicBezierEasing(0.5f, 0.0f, 0.5f, 1f),
-            )
-        )
-        buttonAlpha.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(
-                durationMillis = 500,
-            ),
-        )
+        Log.d("OnboardingScreen", "animation? ${route.playAnimation}")
+        if (route.playAnimation) {
+            appIconOffset.animateAppIconOffset()
+            buttonAlpha.animateButtonAlpha()
+        }
     }
 
     BoxWithConstraints(modifier = modifier) {
@@ -218,6 +212,7 @@ private fun OnboardingScreenPreview() {
         val context = LocalContext.current
         val client = GoogleSignIn.getClient(context, GoogleSignInOptions.Builder().build())
         OnboardingScreen(
+            route = OnboardingRoute(playAnimation = true),
             onPhoneLogin = {},
             onNewUserSignUp = {},
             onExistingUserLogin = {},
