@@ -15,7 +15,6 @@ android {
         minSdk = 26
 
         testInstrumentationRunner = "com.practice.meal.util.HiltTestRunner"
-        consumerProguardFiles.add(File("consumer-rules.pro"))
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments["room.schemaLocation"] = "$projectDir/schemas"

@@ -15,7 +15,6 @@ android {
         minSdk = 26
 
         testInstrumentationRunner = "com.practice.memo.testutil.HiltTestRunner"
-        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
