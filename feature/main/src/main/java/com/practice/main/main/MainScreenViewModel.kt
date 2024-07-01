@@ -20,7 +20,12 @@ import com.practice.main.main.state.DialogUiState
 import com.practice.main.main.state.MainUiMode.Calendar.toUiLoadedMode
 import com.practice.main.main.state.MainUiState
 import com.practice.main.main.state.PreferencesState
-import com.practice.main.state.*
+import com.practice.main.state.UiMeals
+import com.practice.main.state.UiMemos
+import com.practice.main.state.UiSchedules
+import com.practice.main.state.toMealUiState
+import com.practice.main.state.toUiMemo
+import com.practice.main.state.toUiSchedule
 import com.practice.meal.MealRepository
 import com.practice.memo.MemoRepository
 import com.practice.preferences.PreferencesRepository
@@ -31,11 +36,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-// TODO: 빠른 보기에서 영양/메모 팝업 대신 내비게이션 화면으로 가도록 수정
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
