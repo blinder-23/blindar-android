@@ -1,6 +1,5 @@
 package com.practice.settings.settings
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -244,7 +243,6 @@ private fun UserProfile(
     profileUiState: ProfileUiState,
     modifier: Modifier = Modifier,
 ) {
-    Log.d("Settings", "profile image uri: ${profileUiState.profileImageUri}")
     val usernameDescription =
         stringResource(id = R.string.settings_username, profileUiState.username)
     Row(

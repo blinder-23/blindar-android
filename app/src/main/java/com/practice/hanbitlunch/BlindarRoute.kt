@@ -5,6 +5,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.serialization.decodeArguments
 import com.practice.main.memo.MemoRoute
 import com.practice.main.nutrient.NutrientRoute
+import com.practice.onboarding.onboarding.OnboardingRoute
 import com.practice.settings.feedback.FeedbackRoute
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.serialization.InternalSerializationApi
@@ -13,9 +14,6 @@ import kotlinx.serialization.serializer
 
 @Serializable
 data object SplashRoute
-
-@Serializable
-data object OnboardingRoute
 
 @Serializable
 data object VerifyPhoneRoute
@@ -68,7 +66,12 @@ fun NavBackStackEntry.toBlindarRoute(): Any {
 }
 
 private val NavBackStackEntry.destinationClassPackageName: String?
-    get() = this.destination.route?.substringBefore("/")
+    get() = this.destination.route?.run {
+        if (contains("?"))
+            return substringBefore("?")
+        else
+            return substringBefore("/")
+    }
 
 private val NavBackStackEntry.destinationClassName: String
     get() = destinationClassPackageName?.substringAfterLast(".").orEmpty()

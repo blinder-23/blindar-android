@@ -1,6 +1,5 @@
 package com.practice.main.main.calendar
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -116,11 +115,8 @@ fun CalendarCard(
                         onSwiped(YearMonth(newYear, newMonth))
                     },
                     onSelectedDateChange = {
-                        val newPage =
-                            middlePage + calendarState.selectedDate.yearMonth.monthDiff(
-                                currentYearMonth
-                            )
-                        Log.d("CalendarCard", "Scroll from ${pagerState.currentPage} to $newPage")
+                        val newPage = middlePage + calendarState.selectedDate.yearMonth
+                            .monthDiff(currentYearMonth)
                         pagerState.animateScrollToPage(newPage)
                     },
                     dateShape = dateShape,

@@ -1,7 +1,6 @@
 package com.practice.work.dailyalarm
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
@@ -32,16 +31,13 @@ class DailyNotificationWork @AssistedInject constructor(
     private val preferencesRepository: PreferencesRepository,
 ) : CoroutineWorker(context, workerParams) {
     override suspend fun doWork(): Result {
-        logWorkId()
         return if (isNotificationEnabled()) {
-            logNotificationIsEnabled()
 
             val now = Date.now()
             sendDailyNotification(now, context)
 
             Result.success()
         } else {
-            logNotificationIsDisabled()
             Result.failure()
         }
     }
@@ -53,14 +49,6 @@ class DailyNotificationWork @AssistedInject constructor(
     private suspend fun sendDailyNotification(date: Date, context: Context) {
         sendDailyMealNotification(date, context)
         sendDailyScheduleNotification(date, context)
-    }
-
-    private fun logNotificationIsEnabled() {
-        log("Notification is enabled at ${Date.now()}")
-    }
-
-    private fun logNotificationIsDisabled() {
-        log("Notification is disabled at ${Date.now()}")
     }
 
     private suspend fun sendDailyMealNotification(date: Date, context: Context) {
@@ -102,14 +90,6 @@ class DailyNotificationWork @AssistedInject constructor(
 
     private fun combineScheduleAndMemo(schedules: List<Schedule>, memos: List<Memo>): List<String> {
         return schedules.map { it.eventName } + memos.map { it.content }
-    }
-
-    private fun logWorkId() {
-        log("ID $id started")
-    }
-
-    private fun log(message: String) {
-        Log.d(TAG, message)
     }
 
     companion object {

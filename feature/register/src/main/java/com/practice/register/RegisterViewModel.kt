@@ -140,9 +140,7 @@ class RegisterViewModel @Inject constructor(
                 BlindarWorkManager.setOneTimeFetchDataWork(activity)
 
                 val user = BlindarFirebase.getBlindarUser()
-                Log.d(TAG, "is user already registered? ${user is BlindarUserStatus.LoginUser}")
                 if (user is BlindarUserStatus.LoginUser) {
-                    Log.d(TAG, "load memo from server of user")
                     BlindarWorkManager.setFetchMemoFromServerWork(activity, user.user.uid)
                 }
             },
@@ -170,10 +168,6 @@ class RegisterViewModel @Inject constructor(
         onSuccess: () -> Unit,
         onFail: () -> Unit,
     ) {
-        Log.d(
-            TAG,
-            "name: ${registerUiState.value.name}, valid: ${registerUiState.value.isNameValid}"
-        )
         if (registerUiState.value.isNameValid) {
             BlindarFirebase.tryStoreUsername(
                 username = registerUiState.value.name,

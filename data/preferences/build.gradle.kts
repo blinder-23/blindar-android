@@ -15,7 +15,6 @@ android {
         minSdk = 26
 
         testInstrumentationRunner = "com.practice.preferences.HiltTestRunner"
-        consumerProguardFiles.add(File("consumer-rules.pro"))
     }
     testOptions {
         managedDevices {

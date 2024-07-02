@@ -6,7 +6,6 @@ import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -113,7 +112,7 @@ object BlindarNotificationManager {
         val builder = buildMealNotification(context, title, body)
 
         val notificationId: Int = date.toEpochSecond().toInt()
-        notifyIfPermissionIsGranted(context, builder, notificationId, "meal")
+        notifyIfPermissionIsGranted(context, builder, notificationId)
 
         return notificationId
     }
@@ -126,7 +125,7 @@ object BlindarNotificationManager {
         val builder = buildScheduleNotification(context, title, body)
 
         val notificationId: Int = date.toEpochSecond().toInt() + 1
-        notifyIfPermissionIsGranted(context, builder, notificationId, "schedule")
+        notifyIfPermissionIsGranted(context, builder, notificationId)
 
         return notificationId
     }
@@ -177,7 +176,6 @@ object BlindarNotificationManager {
         context: Context,
         builder: NotificationCompat.Builder,
         notificationId: Int,
-        logTitle: String = ""
     ) {
         with(NotificationManagerCompat.from(context)) {
             if ((ActivityCompat.checkSelfPermission(
@@ -185,15 +183,8 @@ object BlindarNotificationManager {
                 ) == PackageManager.PERMISSION_GRANTED) && areNotificationsEnabled()
             ) {
                 notify(notificationId, builder.build())
-                log("notification $logTitle is sent!")
-            } else {
-                log("notification $logTitle could not be sent because of the permission lack")
             }
         }
-    }
-
-    private fun log(message: String) {
-        Log.d(TAG, message)
     }
 
     private const val TAG = "BlinderNotificationManager"

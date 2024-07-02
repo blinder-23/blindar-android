@@ -1,6 +1,5 @@
 package com.practice.hanbitlunch
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -21,6 +20,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.practice.hanbitlunch.navigation.memoRoute
 import com.practice.hanbitlunch.navigation.nutrientRoute
@@ -29,6 +29,7 @@ import com.practice.main.memo.MemoRoute
 import com.practice.main.memo.MemoScreen
 import com.practice.main.nutrient.NutrientRoute
 import com.practice.main.nutrient.NutrientScreen
+import com.practice.onboarding.onboarding.OnboardingRoute
 import com.practice.onboarding.onboarding.OnboardingScreen
 import com.practice.onboarding.splash.SplashScreen
 import com.practice.register.phonenumber.VerifyPhoneNumber
@@ -58,8 +59,13 @@ fun BlindarNavHost(
         startDestination = SplashRoute,
         modifier = modifier,
         enterTransition = {
-            if (targetState.toBlindarRoute() is OnboardingRoute) {
+            if (initialState.toBlindarRoute() is SplashRoute && targetState.toBlindarRoute() is OnboardingRoute) {
                 fadeIn(initialAlpha = 1f)
+            } else if (targetState.toBlindarRoute() is OnboardingRoute) {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tweenSpec,
+                )
             } else {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Left,
@@ -76,6 +82,11 @@ fun BlindarNavHost(
         exitTransition = {
             if ((initialState.toBlindarRoute() is SplashRoute && targetState.toBlindarRoute() !is MainRoute)) {
                 fadeOut(targetAlpha = 1f)
+            } else if (initialState.toBlindarRoute() !is SplashRoute && targetState.toBlindarRoute() is OnboardingRoute) {
+                slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tweenSpec,
+                )
             } else {
                 slideOutOfContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Left,
@@ -121,7 +132,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
         }
     }
     val onAutoLoginFail = {
-        navController.navigate(OnboardingRoute) {
+        navController.navigate(OnboardingRoute(playAnimation = true)) {
             popUpTo(SplashRoute) { inclusive = true }
         }
     }
@@ -129,14 +140,12 @@ fun NavGraphBuilder.blindarMainNavGraph(
     composable<SplashRoute> {
         SplashScreen(
             onAutoLoginSuccess = {
-                Log.d(TAG, "auto login success")
                 onNavigateToMainScreen()
                 onLoginSuccess()
             },
             onUsernameNotSet = onUsernameNotSet,
             onSchoolNotSelected = onSchoolNotSelected,
             onAutoLoginFail = {
-                Log.d(TAG, "auto login fail")
                 onAutoLoginFail()
             },
             modifier = Modifier
@@ -145,20 +154,19 @@ fun NavGraphBuilder.blindarMainNavGraph(
                 .background(MaterialTheme.colorScheme.surface),
         )
     }
-    composable<OnboardingRoute> {
-        // TODO: Splash에서 올 때만 애니메이션 적용하도록 수정
+    composable<OnboardingRoute> { backStackEntry ->
+        val route = backStackEntry.toRoute<OnboardingRoute>()
         val context = LocalContext.current
         val failMessage = stringResource(id = R.string.google_login_fail_message)
         OnboardingScreen(
+            route = route,
             onPhoneLogin = { navController.navigate(VerifyPhoneRoute) },
             onNewUserSignUp = { user ->
-                Log.d(TAG, "new user with google: ${user.uid}")
                 navController.navigate(SelectSchoolRoute)
             },
             onExistingUserLogin = { user ->
-                Log.d(TAG, "existing user with google: ${user.uid}")
                 navController.navigate(MainRoute) {
-                    popUpTo(OnboardingRoute) { inclusive = true }
+                    popUpTo<OnboardingRoute> { inclusive = true }
                 }
             },
             onFail = {
@@ -173,11 +181,15 @@ fun NavGraphBuilder.blindarMainNavGraph(
     }
     composable<VerifyPhoneRoute> {
         VerifyPhoneNumber(
-            onBackButtonClick = onBackButtonClick,
+            onBackButtonClick = {
+                navController.navigate(OnboardingRoute()) {
+                    popUpTo<OnboardingRoute> { inclusive = true }
+                }
+            },
             onExistingUserLogin = {
                 onNavigateToMainScreen()
                 navController.navigate(MainRoute) {
-                    popUpTo(OnboardingRoute) { inclusive = true }
+                    popUpTo<OnboardingRoute> { inclusive = true }
                 }
             },
             onNewUserSignUp = { navController.navigate(VerifyUsernameRoute) },
@@ -208,7 +220,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
             onNavigateToMain = {
                 onNavigateToMainScreen()
                 navController.navigate(MainRoute) {
-                    popUpTo(OnboardingRoute) { inclusive = true }
+                    popUpTo<OnboardingRoute> { inclusive = true }
                     popUpTo(MainRoute) { inclusive = true }
                 }
             },
@@ -243,7 +255,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
                 navController.popBackStack()
             },
             onLogout = {
-                navController.navigate(OnboardingRoute) {
+                navController.navigate(OnboardingRoute(playAnimation = false)) {
                     popUpTo(MainRoute) { inclusive = true }
                 }
             },

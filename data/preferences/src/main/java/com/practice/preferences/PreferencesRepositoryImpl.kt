@@ -49,7 +49,6 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         dataStore.data.catch { exception ->
             when (exception) {
                 is IOException -> {
-                    Log.e(TAG, "Error while reading preferences.", exception)
                     emit(emptyPreferences())
                 }
 

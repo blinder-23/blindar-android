@@ -34,17 +34,13 @@ class FetchRemoteMealWorker @AssistedInject constructor(
         preferencesRepository.increaseRunningWorkCount()
         val result = fetchRemoteMeals()
         preferencesRepository.decreaseRunningWorkCount()
-        Log.d(TAG, "finished!")
         return result
     }
 
     private suspend fun clearDatabaseIfValueIsSet() {
         val clearDatabase = inputData.getBoolean(clearDatabaseKey, false)
         if (clearDatabase) {
-            Log.d(TAG, "clear database")
             localRepository.clear()
-        } else {
-            Log.d(TAG, "doesn't clear database")
         }
     }
 
@@ -75,16 +71,13 @@ class FetchRemoteMealWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchMeals(schoolCode: Int, year: Int, month: Int): List<Meal> =
-        remoteRepository.getMeals(schoolCode, year, month).apply {
-            Log.d(TAG, "$schoolCode meal $year $month: ${meals.size}")
-        }.meals
+        remoteRepository.getMeals(schoolCode, year, month).meals
 
     private suspend fun storeMeals(meals: List<Meal>) {
         localRepository.insertMeals(meals)
     }
 
     private fun handleException(e: Exception, year: Int, month: Int): Result {
-        Log.e(TAG, "$year, $month has an exception: ${e.message}")
         return Result.failure()
     }
 

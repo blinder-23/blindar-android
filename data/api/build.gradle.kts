@@ -18,7 +18,6 @@ android {
         minSdk = 26
 
         testInstrumentationRunner = "com.practice.api.HiltTestRunner"
-        consumerProguardFiles.add(File("consumer-rules.pro"))
         buildConfigField("String", "SERVER_URL", url)
     }
 

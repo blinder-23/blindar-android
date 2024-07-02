@@ -56,7 +56,6 @@ class DailyDatePickerState(
     fun onTextFieldUpdate(value: TextFieldValue, setDate: Boolean = true) {
         val text = value.text
         if (!text.isDigitsOnly() || text.length > 8) return
-        Log.d("DailyDatePickerState", "set text value to $value")
         textFieldValue = value
         if (text.length == 8) {
             text.parseToDate()?.let {
@@ -95,7 +94,6 @@ class DailyDatePickerState(
         val year = substring(0..3).toIntOrNull()
         val month = substring(4..5).toIntOrNull()
         val day = substring(6..7).toIntOrNull()
-        Log.d(TAG, "$year, $month, $day")
 
         return if (year != null && month != null && day != null) {
             Date(year, month, day)

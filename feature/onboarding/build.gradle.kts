@@ -6,6 +6,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -16,7 +17,6 @@ android {
         minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -83,4 +83,7 @@ dependencies {
     // Kotlin Coroutines
     implementation(libs.bundles.coroutines)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // Kotlin serialization
+    implementation(libs.kotlinx.serialization.json)
 }
