@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.practice.notification"
-    compileSdk = 34
+    compileSdkPreview = "VanillaIceCream"
 
     defaultConfig {
         minSdk = 26

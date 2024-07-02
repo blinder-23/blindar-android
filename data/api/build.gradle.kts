@@ -12,7 +12,7 @@ val url: String = gradleLocalProperties(rootDir, providers).getProperty("server.
 
 android {
     namespace = "com.practice.api"
-    compileSdk = 34
+    compileSdkPreview = "VanillaIceCream"
 
     defaultConfig {
         minSdk = 26

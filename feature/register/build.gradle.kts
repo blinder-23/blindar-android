@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.practice.register"
-    compileSdk = 34
+    compileSdkPreview = "VanillaIceCream"
 
     defaultConfig {
         minSdk = 26

@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.practice.meal"
-    compileSdk = 34
+    compileSdkPreview = "VanillaIceCream"
 
     defaultConfig {
         minSdk = 26
