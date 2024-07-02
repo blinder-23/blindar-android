@@ -10,9 +10,12 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.firebase.R
 import com.practice.preferences.PreferencesRepository
@@ -26,6 +29,8 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var preferencesRepository: PreferencesRepository
 
+    private val credentialManager = CredentialManager.create(this)
+
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +43,11 @@ class MainActivity : ComponentActivity() {
                 BlindarTheme {
                     BlindarNavHost(
                         windowSizeClass = windowSizeClass,
+                        getCredentialManager = { credentialManager },
+                        signInWithGoogleRequest = getSignInWithGoogleRequest(),
                         modifier = Modifier
 //                            .safeDrawingPadding()
                             .fillMaxSize(),
-                        googleSignInClient = getGoogleSignInClient(),
                         onNavigateToMainScreen = {
 //                            WindowCompat.setDecorFitsSystemWindows(window, true)
                         }
@@ -58,5 +64,16 @@ class MainActivity : ComponentActivity() {
             .requestEmail()
             .build()
         return GoogleSignIn.getClient(this, options)
+    }
+
+    private fun getSignInWithGoogleRequest(): GetCredentialRequest {
+        val webClientId = getString(R.string.web_client_id)
+        val signInWithGoogleOption = GetSignInWithGoogleOption.Builder(webClientId)
+            .build()
+
+        val request: GetCredentialRequest = GetCredentialRequest.Builder()
+            .addCredentialOption(signInWithGoogleOption)
+            .build()
+        return request
     }
 }

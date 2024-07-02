@@ -31,7 +31,7 @@ object BlindarFirebase {
         return signInWithGoogle(idToken = account.idToken)
     }
 
-    private suspend fun signInWithGoogle(idToken: String?): FirebaseUser? {
+    suspend fun signInWithGoogle(idToken: String?): FirebaseUser? {
         val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
         val task = try {
             auth.signInWithCredential(firebaseCredential).await()

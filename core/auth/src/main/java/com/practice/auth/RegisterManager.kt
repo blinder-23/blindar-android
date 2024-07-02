@@ -2,7 +2,6 @@ package com.practice.auth
 
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseException
@@ -42,6 +41,16 @@ class RegisterManager @Inject constructor(
             BlindarFirebase.getSchoolCode(firebaseUser.displayName!!) == null -> UserRegisterState.SCHOOL_NOT_SELECTED
             else -> UserRegisterState.ALL_FILLED
         }
+    }
+
+    suspend fun signInWithGoogle(
+        idToken: String,
+        onNewUserSignUp: (FirebaseUser) -> Unit,
+        onExistingUserLogin: (FirebaseUser) -> Unit,
+        onFail: () -> Unit,
+    ) {
+        val user = BlindarFirebase.signInWithGoogle(idToken)
+        checkGoogleRegisterStatus(user, onNewUserSignUp, onExistingUserLogin, onFail)
     }
 
     suspend fun parseIntentAndSignInWithGoogle(

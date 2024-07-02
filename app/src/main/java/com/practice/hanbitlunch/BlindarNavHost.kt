@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -21,7 +23,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.practice.hanbitlunch.navigation.memoRoute
 import com.practice.hanbitlunch.navigation.nutrientRoute
 import com.practice.main.main.MainScreen
@@ -45,7 +46,8 @@ private const val TAG = "BlindarNavHost"
 @Composable
 fun BlindarNavHost(
     windowSizeClass: WindowSizeClass,
-    googleSignInClient: GoogleSignInClient,
+    getCredentialManager: () -> CredentialManager,
+    signInWithGoogleRequest: GetCredentialRequest,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     onNavigateToMainScreen: () -> Unit = {},
@@ -104,8 +106,9 @@ fun BlindarNavHost(
         blindarMainNavGraph(
             navController = navController,
             windowSizeClass = windowSizeClass,
-            googleSignInClient = googleSignInClient,
             onNavigateToMainScreen = onNavigateToMainScreen,
+            getCredentialManager = getCredentialManager,
+            signInWithGoogleRequest = signInWithGoogleRequest,
         )
     }
 }
@@ -113,8 +116,9 @@ fun BlindarNavHost(
 fun NavGraphBuilder.blindarMainNavGraph(
     navController: NavHostController,
     windowSizeClass: WindowSizeClass,
-    googleSignInClient: GoogleSignInClient,
     onNavigateToMainScreen: () -> Unit,
+    getCredentialManager: () -> CredentialManager,
+    signInWithGoogleRequest: GetCredentialRequest,
 ) {
     val onLoginSuccess = {
         navController.navigate(MainRoute) {
@@ -172,7 +176,8 @@ fun NavGraphBuilder.blindarMainNavGraph(
             onFail = {
                 context.makeToast(failMessage)
             },
-            googleSignInClient = googleSignInClient,
+            credentialManager = getCredentialManager(),
+            signInWithGoogleRequest = signInWithGoogleRequest,
             modifier = Modifier
                 .safeDrawingPadding()
                 .fillMaxSize()
