@@ -92,3 +92,16 @@
 -keepclasseswithmembers class com.google.firebase.FirebaseException
 -if class androidx.credentials.CredentialManager
 -keep class androidx.credentials.playservices.** {*;}
+
+# Temporary rules
+-dontwarn com.google.android.gms.auth.api.credentials.Credential$Builder
+-dontwarn com.google.android.gms.auth.api.credentials.Credential
+-dontwarn com.google.android.gms.auth.api.credentials.CredentialRequest$Builder
+-dontwarn com.google.android.gms.auth.api.credentials.CredentialRequest
+-dontwarn com.google.android.gms.auth.api.credentials.CredentialRequestResponse
+-dontwarn com.google.android.gms.auth.api.credentials.Credentials
+-dontwarn com.google.android.gms.auth.api.credentials.CredentialsClient
+-dontwarn com.google.android.gms.auth.api.credentials.CredentialsOptions$Builder
+-dontwarn com.google.android.gms.auth.api.credentials.CredentialsOptions
+-dontwarn com.google.android.gms.auth.api.credentials.HintRequest$Builder
+-dontwarn com.google.android.gms.auth.api.credentials.HintRequest
