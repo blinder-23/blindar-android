@@ -1,7 +1,12 @@
 package com.practice.onboarding.onboarding
 
+import android.content.Context
+import android.util.Log
+import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
+import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
@@ -16,6 +21,22 @@ import javax.inject.Inject
 class OnboardingViewModel @Inject constructor(
     private val registerManager: RegisterManager,
 ) : ViewModel() {
+
+    suspend fun getCredential(
+        context: Context,
+        credentialManager: CredentialManager,
+        request: GetCredentialRequest,
+    ): GetCredentialResponse? {
+        return try {
+            credentialManager.getCredential(
+                context = context,
+                request = request,
+            )
+        } catch (e: GetCredentialCancellationException) {
+            e.printStackTrace()
+            null
+        }
+    }
 
     fun parseIdToken(
         result: GetCredentialResponse,

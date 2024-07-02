@@ -1,6 +1,5 @@
 package com.practice.onboarding.onboarding
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -88,16 +87,17 @@ fun OnboardingScreen(
             GoogleLoginButton(
                 onGoogleLogin = {
                     coroutineScope.launch {
-                        val result = credentialManager.getCredential(
-                            context = context.applicationContext,
+                        val result = viewModel.getCredential(
+                            context = context,
+                            credentialManager = credentialManager,
                             request = signInWithGoogleRequest,
                         )
-                        Log.d("OnboardingScreen", "${result.credential.type}")
                         viewModel.parseIdToken(
-                            result = result,
+                            result = result ?: return@launch,
                             onNewUserSignUp = onNewUserSignUp,
                             onExistingUserLogin = onExistingUserLogin,
                             onFail = onFail,
+                            context = context,
                         )
                     }
                 },
