@@ -3,6 +3,7 @@ package com.practice.main.state
 import android.util.Log
 import com.hsk.ktx.date.Date
 import com.practice.domain.Memo
+import com.practice.main.main.state.MemoDialogElement
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -75,6 +76,9 @@ data class UiMemo(
     override val displayText: String
         get() = contents
 
+    val date: Date
+        get() = Date(year, month, day)
+
     companion object {
         fun getEmptyMemo(
             id: String = "",
@@ -94,6 +98,8 @@ data class UiMemo(
         }
     }
 }
+
+fun List<Memo>.toUiMemo() = map { it.toUiMemo() }
 
 fun Memo.toUiMemo() = UiMemo(
     id = id,

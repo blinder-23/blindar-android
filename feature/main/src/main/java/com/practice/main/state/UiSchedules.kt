@@ -2,6 +2,7 @@ package com.practice.main.state
 
 import com.hsk.ktx.date.Date
 import com.practice.domain.schedule.Schedule
+import com.practice.main.main.state.MemoDialogElement
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -42,6 +43,8 @@ data class UiSchedule(
     override val displayText: String
         get() = if (eventName == eventContent) eventName else "$eventName - $eventContent"
 }
+
+fun List<Schedule>.toUiSchedule() = map { it.toUiSchedule() }
 
 fun Schedule.toUiSchedule() = UiSchedule(
     schoolCode = schoolCode,

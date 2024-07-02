@@ -6,6 +6,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -79,4 +80,7 @@ dependencies {
 
     // Kotlin immutable collections
     implementation(libs.kotlinx.collections.immutable)
+
+    // Kotlin serialization
+    implementation(libs.kotlinx.serialization.json)
 }

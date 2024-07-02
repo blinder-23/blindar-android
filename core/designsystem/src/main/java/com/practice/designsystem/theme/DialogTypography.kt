@@ -32,27 +32,27 @@ private val dialogFontFamily = FontFamily(
 
 val DialogTypography = Typography(
     titleLarge = TextStyle(
-        fontFamily = dialogFontFamily,
+        fontFamily = Pretendard,
         fontWeight = FontWeight.SemiBold,
         fontSize = 26.sp,
     ),
     titleMedium = TextStyle(
-        fontFamily = dialogFontFamily,
+        fontFamily = Pretendard,
         fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp,
     ),
     bodyLarge = TextStyle(
-        fontFamily = dialogFontFamily,
+        fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
         fontSize = 24.sp,
     ),
     bodyMedium = TextStyle(
-        fontFamily = dialogFontFamily,
+        fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
         fontSize = 20.sp,
     ),
     bodySmall = TextStyle(
-        fontFamily = dialogFontFamily,
+        fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
     )

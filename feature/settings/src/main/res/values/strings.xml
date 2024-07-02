@@ -2,6 +2,12 @@
 <resources>
     <string name="top_bar_title">설정</string>
 
+    <string name="settings_username">사용자 이름: %s</string>
+    <string name="settings_logout">로그아웃</string>
+    <string name="settings_logout_dialog_title">로그아웃할까요?</string>
+    <string name="settings_logout_dialog_dismiss">취소</string>
+    <string name="settings_logout_dialog_logout">로그아웃</string>
+
     <string name="settings_daily_mode_title">하루씩 보기 모드</string>
     <string name="settings_daily_mode_title_description_enabled">하루씩 보기 모드 켜짐</string>
     <string name="settings_daily_mode_title_description_disabled">하루씩 보기 모드 꺼짐</string>
@@ -39,6 +45,10 @@
     <string name="feedback_dialog_textfield_error_empty">피드백을 입력해 주세요.</string>
     <string name="feedback_dialog_cancel_button">취소</string>
     <string name="feedback_dialog_send_button">전송</string>
+
+    <string name="feedback_screen_title">피드백 작성</string>
+    <string name="feedback_screen_textfield_label">피드백 작성</string>
+    <string name="feedback_screen_textfield_error_empty">피드백을 입력해 주세요.</string>
 
     <string name="close">닫기</string>
 </resources>

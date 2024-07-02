@@ -6,8 +6,12 @@ import kotlinx.coroutines.flow.Flow
 
 class MealRepository(private val dataSource: MealDataSource) {
 
-    suspend fun getMeals(schoolCode: Int, year: Int, month: Int): Flow<List<Meal>> {
+    fun getMeals(schoolCode: Int, year: Int, month: Int): Flow<List<Meal>> {
         return dataSource.getMeals(schoolCode, year, month)
+    }
+
+    suspend fun getMealsPlain(schoolCode: Int, year: Int, month: Int): List<Meal> {
+        return dataSource.getMealsPlain(schoolCode, year, month)
     }
 
     suspend fun getMeal(schoolCode: Int, date: Date): List<Meal> {

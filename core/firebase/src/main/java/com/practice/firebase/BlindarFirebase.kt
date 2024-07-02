@@ -204,6 +204,10 @@ object BlindarFirebase {
         return value as? String
     }
 
+    fun logout() {
+        auth.signOut()
+    }
+
     private const val usersKey = "users"
     private const val ownerKey = "owner"
     private const val schoolCodeKey = "school_code"

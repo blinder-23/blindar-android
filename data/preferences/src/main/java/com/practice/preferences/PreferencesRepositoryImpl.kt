@@ -34,7 +34,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
     private val TAG = "PreferencesRepository"
 
     private object PreferenceKeys {
-//        val UI_MODE = stringPreferencesKey("ui-mode")
+        //        val UI_MODE = stringPreferencesKey("ui-mode")
         val MAIN_SCREEN_MODE = stringPreferencesKey("main-screen-mode")
         val THEME_MODE = stringPreferencesKey("theme-mode")
         val FIRST_EXECUTION = booleanPreferencesKey("first-execution")

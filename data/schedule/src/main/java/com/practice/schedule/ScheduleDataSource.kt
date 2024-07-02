@@ -4,7 +4,8 @@ import com.practice.domain.schedule.Schedule
 import kotlinx.coroutines.flow.Flow
 
 sealed interface ScheduleDataSource {
-    suspend fun getSchedules(schoolCode: Int, year: Int, month: Int): Flow<List<Schedule>>
+    fun getSchedules(schoolCode: Int, year: Int, month: Int): Flow<List<Schedule>>
+    suspend fun getSchedulesPlain(schoolCode: Int, year: Int, month: Int): List<Schedule>
 
     suspend fun getSchedules(schoolCode: Int, ymd: String): List<Schedule>
 

@@ -13,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.LightPreview
-import com.practice.designsystem.components.BlindarTopAppBar
+import com.practice.designsystem.components.BlindarLargeTopAppBar
 import com.practice.designsystem.components.BlindarTopAppBarDefaults
 import com.practice.designsystem.components.TitleSmall
 import com.practice.designsystem.theme.BlindarTheme
@@ -78,26 +79,36 @@ private fun SelectSchoolScreen(
     modifier: Modifier = Modifier,
 ) {
     val horizontalMargin = 8.dp
-    Column(modifier = modifier) {
-        BlindarTopAppBar(
-            title = stringResource(id = R.string.select_school_screen),
-            navigationIcon = { BlindarTopAppBarDefaults.NavigationIcon(onClick = onBackButtonClick) },
-        )
-        SearchSchoolTextField(
-            query = query,
-            onQueryChange = onQueryChange,
+    Scaffold(
+        topBar = {
+            BlindarLargeTopAppBar(
+                title = stringResource(id = R.string.select_school_screen),
+                navigationIcon = { BlindarTopAppBarDefaults.NavigationIcon(onClick = onBackButtonClick) },
+            )
+        },
+        modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.surface,
+    ) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 21.dp, start = horizontalMargin, end = horizontalMargin),
-        )
-        SchoolList(
-            selectedSchool = selectedSchool,
-            schools = schools,
-            onSchoolClick = onSchoolClick,
-            modifier = Modifier
-                .weight(1f)
-                .background(MaterialTheme.colorScheme.surface),
-        )
+                .padding(it)
+                .padding(horizontal = 8.dp),
+        ) {
+            SearchSchoolTextField(
+                query = query,
+                onQueryChange = onQueryChange,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 21.dp, start = horizontalMargin, end = horizontalMargin),
+            )
+            SchoolList(
+                selectedSchool = selectedSchool,
+                schools = schools,
+                onSchoolClick = onSchoolClick,
+                modifier = Modifier
+                    .weight(1f),
+            )
+        }
     }
 }
 

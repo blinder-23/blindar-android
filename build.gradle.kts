@@ -15,6 +15,7 @@ buildscript {
         classpath(libs.google.services)
         classpath(libs.firebase.crashlytics.gradle)
         classpath(libs.vanniktech.dependency.graph.generator)
+        classpath(libs.kotlinx.serialization.plugin)
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

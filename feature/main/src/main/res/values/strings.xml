@@ -68,4 +68,29 @@
     <string name="meal_dialog_close">닫기</string>
 
     <string name="schedule_dialog_close">닫기</string>
+
+    <!--  nutrient screen  -->
+    <string name="nutrient_header">영양 정보</string>
+    <string name="nutrient_date_format">%d월 %d일 (%s) %s</string>
+    <string name="nutrient_fail">오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.</string>
+
+    <string name="nutrient_item_amount">%.1f%s</string>
+
+    <!--  memo screen  -->
+    <string name="memo_header">메모 편집</string>
+    <string name="memo_date_format">%d년 %d월 %d일 (%s)</string>
+    <string name="memo_add_button">메모 추가하기</string>
+    <string name="memo_fail">오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.</string>
+    <string name="memo_item_edit">수정하기</string>
+    <string name="memo_item_delete">삭제하기</string>
+
+    <string name="memo_bottom_sheet_title_add">메모 추가</string>
+    <string name="memo_bottom_sheet_title_edit">메모 편집</string>
+    <string name="memo_bottom_sheet_textfield_label">메모 내용</string>
+    <string name="memo_bottom_sheet_cancel_button">취소</string>
+    <string name="memo_bottom_sheet_submit_button">저장</string>
+
+    <string name="memo_delete_dialog_title">메모를 삭제할까요?</string>
+    <string name="memo_delete_dialog_cancel">취소</string>
+    <string name="memo_delete_dialog_delete">삭제</string>
 </resources>

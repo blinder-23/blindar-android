@@ -11,13 +11,18 @@ import kotlinx.coroutines.flow.map
 
 class LocalScheduleDataSource(private val scheduleDao: ScheduleDao) : ScheduleDataSource {
 
-    override suspend fun getSchedules(
+    override fun getSchedules(
         schoolCode: Int,
         year: Int,
         month: Int,
     ): Flow<List<Schedule>> {
         return scheduleDao.getSchedule(schoolCode, getDateString(year, month))
             .map { it.toScheduleEntities() }
+    }
+
+    override suspend fun getSchedulesPlain(schoolCode: Int, year: Int, month: Int): List<Schedule> {
+        return scheduleDao.getSchedulePlain(schoolCode, getDateString(year, month))
+            .map { it.toScheduleEntity() }
     }
 
     override suspend fun getSchedules(schoolCode: Int, ymd: String): List<Schedule> {

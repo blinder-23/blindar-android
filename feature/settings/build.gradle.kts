@@ -6,6 +6,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -50,6 +51,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:firebase"))
     implementation(project(":core:util"))
+    implementation(project(":core:auth"))
     implementation(project(":data:preferences"))
     implementation(project(":data:api"))
 
@@ -70,4 +72,10 @@ dependencies {
     // Kotlin Coroutines
     implementation(libs.bundles.coroutines)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // Kotlin serialization
+    implementation(libs.kotlinx.serialization.json)
+
+    // Coil
+    implementation(libs.coil)
 }

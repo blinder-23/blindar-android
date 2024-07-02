@@ -8,7 +8,7 @@ class FakeScheduleDataSource : ScheduleDataSource {
 
     private val scheduleEntities = mutableSetOf<Schedule>()
 
-    override suspend fun getSchedules(
+    override fun getSchedules(
         schoolCode: Int,
         year: Int,
         month: Int,
@@ -16,6 +16,10 @@ class FakeScheduleDataSource : ScheduleDataSource {
         return flow {
             emit(scheduleEntities.filter { it.schoolCode == schoolCode && it.year == year && it.month == month })
         }
+    }
+
+    override suspend fun getSchedulesPlain(schoolCode: Int, year: Int, month: Int): List<Schedule> {
+        return scheduleEntities.filter { it.schoolCode == schoolCode && it.year == year && it.month == month }
     }
 
     override suspend fun getSchedules(schoolCode: Int, ymd: String): List<Schedule> {
