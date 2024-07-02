@@ -46,7 +46,6 @@ private const val TAG = "BlindarNavHost"
 @Composable
 fun BlindarNavHost(
     windowSizeClass: WindowSizeClass,
-    getCredentialManager: () -> CredentialManager,
     signInWithGoogleRequest: GetCredentialRequest,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
@@ -56,6 +55,7 @@ fun BlindarNavHost(
         durationMillis = 500,
     )
 
+    val context = LocalContext.current
     NavHost(
         navController = navController,
         startDestination = SplashRoute,
@@ -107,7 +107,7 @@ fun BlindarNavHost(
             navController = navController,
             windowSizeClass = windowSizeClass,
             onNavigateToMainScreen = onNavigateToMainScreen,
-            getCredentialManager = getCredentialManager,
+            credentialManager = CredentialManager.create(context),
             signInWithGoogleRequest = signInWithGoogleRequest,
         )
     }
@@ -117,7 +117,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
     navController: NavHostController,
     windowSizeClass: WindowSizeClass,
     onNavigateToMainScreen: () -> Unit,
-    getCredentialManager: () -> CredentialManager,
+    credentialManager: CredentialManager,
     signInWithGoogleRequest: GetCredentialRequest,
 ) {
     val onLoginSuccess = {
@@ -176,7 +176,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
             onFail = {
                 context.makeToast(failMessage)
             },
-            credentialManager = getCredentialManager(),
+            credentialManager = credentialManager,
             signInWithGoogleRequest = signInWithGoogleRequest,
             modifier = Modifier
                 .safeDrawingPadding()

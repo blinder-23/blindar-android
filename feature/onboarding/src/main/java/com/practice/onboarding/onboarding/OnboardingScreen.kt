@@ -1,11 +1,6 @@
 package com.practice.onboarding.onboarding
 
-import android.app.Activity
-import android.content.Intent
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -64,20 +59,6 @@ fun OnboardingScreen(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val startForResult = rememberGoogleLoginRequestLauncher(
-        onGoogleLogin = { intent ->
-            coroutineScope.launch {
-                viewModel.tryGoogleLogin(
-                    context = context,
-                    intent = intent,
-                    onNewUserSignUp = onNewUserSignUp,
-                    onExistingUserLogin = onExistingUserLogin,
-                    onFail = onFail,
-                )
-            }
-        },
-        onFail = { },
-    )
 
     val appIconOffset = getAppIconOffset(playAnimation = route.playAnimation)
     val buttonAlpha = getButtonAlpha(playAnimation = route.playAnimation)
@@ -143,19 +124,6 @@ fun OnboardingScreen(
         }
     }
 }
-
-@Composable
-private fun rememberGoogleLoginRequestLauncher(
-    onGoogleLogin: (Intent) -> Unit,
-    onFail: (ActivityResult) -> Unit,
-) =
-    rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.let(onGoogleLogin)
-        } else {
-            onFail(result)
-        }
-    }
 
 @Composable
 private fun PhoneLoginButton(
