@@ -13,6 +13,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.google.firebase.auth.FirebaseUser
 import com.practice.auth.RegisterManager
+import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,6 +44,7 @@ class OnboardingViewModel @Inject constructor(
         onNewUserSignUp: (FirebaseUser) -> Unit,
         onExistingUserLogin: (FirebaseUser) -> Unit,
         onFail: () -> Unit,
+        context: Context,
     ) {
         when (val credential = result.credential) {
             is CustomCredential -> {
@@ -55,6 +57,7 @@ class OnboardingViewModel @Inject constructor(
                             onNewUserSignUp = onNewUserSignUp,
                             onExistingUserLogin = onExistingUserLogin,
                             onFail = onFail,
+                            context = context,
                         )
                     } catch (e: GoogleIdTokenParsingException) {
                         e.printStackTrace()
@@ -69,11 +72,25 @@ class OnboardingViewModel @Inject constructor(
         onNewUserSignUp: (FirebaseUser) -> Unit,
         onExistingUserLogin: (FirebaseUser) -> Unit,
         onFail: () -> Unit,
+        context: Context,
     ) {
         viewModelScope.launch {
-            // TODO: 구글 로그인 후 데이터 work가 돌지 않는 문제 해결
-            registerManager.signInWithGoogle(idToken, onNewUserSignUp, onExistingUserLogin, onFail)
+            registerManager.signInWithGoogle(
+                idToken = idToken,
+                onNewUserSignUp = onNewUserSignUp,
+                onExistingUserLogin = { user ->
+                    onExistingUserLogin(user)
+                    setFetchRemoteDataWork(context, user.uid)
+                },
+                onFail = onFail,
+            )
         }
+    }
+
+    private fun setFetchRemoteDataWork(context: Context, userId: String) {
+        Log.d(TAG, "set work for $userId")
+        BlindarWorkManager.setOneTimeFetchDataWork(context)
+        BlindarWorkManager.setFetchMemoFromServerWork(context, userId)
     }
 
     companion object {
