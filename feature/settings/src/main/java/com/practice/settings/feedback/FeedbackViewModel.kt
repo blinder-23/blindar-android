@@ -1,7 +1,7 @@
 package com.practice.settings.feedback
 
-import android.os.Build
 import androidx.lifecycle.ViewModel
+import com.practice.api.feedback.FeedbackRequest
 import com.practice.api.feedback.RemoteFeedbackRepository
 import com.practice.api.feedback.repository.FeedbackResult
 import com.practice.firebase.BlindarFirebase
@@ -37,22 +37,18 @@ class FeedbackViewModel @Inject constructor(
         }
     }
 
-    suspend fun sendFeedback(request: FeedbackUiRequest): Boolean {
-        val (feedback, appVersionName) = request
+    suspend fun sendFeedback(request: UiFeedbackRequest): Boolean {
+        val (appVersionName, feedback) = request
         if (!canSendFeedback(request.feedback)) {
             return false
         }
 
-        val userId = getUserId() ?: return false
-        val deviceName = Build.MODEL ?: "UNKNOWN_DEVICE"
-        val osVersion = Build.VERSION.SDK_INT.toString()
-
         return feedbackRepository.sendFeedback(
-            userId = userId,
-            deviceName = deviceName,
-            osVersion = osVersion,
-            appVersion = appVersionName,
-            contents = feedback
+            FeedbackRequest(
+                userId = getUserId() ?: "",
+                feedback = feedback,
+                appVersionName = appVersionName,
+            )
         ) is FeedbackResult.Success
     }
 
