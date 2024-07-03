@@ -35,6 +35,7 @@ fun BlindarButton(
         color = MaterialTheme.colorScheme.primaryContainer,
     ),
     isPrimary: Boolean = true,
+    enabled: Boolean = true,
     content: @Composable RowScope.() -> Unit = {},
 ) {
     val containerColor by animateColorAsState(
@@ -49,6 +50,7 @@ fun BlindarButton(
         colors = ButtonDefaults.buttonColors(containerColor = containerColor),
         border = border,
         shape = shape,
+        enabled = enabled,
     ) {
         CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onPrimaryContainer) {
             content()
