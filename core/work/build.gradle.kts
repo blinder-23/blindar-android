@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.example.work"
-    compileSdk = 34
+    compileSdkPreview = "VanillaIceCream"
 
     defaultConfig {
         minSdk = 26

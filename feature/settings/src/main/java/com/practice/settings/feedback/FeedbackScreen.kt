@@ -87,7 +87,7 @@ private fun FeedbackScreen(
     feedback: String,
     onFeedbackUpdate: (String) -> Unit,
     isError: Boolean,
-    onSend: (FeedbackUiRequest) -> Unit,
+    onSend: (UiFeedbackRequest) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -115,7 +115,7 @@ private fun FeedbackScreen(
                     .fillMaxWidth(),
             )
             FeedbackButtons(
-                onSend = { onSend(FeedbackUiRequest(feedback, versionName)) },
+                onSend = { onSend(UiFeedbackRequest(feedback, versionName)) },
                 onDismiss = onCancel,
             )
         }

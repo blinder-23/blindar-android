@@ -1,9 +1,6 @@
 package com.practice.auth
 
 import android.app.Activity
-import android.content.Intent
-import android.util.Log
-import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.AuthResult
@@ -44,23 +41,14 @@ class RegisterManager @Inject constructor(
         }
     }
 
-    suspend fun parseIntentAndSignInWithGoogle(
-        intent: Intent,
+    suspend fun signInWithGoogle(
+        idToken: String,
         onNewUserSignUp: (FirebaseUser) -> Unit,
         onExistingUserLogin: (FirebaseUser) -> Unit,
         onFail: () -> Unit,
     ) {
-        try {
-            val firebaseUser = BlindarFirebase.signInWithGoogle(intent)
-            checkGoogleRegisterStatus(
-                user = firebaseUser,
-                onNewUserSignUp = onNewUserSignUp,
-                onExistingUserLogin = onExistingUserLogin,
-                onFail = onFail,
-            )
-        } catch (e: ApiException) {
-            onFail()
-        }
+        val user = BlindarFirebase.signInWithGoogle(idToken)
+        checkGoogleRegisterStatus(user, onNewUserSignUp, onExistingUserLogin, onFail)
     }
 
     private suspend fun checkGoogleRegisterStatus(

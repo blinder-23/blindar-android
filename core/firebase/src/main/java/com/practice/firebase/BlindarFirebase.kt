@@ -1,12 +1,9 @@
 package com.practice.firebase
 
 import android.app.Activity
-import android.content.Intent
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.PhoneAuthCredential
@@ -26,12 +23,7 @@ object BlindarFirebase {
     private val auth: FirebaseAuth = Firebase.auth
     private val database: DatabaseReference = Firebase.database.reference
 
-    suspend fun signInWithGoogle(intent: Intent): FirebaseUser? {
-        val account = GoogleSignIn.getSignedInAccountFromIntent(intent).await()
-        return signInWithGoogle(idToken = account.idToken)
-    }
-
-    private suspend fun signInWithGoogle(idToken: String?): FirebaseUser? {
+    suspend fun signInWithGoogle(idToken: String?): FirebaseUser? {
         val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
         val task = try {
             auth.signInWithCredential(firebaseCredential).await()
@@ -62,26 +54,6 @@ object BlindarFirebase {
             .setCallbacks(callback)
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
-    }
-
-    fun signInWithPhoneAuthCredential(
-        activity: Activity,
-        credential: PhoneAuthCredential,
-        onRegisterOrLoginSuccessful: () -> Unit,
-        onLoginFail: () -> Unit,
-    ) {
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(activity) { task ->
-                val user = task.result?.user
-                if (task.isSuccessful && user != null) {
-                    onRegisterOrLoginSuccessful()
-                } else {
-                    if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                        // verification code invalid
-                        onLoginFail()
-                    }
-                }
-            }
     }
 
     fun trySignInWithPhoneAuthCredential(

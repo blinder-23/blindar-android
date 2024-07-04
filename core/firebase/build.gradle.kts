@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.practice.firebase"
-    compileSdk = 34
+    compileSdkPreview = "VanillaIceCream"
 
     defaultConfig {
         minSdk = 26
@@ -51,6 +51,9 @@ dependencies {
     api(platform(libs.firebase.bom))
     api(libs.firebase.auth.ktx)
     api(libs.firebase.database)
+
+    // androidx credential manager
+    api(libs.bundles.androidx.credentials)
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)

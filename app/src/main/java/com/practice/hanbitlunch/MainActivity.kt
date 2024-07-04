@@ -10,9 +10,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import androidx.credentials.GetCredentialRequest
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.firebase.R
 import com.practice.preferences.PreferencesRepository
@@ -38,10 +37,10 @@ class MainActivity : ComponentActivity() {
                 BlindarTheme {
                     BlindarNavHost(
                         windowSizeClass = windowSizeClass,
+                        signInWithGoogleRequest = getSignInWithGoogleRequest(),
                         modifier = Modifier
 //                            .safeDrawingPadding()
                             .fillMaxSize(),
-                        googleSignInClient = getGoogleSignInClient(),
                         onNavigateToMainScreen = {
 //                            WindowCompat.setDecorFitsSystemWindows(window, true)
                         }
@@ -51,12 +50,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun getGoogleSignInClient(): GoogleSignInClient {
+    private fun getSignInWithGoogleRequest(): GetCredentialRequest {
         val webClientId = getString(R.string.web_client_id)
-        val options = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(webClientId)
-            .requestEmail()
+        val signInWithGoogleOption = GetSignInWithGoogleOption.Builder(webClientId)
             .build()
-        return GoogleSignIn.getClient(this, options)
+
+        val request: GetCredentialRequest = GetCredentialRequest.Builder()
+            .addCredentialOption(signInWithGoogleOption)
+            .build()
+        return request
     }
 }

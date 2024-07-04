@@ -23,12 +23,12 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 android {
-    compileSdk = 34
+    compileSdkPreview = "VanillaIceCream"
 
     defaultConfig {
         applicationId = "com.practice.hanbitlunch"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "2.4.4"
         signingConfig = signingConfigs.getByName("debug")

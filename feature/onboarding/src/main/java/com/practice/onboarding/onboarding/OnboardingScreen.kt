@@ -1,10 +1,5 @@
 package com.practice.onboarding.onboarding
 
-import android.app.Activity
-import android.content.Intent
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -19,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,10 +29,10 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.auth.FirebaseUser
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.LightTabletPreview
@@ -48,6 +44,7 @@ import com.practice.onboarding.onboarding.animation.animateAppIconOffset
 import com.practice.onboarding.onboarding.animation.animateButtonAlpha
 import com.practice.onboarding.onboarding.animation.getAppIconOffset
 import com.practice.onboarding.onboarding.animation.getButtonAlpha
+import com.practice.util.getAppVersionName
 import kotlinx.coroutines.launch
 
 @Composable
@@ -57,26 +54,13 @@ fun OnboardingScreen(
     onNewUserSignUp: (FirebaseUser) -> Unit,
     onExistingUserLogin: (FirebaseUser) -> Unit,
     onFail: () -> Unit,
-    googleSignInClient: GoogleSignInClient,
+    credentialManager: CredentialManager,
+    signInWithGoogleRequest: GetCredentialRequest,
     modifier: Modifier = Modifier,
     viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val startForResult = rememberGoogleLoginRequestLauncher(
-        onGoogleLogin = { intent ->
-            coroutineScope.launch {
-                viewModel.tryGoogleLogin(
-                    context = context,
-                    intent = intent,
-                    onNewUserSignUp = onNewUserSignUp,
-                    onExistingUserLogin = onExistingUserLogin,
-                    onFail = onFail,
-                )
-            }
-        },
-        onFail = { },
-    )
 
     val appIconOffset = getAppIconOffset(playAnimation = route.playAnimation)
     val buttonAlpha = getButtonAlpha(playAnimation = route.playAnimation)
@@ -105,7 +89,20 @@ fun OnboardingScreen(
             )
             GoogleLoginButton(
                 onGoogleLogin = {
-                    startForResult.launch(googleSignInClient.signInIntent)
+                    coroutineScope.launch {
+                        val result = viewModel.getCredential(
+                            context = context,
+                            credentialManager = credentialManager,
+                            request = signInWithGoogleRequest,
+                        )
+                        viewModel.parseIdToken(
+                            result = result ?: return@launch,
+                            onNewUserSignUp = onNewUserSignUp,
+                            onExistingUserLogin = onExistingUserLogin,
+                            onFail = onFail,
+                            context = context,
+                        )
+                    }
                 },
                 modifier = Modifier
                     .constrainAs(googleLoginButton) {
@@ -129,20 +126,19 @@ fun OnboardingScreen(
             )
         }
     }
-}
 
-@Composable
-private fun rememberGoogleLoginRequestLauncher(
-    onGoogleLogin: (Intent) -> Unit,
-    onFail: (ActivityResult) -> Unit,
-) =
-    rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.let(onGoogleLogin)
-        } else {
-            onFail(result)
-        }
+    val exception by viewModel.loginException.collectAsStateWithLifecycle()
+    val sendLogEnabled by viewModel.sendLogEnabled.collectAsStateWithLifecycle()
+    if (exception != null) {
+        LoginErrorDialog(
+            isSendButtonEnabled = sendLogEnabled,
+            onDismiss = viewModel::hideErrorDialog,
+            onSendLog = {
+                viewModel.sendFeedback(appVersionName = context.getAppVersionName())
+            },
+        )
     }
+}
 
 @Composable
 private fun PhoneLoginButton(
@@ -208,14 +204,14 @@ private fun GoogleLoginButton(
 private fun OnboardingScreenPreview() {
     BlindarTheme {
         val context = LocalContext.current
-        val client = GoogleSignIn.getClient(context, GoogleSignInOptions.Builder().build())
         OnboardingScreen(
             route = OnboardingRoute(playAnimation = true),
             onPhoneLogin = {},
             onNewUserSignUp = {},
             onExistingUserLogin = {},
             onFail = {},
-            googleSignInClient = client,
+            credentialManager = CredentialManager.create(context),
+            signInWithGoogleRequest = GetCredentialRequest.Builder().build(),
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface),
