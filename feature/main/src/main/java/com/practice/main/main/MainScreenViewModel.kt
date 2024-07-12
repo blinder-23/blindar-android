@@ -170,7 +170,7 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    fun onDateClick(clickedDate: Date) = viewModelScope.launch {
+    fun onDateClick(clickedDate: Date) {
         selectedDate.update { clickedDate }
         selectedMealIndex.update { 0 }
     }
@@ -183,7 +183,7 @@ class MainScreenViewModel @Inject constructor(
         )
     }
 
-    fun onMealTimeClick(index: Int) = viewModelScope.launch {
+    fun onMealTimeClick(index: Int) {
         selectedMealIndex.update { index }
     }
 
@@ -209,7 +209,7 @@ class MainScreenViewModel @Inject constructor(
     }
 
     // TODO: 이전 yearMonth에 따라 first 또는 last day로 이동 (weekday 아님!)
-    fun onSwiped(yearMonth: YearMonth) = viewModelScope.launch {
+    fun onSwiped(yearMonth: YearMonth) {
         val firstWeekday = yearMonth.getFirstWeekday()
         selectedDate.update { firstWeekday }
     }
