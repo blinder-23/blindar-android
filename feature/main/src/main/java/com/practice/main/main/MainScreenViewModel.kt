@@ -1,7 +1,6 @@
 package com.practice.main.main
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hsk.ktx.date.Date
@@ -36,12 +35,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -73,8 +75,15 @@ class MainScreenViewModel @Inject constructor(
             )
         }
     private val selectedDate = MutableStateFlow(Date.now())
+    private val selectedYearMonth: Flow<YearMonth> = selectedDate.map {
+        it.yearMonth
+    }.distinctUntilChanged()
+
     private val selectedMealIndex = MutableStateFlow(0)
+
     private val isDialogVisible = MutableStateFlow(DialogUiState.EMPTY)
+
+    private var loadMonthlyDataJob: Job? = null
     private val monthlyData: MutableStateFlow<MonthlyData> = MutableStateFlow(MonthlyData.Empty)
 
     val uiState: StateFlow<MainUiState> = combine(
@@ -118,52 +127,52 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    private suspend fun collectPreferences() {
-        preferencesState.collectLatest {
-            when (it) {
-                is PreferencesState.Loading -> MonthlyData.Empty
-                is PreferencesState.Loaded -> {
-                    collectMonthlyData(it)
-                }
-            }
-        }
-    }
-
-    private suspend fun collectMonthlyData(preferences: PreferencesState.Loaded) {
-        val schoolCode = preferences.selectedSchool.schoolCode
-        val (year, month) = selectedDate.value.yearMonth
-
-        combine(
-            mealRepository.getMeals(schoolCode, year, month),
-            scheduleRepository.getSchedules(schoolCode, year, month),
-            memoRepository.getMemos(userId, year, month),
-        ) { meals, schedules, memos ->
-            MonthlyData(
-                schoolCode = schoolCode,
-                year = year,
-                month = month,
-                meals = meals.toImmutableList(),
-                schedules = schedules.toImmutableList(),
-                memos = memos.toImmutableList(),
-            )
-        }.collectLatest {
-            monthlyData.value = it
-        }
-    }
-
     /**
      * init 블럭에서 실행하지 않은 이유는 [IllegalStateException]이 발생하기 때문이다.
      * 아직 UI에 반영되지 않은 값을 참조하기 때문에 예외가 발생한다.
      */
     fun onLaunch() {
         viewModelScope.launch {
-            collectPreferences()
+            collectMonthlyDataParameters()
         }
     }
 
-    fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
-        selectedDate.value = clickedDate
-        selectedMealIndex.value = 0
+    private suspend fun collectMonthlyDataParameters() {
+        preferencesState.combine(selectedYearMonth) { preferencesState, selectedYearMonth ->
+            MonthlyDataParameter(preferencesState.selectedSchool.schoolCode, selectedYearMonth)
+        }.collectLatest(::collectMonthlyData)
+    }
+
+    private suspend fun collectMonthlyData(parameter: MonthlyDataParameter) {
+        loadMonthlyDataJob?.cancel()
+
+        val (schoolCode, yearMonth) = parameter
+        val (year, month) = yearMonth
+        loadMonthlyDataJob = viewModelScope.launch(Dispatchers.IO) {
+            combine(
+                mealRepository.getMeals(schoolCode, year, month),
+                scheduleRepository.getSchedules(schoolCode, year, month),
+                memoRepository.getMemos(userId, year, month),
+            ) { meals, schedules, memos ->
+                MonthlyData(
+                    schoolCode = schoolCode,
+                    year = year,
+                    month = month,
+                    meals = meals.toImmutableList(),
+                    schedules = schedules.toImmutableList(),
+                    memos = memos.toImmutableList(),
+                )
+            }.cancellable().distinctUntilChanged { old, new ->
+                old.compareSizes(new)
+            }.collectLatest {
+                monthlyData.value = it
+            }
+        }
+    }
+
+    fun onDateClick(clickedDate: Date) = viewModelScope.launch {
+        selectedDate.update { clickedDate }
+        selectedMealIndex.update { 0 }
     }
 
     fun onRefreshIconClick(context: Context) {
@@ -174,8 +183,8 @@ class MainScreenViewModel @Inject constructor(
         )
     }
 
-    fun onMealTimeClick(index: Int) {
-        selectedMealIndex.value = index
+    fun onMealTimeClick(index: Int) = viewModelScope.launch {
+        selectedMealIndex.update { index }
     }
 
     private fun parseDailyState(monthlyData: MonthlyData): List<DailyData> {
@@ -199,9 +208,10 @@ class MainScreenViewModel @Inject constructor(
         return newDailyData
     }
 
+    // TODO: 이전 yearMonth에 따라 first 또는 last day로 이동 (weekday 아님!)
     fun onSwiped(yearMonth: YearMonth) = viewModelScope.launch {
         val firstWeekday = yearMonth.getFirstWeekday()
-        selectedDate.value = firstWeekday
+        selectedDate.update { firstWeekday }
     }
 
     fun getContentDescription(date: Date): String {
@@ -251,6 +261,19 @@ class MainScreenViewModel @Inject constructor(
     companion object {
         private const val TAG = "MainScreenViewModel"
     }
+}
+
+private data class MonthlyDataParameter(
+    val schoolCode: Int,
+    val yearMonth: YearMonth,
+)
+
+private fun MonthlyData.compareSizes(other: MonthlyData): Boolean {
+    return this.year == other.year &&
+            this.month == other.month &&
+            this.meals.size == other.meals.size &&
+            this.schedules.size == other.schedules.size &&
+            this.memos.size == other.memos.size
 }
 
 private fun MonthlyData.getMeals(date: Date): UiMeals {
