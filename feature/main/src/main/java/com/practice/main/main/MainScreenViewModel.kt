@@ -127,12 +127,8 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    /**
-     * init 블럭에서 실행하지 않은 이유는 [IllegalStateException]이 발생하기 때문이다.
-     * 아직 UI에 반영되지 않은 값을 참조하기 때문에 예외가 발생한다.
-     */
-    fun onLaunch() {
-        viewModelScope.launch {
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
             collectMonthlyDataParameters()
         }
     }

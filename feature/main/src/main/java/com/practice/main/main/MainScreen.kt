@@ -18,8 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.a11y.isLargeFont
@@ -52,10 +50,6 @@ fun MainScreen(
         systemUiController.setStatusBarColor(systemBarColor)
         systemUiController.setNavigationBarColor(systemBarColor)
         onLaunch()
-    }
-
-    LifecycleEventEffect(event = Lifecycle.Event.ON_START) {
-        viewModel.onLaunch()
     }
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
