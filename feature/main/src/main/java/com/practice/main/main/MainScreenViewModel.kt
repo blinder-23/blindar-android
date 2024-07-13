@@ -58,13 +58,14 @@ class MainScreenViewModel @Inject constructor(
     preferencesRepository: PreferencesRepository,
 ) : ViewModel() {
 
-    private val userId = getCurrentUserId()
+    private var initialWorkCount: Int? = null
 
     private val preferencesState: Flow<PreferencesState> =
         preferencesRepository.userPreferencesFlow.map {
             if (initialWorkCount == null) {
                 initialWorkCount = it.runningWorksCount
             }
+
             PreferencesState.Loaded(
                 isRefreshing = it.runningWorksCount != initialWorkCount,
                 selectedSchool = School(
@@ -74,6 +75,7 @@ class MainScreenViewModel @Inject constructor(
                 mainUiMode = it.mainScreenMode.toUiLoadedMode(),
             )
         }
+
     private val selectedDate = MutableStateFlow(Date.now())
     private val selectedYearMonth: Flow<YearMonth> = selectedDate.map {
         it.yearMonth
@@ -85,6 +87,8 @@ class MainScreenViewModel @Inject constructor(
 
     private var loadMonthlyDataJob: Job? = null
     private val monthlyData: MutableStateFlow<MonthlyData> = MutableStateFlow(MonthlyData.Empty)
+
+    private val userId = getCurrentUserId()
 
     val uiState: StateFlow<MainUiState> = combine(
         preferencesState,
@@ -117,8 +121,6 @@ class MainScreenViewModel @Inject constructor(
     // For internal use only
     private val state: MainUiState
         get() = uiState.value
-
-    private var initialWorkCount: Int? = null
 
     private fun getCurrentUserId(): String {
         return when (val currentlyLoggedInUser = BlindarFirebase.getBlindarUser()) {
