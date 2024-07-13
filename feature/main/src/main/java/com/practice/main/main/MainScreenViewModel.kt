@@ -208,7 +208,6 @@ class MainScreenViewModel @Inject constructor(
         return newDailyData
     }
 
-    // TODO: 이전 yearMonth에 따라 first 또는 last day로 이동 (weekday 아님!)
     fun onSwiped(yearMonth: YearMonth) {
         val firstWeekday = yearMonth.getFirstWeekday()
         selectedDate.update { firstWeekday }
