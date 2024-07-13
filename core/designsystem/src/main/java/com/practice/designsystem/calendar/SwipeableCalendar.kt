@@ -23,6 +23,7 @@ import com.practice.designsystem.calendar.core.offset
 import com.practice.designsystem.calendar.core.rememberCalendarState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.flow.drop
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -43,10 +44,10 @@ fun SwipeableCalendar(
 ) {
     val currentYearMonth = YearMonth.now()
     val middlePage = itemCount / 2
-
     // Tracks swipe gesture
+    // Drop first page event (initial composition after composable is drawn)
     LaunchedEffect(true) {
-        snapshotFlow { pagerState.currentPage }.collect { pageIndex ->
+        snapshotFlow { pagerState.currentPage }.drop(1).collect { pageIndex ->
             onPageChange(pageIndex)
         }
     }

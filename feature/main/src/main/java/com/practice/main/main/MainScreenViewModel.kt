@@ -1,7 +1,6 @@
 package com.practice.main.main
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hsk.ktx.date.Date
@@ -36,12 +35,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -56,13 +58,14 @@ class MainScreenViewModel @Inject constructor(
     preferencesRepository: PreferencesRepository,
 ) : ViewModel() {
 
-    private val userId = getCurrentUserId()
+    private var initialWorkCount: Int? = null
 
     private val preferencesState: Flow<PreferencesState> =
         preferencesRepository.userPreferencesFlow.map {
             if (initialWorkCount == null) {
                 initialWorkCount = it.runningWorksCount
             }
+
             PreferencesState.Loaded(
                 isRefreshing = it.runningWorksCount != initialWorkCount,
                 selectedSchool = School(
@@ -72,10 +75,20 @@ class MainScreenViewModel @Inject constructor(
                 mainUiMode = it.mainScreenMode.toUiLoadedMode(),
             )
         }
+
     private val selectedDate = MutableStateFlow(Date.now())
+    private val selectedYearMonth: Flow<YearMonth> = selectedDate.map {
+        it.yearMonth
+    }.distinctUntilChanged()
+
     private val selectedMealIndex = MutableStateFlow(0)
+
     private val isDialogVisible = MutableStateFlow(DialogUiState.EMPTY)
+
+    private var loadMonthlyDataJob: Job? = null
     private val monthlyData: MutableStateFlow<MonthlyData> = MutableStateFlow(MonthlyData.Empty)
+
+    private val userId = getCurrentUserId()
 
     val uiState: StateFlow<MainUiState> = combine(
         preferencesState,
@@ -109,8 +122,6 @@ class MainScreenViewModel @Inject constructor(
     private val state: MainUiState
         get() = uiState.value
 
-    private var initialWorkCount: Int? = null
-
     private fun getCurrentUserId(): String {
         return when (val currentlyLoggedInUser = BlindarFirebase.getBlindarUser()) {
             is BlindarUserStatus.LoginUser -> currentlyLoggedInUser.user.uid
@@ -118,52 +129,48 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    private suspend fun collectPreferences() {
-        preferencesState.collectLatest {
-            when (it) {
-                is PreferencesState.Loading -> MonthlyData.Empty
-                is PreferencesState.Loaded -> {
-                    collectMonthlyData(it)
-                }
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            collectMonthlyDataParameters()
+        }
+    }
+
+    private suspend fun collectMonthlyDataParameters() {
+        preferencesState.combine(selectedYearMonth) { preferencesState, selectedYearMonth ->
+            MonthlyDataParameter(preferencesState.selectedSchool.schoolCode, selectedYearMonth)
+        }.collectLatest(::collectMonthlyData)
+    }
+
+    private suspend fun collectMonthlyData(parameter: MonthlyDataParameter) {
+        loadMonthlyDataJob?.cancel()
+
+        val (schoolCode, yearMonth) = parameter
+        val (year, month) = yearMonth
+        loadMonthlyDataJob = viewModelScope.launch(Dispatchers.IO) {
+            combine(
+                mealRepository.getMeals(schoolCode, year, month),
+                scheduleRepository.getSchedules(schoolCode, year, month),
+                memoRepository.getMemos(userId, year, month),
+            ) { meals, schedules, memos ->
+                MonthlyData(
+                    schoolCode = schoolCode,
+                    year = year,
+                    month = month,
+                    meals = meals.toImmutableList(),
+                    schedules = schedules.toImmutableList(),
+                    memos = memos.toImmutableList(),
+                )
+            }.cancellable().distinctUntilChanged { old, new ->
+                old.compareSizes(new)
+            }.collectLatest {
+                monthlyData.value = it
             }
         }
     }
 
-    private suspend fun collectMonthlyData(preferences: PreferencesState.Loaded) {
-        val schoolCode = preferences.selectedSchool.schoolCode
-        val (year, month) = selectedDate.value.yearMonth
-
-        combine(
-            mealRepository.getMeals(schoolCode, year, month),
-            scheduleRepository.getSchedules(schoolCode, year, month),
-            memoRepository.getMemos(userId, year, month),
-        ) { meals, schedules, memos ->
-            MonthlyData(
-                schoolCode = schoolCode,
-                year = year,
-                month = month,
-                meals = meals.toImmutableList(),
-                schedules = schedules.toImmutableList(),
-                memos = memos.toImmutableList(),
-            )
-        }.collectLatest {
-            monthlyData.value = it
-        }
-    }
-
-    /**
-     * init 블럭에서 실행하지 않은 이유는 [IllegalStateException]이 발생하기 때문이다.
-     * 아직 UI에 반영되지 않은 값을 참조하기 때문에 예외가 발생한다.
-     */
-    fun onLaunch() {
-        viewModelScope.launch {
-            collectPreferences()
-        }
-    }
-
-    fun onDateClick(clickedDate: Date) = viewModelScope.launch(Dispatchers.IO) {
-        selectedDate.value = clickedDate
-        selectedMealIndex.value = 0
+    fun onDateClick(clickedDate: Date) {
+        selectedDate.update { clickedDate }
+        selectedMealIndex.update { 0 }
     }
 
     fun onRefreshIconClick(context: Context) {
@@ -175,7 +182,7 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onMealTimeClick(index: Int) {
-        selectedMealIndex.value = index
+        selectedMealIndex.update { index }
     }
 
     private fun parseDailyState(monthlyData: MonthlyData): List<DailyData> {
@@ -199,9 +206,9 @@ class MainScreenViewModel @Inject constructor(
         return newDailyData
     }
 
-    fun onSwiped(yearMonth: YearMonth) = viewModelScope.launch {
+    fun onSwiped(yearMonth: YearMonth) {
         val firstWeekday = yearMonth.getFirstWeekday()
-        selectedDate.value = firstWeekday
+        selectedDate.update { firstWeekday }
     }
 
     fun getContentDescription(date: Date): String {
@@ -251,6 +258,19 @@ class MainScreenViewModel @Inject constructor(
     companion object {
         private const val TAG = "MainScreenViewModel"
     }
+}
+
+private data class MonthlyDataParameter(
+    val schoolCode: Int,
+    val yearMonth: YearMonth,
+)
+
+private fun MonthlyData.compareSizes(other: MonthlyData): Boolean {
+    return this.year == other.year &&
+            this.month == other.month &&
+            this.meals.size == other.meals.size &&
+            this.schedules.size == other.schedules.size &&
+            this.memos.size == other.memos.size
 }
 
 private fun MonthlyData.getMeals(date: Date): UiMeals {
