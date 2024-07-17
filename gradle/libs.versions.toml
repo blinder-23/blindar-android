@@ -19,7 +19,7 @@ lifecycle = '2.8.2'
 retrofit = '2.11.0'
 room = "2.6.1"
 violet-dreams = '0.1.2'
-navigation = '2.8.0-beta04'
+navigation = '2.8.0-beta05'
 work = "2.9.0"
 
 [libraries]
@@ -40,7 +40,7 @@ accompanist-placeholder-material = { module = 'com.google.accompanist:accompanis
 accompanist-systemuicontroller = { module = 'com.google.accompanist:accompanist-systemuicontroller', version.ref = 'accompanist' }
 accompanist-permission = { module = 'com.google.accompanist:accompanist-permissions', version.ref = 'accompanist' }
 
-androidx-collection-ktx = 'androidx.collection:collection-ktx:1.4.0'
+androidx-collection-ktx = 'androidx.collection:collection-ktx:1.4.1'
 androidx-core-ktx = 'androidx.core:core-ktx:1.13.1'
 androidx-palette-ktx = 'androidx.palette:palette-ktx:1.0.0'
 
@@ -74,7 +74,7 @@ android-identity = "com.google.android.libraries.identity.googleid:googleid:1.1.
 
 androidx-activity-compose = { module = 'androidx.activity:activity-compose' }
 androidx-hilt-navigation-compose = 'androidx.hilt:hilt-navigation-compose:1.2.0'
-androidx-lifecycle-viewmodel-compose = 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2'
+androidx-lifecycle-viewmodel-compose = 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3'
 androidx-paging-compose = 'androidx.paging:paging-compose:3.3.0'
 androidx-navigation-compose = { module = 'androidx.navigation:navigation-compose', version.ref = 'navigation' }
 androidx-constraintlayout-compose = 'androidx.constraintlayout:constraintlayout-compose:1.0.1'
@@ -109,7 +109,7 @@ kotlinx-coroutines-android = { module = 'org.jetbrains.kotlinx:kotlinx-coroutine
 kotlinx-coroutines-core = { module = 'org.jetbrains.kotlinx:kotlinx-coroutines-core', version.ref = 'coroutines' }
 kotlinx-coroutines-test = { module = 'org.jetbrains.kotlinx:kotlinx-coroutines-test', version.ref = 'coroutines' }
 
-kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0"
+kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1"
 
 retrofit = { module = 'com.squareup.retrofit2:retrofit', version.ref = 'retrofit' }
 retrofit-converter-gson = { module = 'com.squareup.retrofit2:converter-gson', version.ref = 'retrofit' }
@@ -178,4 +178,4 @@ retrofit = ['retrofit', 'retrofit-converter-gson', 'retrofit-coroutines-adapter'
 
 [plugins]
 compose-compiler = { id = 'org.jetbrains.kotlin.plugin.compose', version.ref = 'kotlin' }
-ksp = { id = 'com.google.devtools.ksp', version = '2.0.0-1.0.22' }
+ksp = { id = 'com.google.devtools.ksp', version = '2.0.0-1.0.23' }
