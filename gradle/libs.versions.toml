@@ -1,15 +1,15 @@
 [versions]
 # app (camelCase is allowed only here)
-compileSdk = "VanillaIceCream"
+compileSdk = "34"
 minSdk = "26"
-targetSdk = "35"
+targetSdk = "34"
 versionName = "2.5.0"
 
 # library
 accompanist = '0.32.0'
 compose-bom = "2024.06.00"
 coroutines = "1.8.1"
-credentials = '1.5.0-alpha02'
+credentials = '1.2.2'
 firebase-bom = "33.1.1"
 hilt = "2.51.1"
 hsk-ktx = '1.0-beta17'

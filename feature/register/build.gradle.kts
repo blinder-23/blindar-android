@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.practice.register"
-    compileSdkPreview = libs.versions.compileSdk.get()
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()

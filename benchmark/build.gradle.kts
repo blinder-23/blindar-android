@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.benchmark"
-    compileSdkPreview = libs.versions.compileSdk.get()
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

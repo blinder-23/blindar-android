@@ -23,7 +23,7 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 android {
-    compileSdkPreview = libs.versions.compileSdk.get()
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.practice.hanbitlunch"

@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.example.work"
-    compileSdkPreview = libs.versions.compileSdk.get()
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
