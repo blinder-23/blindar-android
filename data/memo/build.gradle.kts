@@ -9,10 +9,10 @@ plugins {
 
 android {
     namespace = "com.practice.memo"
-    compileSdkPreview = "VanillaIceCream"
+    compileSdkPreview = libs.versions.compileSdk.get()
 
     defaultConfig {
-        minSdk = 26
+        minSdk = libs.versions.minSdk.get().toInt()
 
         testInstrumentationRunner = "com.practice.memo.testutil.HiltTestRunner"
     }

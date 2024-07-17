@@ -11,10 +11,10 @@ plugins {
 
 android {
     namespace = "com.practice.main"
-    compileSdkPreview = "VanillaIceCream"
+    compileSdkPreview = libs.versions.compileSdk.get()
 
     defaultConfig {
-        minSdk = 26
+        minSdk = libs.versions.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

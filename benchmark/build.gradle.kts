@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.benchmark"
-    compileSdkPreview = "VanillaIceCream"
+    compileSdkPreview = libs.versions.compileSdk.get()
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -20,8 +20,8 @@ android {
     }
 
     defaultConfig {
-        minSdk = 26
-        targetSdk = 35
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

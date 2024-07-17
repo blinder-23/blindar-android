@@ -23,14 +23,14 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 android {
-    compileSdkPreview = "VanillaIceCream"
+    compileSdkPreview = libs.versions.compileSdk.get()
 
     defaultConfig {
         applicationId = "com.practice.hanbitlunch"
-        minSdk = 26
-        targetSdk = 35
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
-        versionName = "2.5.0"
+        versionName = libs.versions.versionName.get()
         signingConfig = signingConfigs.getByName("debug")
 
         testInstrumentationRunner = "com.practice.hanbitlunch.HiltTestRunner"

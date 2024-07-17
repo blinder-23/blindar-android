@@ -12,10 +12,10 @@ val url: String = gradleLocalProperties(rootDir, providers).getProperty("server.
 
 android {
     namespace = "com.practice.api"
-    compileSdkPreview = "VanillaIceCream"
+    compileSdkPreview = libs.versions.compileSdk.get()
 
     defaultConfig {
-        minSdk = 26
+        minSdk = libs.versions.minSdk.get().toInt()
 
         testInstrumentationRunner = "com.practice.api.HiltTestRunner"
         buildConfigField("String", "SERVER_URL", url)

@@ -1,4 +1,11 @@
 [versions]
+# app (camelCase is allowed only here)
+compileSdk = "VanillaIceCream"
+minSdk = "26"
+targetSdk = "35"
+versionName = "2.5.0"
+
+# library
 accompanist = '0.32.0'
 compose-bom = "2024.06.00"
 coroutines = "1.8.1"
