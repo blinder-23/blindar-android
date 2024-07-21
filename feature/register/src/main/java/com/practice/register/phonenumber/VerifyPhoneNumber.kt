@@ -1,7 +1,5 @@
 package com.practice.register.phonenumber
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,12 +9,9 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -26,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -38,7 +32,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.DarkPreview
 import com.practice.designsystem.LightPreview
-import com.practice.designsystem.components.*
+import com.practice.designsystem.components.BlindarChip
+import com.practice.designsystem.components.BlindarLargeTopAppBar
+import com.practice.designsystem.components.BlindarTopAppBarDefaults
+import com.practice.designsystem.components.BottomNextButton
+import com.practice.designsystem.components.LabelSmall
+import com.practice.designsystem.components.TitleSmall
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.register.R
 import com.practice.register.RegisterUiState
@@ -66,10 +65,7 @@ fun VerifyPhoneNumber(
     val activity = LocalActivity.current
     val context = LocalContext.current
 
-    val codeSentMessage = stringResource(id = R.string.auth_code_sent)
-    val invalidCodeMessage = stringResource(id = R.string.invalid_code)
-    val authFailMessage = stringResource(id = R.string.auth_code_fail)
-    val onCodeInvalid = { context.makeToast(invalidCodeMessage) }
+    val onCodeInvalid = { context.makeToast(R.string.invalid_code) }
     val verifyAuthCode = {
         viewModel.verifyAuthCode(
             activity = activity,
@@ -88,13 +84,13 @@ fun VerifyPhoneNumber(
         onAuthChipClick = {
             viewModel.onAuthChipClick(
                 activity = activity,
-                onCodeSent = { context.makeToast(codeSentMessage) },
+                onCodeSent = { context.makeToast(R.string.auth_code_sent) },
                 onNewUserSignUp = onNewUserSignUp,
                 onExistingUserLogin = onExistingUserLogin,
                 onUsernameNotSet = onUsernameNotSet,
                 onSchoolNotSelected = onSchoolNotSelected,
                 onCodeInvalid = onCodeInvalid,
-                onFail = { context.makeToast(authFailMessage) },
+                onFail = { context.makeToast(R.string.auth_code_fail) },
             )
         },
         onAuthCodeChange = viewModel::onAuthCodeChange,

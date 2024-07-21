@@ -4,14 +4,12 @@ import android.Manifest
 import android.app.AlarmManager
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.getSystemService
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -27,14 +25,12 @@ internal fun rememberNotificationPermissionLauncher(
 ): ManagedActivityResultLauncher<String, Boolean> {
     val context = LocalContext.current
 
-    val permissionErrorMessage = stringResource(id = R.string.settings_daily_alarm_permission_error)
-    val dailyAlarmEnabledMessage = stringResource(id = R.string.settings_daily_alarm_enabled)
     val onPermissionGranted = {
         onToggle(!isDailyAlarmEnabled)
-        context.makeToast(dailyAlarmEnabledMessage, Toast.LENGTH_SHORT)
+        context.makeToast(R.string.settings_daily_alarm_enabled, Toast.LENGTH_SHORT)
     }
     val onPermissionDenied = {
-        context.makeToast(permissionErrorMessage, Toast.LENGTH_SHORT)
+        context.makeToast(R.string.settings_daily_alarm_permission_error, Toast.LENGTH_SHORT)
     }
 
     val exactAlarmPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
