@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
@@ -170,7 +169,6 @@ fun NavGraphBuilder.blindarMainNavGraph(
     composable<OnboardingRoute> { backStackEntry ->
         val route = backStackEntry.toRoute<OnboardingRoute>()
         val context = LocalContext.current
-        val failMessage = stringResource(id = R.string.google_login_fail_message)
         OnboardingScreen(
             route = route,
             onPhoneLogin = { navController.navigate(VerifyPhoneRoute) },
@@ -183,7 +181,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
                 }
             },
             onFail = {
-                context.makeToast(failMessage)
+                context.makeToast(R.string.google_login_fail_message)
             },
             credentialManager = credentialManager,
             signInWithGoogleRequest = signInWithGoogleRequest,

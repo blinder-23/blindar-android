@@ -44,7 +44,6 @@ fun RegisterFormScreen(
 ) {
     val state by viewModel.registerUiState
     val context = LocalContext.current
-    val submitNameFailMessage = stringResource(R.string.submit_name_fail)
 
     RegisterFormScreen(
         state = state,
@@ -52,7 +51,7 @@ fun RegisterFormScreen(
         onSubmitName = {
             viewModel.submitName(
                 onSuccess = onNameUpdated,
-                onFail = { context.makeToast(submitNameFailMessage) },
+                onFail = { context.makeToast(R.string.submit_name_fail) },
             )
         },
         onNameChange = viewModel::onNameChange,
