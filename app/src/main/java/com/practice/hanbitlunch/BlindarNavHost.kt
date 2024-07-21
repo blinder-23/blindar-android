@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -23,6 +24,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.hanbitlunch.navigation.memoRoute
 import com.practice.hanbitlunch.navigation.nutrientRoute
 import com.practice.main.main.MainScreen
@@ -51,6 +53,13 @@ fun BlindarNavHost(
     navController: NavHostController = rememberNavController(),
     onNavigateToMainScreen: () -> Unit = {},
 ) {
+    val systemUiController = rememberSystemUiController()
+    val systemBarColor = MaterialTheme.colorScheme.surface
+    LaunchedEffect(Unit) {
+        systemUiController.setStatusBarColor(systemBarColor)
+        systemUiController.setNavigationBarColor(systemBarColor)
+    }
+
     val tweenSpec = tween<IntOffset>(
         durationMillis = 500,
     )

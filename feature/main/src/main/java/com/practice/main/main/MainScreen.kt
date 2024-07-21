@@ -19,7 +19,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.a11y.isLargeFont
 import com.practice.designsystem.components.BlindarDialog
 import com.practice.designsystem.components.dialogContentPadding
@@ -44,11 +43,7 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     onLaunch: suspend () -> Unit = {},
 ) {
-    val systemUiController = rememberSystemUiController()
-    val systemBarColor = MaterialTheme.colorScheme.surface
-    LaunchedEffect(true) {
-        systemUiController.setStatusBarColor(systemBarColor)
-        systemUiController.setNavigationBarColor(systemBarColor)
+    LaunchedEffect(Unit) {
         onLaunch()
     }
 
