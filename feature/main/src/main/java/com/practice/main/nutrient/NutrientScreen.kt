@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -128,8 +130,9 @@ private fun NutrientScreenSuccess(
     modifier: Modifier = Modifier,
 ) {
     val (calorie, major, minor) = sortAndSplitNutrients(uiState.nutrients)
+    val scrollState = rememberScrollState()
     Column(
-        modifier = modifier,
+        modifier = modifier.verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         calorie.forEach {
