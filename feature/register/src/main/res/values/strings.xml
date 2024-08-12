@@ -16,7 +16,8 @@
 
     <string name="name_title">이름</string>
     <string name="name_placeholder">한글 15자, 영문, 숫자는 30자까지 가능합니다.</string>
-    <string name="submit_name_fail">조건에 맞지 않거나 중복된 이름입니다.</string>
+    <string name="username_invalid">조건에 맞지 않는 이름입니다.</string>
+    <string name="username_duplicate">중복된 사용자 이름입니다.</string>
 
     <string name="school_text_field_label">학교 검색</string>
     <string name="school_clear_text_field">검색창 비우기</string>
