@@ -1,8 +1,8 @@
 package com.practice.register
 
+import com.practice.domain.School
 import com.practice.register.phonenumber.PhoneNumberValidator
 import com.practice.register.registerform.NameValidator
-import com.practice.domain.School
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -12,6 +12,7 @@ data class RegisterUiState(
     val isAuthCodeFieldEnabled: Boolean,
     val isVerifyCodeButtonEnabled: Boolean,
     val name: String,
+    val isDuplicateName: Boolean,
     val selectedSchool: School,
     val schoolQuery: String,
     val schools: ImmutableList<School>,
@@ -29,6 +30,7 @@ data class RegisterUiState(
             isAuthCodeFieldEnabled = false,
             isVerifyCodeButtonEnabled = false,
             name = "",
+            isDuplicateName = false,
             selectedSchool = School.EmptySchool,
             schoolQuery = "",
             schools = persistentListOf(),
