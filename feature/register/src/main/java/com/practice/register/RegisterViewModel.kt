@@ -18,12 +18,15 @@ import com.practice.firebase.BlindarUserStatus
 import com.practice.preferences.PreferencesRepository
 import com.practice.register.phonenumber.PhoneNumberValidator
 import com.practice.util.removeWhitespaces
-import com.practice.util.update
 import com.practice.work.BlindarWorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,13 +37,12 @@ class RegisterViewModel @Inject constructor(
     private val registerManager: RegisterManager,
 ) : ViewModel() {
     private val TAG = "RegisterViewModel"
-    var registerUiState = mutableStateOf(RegisterUiState.Empty)
-        private set
+
+    private val _registerUiState = MutableStateFlow(RegisterUiState.Empty)
+    val registerUiState: StateFlow<RegisterUiState>
+        get() = _registerUiState.asStateFlow()
 
     var isAuthCodeInvalid by mutableStateOf(false)
-        private set
-
-    var isUsernameInvalid by mutableStateOf(false)
         private set
 
     private var schoolListJob: Job? = null
@@ -57,8 +59,8 @@ class RegisterViewModel @Inject constructor(
 
     fun onPhoneNumberChange(value: String) {
         val digitsOnly = PhoneNumberValidator.filterOnlyDigits(value)
-        registerUiState.update {
-            this.copy(phoneNumber = digitsOnly)
+        _registerUiState.update {
+            it.copy(phoneNumber = digitsOnly)
         }
     }
 
@@ -100,22 +102,22 @@ class RegisterViewModel @Inject constructor(
     }
 
     private fun enableAuthCodeField() {
-        registerUiState.update {
-            this.copy(isAuthCodeFieldEnabled = true)
+        _registerUiState.update {
+            it.copy(isAuthCodeFieldEnabled = true)
         }
     }
 
     private fun enableNextButton() {
-        registerUiState.update {
-            this.copy(isVerifyCodeButtonEnabled = true)
+        _registerUiState.update {
+            it.copy(isVerifyCodeButtonEnabled = true)
         }
     }
 
     fun onAuthCodeChange(value: String) {
         val digitsOnly = PhoneNumberValidator.filterOnlyDigits(value)
         if (digitsOnly.length <= 6) {
-            registerUiState.update {
-                this.copy(authCode = digitsOnly)
+            _registerUiState.update {
+                it.copy(authCode = digitsOnly)
             }
             isAuthCodeInvalid = false
         }
@@ -158,25 +160,35 @@ class RegisterViewModel @Inject constructor(
      * RegisterFormScreen
      */
     fun onNameChange(name: String) {
-        registerUiState.update {
-            this.copy(name = name.removeWhitespaces())
+        _registerUiState.update {
+            it.copy(
+                name = name.removeWhitespaces(),
+                isDuplicateName = false,
+            )
         }
-        isUsernameInvalid = false
     }
 
     fun submitName(
         onSuccess: () -> Unit,
         onFail: () -> Unit,
     ) {
+        val onUsernameDuplicate = {
+            onFail()
+            _registerUiState.update {
+                it.copy(isDuplicateName = true)
+            }
+        }
+
+        // TODO: Firebase 확인 로직 제거하고, 서버 API로 migrate
         if (registerUiState.value.isNameValid) {
             BlindarFirebase.tryStoreUsername(
                 username = registerUiState.value.name,
                 onSuccess = onSuccess,
-                onFail = onFail,
+                onFail = onUsernameDuplicate,
             )
         } else {
-            onFail()
-            isUsernameInvalid = true
+            Log.d("RegisterViewModel", "name duplicate")
+            onUsernameDuplicate()
         }
     }
 
@@ -185,8 +197,8 @@ class RegisterViewModel @Inject constructor(
      */
     private suspend fun collectSelectedSchool() {
         preferencesRepository.userPreferencesFlow.collectLatest { preferences ->
-            registerUiState.update {
-                this.copy(
+            _registerUiState.update {
+                it.copy(
                     selectedSchool = School(
                         name = preferences.schoolName,
                         schoolCode = preferences.schoolCode,
@@ -198,8 +210,8 @@ class RegisterViewModel @Inject constructor(
 
     fun onSchoolQueryChange(query: String) {
         val queryWithoutWhitespaces = query.removeWhitespaces()
-        registerUiState.update {
-            this.copy(schoolQuery = queryWithoutWhitespaces)
+        _registerUiState.update {
+            it.copy(schoolQuery = queryWithoutWhitespaces)
         }
         updateSchoolList(queryWithoutWhitespaces)
     }
@@ -210,8 +222,8 @@ class RegisterViewModel @Inject constructor(
             val schools = schoolRepository.searchSupportedSchools(query)
                 .map { it.toSchool() }
                 .toImmutableList()
-            registerUiState.update {
-                this.copy(schools = schools)
+            _registerUiState.update {
+                it.copy(schools = schools)
             }
         }
     }

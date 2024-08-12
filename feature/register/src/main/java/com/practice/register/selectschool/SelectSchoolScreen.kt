@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.practice.designsystem.LightAndDarkPreview
 import com.practice.designsystem.LightPreview
 import com.practice.designsystem.components.BlindarLargeTopAppBar
@@ -44,7 +45,7 @@ fun SelectSchoolScreen(
     modifier: Modifier = Modifier,
     viewModel: RegisterViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.registerUiState
+    val uiState by viewModel.registerUiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val baseSuccessMessage = stringResource(id = R.string.school_selected_base)

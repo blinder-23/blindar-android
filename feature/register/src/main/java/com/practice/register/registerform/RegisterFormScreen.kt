@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.practice.designsystem.DarkPreview
 import com.practice.designsystem.components.BlindarLargeTopAppBar
 import com.practice.designsystem.components.BlindarTopAppBarDefaults
@@ -42,7 +43,7 @@ fun RegisterFormScreen(
     modifier: Modifier = Modifier,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
-    val state by viewModel.registerUiState
+    val state by viewModel.registerUiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     RegisterFormScreen(
@@ -51,7 +52,7 @@ fun RegisterFormScreen(
         onSubmitName = {
             viewModel.submitName(
                 onSuccess = onNameUpdated,
-                onFail = { context.makeToast(R.string.submit_name_fail) },
+                onFail = { context.makeToast(R.string.username_duplicate) },
             )
         },
         onNameChange = viewModel::onNameChange,
@@ -91,7 +92,8 @@ private fun RegisterFormScreen(
         RegisterNameCard(
             name = state.name,
             onNameChange = onNameChange,
-            isValid = state.isNameValid,
+            isValid = state.name.isEmpty() || state.isNameValid,
+            isDuplicate = state.isDuplicateName,
             submitName = onSubmitName,
             focusRequester = textFieldFocusRequester,
             modifier = Modifier
@@ -108,6 +110,7 @@ private fun RegisterNameCard(
     name: String,
     onNameChange: (String) -> Unit,
     isValid: Boolean,
+    isDuplicate: Boolean,
     submitName: () -> Unit,
     focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
@@ -115,7 +118,8 @@ private fun RegisterNameCard(
     NameTextField(
         name = name,
         onNameChange = onNameChange,
-        isValid = isValid,
+        isInvalid = !isValid,
+        isDuplicateName = isDuplicate,
         submitName = submitName,
         modifier = modifier
             .padding(16.dp)
@@ -127,23 +131,25 @@ private fun RegisterNameCard(
 private fun NameTextField(
     name: String,
     onNameChange: (String) -> Unit,
-    isValid: Boolean,
+    isInvalid: Boolean,
+    isDuplicateName: Boolean,
     submitName: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isError = name.isNotEmpty() && !isValid
     val keyboardController = LocalSoftwareKeyboardController.current
     OutlinedTextField(
         value = name,
         onValueChange = onNameChange,
         modifier = modifier,
-        isError = isError,
+        isError = isInvalid || isDuplicateName,
         placeholder = {
             LabelSmall(text = stringResource(id = R.string.name_placeholder))
         },
         supportingText = {
-            if (isError) {
-                LabelSmall(text = stringResource(id = R.string.submit_name_fail))
+            if (isDuplicateName) {
+                LabelSmall(text = stringResource(id = R.string.username_duplicate))
+            } else if (isInvalid) {
+                LabelSmall(text = stringResource(id = R.string.username_invalid))
             }
         },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
@@ -165,8 +171,8 @@ private fun RegisterFormScreenPreview() {
         RegisterFormScreen(
             state = state,
             onBackButtonClick = {},
-            onNameChange = { state = state.copy(name = it) },
-            onSubmitName = {},
+            onNameChange = { state = state.copy(name = it, isDuplicateName = false) },
+            onSubmitName = { state = state.copy(isDuplicateName = state.name == "중복") },
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primary),

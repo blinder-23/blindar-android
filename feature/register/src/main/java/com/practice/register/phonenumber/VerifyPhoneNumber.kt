@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.practice.designsystem.DarkPreview
 import com.practice.designsystem.LightPreview
@@ -61,7 +62,7 @@ fun VerifyPhoneNumber(
         systemUiController.setNavigationBarColor(navigationBarColor)
     }
 
-    val state by viewModel.registerUiState
+    val state by viewModel.registerUiState.collectAsStateWithLifecycle()
     val activity = LocalActivity.current
     val context = LocalContext.current
 
