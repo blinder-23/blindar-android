@@ -1,4 +1,4 @@
-package com.practice.settings.feedback
+package com.practice.feedback
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -37,7 +37,6 @@ import com.practice.designsystem.components.BlindarTopAppBarDefaults
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.LabelMedium
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.settings.R
 import com.practice.util.getAppVersionName
 import com.practice.util.makeToast
 import kotlinx.coroutines.launch

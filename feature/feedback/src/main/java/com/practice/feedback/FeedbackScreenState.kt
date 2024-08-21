@@ -1,4 +1,4 @@
-package com.practice.settings.feedback
+package com.practice.feedback
 
 data class FeedbackScreenState(
     val feedback: String = "",

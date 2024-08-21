@@ -3,10 +3,10 @@ package com.practice.hanbitlunch
 import android.os.Bundle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.serialization.decodeArguments
+import com.practice.feedback.FeedbackRoute
 import com.practice.main.memo.MemoRoute
 import com.practice.main.nutrient.NutrientRoute
 import com.practice.onboarding.OnboardingRoute
-import com.practice.settings.feedback.FeedbackRoute
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable

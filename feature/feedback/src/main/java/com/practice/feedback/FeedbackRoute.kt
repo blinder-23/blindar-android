@@ -1,4 +1,4 @@
-package com.practice.settings.feedback
+package com.practice.feedback
 
 import kotlinx.serialization.Serializable
 
