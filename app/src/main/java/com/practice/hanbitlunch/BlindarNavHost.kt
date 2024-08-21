@@ -24,6 +24,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.practice.feedback.FeedbackRoute
+import com.practice.feedback.FeedbackScreen
 import com.practice.hanbitlunch.navigation.memoRoute
 import com.practice.hanbitlunch.navigation.nutrientRoute
 import com.practice.main.main.MainScreen
@@ -36,8 +38,6 @@ import com.practice.onboarding.OnboardingScreen
 import com.practice.register.phonenumber.VerifyPhoneNumber
 import com.practice.register.registerform.RegisterFormScreen
 import com.practice.register.selectschool.SelectSchoolScreen
-import com.practice.settings.feedback.FeedbackRoute
-import com.practice.settings.feedback.FeedbackScreen
 import com.practice.settings.settings.Settings
 import com.practice.splash.SplashScreen
 import com.practice.util.makeToast

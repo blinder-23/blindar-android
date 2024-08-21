@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_send_feedback_on_success">피드백을 전송했습니다.</string>
+    <string name="settings_send_feedback_on_error">피드백 전송에 실패했습니다. 잠시 후에 다시 시도해 주세요.</string>
+
+    <string name="feedback_dialog_title">피드백 보내기</string>
+    <string name="feedback_dialog_textfield_label">블린더 사용 후기를 알려주세요!</string>
+    <string name="feedback_dialog_textfield_error_empty">피드백을 입력해 주세요.</string>
+    <string name="feedback_dialog_cancel_button">취소</string>
+    <string name="feedback_dialog_send_button">전송</string>
+
+    <string name="feedback_screen_title">피드백 작성</string>
+    <string name="feedback_screen_textfield_label">피드백 작성</string>
+    <string name="feedback_screen_textfield_error_empty">피드백을 입력해 주세요.</string>
+
+    <string name="close">닫기</string>
+</resources>
