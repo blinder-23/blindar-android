@@ -1,4 +1,4 @@
-package com.practice.onboarding.onboarding
+package com.practice.onboarding
 
 import kotlinx.serialization.Serializable
 

@@ -31,15 +31,15 @@ import com.practice.main.memo.MemoRoute
 import com.practice.main.memo.MemoScreen
 import com.practice.main.nutrient.NutrientRoute
 import com.practice.main.nutrient.NutrientScreen
-import com.practice.onboarding.onboarding.OnboardingRoute
-import com.practice.onboarding.onboarding.OnboardingScreen
-import com.practice.onboarding.splash.SplashScreen
+import com.practice.onboarding.OnboardingRoute
+import com.practice.onboarding.OnboardingScreen
 import com.practice.register.phonenumber.VerifyPhoneNumber
 import com.practice.register.registerform.RegisterFormScreen
 import com.practice.register.selectschool.SelectSchoolScreen
 import com.practice.settings.feedback.FeedbackRoute
 import com.practice.settings.feedback.FeedbackScreen
 import com.practice.settings.settings.Settings
+import com.practice.splash.SplashScreen
 import com.practice.util.makeToast
 
 private const val TAG = "BlindarNavHost"

@@ -1,4 +1,4 @@
-package com.practice.onboarding.onboarding
+package com.practice.onboarding
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +21,6 @@ import com.practice.designsystem.components.BlindarDialog
 import com.practice.designsystem.components.BodyLarge
 import com.practice.designsystem.components.TitleMedium
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.onboarding.R
 
 @Composable
 fun LoginErrorDialog(

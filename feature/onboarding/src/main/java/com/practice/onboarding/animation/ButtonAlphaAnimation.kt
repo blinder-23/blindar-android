@@ -1,4 +1,4 @@
-package com.practice.onboarding.onboarding.animation
+package com.practice.onboarding.animation
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
