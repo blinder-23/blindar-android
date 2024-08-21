@@ -1,4 +1,4 @@
-package com.practice.onboarding.splash
+package com.practice.splash
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

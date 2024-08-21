@@ -1,4 +1,4 @@
-package com.practice.onboarding.splash
+package com.practice.splash
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +20,6 @@ import com.practice.designsystem.components.AppIcon
 import com.practice.designsystem.components.LabelMedium
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.notification.BlindarNotificationManager
-import com.practice.onboarding.R
 import com.practice.work.dailyalarm.DailyNotificationAlarmReceiver
 import kotlinx.coroutines.delay
 

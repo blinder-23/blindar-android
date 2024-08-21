@@ -17,8 +17,10 @@ tasks.withType<Test> {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
     }
 }
 
@@ -140,6 +142,7 @@ dependencies {
     implementation(libs.violet.dreams.core)
     implementation(libs.violet.dreams.ui)
 
+    implementation(project(":feature:splash"))
     implementation(project(":feature:main"))
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:register"))

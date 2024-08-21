@@ -4,6 +4,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -47,6 +48,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:work"))
     implementation(project(":core:auth"))
+    implementation(project(":core:notification"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)
@@ -54,4 +56,23 @@ dependencies {
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
+
+    // Accompanist
+    implementation(libs.bundles.accompanist)
+
+    // Firebase
+    implementation(libs.firebase.ui.auth)
+
+    // AndroidX lifecycles
+    implementation(libs.bundles.lifecycle)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    ksp(libs.hilt.compiler.androidx)
+    androidTestImplementation(libs.hilt.android.testing)
+
+    // Kotlin Coroutines
+    implementation(libs.bundles.coroutines)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
