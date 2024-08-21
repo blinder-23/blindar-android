@@ -31,8 +31,8 @@ import com.practice.main.memo.MemoRoute
 import com.practice.main.memo.MemoScreen
 import com.practice.main.nutrient.NutrientRoute
 import com.practice.main.nutrient.NutrientScreen
-import com.practice.onboarding.onboarding.OnboardingRoute
-import com.practice.onboarding.onboarding.OnboardingScreen
+import com.practice.onboarding.OnboardingRoute
+import com.practice.onboarding.OnboardingScreen
 import com.practice.register.phonenumber.VerifyPhoneNumber
 import com.practice.register.registerform.RegisterFormScreen
 import com.practice.register.selectschool.SelectSchoolScreen

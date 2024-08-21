@@ -1,4 +1,4 @@
-package com.practice.onboarding.onboarding
+package com.practice.onboarding
 
 import android.content.Context
 import android.util.Log

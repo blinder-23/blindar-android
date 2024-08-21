@@ -1,4 +1,4 @@
-package com.practice.onboarding.onboarding
+package com.practice.onboarding
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -39,11 +39,10 @@ import com.practice.designsystem.LightTabletPreview
 import com.practice.designsystem.components.AppIcon
 import com.practice.designsystem.components.TitleLarge
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.onboarding.R
-import com.practice.onboarding.onboarding.animation.animateAppIconOffset
-import com.practice.onboarding.onboarding.animation.animateButtonAlpha
-import com.practice.onboarding.onboarding.animation.getAppIconOffset
-import com.practice.onboarding.onboarding.animation.getButtonAlpha
+import com.practice.onboarding.animation.animateAppIconOffset
+import com.practice.onboarding.animation.animateButtonAlpha
+import com.practice.onboarding.animation.getAppIconOffset
+import com.practice.onboarding.animation.getButtonAlpha
 import com.practice.util.getAppVersionName
 import kotlinx.coroutines.launch
 
