@@ -1,7 +1,6 @@
 package com.practice.work
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.Data
@@ -49,6 +48,7 @@ class FetchRemoteMealWorker @AssistedInject constructor(
         val currentYear = now.year
         val currentMonth = now.month
         val schoolCode = preferencesRepository.fetchInitialPreferences().schoolCode
+        tryFetchAndStoreMeals(schoolCode, currentYear, currentMonth)
         (currentYear downTo currentYear - 2).forEach { year ->
             (0 until 12).forEach { months ->
                 tryFetchAndStoreMeals(schoolCode, year, (currentMonth + months - 1) % 12 + 1)

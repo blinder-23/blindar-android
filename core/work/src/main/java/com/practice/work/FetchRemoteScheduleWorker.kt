@@ -48,6 +48,7 @@ class FetchRemoteScheduleWorker @AssistedInject constructor(
         val currentYear = now.year
         val currentMonth = now.month
         val schoolCode = preferencesRepository.fetchInitialPreferences().schoolCode
+        tryFetchAndStoreSchedules(schoolCode, currentYear, currentMonth)
         (currentYear downTo currentYear - 2).forEach { year ->
             (0 until 12).forEach { months ->
                 tryFetchAndStoreSchedules(schoolCode, year, (currentMonth + months - 1) % 12 + 1)
