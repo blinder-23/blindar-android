@@ -1,4 +1,4 @@
-package com.practice.register.phonenumber
+package com.practice.verifyphone
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -40,9 +40,6 @@ import com.practice.designsystem.components.BottomNextButton
 import com.practice.designsystem.components.LabelSmall
 import com.practice.designsystem.components.TitleSmall
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.register.R
-import com.practice.register.RegisterUiState
-import com.practice.register.RegisterViewModel
 import com.practice.util.LocalActivity
 import com.practice.util.makeToast
 
@@ -54,7 +51,7 @@ fun VerifyPhoneNumber(
     onSchoolNotSelected: () -> Unit,
     onNewUserSignUp: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: RegisterViewModel = hiltViewModel()
+    viewModel: VerifyPhoneViewModel = hiltViewModel()
 ) {
     val systemUiController = rememberSystemUiController()
     val navigationBarColor = MaterialTheme.colorScheme.surfaceVariant
@@ -62,7 +59,7 @@ fun VerifyPhoneNumber(
         systemUiController.setNavigationBarColor(navigationBarColor)
     }
 
-    val state by viewModel.registerUiState.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val activity = LocalActivity.current
     val context = LocalContext.current
 
@@ -96,14 +93,14 @@ fun VerifyPhoneNumber(
         },
         onAuthCodeChange = viewModel::onAuthCodeChange,
         onVerifyAuthCode = verifyAuthCode,
-        isAuthCodeInvalid = viewModel.isAuthCodeInvalid,
+        isAuthCodeInvalid = state.isAuthCodeInvalid,
         modifier = modifier,
     )
 }
 
 @Composable
 private fun VerifyPhoneNumber(
-    state: RegisterUiState,
+    state: VerifyPhoneUiState,
     onBackButtonClick: () -> Unit,
     onPhoneNumberChange: (String) -> Unit,
     onAuthChipClick: () -> Unit,
@@ -283,7 +280,7 @@ private fun AuthCodeTextField(
 @DarkPreview
 @Composable
 private fun VerifyPhoneNumberPreview() {
-    var registerState by remember { mutableStateOf(RegisterUiState.Empty) }
+    var registerState by remember { mutableStateOf(VerifyPhoneUiState.Empty) }
     BlindarTheme {
         VerifyPhoneNumber(
             state = registerState,

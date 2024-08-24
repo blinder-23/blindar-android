@@ -1,6 +1,5 @@
-package com.practice.register
+package com.practice.verifyphone
 
-import com.practice.register.phonenumber.PhoneNumberValidator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
@@ -66,18 +65,24 @@ class PhoneNumberValidatorTest {
     @Test
     fun digitsString() {
         val string = "0123456789"
-        assertThat(PhoneNumberValidator.filterOnlyDigits(string)).isEqualTo(string)
+        assertThat(PhoneNumberValidator.filterOnlyDigits(string)).isEqualTo(
+            string
+        )
     }
 
     @Test
     fun asciiCharacterString() {
         val string = "012a345er67.;89"
-        assertThat(PhoneNumberValidator.filterOnlyDigits(string)).isEqualTo("0123456789")
+        assertThat(PhoneNumberValidator.filterOnlyDigits(string)).isEqualTo(
+            "0123456789"
+        )
     }
 
     @Test
     fun unicodeCharacterString() {
         val string = "0123456가7닭89"
-        assertThat(PhoneNumberValidator.filterOnlyDigits(string)).isEqualTo("0123456789")
+        assertThat(PhoneNumberValidator.filterOnlyDigits(string)).isEqualTo(
+            "0123456789"
+        )
     }
 }
