@@ -1,4 +1,4 @@
-package com.practice.register.registerform
+package com.practice.username
 
 object NameValidator {
     private val regex = Regex("^[0-9a-zA-Z가-힣]+$")

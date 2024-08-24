@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="register_form_screen">닉네임 입력</string>
     <string name="select_school_screen">학교 선택</string>
     <string name="next_button">다음</string>
 

@@ -47,6 +47,7 @@ android {
 
 dependencies {
     implementation(project(":core:designsystem"))
+    implementation(project(":core:firebase"))
 
     // KTX libraries
     implementation(libs.androidx.core.ktx)
@@ -74,4 +75,9 @@ dependencies {
     // Kotlin Coroutines
     implementation(libs.bundles.coroutines)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // Unit test
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.vintage.engine)
+    testImplementation(libs.assertj.core)
 }

@@ -146,6 +146,7 @@ dependencies {
     implementation(project(":feature:main"))
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:verifyphone"))
+    implementation(project(":feature:username"))
     implementation(project(":feature:register"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:feedback"))

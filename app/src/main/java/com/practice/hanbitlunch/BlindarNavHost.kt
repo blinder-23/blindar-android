@@ -35,10 +35,10 @@ import com.practice.main.nutrient.NutrientRoute
 import com.practice.main.nutrient.NutrientScreen
 import com.practice.onboarding.OnboardingRoute
 import com.practice.onboarding.OnboardingScreen
-import com.practice.register.registerform.RegisterFormScreen
 import com.practice.register.selectschool.SelectSchoolScreen
 import com.practice.settings.settings.Settings
 import com.practice.splash.SplashScreen
+import com.practice.username.RegisterFormScreen
 import com.practice.util.makeToast
 import com.practice.verifyphone.VerifyPhoneNumber
 

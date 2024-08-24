@@ -1,4 +1,4 @@
-package com.practice.register.registerform
+package com.practice.username
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,9 +31,6 @@ import com.practice.designsystem.components.BlindarTopAppBarDefaults
 import com.practice.designsystem.components.BottomNextButton
 import com.practice.designsystem.components.LabelSmall
 import com.practice.designsystem.theme.BlindarTheme
-import com.practice.register.R
-import com.practice.register.RegisterUiState
-import com.practice.register.RegisterViewModel
 import com.practice.util.makeToast
 
 @Composable
@@ -41,9 +38,9 @@ fun RegisterFormScreen(
     onBackButtonClick: () -> Unit,
     onNameUpdated: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: RegisterViewModel = hiltViewModel()
+    viewModel: RegisterFormViewModel = hiltViewModel()
 ) {
-    val state by viewModel.registerUiState.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     RegisterFormScreen(
@@ -62,7 +59,7 @@ fun RegisterFormScreen(
 
 @Composable
 private fun RegisterFormScreen(
-    state: RegisterUiState,
+    state: RegisterFormUiState,
     onBackButtonClick: () -> Unit,
     onSubmitName: () -> Unit,
     onNameChange: (String) -> Unit,
@@ -166,7 +163,7 @@ private fun NameTextField(
 @DarkPreview
 @Composable
 private fun RegisterFormScreenPreview() {
-    var state by remember { mutableStateOf(RegisterUiState.Empty) }
+    var state by remember { mutableStateOf(RegisterFormUiState.Empty) }
     BlindarTheme {
         RegisterFormScreen(
             state = state,

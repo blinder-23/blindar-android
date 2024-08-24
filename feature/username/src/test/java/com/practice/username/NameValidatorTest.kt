@@ -1,6 +1,5 @@
-package com.practice.register
+package com.practice.username
 
-import com.practice.register.registerform.NameValidator
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 

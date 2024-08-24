@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.practice.api.school.RemoteSchoolRepository
 import com.practice.api.toSchool
 import com.practice.domain.School
-import com.practice.firebase.BlindarFirebase
 import com.practice.preferences.PreferencesRepository
 import com.practice.util.removeWhitespaces
 import com.practice.work.BlindarWorkManager
@@ -38,41 +37,6 @@ class RegisterViewModel @Inject constructor(
             collectSelectedSchool()
         }
         updateSchoolList("")
-    }
-
-    /**
-     * RegisterFormScreen
-     */
-    fun onNameChange(name: String) {
-        _registerUiState.update {
-            it.copy(
-                name = name.removeWhitespaces(),
-                isDuplicateName = false,
-            )
-        }
-    }
-
-    fun submitName(
-        onSuccess: () -> Unit,
-        onFail: () -> Unit,
-    ) {
-        val onUsernameDuplicate = {
-            onFail()
-            _registerUiState.update {
-                it.copy(isDuplicateName = true)
-            }
-        }
-
-        // TODO: Firebase 확인 로직 제거하고, 서버 API로 migrate
-        if (registerUiState.value.isNameValid) {
-            BlindarFirebase.tryStoreUsername(
-                username = registerUiState.value.name,
-                onSuccess = onSuccess,
-                onFail = onUsernameDuplicate,
-            )
-        } else {
-            onUsernameDuplicate()
-        }
     }
 
     /**
