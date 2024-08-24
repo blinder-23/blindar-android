@@ -1,4 +1,4 @@
-package com.practice.register.selectschool
+package com.practice.selectschool.compose
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -35,7 +35,7 @@ import com.practice.designsystem.modifier.drawBottomBorder
 import com.practice.designsystem.modifier.drawTopBorder
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.School
-import com.practice.register.R
+import com.practice.selectschool.R
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 

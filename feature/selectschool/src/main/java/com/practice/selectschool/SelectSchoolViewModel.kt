@@ -1,4 +1,4 @@
-package com.practice.register
+package com.practice.selectschool
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -21,14 +21,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(
+class SelectSchoolViewModel @Inject constructor(
     private val schoolRepository: RemoteSchoolRepository,
     private val preferencesRepository: PreferencesRepository,
 ) : ViewModel() {
 
-    private val _registerUiState = MutableStateFlow(RegisterUiState.Empty)
-    val registerUiState: StateFlow<RegisterUiState>
-        get() = _registerUiState.asStateFlow()
+    private val _uiState = MutableStateFlow(SelectSchoolUiState.Empty)
+    val uiState: StateFlow<SelectSchoolUiState>
+        get() = _uiState.asStateFlow()
 
     private var schoolListJob: Job? = null
 
@@ -39,12 +39,9 @@ class RegisterViewModel @Inject constructor(
         updateSchoolList("")
     }
 
-    /**
-     * SelectSchoolScreen
-     */
     private suspend fun collectSelectedSchool() {
         preferencesRepository.userPreferencesFlow.collectLatest { preferences ->
-            _registerUiState.update {
+            _uiState.update {
                 it.copy(
                     selectedSchool = School(
                         name = preferences.schoolName,
@@ -57,7 +54,7 @@ class RegisterViewModel @Inject constructor(
 
     fun onSchoolQueryChange(query: String) {
         val queryWithoutWhitespaces = query.removeWhitespaces()
-        _registerUiState.update {
+        _uiState.update {
             it.copy(schoolQuery = queryWithoutWhitespaces)
         }
         updateSchoolList(queryWithoutWhitespaces)
@@ -69,7 +66,7 @@ class RegisterViewModel @Inject constructor(
             val schools = schoolRepository.searchSupportedSchools(query)
                 .map { it.toSchool() }
                 .toImmutableList()
-            _registerUiState.update {
+            _uiState.update {
                 it.copy(schools = schools)
             }
         }

@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.practice.register"
+    namespace = "com.practice.selectschool"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

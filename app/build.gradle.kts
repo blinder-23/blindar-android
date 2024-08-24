@@ -147,7 +147,7 @@ dependencies {
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:verifyphone"))
     implementation(project(":feature:username"))
-    implementation(project(":feature:register"))
+    implementation(project(":feature:selectschool"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:feedback"))
 

@@ -1,4 +1,4 @@
-package com.practice.register.selectschool
+package com.practice.selectschool.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -33,8 +33,8 @@ import com.practice.designsystem.components.BlindarTopAppBarDefaults
 import com.practice.designsystem.components.TitleSmall
 import com.practice.designsystem.theme.BlindarTheme
 import com.practice.domain.School
-import com.practice.register.R
-import com.practice.register.RegisterViewModel
+import com.practice.selectschool.R
+import com.practice.selectschool.SelectSchoolViewModel
 import com.practice.util.makeToast
 import kotlinx.collections.immutable.ImmutableList
 
@@ -43,9 +43,9 @@ fun SelectSchoolScreen(
     onBackButtonClick: () -> Unit,
     onNavigateToMain: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: RegisterViewModel = hiltViewModel(),
+    viewModel: SelectSchoolViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.registerUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val baseSuccessMessage = stringResource(id = R.string.school_selected_base)
