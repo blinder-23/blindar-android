@@ -1,4 +1,4 @@
-package com.practice.register.phonenumber
+package com.practice.verifyphone
 
 object PhoneNumberValidator {
     private val regex = Regex("^01(0|1|[6-9])(\\d{3}|\\d{4})(\\d{4})$")
