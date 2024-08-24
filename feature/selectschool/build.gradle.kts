@@ -6,11 +6,10 @@ plugins {
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
-    kotlin("plugin.serialization")
 }
 
 android {
-    namespace = "com.practice.settings"
+    namespace = "com.practice.selectschool"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -45,11 +44,11 @@ android {
 
 dependencies {
     implementation(project(":core:designsystem"))
-    implementation(project(":core:firebase"))
-    implementation(project(":core:util"))
+    implementation(project(":core:work"))
     implementation(project(":core:auth"))
-    implementation(project(":data:preferences"))
-    implementation(project(":data:api"))
+
+    // KTX libraries
+    implementation(libs.androidx.core.ktx)
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
@@ -58,6 +57,12 @@ dependencies {
     // Accompanist
     implementation(libs.bundles.accompanist)
 
+    // Firebase
+    implementation(libs.firebase.ui.auth)
+
+    // AndroidX lifecycles
+    implementation(libs.bundles.lifecycle)
+
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
@@ -65,13 +70,18 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     implementation(libs.hilt.work)
 
+    // Other Jetpack Libraries
+    implementation(libs.bundles.jetpack)
+
     // Kotlin Coroutines
     implementation(libs.bundles.coroutines)
     testImplementation(libs.kotlinx.coroutines.test)
 
-    // Kotlin serialization
-    implementation(libs.kotlinx.serialization.json)
+    // Unit test
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.vintage.engine)
+    testImplementation(libs.assertj.core)
 
-    // Coil
-    implementation(libs.coil)
+    // Kotlin immutable collections
+    implementation(libs.kotlinx.collections.immutable)
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="select_school_screen">학교 선택</string>
+    <string name="next_button">다음</string>
+
+    <string name="school_text_field_label">학교 검색</string>
+    <string name="school_clear_text_field">검색창 비우기</string>
+    <string name="school_selected_base">선택되었습니다.</string>
+    <string name="school_item_unselected">%s</string>
+    <string name="school_item_selected">%s 선택됨</string>
+    <string name="school_select_fail_base">선택에 실패했습니다. 잠시 후 다시 시도해 주세요.</string>
+</resources>
