@@ -3,7 +3,7 @@
 compileSdk = "34"
 minSdk = "26"
 targetSdk = "34"
-versionName = "2.5.1"
+versionName = "2.5.2"
 
 # library
 accompanist = '0.32.0'
@@ -19,7 +19,7 @@ lifecycle = '2.8.2'
 retrofit = '2.11.0'
 room = "2.6.1"
 violet-dreams = '0.1.2'
-navigation = '2.8.0-beta06'
+navigation = '2.8.2'
 work = "2.9.0"
 
 [libraries]
