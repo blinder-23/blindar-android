@@ -14,7 +14,7 @@ class RemoteMemoRepository @Inject constructor(private val remoteMemoDataSource:
 
     suspend fun updateMemo(memo: Memo): String {
         return tryBlock {
-            remoteMemoDataSource.updateMemo(memo).id
+            remoteMemoDataSource.updateMemo(memo).response.id
         }
     }
 
