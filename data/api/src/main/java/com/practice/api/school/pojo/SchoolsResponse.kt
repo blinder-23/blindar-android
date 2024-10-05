@@ -1,7 +1,8 @@
 package com.practice.api.school.pojo
 
+import com.google.gson.annotations.SerializedName
+
 data class SchoolsResponse(
-    val message: String,
-    val responseCode: Int,
-    val data: List<SchoolModel>,
+    @SerializedName("is_success") val isSuccess: Boolean,
+    val response: List<SchoolModel>,
 )
