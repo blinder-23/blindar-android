@@ -21,7 +21,7 @@ class FakeRemoteMemoDataSource : RemoteMemoDataSource {
             memo.copy(id = assignNewId())
         }
         memos.add(idGivenMemo)
-        return UpdateMemoResponse(idGivenMemo.id)
+        return UpdateMemoResponse(isSuccess = true, id = idGivenMemo.id)
     }
 
     override suspend fun deleteMemo(id: String): DeleteMemoResponse {

@@ -12,8 +12,8 @@ class SchoolApiTest {
     fun testSchoolApi() = runTest {
         val response = api.getSupportedSchools()
         println(response)
-        assertThat(response.responseCode).isEqualTo(200)
-        assertThat(response.data)
+        assertThat(response.isSuccess).isTrue()
+        assertThat(response.response)
             .isNotEmpty
     }
 }

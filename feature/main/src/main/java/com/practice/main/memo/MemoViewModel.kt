@@ -1,5 +1,6 @@
 package com.practice.main.memo
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -120,6 +121,7 @@ class MemoViewModel @Inject constructor(
     private suspend fun onMemoAddSubmit(state: MemoBottomSheetState.Add) {
         val memo = state.uiMemo.toMemo()
         val assignedMemoId = remoteMemoRepository.updateMemo(memo)
+        Log.d("MemoViewModel", "got $assignedMemoId id")
         localMemoRepository.insertMemo(memo.copy(id = assignedMemoId, isSavedOnRemote = true))
     }
 

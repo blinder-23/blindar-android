@@ -9,6 +9,7 @@ interface ScheduleApi {
 
     @GET("schedule")
     suspend fun getSchedules(
+        @Query("school_code") schoolCode: Int,
         @Query("year") year: Int,
         @Query("month") month: Int,
     ): ScheduleResponse

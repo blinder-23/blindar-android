@@ -12,12 +12,14 @@ class ScheduleApiTest {
 
     @Test
     fun testScheduleApi(): Unit = runBlocking {
-        val response = api.getSchedules(2022, 9)
+        val year = 2024
+        val month = 8
+        val response = api.getSchedules(7010578, year, month)
         assertThat(response.schedules)
             .isNotEmpty
             .allSatisfy {
                 assertThat(it.date.toEpochDate(9)).matches { date ->
-                    date.year == 2022 && date.month == 9
+                    date.year == year && date.month == month
                 }
             }
     }

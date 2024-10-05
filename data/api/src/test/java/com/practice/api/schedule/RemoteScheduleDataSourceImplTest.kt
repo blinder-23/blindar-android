@@ -12,14 +12,14 @@ class RemoteScheduleRepositoryImplTest {
 
     @Test
     fun `test schedules`(): Unit = runBlocking {
-        val year = 2022
-        val month = 9
+        val year = 2024
+        val month = 8
         val result = dataSource.getSchedules(7010578, year, month)
 
         assertThat(result.schedules).isNotEmpty
             .allSatisfy {
                 val scheduleMonth = it.date.toEpochDate(9).month
-                assertThat(scheduleMonth).isEqualTo(9)
+                assertThat(scheduleMonth).isEqualTo(month)
             }
     }
 
