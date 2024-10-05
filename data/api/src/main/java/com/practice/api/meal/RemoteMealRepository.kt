@@ -8,6 +8,7 @@ class RemoteMealRepository(private val remote: RemoteMealDataSource) {
         return try {
             remote.getMeals(schoolCode, year, month).toMonthlyMeal(schoolCode, year, month)
         } catch (e: Exception) {
+            e.printStackTrace()
             throw RemoteMealRepositoryException(e.message)
         }
     }
