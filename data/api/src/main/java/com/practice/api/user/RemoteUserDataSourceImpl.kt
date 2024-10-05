@@ -1,6 +1,6 @@
 package com.practice.api.user
 
-import com.practice.api.user.pojo.UserUpdateRequestBody
+import com.practice.api.user.pojo.RemoteUser
 import com.practice.api.user.pojo.UserUpdateResponse
 import javax.inject.Inject
 
@@ -10,7 +10,7 @@ class RemoteUserDataSourceImpl @Inject constructor(private val api: UserApi): Re
         schoolCode: Int,
         username: String
     ): UserUpdateResponse {
-        val requestBody = UserUpdateRequestBody(userId, schoolCode, username)
+        val requestBody = RemoteUser(userId, schoolCode, username)
         return api.updateUser(requestBody)
     }
 }
