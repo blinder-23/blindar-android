@@ -93,7 +93,7 @@ class SelectSchoolViewModel @Inject constructor(
                 remoteUserRepository.updateUserInfo(getUserID(), school.schoolCode, getUsername())
 
                 uiState.value.username?.let { username ->
-                    BlindarFirebase.tryStoreUsername(username = username)
+                    BlindarFirebase.tryUpdateUsername(username = username)
                 }
 
                 BlindarWorkManager.setOneTimeFetchDataWork(context)

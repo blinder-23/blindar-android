@@ -68,14 +68,14 @@ class RegisterManager @Inject constructor(
 
             getUserRegisterState(user) == UserRegisterState.ALL_FILLED -> {
                 // existing user login
-                storeSchoolCodeAndNameToPreferences()
+                tryStoreUserSchoolInfoFromServer()
                 onExistingUserLogin(user)
             }
 
             else -> {
                 // new user registers
                 try {
-                    BlindarFirebase.tryStoreUsername(user.displayName!!)
+                    BlindarFirebase.tryUpdateUsername(user.displayName!!)
                     onNewUserSignUp(user)
                 } catch (e: Exception) {
                     onFail()
@@ -192,8 +192,6 @@ class RegisterManager @Inject constructor(
                 UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()
                 UserRegisterState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
                 UserRegisterState.ALL_FILLED -> {
-                    // 다시 로그인했을 때 학교 ID, 이름을 로컬에 저장
-                    storeSchoolCodeAndNameToPreferences()
                     onExistingUserLogin()
                 }
 
@@ -219,14 +217,6 @@ class RegisterManager @Inject constructor(
             schoolCode = school.schoolCode,
             schoolName = school.name,
         )
-    }
-
-    private suspend fun storeSchoolCodeAndNameToPreferences() {
-        val schoolCode = BlindarFirebase.getSchoolCode()?.toInt()
-        val schoolName = BlindarFirebase.getSchoolName()
-        if (schoolCode != null && schoolName != null) {
-            preferencesRepository.updateSelectedSchool(schoolCode, schoolName)
-        }
     }
 
     private fun catchVerificationFailException(onFail: () -> Unit) {

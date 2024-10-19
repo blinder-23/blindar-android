@@ -11,8 +11,6 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
@@ -21,7 +19,6 @@ import java.util.concurrent.TimeUnit
 object BlindarFirebase {
     private const val TAG = "BlindarFirebase"
     private val auth: FirebaseAuth = Firebase.auth
-    private val database: DatabaseReference = Firebase.database.reference
 
     suspend fun signInWithGoogle(idToken: String?): FirebaseUser? {
         val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
@@ -69,7 +66,7 @@ object BlindarFirebase {
         return auth.signInWithCredential(credential)
     }
 
-    suspend fun tryStoreUsername(username: String) {
+    suspend fun tryUpdateUsername(username: String) {
         auth.currentUser?.let { user ->
             tryUpdateCurrentUsername(user, username)
         }
@@ -83,24 +80,6 @@ object BlindarFirebase {
             displayName = username
         }
         user.updateProfile(profileUpdates).await()
-    }
-
-    suspend fun getSchoolCode(username: String = auth.currentUser?.displayName ?: ""): Long? {
-        val value =
-            database.child(usersKey).child(username).child(schoolCodeKey).get().await().value
-        if (value != null) {
-            return value as? Long
-        }
-
-        val oldValue =
-            database.child(usersKey).child(username).child(oldSchoolCodeKey).get().await().value
-        return oldValue as? Long
-    }
-
-    suspend fun getSchoolName(username: String = auth.currentUser?.displayName ?: ""): String? {
-        val value =
-            database.child(usersKey).child(username).child(schoolNameKey).get().await().value
-        return value as? String
     }
 
     fun logout() {
