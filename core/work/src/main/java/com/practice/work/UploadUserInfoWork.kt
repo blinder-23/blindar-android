@@ -25,9 +25,7 @@ class UploadUserInfoWork @AssistedInject constructor(
         val username = getUsername()
         val userId = getUserId()
         val schoolCode = getSchoolCode()
-        val schoolName = getSchoolName()
 
-        uploadToFirebase(username, schoolCode, schoolName)
         uploadToServer(userId, schoolCode, username)
         return Result.success()
     }
@@ -53,48 +51,6 @@ class UploadUserInfoWork @AssistedInject constructor(
     private fun getSchoolCode(): Int? {
         return preferencesRepository.userPreferencesFlow.value.let {
             if (it.isSchoolCodeEmpty) null else it.schoolCode
-        }
-    }
-
-    private fun getSchoolName(): String? {
-        return preferencesRepository.userPreferencesFlow.value.let {
-            if (it.isSchoolNameEmpty) null else it.schoolName
-        }
-    }
-
-    private fun uploadToFirebase(username: String?, schoolCode: Int?, schoolName: String?) {
-        uploadUsernameToFirebase(username)
-        uploadSchoolCodeToFirebase(schoolCode)
-        uploadSchoolNameToFirebase(schoolName)
-    }
-
-    private fun uploadUsernameToFirebase(username: String?) {
-        username?.let {
-            BlindarFirebase.tryStoreUsername(
-                username = username,
-                onSuccess = {                },
-                onFail = {                },
-            )
-        }
-    }
-
-    private fun uploadSchoolCodeToFirebase(schoolCode: Int?) {
-        schoolCode?.let {
-            BlindarFirebase.tryUpdateCurrentUserSchoolCode(
-                schoolCode = schoolCode,
-                onSuccess = { },
-                onFail = { },
-            )
-        }
-    }
-
-    private fun uploadSchoolNameToFirebase(schoolName: String?) {
-        schoolName?.let {
-            BlindarFirebase.tryUpdateCurrentUserSchoolName(
-                schoolName = schoolName,
-                onSuccess = { },
-                onFail = { },
-            )
         }
     }
 
