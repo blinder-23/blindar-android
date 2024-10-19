@@ -41,6 +41,13 @@ object BlindarFirebase {
         }
     }
 
+    fun getUserIdOrNull(): String? {
+        return when (val user = getBlindarUser()) {
+            is BlindarUserStatus.LoginUser -> user.user.uid
+            is BlindarUserStatus.NotLoggedIn -> null
+        }
+    }
+
     fun signUpWithPhoneNumber(
         activity: Activity,
         phoneNumber: String,
@@ -62,84 +69,20 @@ object BlindarFirebase {
         return auth.signInWithCredential(credential)
     }
 
-    fun tryStoreUsername(
-        username: String,
-        onSuccess: () -> Unit,
-        onFail: () -> Unit,
-        updateProfile: Boolean = true,
-    ) {
+    suspend fun tryStoreUsername(username: String) {
         auth.currentUser?.let { user ->
-            database.child(usersKey).child(username).child(ownerKey).setValue(user.uid)
-                .addOnSuccessListener {
-                    if (updateProfile) {
-                        tryUpdateCurrentUsername(user, username, onSuccess, onFail)
-                    } else {
-                        onSuccess()
-                    }
-                }
-                .addOnFailureListener {
-                    onFail()
-                }
+            tryUpdateCurrentUsername(user, username)
         }
     }
 
-    fun storeUsername(username: String): Task<Void>? = auth.currentUser?.let { user ->
-        database.child(usersKey).child(username).child(ownerKey).setValue(user.uid)
-    }
-
-    private fun tryUpdateCurrentUsername(
+    private suspend fun tryUpdateCurrentUsername(
         user: FirebaseUser,
         username: String,
-        onSuccess: () -> Unit,
-        onFail: () -> Unit,
     ) {
         val profileUpdates = userProfileChangeRequest {
             displayName = username
         }
-        user.updateProfile(profileUpdates)
-            .addOnSuccessListener {
-                onSuccess()
-            }.addOnFailureListener {
-                onFail()
-            }
-    }
-
-    fun tryUpdateCurrentUserSchoolCode(
-        schoolCode: Int,
-        onSuccess: () -> Unit,
-        onFail: () -> Unit
-    ) {
-        val username = auth.currentUser?.displayName
-        if (username != null) {
-            database.child(usersKey).child(username).child(schoolCodeKey).setValue(schoolCode)
-                .addOnSuccessListener {
-                    onSuccess()
-                }
-                .addOnFailureListener {
-                    onFail()
-                }
-        } else {
-            onFail()
-        }
-    }
-
-    fun tryUpdateCurrentUserSchoolName(
-        schoolName: String,
-        onSuccess: () -> Unit,
-        onFail: () -> Unit,
-    ) {
-        val username = auth.currentUser?.displayName
-        if (username != null) {
-            database.child(usersKey).child(username).child(schoolNameKey).setValue(schoolName)
-                .addOnSuccessListener {
-                    onSuccess()
-                }
-                .addOnFailureListener {
-                    onFail()
-                }
-        } else {
-            onFail()
-        }
+        user.updateProfile(profileUpdates).await()
     }
 
     suspend fun getSchoolCode(username: String = auth.currentUser?.displayName ?: ""): Long? {
