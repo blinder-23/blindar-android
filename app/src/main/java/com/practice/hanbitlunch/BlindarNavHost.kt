@@ -217,7 +217,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
         // RegisterForm과 SelectSchool은 같은 ViewModel을 공유
         RegisterFormScreen(
             onBackButtonClick = onBackButtonClick,
-            onNameUpdated = {
+            onNavigateToNext = {
                 navController.navigate(SelectSchoolRoute)
             },
             modifier = Modifier

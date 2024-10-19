@@ -36,7 +36,7 @@ import com.practice.util.makeToast
 @Composable
 fun RegisterFormScreen(
     onBackButtonClick: () -> Unit,
-    onNameUpdated: () -> Unit,
+    onNavigateToNext: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RegisterFormViewModel = hiltViewModel()
 ) {
@@ -47,9 +47,9 @@ fun RegisterFormScreen(
         state = state,
         onBackButtonClick = onBackButtonClick,
         onSubmitName = {
-            viewModel.submitName(
-                onSuccess = onNameUpdated,
-                onFail = { context.makeToast(R.string.username_duplicate) },
+            viewModel.checkUsernameIsDuplicated(
+                onNotDuplicated = onNavigateToNext,
+                onDuplicated = { context.makeToast(R.string.username_duplicate) },
             )
         },
         onNameChange = viewModel::onNameChange,
