@@ -139,7 +139,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
         }
     }
     val onSchoolNotSelected = {
-        navController.navigate(SelectSchoolRoute) {
+        navController.navigate(SelectSchoolRoute()) {
             popUpTo(SplashRoute) { inclusive = true }
         }
     }
@@ -155,6 +155,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
                 onNavigateToMainScreen()
                 onLoginSuccess()
             },
+            // TODO: 회원가입 완료 안됐으면 무조건 username부터 다시
             onUsernameNotSet = onUsernameNotSet,
             onSchoolNotSelected = onSchoolNotSelected,
             onAutoLoginFail = {
@@ -173,7 +174,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
             route = route,
             onPhoneLogin = { navController.navigate(VerifyPhoneRoute) },
             onNewUserSignUp = { user ->
-                navController.navigate(SelectSchoolRoute)
+                navController.navigate(SelectSchoolRoute(user.displayName))
             },
             onExistingUserLogin = { user ->
                 navController.navigate(MainRoute) {
@@ -217,8 +218,8 @@ fun NavGraphBuilder.blindarMainNavGraph(
         // RegisterForm과 SelectSchool은 같은 ViewModel을 공유
         RegisterFormScreen(
             onBackButtonClick = onBackButtonClick,
-            onNameUpdated = {
-                navController.navigate(SelectSchoolRoute)
+            onNavigateToNext = { username ->
+                navController.navigate(SelectSchoolRoute(username))
             },
             modifier = Modifier
                 .fillMaxSize()
@@ -248,7 +249,7 @@ fun NavGraphBuilder.blindarMainNavGraph(
             viewModel = hiltViewModel(),
             modifier = Modifier.fillMaxSize(),
             onNavigateToSelectSchoolScreen = {
-                navController.navigate(SelectSchoolRoute)
+                navController.navigate(SelectSchoolRoute())
             },
             onNavigateToSettingsScreen = {
                 navController.navigate(SettingsRoute)
