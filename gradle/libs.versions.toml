@@ -3,12 +3,12 @@
 compileSdk = "34"
 minSdk = "26"
 targetSdk = "34"
-versionName = "2.5.2"
+versionName = "2.5.3"
 
 # library
 accompanist = '0.32.0'
 compose-bom = "2024.06.00"
-coroutines = "1.8.1"
+coroutines = "1.10.2"
 credentials = '1.2.2'
 firebase-bom = "33.1.1"
 hilt = "2.51.1"
