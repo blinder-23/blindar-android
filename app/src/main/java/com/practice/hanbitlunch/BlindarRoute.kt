@@ -21,8 +21,15 @@ data object VerifyPhoneRoute
 @Serializable
 data object VerifyUsernameRoute
 
+/**
+ * 학교 선택 페이지로 이동하는 navigation route.
+ *
+ * @param username 현재 가입된(또는 가입 중인) 사용자 이름
+ */
 @Serializable
-data object SelectSchoolRoute
+data class SelectSchoolRoute(
+    val username: String? = null,
+)
 
 @Serializable
 data object MainRoute

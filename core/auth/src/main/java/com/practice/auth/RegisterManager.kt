@@ -8,18 +8,21 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
+import com.practice.api.user.RemoteUserRepository
 import com.practice.firebase.BlindarFirebase
 import com.practice.firebase.BlindarUserStatus
 import com.practice.preferences.PreferencesRepository
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 // TODO: 로그인/로그아웃 로직을 모두 여기로 모으고, BlindarFirebase에 직접 접근할 수 없도록 수정
 class RegisterManager @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
+    private val remoteUserRepository: RemoteUserRepository,
 ) {
-    suspend fun getUserRegisterState(): UserRegisterState {
+    fun getUserRegisterState(): UserRegisterState {
         val blindarUser = BlindarFirebase.getBlindarUser()
         if (blindarUser is BlindarUserStatus.NotLoggedIn) {
             return UserRegisterState.NOT_LOGGED_IN
@@ -29,14 +32,14 @@ class RegisterManager @Inject constructor(
         return getUserRegisterState(user.user)
     }
 
-    private suspend fun getUserRegisterState(firebaseUser: FirebaseUser): UserRegisterState {
+    private fun getUserRegisterState(firebaseUser: FirebaseUser): UserRegisterState {
         val username = firebaseUser.displayName
         val preferences = preferencesRepository.userPreferencesFlow.value
 
         return when {
             username != null && !preferences.isSchoolCodeEmpty -> UserRegisterState.AUTO_LOGIN
             username.isNullOrEmpty() -> UserRegisterState.USERNAME_MISSING
-            BlindarFirebase.getSchoolCode(firebaseUser.displayName!!) == null -> UserRegisterState.SCHOOL_NOT_SELECTED
+            preferences.isSchoolCodeEmpty -> UserRegisterState.SCHOOL_NOT_SELECTED
             else -> UserRegisterState.ALL_FILLED
         }
     }
@@ -65,15 +68,16 @@ class RegisterManager @Inject constructor(
 
             getUserRegisterState(user) == UserRegisterState.ALL_FILLED -> {
                 // existing user login
-                storeSchoolCodeAndNameToPreferences()
+                tryStoreUserSchoolInfoFromServer()
                 onExistingUserLogin(user)
             }
 
             else -> {
                 // new user registers
-                BlindarFirebase.storeUsername(user.displayName!!)?.addOnSuccessListener {
+                try {
+                    BlindarFirebase.tryUpdateUsername(user.displayName!!)
                     onNewUserSignUp(user)
-                }?.addOnFailureListener {
+                } catch (e: Exception) {
                     onFail()
                 }
             }
@@ -179,14 +183,15 @@ class RegisterManager @Inject constructor(
         onExistingUserLogin: () -> Unit,
     ) {
         coroutineScope.launch {
+            tryStoreUserSchoolInfoFromServer()
+            delay(100) // 학교가 preference에 업데이트되어 flow에 emit되도록 기다림
+
             val state = getUserRegisterState()
             when (state) {
                 UserRegisterState.NOT_LOGGED_IN -> onNewUserSignUp()
                 UserRegisterState.USERNAME_MISSING -> onUsernameNotSet()
                 UserRegisterState.SCHOOL_NOT_SELECTED -> onSchoolNotSelected()
                 UserRegisterState.ALL_FILLED -> {
-                    // 다시 로그인했을 때 학교 ID, 이름을 로컬에 저장
-                    storeSchoolCodeAndNameToPreferences()
                     onExistingUserLogin()
                 }
 
@@ -197,12 +202,21 @@ class RegisterManager @Inject constructor(
         }
     }
 
-    private suspend fun storeSchoolCodeAndNameToPreferences() {
-        val schoolCode = BlindarFirebase.getSchoolCode()?.toInt()
-        val schoolName = BlindarFirebase.getSchoolName()
-        if (schoolCode != null && schoolName != null) {
-            preferencesRepository.updateSelectedSchool(schoolCode, schoolName)
+    private suspend fun tryStoreUserSchoolInfoFromServer() {
+        try {
+            storeUserSchoolInfoFromServer()
+        } catch (e: Exception) {
+            return
         }
+    }
+
+    private suspend fun storeUserSchoolInfoFromServer() {
+        val userId = BlindarFirebase.getUserIdOrNull() ?: ""
+        val school = remoteUserRepository.getUserSchool(userId)
+        preferencesRepository.updateSelectedSchool(
+            schoolCode = school.schoolCode,
+            schoolName = school.name,
+        )
     }
 
     private fun catchVerificationFailException(onFail: () -> Unit) {
