@@ -3,7 +3,7 @@
 compileSdk = "35"
 minSdk = "26"
 targetSdk = "35"
-versionName = "2.5.3"
+versionName = "2.5.4"
 
 # library
 accompanist = '0.32.0'
