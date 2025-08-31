@@ -10,12 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.stringResource
@@ -70,21 +70,25 @@ fun VerticalCalendarMainScreen(
     modifier: Modifier = Modifier,
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
-    Column(modifier = modifier) {
-        MainScreenTopBar(
-            schoolName = uiState.selectedSchool.name,
-            isLoading = uiState.isLoading,
-            onRefreshIconClick = onRefreshIconClick,
-            onSettingsIconClick = onSettingsIconClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally),
-            onSchoolNameClick = onNavigateToSelectSchoolScreen,
-            onClickLabel = stringResource(id = R.string.navigate_to_school_select),
-        )
+    Scaffold(
+        topBar = {
+            MainScreenTopBar(
+                schoolName = uiState.selectedSchool.name,
+                isLoading = uiState.isLoading,
+                onRefreshIconClick = onRefreshIconClick,
+                onSettingsIconClick = onSettingsIconClick,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onSchoolNameClick = onNavigateToSelectSchoolScreen,
+                onClickLabel = stringResource(id = R.string.navigate_to_school_select),
+            )
+        },
+        modifier = modifier,
+    ) {
         Column(
             modifier = Modifier
-                .weight(1f)
+                .padding(it)
+                .fillMaxSize()
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {

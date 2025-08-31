@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.stringResource
@@ -54,48 +54,53 @@ fun HorizontalCalendarMainScreen(
     modifier: Modifier = Modifier,
     customActions: (Date) -> ImmutableList<CustomAccessibilityAction> = { persistentListOf() },
 ) {
-    Column(modifier = modifier) {
-        MainScreenTopBar(
-            schoolName = uiState.selectedSchool.name,
-            isLoading = uiState.isLoading,
-            onRefreshIconClick = onRefreshIconClick,
-            onSettingsIconClick = onSettingsIconClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally),
-            onSchoolNameClick = onNavigateToSelectSchoolScreen,
-            onClickLabel = stringResource(id = R.string.navigate_to_school_select)
-        )
-        Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            CalendarCard(
-                calendarPageCount = calendarPageCount,
-                calendarState = calendarState,
-                calendarHeaderClickLabel = calendarHeaderClickLabel,
-                onCalendarHeaderClick = onCalendarHeaderClick,
-                onDateClick = onDateClick,
-                onSwiped = onSwiped,
-                getContentDescription = getContentDescription,
-                dateShape = largeCalendarDateShape,
-                getClickLabel = getClickLabel,
-                drawBehindElement = drawUnderlineToScheduleDate,
-                modifier = Modifier.weight(1f),
-                customActions = customActions,
-                isLarge = true,
-            )
-            MainScreenContents(
-                uiMeals = uiState.selectedDateDataState.uiMeals,
-                mealPagerState = mealPagerState,
-                memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
-                onMealTimeClick = onMealTimeClick,
-                onNutrientButtonClick = { onNutrientButtonClick(uiState) },
-                onMemoButtonClick = { onMemoButtonClick(uiState) },
+    Scaffold(
+        topBar = {
+            MainScreenTopBar(
+                schoolName = uiState.selectedSchool.name,
+                isLoading = uiState.isLoading,
+                onRefreshIconClick = onRefreshIconClick,
+                onSettingsIconClick = onSettingsIconClick,
                 modifier = Modifier
-                    .weight(1f)
                     .fillMaxWidth(),
+                onSchoolNameClick = onNavigateToSelectSchoolScreen,
+                onClickLabel = stringResource(id = R.string.navigate_to_school_select)
             )
+        },
+        modifier = modifier,
+    ) {
+        Column(modifier = Modifier.padding(it)) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                CalendarCard(
+                    calendarPageCount = calendarPageCount,
+                    calendarState = calendarState,
+                    calendarHeaderClickLabel = calendarHeaderClickLabel,
+                    onCalendarHeaderClick = onCalendarHeaderClick,
+                    onDateClick = onDateClick,
+                    onSwiped = onSwiped,
+                    getContentDescription = getContentDescription,
+                    dateShape = largeCalendarDateShape,
+                    getClickLabel = getClickLabel,
+                    drawBehindElement = drawUnderlineToScheduleDate,
+                    modifier = Modifier.weight(1f),
+                    customActions = customActions,
+                    isLarge = true,
+                )
+                MainScreenContents(
+                    uiMeals = uiState.selectedDateDataState.uiMeals,
+                    mealPagerState = mealPagerState,
+                    memoDialogElements = uiState.selectedDateDataState.memoDialogElements,
+                    onMealTimeClick = onMealTimeClick,
+                    onNutrientButtonClick = { onNutrientButtonClick(uiState) },
+                    onMemoButtonClick = { onMemoButtonClick(uiState) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                )
+            }
         }
     }
 }

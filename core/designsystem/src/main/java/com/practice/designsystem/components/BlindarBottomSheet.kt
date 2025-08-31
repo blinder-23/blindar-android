@@ -99,7 +99,7 @@ fun BlindarBottomSheet(
         tonalElevation = tonalElevation,
         scrimColor = scrimColor,
         dragHandle = dragHandle,
-        windowInsets = windowInsets,
+        contentWindowInsets = { windowInsets },
         properties = properties,
     ) {
         content()

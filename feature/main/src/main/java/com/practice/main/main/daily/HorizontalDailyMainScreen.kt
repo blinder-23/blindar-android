@@ -3,7 +3,6 @@ package com.practice.main.main.daily
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,8 +14,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,18 +61,21 @@ fun HorizontalDailyMainScreen(
     onScheduleDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        MainScreenTopBar(
-            schoolName = uiState.selectedSchool.name,
-            isLoading = uiState.isLoading,
-            onRefreshIconClick = onRefreshIconClick,
-            onSettingsIconClick = onSettingsIconClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally),
-            onSchoolNameClick = onSchoolNameClick,
-            onClickLabel = stringResource(id = R.string.navigate_to_school_select),
-        )
+    Scaffold(
+        topBar = {
+            MainScreenTopBar(
+                schoolName = uiState.selectedSchool.name,
+                isLoading = uiState.isLoading,
+                onRefreshIconClick = onRefreshIconClick,
+                onSettingsIconClick = onSettingsIconClick,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onSchoolNameClick = onSchoolNameClick,
+                onClickLabel = stringResource(id = R.string.navigate_to_school_select),
+            )
+        },
+        modifier = modifier,
+    ) { paddingValues ->
         HorizontalDailyMainScreenContents(
             datePickerState = datePickerState,
             uiState = uiState,
@@ -83,6 +85,7 @@ fun HorizontalDailyMainScreen(
             onMemoButtonClick = onMemoButtonClick,
             onMealDialogOpen = onMealDialogOpen,
             onScheduleDialogOpen = onScheduleDialogOpen,
+            modifier = Modifier.padding(paddingValues),
         )
     }
 }
@@ -98,9 +101,10 @@ private fun HorizontalDailyMainScreenContents(
     onMemoButtonClick: (MainUiState) -> Unit,
     onMealDialogOpen: () -> Unit,
     onScheduleDialogOpen: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier.padding(16.dp),
+        modifier = modifier.padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         DatePickerCard(

@@ -5,9 +5,12 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -64,60 +67,64 @@ fun BlindarNavHost(
     )
 
     val context = LocalContext.current
-    NavHost(
-        navController = navController,
-        startDestination = SplashRoute,
-        modifier = modifier,
-        enterTransition = {
-            if (initialState.toBlindarRoute() is SplashRoute && targetState.toBlindarRoute() is OnboardingRoute) {
-                fadeIn(initialAlpha = 1f)
-            } else if (targetState.toBlindarRoute() is OnboardingRoute) {
-                slideIntoContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tweenSpec,
-                )
-            } else {
-                slideIntoContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tweenSpec,
-                )
-            }
-        },
-        popEnterTransition = {
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tweenSpec,
-            )
-        },
-        exitTransition = {
-            if ((initialState.toBlindarRoute() is SplashRoute && targetState.toBlindarRoute() !is MainRoute)) {
-                fadeOut(targetAlpha = 1f)
-            } else if (initialState.toBlindarRoute() !is SplashRoute && targetState.toBlindarRoute() is OnboardingRoute) {
-                slideOutOfContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tweenSpec,
-                )
-            } else {
-                slideOutOfContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tweenSpec,
-                )
-            }
-        },
-        popExitTransition = {
-            slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tweenSpec,
-            )
-        },
-    ) {
-        blindarMainNavGraph(
+    Scaffold {
+        NavHost(
             navController = navController,
-            windowSizeClass = windowSizeClass,
-            onNavigateToMainScreen = onNavigateToMainScreen,
-            credentialManager = CredentialManager.create(context),
-            signInWithGoogleRequest = signInWithGoogleRequest,
-        )
+            startDestination = SplashRoute,
+            modifier = modifier
+                .padding(it)
+                .consumeWindowInsets(it),
+            enterTransition = {
+                if (initialState.toBlindarRoute() is SplashRoute && targetState.toBlindarRoute() is OnboardingRoute) {
+                    fadeIn(initialAlpha = 1f)
+                } else if (targetState.toBlindarRoute() is OnboardingRoute) {
+                    slideIntoContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tweenSpec,
+                    )
+                } else {
+                    slideIntoContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tweenSpec,
+                    )
+                }
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tweenSpec,
+                )
+            },
+            exitTransition = {
+                if ((initialState.toBlindarRoute() is SplashRoute && targetState.toBlindarRoute() !is MainRoute)) {
+                    fadeOut(targetAlpha = 1f)
+                } else if (initialState.toBlindarRoute() !is SplashRoute && targetState.toBlindarRoute() is OnboardingRoute) {
+                    slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tweenSpec,
+                    )
+                } else {
+                    slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tweenSpec,
+                    )
+                }
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tweenSpec,
+                )
+            },
+        ) {
+            blindarMainNavGraph(
+                navController = navController,
+                windowSizeClass = windowSizeClass,
+                onNavigateToMainScreen = onNavigateToMainScreen,
+                credentialManager = CredentialManager.create(context),
+                signInWithGoogleRequest = signInWithGoogleRequest,
+            )
+        }
     }
 }
 

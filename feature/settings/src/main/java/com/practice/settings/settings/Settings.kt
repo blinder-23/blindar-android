@@ -1,7 +1,6 @@
 package com.practice.settings.settings
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +19,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -204,22 +204,29 @@ private fun SettingsScreen(
     onFeedbackButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.background(MaterialTheme.colorScheme.surface)) {
-        SettingsTopAppBar(
-            onBackButtonClick = onBackButtonClick,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        UserProfile(
-            onLogout = onLogoutDialogOpen,
-            profileUiState = uiState.profileUiState,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        SettingsItems(
-            uiState = uiState,
-            onToggleDailyMode = onToggleDailyMode,
-            onToggleDailyAlarm = onToggleDailyAlarm,
-            onFeedbackButtonClick = onFeedbackButtonClick,
-        )
+    Scaffold(
+        topBar = {
+            SettingsTopAppBar(
+                onBackButtonClick = onBackButtonClick,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        },
+        containerColor = MaterialTheme.colorScheme.surface,
+        modifier = modifier,
+    ) {
+        Column(modifier = Modifier.padding(it)) {
+            UserProfile(
+                onLogout = onLogoutDialogOpen,
+                profileUiState = uiState.profileUiState,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            SettingsItems(
+                uiState = uiState,
+                onToggleDailyMode = onToggleDailyMode,
+                onToggleDailyAlarm = onToggleDailyAlarm,
+                onFeedbackButtonClick = onFeedbackButtonClick,
+            )
+        }
     }
 }
 
