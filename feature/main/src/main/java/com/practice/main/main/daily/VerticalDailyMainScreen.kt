@@ -10,6 +10,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,18 +58,20 @@ fun VerticalDailyMainScreen(
     onScheduleDialogOpen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        MainScreenTopBar(
-            schoolName = uiState.selectedSchool.name,
-            isLoading = uiState.isLoading,
-            onRefreshIconClick = onRefreshIconClick,
-            onSettingsIconClick = onSettingsIconClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally),
-            onSchoolNameClick = onSchoolNameClick,
-            onClickLabel = stringResource(id = R.string.navigate_to_school_select),
-        )
+    Scaffold(
+        topBar = {
+            MainScreenTopBar(
+                schoolName = uiState.selectedSchool.name,
+                isLoading = uiState.isLoading,
+                onRefreshIconClick = onRefreshIconClick,
+                onSettingsIconClick = onSettingsIconClick,
+                modifier = modifier
+                    .fillMaxWidth(),
+                onSchoolNameClick = onSchoolNameClick,
+                onClickLabel = stringResource(id = R.string.navigate_to_school_select),
+            )
+        }
+    ) {
         VerticalDailyMainScreenContents(
             datePickerState = datePickerState,
             mealPagerState = mealPagerState,
@@ -78,6 +81,7 @@ fun VerticalDailyMainScreen(
             onMemoButtonClick = onMemoButtonClick,
             onMealDialogOpen = onMealDialogOpen,
             onScheduleDialogOpen = onScheduleDialogOpen,
+            modifier = Modifier.padding(it),
         )
     }
 }
@@ -92,9 +96,10 @@ private fun VerticalDailyMainScreenContents(
     onMemoButtonClick: (MainUiState) -> Unit,
     onMealDialogOpen: () -> Unit,
     onScheduleDialogOpen: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+        modifier = modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         MainScreenContents(

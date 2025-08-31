@@ -1,29 +1,29 @@
 [versions]
 # app (camelCase is allowed only here)
-compileSdk = "34"
+compileSdk = "35"
 minSdk = "26"
-targetSdk = "34"
+targetSdk = "35"
 versionName = "2.5.3"
 
 # library
 accompanist = '0.32.0'
-compose-bom = "2024.06.00"
+compose-bom = "2025.08.01"
 coroutines = "1.10.2"
 credentials = '1.2.2'
 firebase-bom = "33.1.1"
-hilt = "2.51.1"
+hilt = "2.57.1"
 hsk-ktx = '1.0-beta17'
 junit5 = "5.9.3"
-kotlin = '2.0.0'
+kotlin = '2.1.20'
 lifecycle = '2.8.2'
 retrofit = '2.11.0'
-room = "2.6.1"
+room = "2.7.2"
 violet-dreams = '0.1.2'
 navigation = '2.8.2'
 work = "2.9.0"
 
 [libraries]
-android-gradle = "com.android.tools.build:gradle:8.5.0"
+android-gradle = "com.android.tools.build:gradle:8.12.2"
 hilt-android-gradle-plugin = { module = 'com.google.dagger:hilt-android-gradle-plugin', version.ref = 'hilt' }
 kotlin-gradle-plugin = { module = 'org.jetbrains.kotlin:kotlin-gradle-plugin', version.ref = 'kotlin' }
 kotlinx-serialization-plugin = { module = 'org.jetbrains.kotlin:kotlin-serialization', version.ref = 'kotlin' }
@@ -178,4 +178,4 @@ retrofit = ['retrofit', 'retrofit-converter-gson', 'retrofit-coroutines-adapter'
 
 [plugins]
 compose-compiler = { id = 'org.jetbrains.kotlin.plugin.compose', version.ref = 'kotlin' }
-ksp = { id = 'com.google.devtools.ksp', version = '2.0.0-1.0.23' }
+ksp = { id = 'com.google.devtools.ksp', version = '2.1.20-2.0.1' }
