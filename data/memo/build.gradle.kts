@@ -1,3 +1,4 @@
+import com.android.build.api.dsl.ManagedVirtualDevice
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -25,15 +26,13 @@ android {
     }
     testOptions {
         managedDevices {
-            devices {
-                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api30atd").apply {
+            allDevices {
+                maybeCreate<ManagedVirtualDevice>("pixel2api30atd").apply {
                     device = "Pixel 2"
                     apiLevel = 30
                     systemImageSource = "aosp-atd"
                 }
-            }
-            devices {
-                maybeCreate<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2api27").apply {
+                maybeCreate<ManagedVirtualDevice>("pixel2api27").apply {
                     device = "Pixel 2"
                     apiLevel = 27
                     systemImageSource = "aosp"
@@ -41,8 +40,8 @@ android {
             }
             groups {
                 maybeCreate("api27and30").apply {
-                    targetDevices.add(devices["pixel2api30atd"])
-                    targetDevices.add(devices["pixel2api27"])
+                    targetDevices.add(allDevices.getByName("pixel2api30atd"))
+                    targetDevices.add(allDevices.getByName("pixel2api27"))
                 }
             }
         }
